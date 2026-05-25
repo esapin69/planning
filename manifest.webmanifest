@@ -1,11 +1,11 @@
 {
   "name": "GHE Planning Brancardier",
   "short_name": "GHE Planning",
-  "description": "Planning brancardier GHE : accès rapide aux plannings, planning personnel et agenda collectif.",
+  "description": "Planning brancardier GHE : accès rapide aux plannings.",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#fff8e6",
-  "theme_color": "#fff8e6",
+  "background_color": "#fff7df",
+  "theme_color": "#fff7df",
   "icons": [
     {
       "src": "icon-192.png",
