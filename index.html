@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>GHE Planning</title>
   <meta name="description" content="Planning brancardier GHE : accès rapide aux plannings, planning personnel et agenda collectif.">
-  <meta name="theme-color" content="#fff7df">
+  <meta name="theme-color" content="#fff8e6">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="favicon.ico">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -13,467 +13,146 @@
   <meta property="og:description" content="Consulter les plannings et calendriers de l’équipe GHE.">
   <meta property="og:image" content="og-image.jpg">
   <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
 
   <style>
     :root{
-      --ink:#07183f;
-      --ink2:#0b204f;
-      --blue:#006bff;
-      --blue-dark:#061a44;
-      --cyan:#16a9c9;
-      --green:#16823c;
-      --yellow:#ffcf38;
-      --orange:#ff9800;
-      --paper:#fffdf7;
-      --muted:#526071;
-      --line:#108fc0;
-      --shadow:rgba(7,24,63,.20);
+      --ink:#07183f; --blue:#006bff; --blue-dark:#061a44; --cyan:#16a9c9;
+      --green:#16823c; --yellow:#ffcf38; --paper:#fffdf7; --muted:#526071; --line:#108fc0;
     }
-
     *{box-sizing:border-box}
-
     html{scroll-behavior:smooth}
-
     body{
-      margin:0;
-      color:var(--ink);
+      margin:0;color:var(--ink);
       background:
         radial-gradient(circle at 12% 0%, rgba(22,169,201,.10), transparent 28%),
         radial-gradient(circle at 90% 86%, rgba(255,207,56,.28), transparent 34%),
         linear-gradient(180deg,#fffaf0 0%,#f8fbff 45%,#fff4c8 100%);
       font-family:"Trebuchet MS","Arial Rounded MT Bold",-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
     }
+    a{color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent}
+    .page{width:min(760px,100%);margin:0 auto;padding:20px 16px 42px}
 
-    a{
-      color:inherit;
-      text-decoration:none;
-      -webkit-tap-highlight-color:transparent;
-    }
-
-    .page{
-      width:min(760px,100%);
-      margin:0 auto;
-      padding:22px 16px 42px;
-    }
-
-    /* Header drawn like a signature */
-    .signature{
-      text-align:center;
-      padding:4px 0 18px;
-      position:relative;
-    }
-
+    .signature{text-align:center;padding:0 0 18px;position:relative}
+    .med-left,.med-right{position:absolute;top:20px;width:84px;height:84px;color:#07183f;opacity:.95}
+    .med-left{left:2px;transform:rotate(-8deg)}
+    .med-right{right:0;top:18px;transform:rotate(8deg)}
+    .med-left svg,.med-right svg{width:100%;height:100%;filter:drop-shadow(2px 3px 0 rgba(7,24,63,.12))}
     .title-top{
-      display:block;
-      color:var(--blue-dark);
-      font-size:clamp(58px,17vw,118px);
-      line-height:.78;
-      font-weight:1000;
-      letter-spacing:.015em;
-      text-transform:uppercase;
-      transform:rotate(-1.3deg);
-      text-shadow:
-        2px 2px 0 #fff,
-        -1px 2px 0 #fff,
-        0 5px 0 rgba(7,24,63,.08);
+      display:block;color:var(--blue-dark);font-size:clamp(58px,17vw,118px);line-height:.78;font-weight:1000;
+      letter-spacing:.015em;text-transform:uppercase;transform:rotate(-1.3deg);
+      text-shadow:2px 2px 0 #fff,-1px 2px 0 #fff,0 5px 0 rgba(7,24,63,.08);
       -webkit-text-stroke:1px rgba(7,24,63,.10);
     }
-
     .title-main{
-      display:block;
-      margin-top:-2px;
-      color:#0aa4cc;
-      font-size:clamp(74px,22vw,148px);
-      line-height:.76;
-      font-weight:1000;
-      letter-spacing:-.035em;
-      text-transform:uppercase;
-      transform:rotate(.7deg);
-      text-shadow:
-        4px 4px 0 var(--blue-dark),
-        -1px 2px 0 var(--blue-dark),
-        0 8px 0 rgba(7,24,63,.11);
+      display:block;margin-top:-2px;color:#0aa4cc;font-size:clamp(74px,22vw,148px);line-height:.76;font-weight:1000;
+      letter-spacing:-.035em;text-transform:uppercase;transform:rotate(.7deg);
+      text-shadow:4px 4px 0 var(--blue-dark),-1px 2px 0 var(--blue-dark),0 8px 0 rgba(7,24,63,.11);
       -webkit-text-stroke:2px var(--blue-dark);
     }
-
     .brush-line{
-      width:min(260px,72%);
-      height:10px;
-      margin:11px auto 0;
-      background:var(--cyan);
-      border-radius:999px;
-      transform:rotate(-1.6deg);
-      box-shadow:
-        24px 2px 0 rgba(22,169,201,.70),
-        -18px -1px 0 rgba(22,169,201,.55);
+      width:min(260px,72%);height:10px;margin:11px auto 0;background:var(--cyan);border-radius:999px;transform:rotate(-1.6deg);
+      box-shadow:24px 2px 0 rgba(22,169,201,.70),-18px -1px 0 rgba(22,169,201,.55);
     }
-
     .script{
-      display:block;
-      margin-top:8px;
-      color:#3d424c;
-      font-family:"Comic Sans MS","Trebuchet MS",cursive;
-      font-size:clamp(28px,8vw,46px);
-      line-height:1;
-      transform:rotate(-2deg);
+      display:block;margin-top:8px;color:#3d424c;font-family:"Comic Sans MS","Trebuchet MS",cursive;
+      font-size:clamp(28px,8vw,46px);line-height:1;transform:rotate(-2deg);
     }
-
     .date{
-      margin-top:16px;
-      font-family:"Comic Sans MS","Trebuchet MS",cursive;
-      color:#232a36;
-      font-size:17px;
-      font-weight:700;
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      transform:rotate(-.5deg);
+      margin-top:14px;font-family:"Comic Sans MS","Trebuchet MS",cursive;color:#232a36;font-size:14px;font-weight:700;
+      display:inline-block;transform:rotate(-1.2deg);letter-spacing:.01em;
+    }
+    .date strong{font-weight:900}
+    .date::after{
+      content:"";display:block;width:96px;height:4px;background:#12a8c8;border-radius:999px;margin:1px 0 0 auto;transform:rotate(-3deg)
     }
 
-    .date .cal{
-      font-family:system-ui;
-      font-size:22px;
-    }
-
-    /* hand-drawn modules */
     .module{
-      position:relative;
-      margin-top:16px;
-      padding:19px 18px 18px;
-      background:rgba(255,253,247,.92);
-      border:3px solid #168fc2;
-      border-radius:28px;
-      box-shadow:
-        0 12px 0 rgba(7,24,63,.08),
-        0 18px 32px rgba(7,24,63,.10);
-      overflow:hidden;
+      position:relative;margin-top:16px;padding:19px 18px 18px;background:rgba(255,253,247,.92);
+      border:3px solid #168fc2;border-radius:28px;
+      box-shadow:0 12px 0 rgba(7,24,63,.08),0 18px 32px rgba(7,24,63,.10);overflow:hidden;
     }
-
-    .module::before,
-    .module::after{
-      content:"";
-      position:absolute;
-      pointer-events:none;
-      border-radius:30px;
-      inset:5px 7px 8px 5px;
-      border:1px solid rgba(22,143,194,.28);
-      transform:rotate(.35deg);
+    .module::before,.module::after{
+      content:"";position:absolute;pointer-events:none;border-radius:30px;inset:5px 7px 8px 5px;
+      border:1px solid rgba(22,143,194,.28);transform:rotate(.35deg)
     }
-
-    .module::after{
-      inset:9px 4px 5px 9px;
-      border-color:rgba(7,24,63,.08);
-      transform:rotate(-.25deg);
-    }
-
+    .module::after{inset:9px 4px 5px 9px;border-color:rgba(7,24,63,.08);transform:rotate(-.25deg)}
     .module-title{
-      position:relative;
-      z-index:1;
-      margin:0;
-      color:var(--ink);
-      font-size:clamp(29px,8vw,48px);
-      line-height:.98;
-      letter-spacing:.005em;
-      font-weight:1000;
-      text-transform:uppercase;
-      transform:rotate(-.8deg);
-      text-shadow:
-        2px 2px 0 #fff,
-        0 4px 0 rgba(7,24,63,.06);
+      position:relative;z-index:1;margin:0;color:var(--ink);font-size:clamp(29px,8vw,48px);line-height:.98;
+      letter-spacing:.005em;font-weight:1000;text-transform:uppercase;transform:rotate(-.8deg);
+      text-shadow:2px 2px 0 #fff,0 4px 0 rgba(7,24,63,.06);
     }
-
-    .module-title .small-break{
-      display:block;
-    }
-
     .module-sub{
-      position:relative;
-      z-index:1;
-      margin:8px 0 12px;
-      color:#1d2736;
-      font-family:"Comic Sans MS","Trebuchet MS",cursive;
-      font-size:21px;
-      line-height:1.1;
+      position:relative;z-index:1;margin:8px 0 12px;color:#1d2736;font-family:"Comic Sans MS","Trebuchet MS",cursive;
+      font-size:21px;line-height:1.1;
     }
-
-    .module-sub::after{
-      content:"";
-      display:block;
-      width:76px;
-      height:4px;
-      margin-top:3px;
-      background:#0aa4cc;
-      border-radius:999px;
-      transform:rotate(-2deg);
-    }
-
-    .btn-row{
-      position:relative;
-      z-index:2;
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-    }
-
+    .module-sub::after{content:"";display:block;width:76px;height:4px;margin-top:3px;background:#0aa4cc;border-radius:999px;transform:rotate(-2deg)}
+    .btn-row{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .toon-btn{
-      position:relative;
-      min-height:58px;
-      border-radius:18px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      padding:0 12px;
-      color:#fff;
-      font-size:clamp(22px,6vw,34px);
-      font-weight:1000;
-      text-transform:uppercase;
-      letter-spacing:.01em;
-      border:4px solid #061a44;
-      box-shadow:
-        0 7px 0 rgba(0,0,0,.24),
-        inset 0 8px 0 rgba(255,255,255,.20),
-        inset 0 -8px 0 rgba(0,0,0,.08);
-      text-shadow:
-        2px 2px 0 #061a44,
-        -1px 1px 0 #061a44;
-      transform:rotate(-.7deg);
-      overflow:hidden;
+      position:relative;min-height:58px;border-radius:18px;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 12px;color:#fff;
+      font-size:clamp(21px,6vw,34px);font-weight:1000;text-transform:uppercase;letter-spacing:.01em;border:4px solid #061a44;
+      box-shadow:0 7px 0 rgba(0,0,0,.24),inset 0 8px 0 rgba(255,255,255,.20),inset 0 -8px 0 rgba(0,0,0,.08);
+      text-shadow:2px 2px 0 #061a44,-1px 1px 0 #061a44;transform:rotate(-.7deg);overflow:hidden;text-align:center;line-height:1.05;
     }
-
-    .toon-btn:nth-child(2){
-      transform:rotate(.7deg);
-    }
-
-    .toon-btn::before{
-      content:"";
-      position:absolute;
-      left:10px;
-      right:10px;
-      top:8px;
-      height:10px;
-      background:rgba(255,255,255,.25);
-      border-radius:999px;
-    }
-
+    .toon-btn:nth-child(2){transform:rotate(.7deg)}
+    .toon-btn::before{content:"";position:absolute;left:10px;right:10px;top:8px;height:10px;background:rgba(255,255,255,.25);border-radius:999px}
     .toon-btn.blue{background:linear-gradient(180deg,#1188ff,#005fe8)}
     .toon-btn.navy{background:linear-gradient(180deg,#112654,#061533)}
     .toon-btn.teal{background:linear-gradient(180deg,#22bed2,#118ca0)}
     .toon-btn.green{background:linear-gradient(180deg,#24a84c,#14782e)}
-    .toon-btn.gold{
-      color:#fff;
-      background:linear-gradient(180deg,#ffd95f,#ffb821);
-      border-color:#8a5a00;
-      text-shadow:
-        2px 2px 0 #7b4c00,
-        -1px 1px 0 #7b4c00;
+    .toon-btn.gold{color:#fff;background:linear-gradient(180deg,#ffd95f,#ffb821);border-color:#8a5a00;text-shadow:2px 2px 0 #7b4c00,-1px 1px 0 #7b4c00}
+    .toon-btn.light{color:#243042;background:linear-gradient(180deg,#fffefa,#fff4d4);border-color:#3a4253;text-shadow:none;font-size:21px;min-height:46px;box-shadow:0 5px 0 rgba(0,0,0,.14),inset 0 6px 0 rgba(255,255,255,.55)}
+    .wide-under{margin:11px auto 0;width:88%;min-height:50px;font-size:clamp(21px,6vw,30px);transform:rotate(-.5deg)}
+    .btn-icon{font-family:system-ui,-apple-system,"Segoe UI Emoji";font-size:.95em;filter:drop-shadow(1px 1px 0 rgba(0,0,0,.15))}
+    .help-note{
+      margin:14px auto 0;text-align:center;color:#0f5fc9;font-family:"Comic Sans MS","Trebuchet MS",cursive;
+      font-size:17px;font-weight:800;transform:rotate(-1.3deg)
     }
-
-    .toon-btn.light{
-      color:#243042;
-      background:linear-gradient(180deg,#fffefa,#fff4d4);
-      border-color:#3a4253;
-      text-shadow:none;
-      font-size:21px;
-      min-height:46px;
-      box-shadow:
-        0 5px 0 rgba(0,0,0,.14),
-        inset 0 6px 0 rgba(255,255,255,.55);
-    }
-
-    .wide-under{
-      margin:11px auto 0;
-      width:88%;
-      min-height:50px;
-      font-size:clamp(21px,6vw,30px);
-      transform:rotate(-.5deg);
-    }
-
-    .btn-icon{
-      font-family:system-ui, -apple-system, "Segoe UI Emoji";
-      font-size:.95em;
-      filter:drop-shadow(1px 1px 0 rgba(0,0,0,.15));
-    }
-
-    .help-strip{
-      margin:13px auto 0;
-      width:78%;
-      min-height:42px;
-      color:#0f5fc9;
-      background:rgba(255,255,255,.78);
-      border:3px dashed #0f6edb;
-      border-radius:18px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      font-family:"Comic Sans MS","Trebuchet MS",cursive;
-      font-size:17px;
-      font-weight:800;
-      transform:rotate(-.9deg);
-    }
-
-    .question{
-      display:inline-grid;
-      place-items:center;
-      width:24px;
-      height:24px;
-      color:white;
-      background:#1487d4;
-      border-radius:50%;
-      font-family:system-ui;
-      font-weight:900;
-    }
-
-    .manual{
-      margin-top:11px;
-    }
+    .help-note::after{content:"";display:block;width:160px;height:3px;background:#0f6edb;border-radius:999px;margin:2px auto 0;transform:rotate(-2deg)}
+    .manual{margin-top:11px}
 
     .footer-help{
-      position:relative;
-      margin:20px 8px 0;
-      padding:17px 18px 18px 58px;
-      background:linear-gradient(180deg,#fff8dc,#fff0b7);
-      border:3px solid #07183f;
-      border-radius:28px;
-      box-shadow:0 8px 0 rgba(7,24,63,.10);
-      transform:rotate(-.8deg);
+      position:relative;margin:20px 8px 0;padding:17px 18px 18px 58px;background:linear-gradient(180deg,#fff8dc,#fff0b7);
+      border:3px solid #07183f;border-radius:28px;box-shadow:0 8px 0 rgba(7,24,63,.10);transform:rotate(-.8deg);
     }
-
-    .footer-help::before{
-      content:"💡";
-      position:absolute;
-      left:-8px;
-      top:16px;
-      font-size:50px;
-      filter:drop-shadow(2px 3px 0 rgba(0,0,0,.12));
-    }
-
-    .footer-help h2{
-      margin:0 0 9px;
-      font-size:25px;
-      line-height:1;
-      font-weight:1000;
-      text-transform:uppercase;
-    }
-
-    .footer-help p{
-      margin:6px 0;
-      color:#243042;
-      font-family:"Comic Sans MS","Trebuchet MS",cursive;
-      font-size:17px;
-      line-height:1.18;
-    }
-
+    .footer-help::before{content:"💡";position:absolute;left:-8px;top:20px;font-size:50px;filter:drop-shadow(2px 3px 0 rgba(0,0,0,.12))}
+    .footer-help h2{margin:0 0 9px;font-size:25px;line-height:1;font-weight:1000;text-transform:uppercase}
+    .footer-help p{margin:6px 0;color:#243042;font-family:"Comic Sans MS","Trebuchet MS",cursive;font-size:17px;line-height:1.18}
     .bubble{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width:23px;
-      height:23px;
-      margin-right:7px;
-      background:#138ee4;
-      color:white;
-      border-radius:50%;
-      font-family:system-ui;
-      font-size:14px;
-      font-weight:900;
+      display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;margin-right:7px;background:#138ee4;color:white;
+      border-radius:50%;font-family:system-ui;font-size:14px;font-weight:900;
     }
-
     .claude{
-      display:block;
-      margin:22px 12px 0 auto;
-      width:max-content;
-      max-width:100%;
-      color:#07183f;
-      font-family:"Comic Sans MS","Trebuchet MS",cursive;
-      font-size:28px;
-      font-weight:900;
-      transform:rotate(-5deg);
+      display:block;margin:14px 12px 0 auto;width:max-content;max-width:100%;color:#07183f;font-family:"Comic Sans MS","Trebuchet MS",cursive;
+      font-size:28px;font-weight:900;transform:rotate(-5deg);
     }
+    .claude::after{content:"";display:block;height:4px;background:#128edb;border-radius:999px;transform:rotate(-3deg);margin-top:-2px}
 
-    .claude::after{
-      content:"";
-      display:block;
-      height:4px;
-      background:#128edb;
-      border-radius:999px;
-      transform:rotate(-3deg);
-      margin-top:-2px;
-    }
-
-    /* modal */
-    .modal{
-      position:fixed;
-      inset:0;
-      display:none;
-      align-items:flex-end;
-      justify-content:center;
-      background:rgba(7,24,63,.45);
-      padding:18px;
-      z-index:20;
-    }
-
+    .modal{position:fixed;inset:0;display:none;align-items:flex-end;justify-content:center;background:rgba(7,24,63,.45);padding:18px;z-index:20}
     .modal.open{display:flex}
-
     .sheet{
-      width:min(720px,100%);
-      background:#fffaf0;
-      border:4px solid #07183f;
-      border-radius:28px;
-      padding:22px;
-      box-shadow:0 20px 60px rgba(0,0,0,.28);
-      transform:rotate(-.4deg);
+      width:min(720px,100%);background:#fffaf0;border:4px solid #07183f;border-radius:28px;padding:22px;
+      box-shadow:0 20px 60px rgba(0,0,0,.28);transform:rotate(-.4deg);
     }
-
-    .sheet h2{
-      margin:0 0 12px;
-      font-size:32px;
-      text-transform:uppercase;
-      line-height:1;
-    }
-
-    .sheet p{
-      margin:9px 0;
-      color:#1f2937;
-      font-family:"Comic Sans MS","Trebuchet MS",cursive;
-      font-size:18px;
-      line-height:1.28;
-    }
-
-    .sheet-actions{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-      margin-top:18px;
-    }
-
-    .sheet .toon-btn{
-      min-height:48px;
-      font-size:18px;
-      border-width:3px;
-    }
-
-    .close{
-      appearance:none;
-      border:none;
-      cursor:pointer;
-    }
+    .sheet h2{margin:0 0 12px;font-size:32px;text-transform:uppercase;line-height:1}
+    .sheet p{margin:9px 0;color:#1f2937;font-family:"Comic Sans MS","Trebuchet MS",cursive;font-size:18px;line-height:1.28}
+    .sheet-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+    .sheet .toon-btn{min-height:48px;font-size:18px;border-width:3px}
+    .close{appearance:none;border:none;cursor:pointer}
 
     @media (max-width:430px){
       .page{padding-left:14px;padding-right:14px}
+      .med-left,.med-right{width:62px;height:62px;top:26px;opacity:.92}
       .module{padding:17px 14px 16px}
       .module-title{font-size:30px}
       .module-sub{font-size:20px}
       .toon-btn{min-height:55px}
       .wide-under{width:90%}
-      .help-strip{width:90%;font-size:15px}
       .footer-help{padding-left:50px}
     }
-
     @media (max-width:370px){
       .module-title{font-size:27px}
-      .toon-btn{font-size:20px}
+      .toon-btn{font-size:19px}
       .toon-btn.light{font-size:18px}
       .title-main{font-size:68px}
     }
@@ -483,71 +162,67 @@
 <body>
   <div class="page">
     <header class="signature">
+      <div class="med-left" aria-hidden="true">
+        <svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="18" y="36" width="82" height="30" rx="10" fill="#bfefff"/>
+          <path d="M26 66L12 95M92 66l16 29M20 88h86"/>
+          <circle cx="22" cy="101" r="7" fill="#fff"/><circle cx="100" cy="101" r="7" fill="#fff"/>
+          <path d="M28 45h64M34 28h18"/>
+        </svg>
+      </div>
+      <div class="med-right" aria-hidden="true">
+        <svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M70 10v24"/>
+          <rect x="48" y="30" width="44" height="55" rx="14" fill="#d9f5ff"/>
+          <path d="M58 48h24M58 62h24"/>
+          <path d="M70 85v14c0 8-7 12-14 9-10-4-5-19-19-19"/>
+          <path d="M31 89c-11 1-11 18 0 18s11-18 0-18z" fill="#fff"/>
+        </svg>
+      </div>
+
       <span class="title-top">Planning</span>
       <span class="title-main">GHE</span>
       <div class="brush-line"></div>
       <span class="script">brancardier ↝</span>
-      <div class="date"><span class="cal">📅</span> Dernière mise à jour : <strong>21 mai 2026</strong></div>
+      <div class="date">Dernière mise à jour : <strong>21 mai 2026</strong></div>
     </header>
 
     <main>
       <section class="module">
         <h1 class="module-title">Voir le planning officiel</h1>
         <p class="module-sub">Choisis ton équipe :</p>
-
         <div class="btn-row">
-          <a class="toon-btn blue" href="https://drive.google.com/drive/folders/19viv8n9VYGPdsYh300h_L6RqxcMKlwzq" target="_blank" rel="noopener">
-            Jour <span class="btn-icon">☀️</span>
-          </a>
-          <a class="toon-btn navy" href="https://drive.google.com/drive/folders/1TLqyqc5kcz1x_g0OhpguPTxdpaX3zkN0" target="_blank" rel="noopener">
-            Nuit <span class="btn-icon">🌙</span>
-          </a>
+          <a class="toon-btn blue" href="https://drive.google.com/drive/folders/19viv8n9VYGPdsYh300h_L6RqxcMKlwzq" target="_blank" rel="noopener">Jour <span class="btn-icon">☀️</span></a>
+          <a class="toon-btn navy" href="https://drive.google.com/drive/folders/1TLqyqc5kcz1x_g0OhpguPTxdpaX3zkN0" target="_blank" rel="noopener">Nuit <span class="btn-icon">🌙</span></a>
         </div>
-
-        <a class="toon-btn gold wide-under" href="https://drive.google.com/drive/folders/14MmkXxk1VNKd_XWGcFAbS3FByQCOs9h5" target="_blank" rel="noopener">
-          Stagiaires <span class="btn-icon">🎓</span>
-        </a>
+        <a class="toon-btn gold wide-under" href="https://drive.google.com/drive/folders/14MmkXxk1VNKd_XWGcFAbS3FByQCOs9h5" target="_blank" rel="noopener">Stagiaires <span class="btn-icon">🎓</span></a>
       </section>
 
       <section class="module">
         <h2 class="module-title">Récupère ton planning perso</h2>
         <p class="module-sub">Ton planning individuel :</p>
-
         <div class="btn-row">
-          <a class="toon-btn blue" href="https://drive.google.com/drive/folders/16M0oWebfo8_5_NORuV9rCkw1HGLW4mKD" target="_blank" rel="noopener">
-            Capture PDF
-          </a>
-          <a class="toon-btn teal" href="https://drive.google.com/drive/folders/1kRUpWie_wasza4wbzN2CEqP3YSivmKGm" target="_blank" rel="noopener" id="agendaHelp">
-            Sur ton agenda
-          </a>
+          <a class="toon-btn blue" href="https://drive.google.com/drive/folders/16M0oWebfo8_5_NORuV9rCkw1HGLW4mKD" target="_blank" rel="noopener">Capture,<br>imprime</a>
+          <a class="toon-btn teal" href="https://drive.google.com/drive/folders/1kRUpWie_wasza4wbzN2CEqP3YSivmKGm" target="_blank" rel="noopener" id="agendaHelp">Sur ton<br>agenda</a>
         </div>
-
-        <a href="#" class="help-strip" id="helpBtn">Besoin d’aide pour l’import ? <span class="question">?</span></a>
+        <a href="#aide-import" class="help-note">Aide en bas de page ↓</a>
       </section>
 
       <section class="module">
         <h2 class="module-title">Qui travaille et à quelle heure ?</h2>
         <p class="module-sub">Agenda collectif :</p>
-
         <div class="btn-row">
-          <a class="toon-btn blue" href="webcal://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics">
-            <span class="btn-icon"></span> iOS
-          </a>
-          <a class="toon-btn green" href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fical%2Fca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%2540group.calendar.google.com%2Fprivate-5a1892e376d3c9b3cc82c5f0ad61c333%2Fbasic.ics" target="_blank" rel="noopener">
-            Android
-          </a>
+          <a class="toon-btn blue" href="webcal://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics"><span class="btn-icon"></span> iOS</a>
+          <a class="toon-btn green" href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fical%2Fca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%2540group.calendar.google.com%2Fprivate-5a1892e376d3c9b3cc82c5f0ad61c333%2Fbasic.ics" target="_blank" rel="noopener">Android</a>
         </div>
-
-        <a class="toon-btn light wide-under manual" href="https://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics" target="_blank" rel="noopener">
-          Import manuel ICS
-        </a>
+        <a class="toon-btn light wide-under manual" href="https://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics" target="_blank" rel="noopener">Import manuel ICS</a>
       </section>
 
-      <section class="footer-help" aria-label="Aide import">
-        <h2>Aide import</h2>
-        <p><span class="bubble">1</span>Télécharge le fichier ICS</p>
-        <p><span class="bubble">2</span>Ouvre-le avec Calendrier</p>
-        <p><span class="bubble">3</span>Clique sur “S’abonner” ou “Ajouter”</p>
+      <section class="footer-help" id="aide-import" aria-label="Aide import">
+        <h2>Besoin d’aide pour l’import ?</h2>
+        <p><span class="bubble">1</span>Télécharge le fichier ICS depuis ton espace planning.</p>
+        <p><span class="bubble">2</span>Si ton téléphone ne propose pas Calendrier, ouvre Claude.</p>
+        <p><span class="bubble">3</span>Copie ce message : “Aide-moi à importer ce fichier ICS dans le calendrier de mon téléphone.”</p>
         <a class="claude" href="https://claude.ai/" target="_blank" rel="noopener">Claude !</a>
       </section>
     </main>
@@ -559,7 +234,7 @@
       <p>1. Télécharge le fichier ICS.</p>
       <p>2. Enregistre-le sur ton téléphone.</p>
       <p>3. Ouvre-le avec l’application Calendrier.</p>
-      <p>Si tu bloques, ouvre Claude et copie ce message :</p>
+      <p>Si tu ne peux pas l’ouvrir avec Calendrier, ouvre Claude et copie :</p>
       <p><strong>“Aide-moi à importer ce fichier ICS dans le calendrier de mon téléphone.”</strong></p>
       <div class="sheet-actions">
         <a class="toon-btn teal" href="https://claude.ai/" target="_blank" rel="noopener">Claude</a>
@@ -570,14 +245,8 @@
 
   <script>
     const modal = document.getElementById('modal');
-    const helpBtn = document.getElementById('helpBtn');
     const agendaHelp = document.getElementById('agendaHelp');
     const closeBtn = document.getElementById('closeBtn');
-
-    helpBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      modal.classList.add('open');
-    });
 
     agendaHelp.addEventListener('click', () => {
       setTimeout(() => modal.classList.add('open'), 700);
