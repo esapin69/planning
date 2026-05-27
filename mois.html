@@ -54,7 +54,7 @@ if(today.getDate() >= 20){
 
 const monthsDiv = document.getElementById("months");
 
-fetch("liens-a-modifier.json?v=" + Date.now())
+fetch("./liens-un-modificateur.json?v=" + Date.now())
   .then(response => response.json())
   .then(links => {
     visibleMonths.forEach(month => {
