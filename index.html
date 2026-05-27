@@ -9,280 +9,93 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="favicon.ico">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <meta property="og:title" content="GHE Planning Brancardier">
-  <meta property="og:description" content="Consulter les plannings et calendriers de l’équipe GHE.">
-  <meta property="og:image" content="og-image.jpg">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
+
   <style>
     :root {
       --ink:#07183f; --blue:#006bff; --navy:#061a44; --cyan:#16a9c9;
       --green:#16823c; --yellow:#ffcf38; --paper:#fffdf7; --muted:#2e3747;
     }
+
     * { box-sizing:border-box; }
     html { scroll-behavior:smooth; }
+
     body {
       margin:0;
       color:var(--ink);
       background:
-        radial-gradient(circle at 8% 0%, rgba(22,169,201,.10), transparent 24%),
-        radial-gradient(circle at 92% 86%, rgba(255,207,56,.28), transparent 36%),
+        radial-gradient(circle at 8% 0%, rgba(22,169,201,.12), transparent 24%),
+        radial-gradient(circle at 92% 86%, rgba(255,207,56,.32), transparent 36%),
         linear-gradient(180deg,#fffaf0 0%,#f8fbff 48%,#fff3bd 100%);
       font-family:"Trebuchet MS","Arial Rounded MT Bold",-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
     }
+
     a { color:inherit; text-decoration:none; -webkit-tap-highlight-color:transparent; }
-    .page { width:min(760px,100%); margin:0 auto; padding:20px 14px 42px; overflow:hidden; }
+
+    .page {
+      width:min(760px,100%);
+      margin:0 auto;
+      padding:20px 14px 42px;
+      overflow:hidden;
+    }
 
     .signature { position:relative; text-align:center; padding:4px 0 20px; }
-    .spark { position:absolute; color:#0b95d2; font-size:34px; font-weight:900; transform:rotate(-14deg); }
-    .spark.left { left:22px; top:42px; }
-    .spark.right { right:24px; top:122px; transform:rotate(17deg); }
+
+    .spark {
+      position:absolute;
+      color:#0b95d2;
+      font-size:38px;
+      font-weight:900;
+      transform:rotate(-17deg);
+    }
+
+    .spark.left { left:20px; top:42px; }
+    .spark.right { right:20px; top:122px; transform:rotate(19deg); }
+
     .star {
-      position:absolute; width:28px; height:28px; background:#ffd23f;
+      position:absolute;
+      width:30px;
+      height:30px;
+      background:#ffd23f;
       clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
-      filter:drop-shadow(2px 2px 0 #07183f);
+      filter:drop-shadow(3px 3px 0 #07183f);
       opacity:.95;
     }
-    .star.left { left:18px; top:128px; transform:rotate(-12deg); }
-    .star.right { right:20px; top:132px; transform:rotate(14deg) scale(.9); }
+
+    .star.left { left:18px; top:128px; transform:rotate(-17deg); }
+    .star.right { right:20px; top:132px; transform:rotate(18deg) scale(.9); }
 
     .title-top {
-      display:block; color:var(--navy); font-size:clamp(60px,18vw,120px); line-height:.78;
-      font-weight:1000; text-transform:uppercase; letter-spacing:.015em; transform:rotate(-1.4deg);
+      display:block;
+      color:var(--navy);
+      font-size:clamp(60px,18vw,120px);
+      line-height:.78;
+      font-weight:1000;
+      text-transform:uppercase;
+      letter-spacing:.015em;
+      transform:rotate(-1.8deg);
       text-shadow:2px 2px 0 #fff,-1px 2px 0 #fff,0 5px 0 rgba(7,24,63,.08);
       -webkit-text-stroke:1px rgba(7,24,63,.10);
     }
+
     .title-main {
-      display:block; margin-top:-2px; color:#0aa4cc; font-size:clamp(76px,22vw,148px);
-      line-height:.76; font-weight:1000; letter-spacing:-.035em; text-transform:uppercase; transform:rotate(.65deg);
-      text-shadow:4px 4px 0 var(--navy),-1px 2px 0 var(--navy),0 8px 0 rgba(7,24,63,.11);
+      display:block;
+      margin-top:-2px;
+      color:#0aa4cc;
+      font-size:clamp(76px,22vw,148px);
+      line-height:.76;
+      font-weight:1000;
+      letter-spacing:-.035em;
+      text-transform:uppercase;
+      transform:rotate(.95deg);
+      text-shadow:5px 5px 0 var(--navy),-1px 2px 0 var(--navy),0 8px 0 rgba(7,24,63,.11);
       -webkit-text-stroke:2px var(--navy);
     }
+
     .brush-line {
-      width:min(270px,74%); height:10px; margin:12px auto 0; background:var(--cyan); border-radius:999px;
-      transform:rotate(-1.7deg); box-shadow:26px 2px 0 rgba(22,169,201,.70),-20px -1px 0 rgba(22,169,201,.55);
-    }
-    .script {
-      display:block; margin-top:9px; color:#3d424c; font-family:"Comic Sans MS","Trebuchet MS",cursive;
-      font-size:clamp(29px,8vw,46px); line-height:1; transform:rotate(-2.1deg);
-    }
-    .date {
-      display:inline-block; margin-top:14px; font-family:"Comic Sans MS","Trebuchet MS",cursive;
-      font-size:14px; font-weight:700; color:#232a36; transform:rotate(-1.1deg);
-    }
-    .date::after {
-      content:""; display:block; width:100px; height:4px; background:#12a8c8; border-radius:999px;
-      margin:1px 0 0 auto; transform:rotate(-3deg);
-    }
-
-    .module {
-      position:relative; margin-top:16px; padding:19px 18px 18px; background:rgba(255,253,247,.92);
-      border:3px solid #168fc2; border-radius:28px;
-      box-shadow:0 12px 0 rgba(7,24,63,.08),0 18px 32px rgba(7,24,63,.10);
-      transform:rotate(var(--r,0deg));
-    }
-    .module::before,.module::after {
-      content:""; position:absolute; pointer-events:none; border-radius:30px;
-      inset:5px 7px 8px 5px; border:1px solid rgba(22,143,194,.28); transform:rotate(.35deg);
-    }
-    .module::after { inset:9px 4px 5px 9px; border-color:rgba(7,24,63,.08); transform:rotate(-.25deg); }
-    .module:nth-of-type(1) { --r:-.35deg; }
-    .module:nth-of-type(2) { --r:.42deg; }
-    .module:nth-of-type(3) { --r:-.28deg; }
-
-    .module-title {
-      position:relative; z-index:1; margin:0; color:var(--ink); font-size:clamp(29px,8vw,48px);
-      line-height:.98; letter-spacing:.005em; font-weight:1000; text-transform:uppercase; transform:rotate(-.8deg);
-      text-shadow:2px 2px 0 #fff,0 4px 0 rgba(7,24,63,.06);
-    }
-    .module-sub {
-      position:relative; z-index:1; margin:8px 0 12px; color:#1d2736; font-family:"Comic Sans MS","Trebuchet MS",cursive;
-      font-size:21px; line-height:1.1;
-    }
-    .module-sub::after {
-      content:""; display:block; width:76px; height:4px; margin-top:3px; background:#0aa4cc; border-radius:999px;
-      transform:rotate(-2deg);
-    }
-
-    .btn-row { position:relative; z-index:2; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    .toon-btn {
-      position:relative; min-height:58px; border-radius:18px; display:flex; align-items:center; justify-content:center; gap:8px;
-      padding:0 10px; color:white; font-size:clamp(21px,6vw,34px); font-weight:1000; text-transform:uppercase;
-      border:4px solid #061a44; line-height:1.04; text-align:center; overflow:hidden;
-      box-shadow:0 7px 0 rgba(0,0,0,.24), inset 0 8px 0 rgba(255,255,255,.20), inset 0 -8px 0 rgba(0,0,0,.08);
-      text-shadow:2px 2px 0 #061a44,-1px 1px 0 #061a44;
-      transform:rotate(-.75deg) skewX(-.7deg);
-    }
-    .toon-btn:nth-child(2) { transform:rotate(.72deg) skewX(.5deg); }
-    .toon-btn::before {
-      content:""; position:absolute; left:10px; right:10px; top:8px; height:10px;
-      background:rgba(255,255,255,.25); border-radius:999px; transform:rotate(-1deg);
-    }
-    .toon-btn.blue { background:linear-gradient(180deg,#1188ff,#005fe8); }
-    .toon-btn.navy { background:linear-gradient(180deg,#112654,#061533); }
-    .toon-btn.teal { background:linear-gradient(180deg,#22bed2,#118ca0); }
-    .toon-btn.green { background:linear-gradient(180deg,#24a84c,#14782e); }
-    .toon-btn.gold {
-      background:linear-gradient(180deg,#ffd95f,#ffb821); border-color:#8a5a00;
-      text-shadow:2px 2px 0 #7b4c00,-1px 1px 0 #7b4c00;
-    }
-    .toon-btn.light {
-      color:#283244; background:linear-gradient(180deg,#fffefa,#fff4d4); border-color:#3a4253; text-shadow:none;
-      font-size:21px; min-height:46px; box-shadow:0 5px 0 rgba(0,0,0,.14), inset 0 6px 0 rgba(255,255,255,.55);
-    }
-    .wide-under {
-      margin:11px auto 0; width:88%; min-height:50px; font-size:clamp(21px,6vw,30px); transform:rotate(-.5deg) skewX(-.4deg);
-    }
-    .btn-icon { font-family:system-ui,-apple-system,"Segoe UI Emoji"; font-size:.95em; filter:drop-shadow(1px 1px 0 rgba(0,0,0,.15)); }
-    .help-note {
-      display:block; margin:14px auto 0; text-align:center; color:#0f5fc9; font-family:"Comic Sans MS","Trebuchet MS",cursive;
-      font-size:17px; font-weight:800; transform:rotate(-1.3deg);
-    }
-    .help-note::after {
-      content:""; display:block; width:160px; height:3px; background:#0f6edb; border-radius:999px; margin:2px auto 0; transform:rotate(-2deg);
-    }
-    .manual { margin-top:11px; }
-
-    .footer-help {
-      position:relative; margin:20px 8px 0; padding:17px 18px 18px 58px; background:linear-gradient(180deg,#fff8dc,#fff0b7);
-      border:3px solid #07183f; border-radius:28px; box-shadow:0 8px 0 rgba(7,24,63,.10); transform:rotate(-.8deg);
-    }
-    .footer-help::before {
-      content:"💡"; position:absolute; left:-8px; top:20px; font-size:50px; filter:drop-shadow(2px 3px 0 rgba(0,0,0,.12));
-    }
-    .footer-help h2 { margin:0 0 9px; font-size:25px; line-height:1; font-weight:1000; text-transform:uppercase; }
-    .footer-help p {
-      margin:6px 0; color:#243042; font-family:"Comic Sans MS","Trebuchet MS",cursive; font-size:17px; line-height:1.18;
-    }
-    .bubble {
-      display:inline-flex; align-items:center; justify-content:center; width:23px; height:23px; margin-right:7px;
-      background:#138ee4; color:white; border-radius:50%; font-family:system-ui; font-size:14px; font-weight:900;
-    }
-    .claude {
-      display:block; margin:14px 12px 0 auto; width:max-content; color:#07183f;
-      font-family:"Comic Sans MS","Trebuchet MS",cursive; font-size:28px; font-weight:900; transform:rotate(-5deg);
-    }
-    .claude::after {
-      content:""; display:block; height:4px; background:#128edb; border-radius:999px; transform:rotate(-3deg); margin-top:-2px;
-    }
-
-    .modal {
-      position:fixed; inset:0; display:none; align-items:flex-end; justify-content:center; background:rgba(7,24,63,.45); padding:18px; z-index:20;
-    }
-    .modal.open { display:flex; }
-    .sheet {
-      width:min(720px,100%); background:#fffaf0; border:4px solid #07183f; border-radius:28px; padding:22px;
-      box-shadow:0 20px 60px rgba(0,0,0,.28); transform:rotate(-.4deg);
-    }
-    .sheet h2 { margin:0 0 12px; font-size:32px; text-transform:uppercase; line-height:1; }
-    .sheet p { margin:9px 0; color:#1f2937; font-family:"Comic Sans MS","Trebuchet MS",cursive; font-size:18px; line-height:1.28; }
-    .sheet-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:18px; }
-    .sheet .toon-btn { min-height:48px; font-size:18px; border-width:3px; }
-    .close { appearance:none; border:none; cursor:pointer; }
-
-    @media (max-width:430px) {
-      .page { padding-left:14px; padding-right:14px; }
-      .module { padding:17px 14px 16px; }
-      .module-title { font-size:30px; }
-      .module-sub { font-size:20px; }
-      .toon-btn { min-height:55px; }
-      .wide-under { width:90%; }
-      .footer-help { padding-left:50px; }
-      .spark.left { left:18px; top:38px; }
-      .spark.right { right:16px; top:116px; }
-    }
-    @media (max-width:370px) {
-      .module-title { font-size:27px; }
-      .toon-btn { font-size:19px; }
-      .toon-btn.light { font-size:18px; }
-      .title-main { font-size:68px; }
-    }
-  </style>
-</head>
-<body>
-  <div class="page">
-    <header class="signature">
-      <div class="spark left" aria-hidden="true">〟</div>
-      <div class="spark right" aria-hidden="true">〞</div>
-      <div class="star left" aria-hidden="true"></div>
-      <div class="star right" aria-hidden="true"></div>
-      <span class="title-top">Planning</span>
-      <span class="title-main">GHE</span>
-      <div class="brush-line"></div>
-      <span class="script">brancardier ↝</span>
-      <div class="date">Dernière mise à jour : <strong>21 mai 2026</strong></div>
-    </header>
-
-    <main>
-      <section class="module">
-        <h1 class="module-title">Voir le planning officiel</h1>
-        <p class="module-sub">Choisis ton équipe :</p>
-        <div class="btn-row">
-          <a class="toon-btn blue" href="https://drive.google.com/drive/folders/19viv8n9VYGPdsYh300h_L6RqxcMKlwzq" target="_blank" rel="noopener">Jour <span class="btn-icon">☀️</span></a>
-          <a class="toon-btn navy" href="https://drive.google.com/drive/folders/1TLqyqc5kcz1x_g0OhpguPTxdpaX3zkN0" target="_blank" rel="noopener">Nuit <span class="btn-icon">🌙</span></a>
-        </div>
-        <a class="toon-btn gold wide-under" href="https://drive.google.com/drive/folders/14MmkXxk1VNKd_XWGcFAbS3FByQCOs9h5" target="_blank" rel="noopener">Stagiaires <span class="btn-icon">🎓</span></a>
-      </section>
-
-      <section class="module">
-        <h2 class="module-title">Récupère ton planning perso</h2>
-        <p class="module-sub">Ton planning individuel :</p>
-        <div class="btn-row">
-          <a class="toon-btn blue" href="https://drive.google.com/drive/folders/16M0oWebfo8_5_NORuV9rCkw1HGLW4mKD" target="_blank" rel="noopener">Capture,<br>imprime</a>
-          <a class="toon-btn teal" href="https://drive.google.com/drive/folders/1kRUpWie_wasza4wbzN2CEqP3YSivmKGm" target="_blank" rel="noopener" id="agendaHelp">Sur ton<br>agenda</a>
-        </div>
-        <a href="#aide-import" class="help-note">Aide en bas de page ↓</a>
-      </section>
-
-      <section class="module">
-        <h2 class="module-title">Qui travaille et à quelle heure ?</h2>
-        <p class="module-sub">Agenda collectif :</p>
-        <div class="btn-row">
-          <a class="toon-btn blue" href="webcal://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics"><span class="btn-icon"></span> iOS</a>
-          <a class="toon-btn green" href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fical%2Fca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com%2Fprivate-5a1892e376d3c9b3cc82c5f0ad61c333%2Fbasic.ics" target="_blank" rel="noopener">Android</a>
-        </div>
-        <a class="toon-btn light wide-under manual" href="https://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics" target="_blank" rel="noopener">Import manuel ICS</a>
-      </section>
-
-      <section class="footer-help" id="aide-import" aria-label="Aide import">
-        <h2>Besoin d’aide pour l’import ?</h2>
-        <p><span class="bubble">1</span>Télécharge le fichier ICS depuis ton espace planning.</p>
-        <p><span class="bubble">2</span>Si ton téléphone ne propose pas Calendrier, ouvre Claude.</p>
-        <p><span class="bubble">3</span>Copie ce message : “Aide-moi à importer ce fichier ICS dans le calendrier de mon téléphone.”</p>
-        <a class="claude" href="https://claude.ai/new" target="_blank" rel="noopener">Claude !</a>
-      </section>
-    </main>
-  </div>
-
-  <div class="modal" id="modal">
-    <div class="sheet">
-      <h2>Aide import</h2>
-      <p>1. Télécharge le fichier ICS.</p>
-      <p>2. Enregistre-le sur ton téléphone.</p>
-      <p>3. Ouvre-le avec l’application Calendrier.</p>
-      <p>Si tu ne peux pas l’ouvrir avec Calendrier, ouvre Claude et copie :</p>
-      <p><strong>“Aide-moi à importer ce fichier ICS dans le calendrier de mon téléphone.”</strong></p>
-      <div class="sheet-actions">
-        <a class="toon-btn teal" href="https://claude.ai/new" target="_blank" rel="noopener">Claude</a>
-        <button class="toon-btn navy close" id="closeBtn">Fermer</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const modal = document.getElementById('modal');
-    const agendaHelp = document.getElementById('agendaHelp');
-    const closeBtn = document.getElementById('closeBtn');
-
-    agendaHelp.addEventListener('click', () => {
-      setTimeout(() => modal.classList.add('open'), 700);
-    });
-
-    closeBtn.addEventListener('click', () => modal.classList.remove('open'));
-
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) modal.classList.remove('open');
-    });
-  </script>
-</body>
-</html>
+      width:min(270px,74%);
+      height:11px;
+      margin:12px auto 0;
+      background:var(--cyan);
+      border-radius:999px;
+      transform:rotate(-2.4deg);
+      box-shadow:30px 3px 0
