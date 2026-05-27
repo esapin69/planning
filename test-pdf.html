@@ -12,61 +12,40 @@ body{
   background:#f6f7fb;
   color:#0b1b46;
 }
-
 .page{
-  max-width:1200px;
+  max-width:900px;
   margin:auto;
   padding:20px;
 }
-
 h1{
   text-align:center;
   font-size:34px;
-  margin:10px 0 30px;
-  font-weight:800;
+  margin:10px 0 24px;
+  font-weight:900;
 }
-
 #packs{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-  gap:24px;
+  grid-template-columns:1fr;
+  gap:22px;
 }
-
 .pack{
   position:relative;
   background:white;
-  border-radius:20px;
+  border-radius:22px;
   overflow:hidden;
-  box-shadow:0 10px 30px rgba(0,0,0,.12);
-  cursor:pointer;
-  transition:.2s;
+  box-shadow:0 10px 30px rgba(0,0,0,.14);
 }
-
-.pack:hover{
-  transform:translateY(-4px);
-}
-
 .pack img{
   width:100%;
   display:block;
-  aspect-ratio:4/3;
-  object-fit:cover;
 }
-
 .zone{
   position:absolute;
-  width:50%;
-  height:50%;
+  inset:0;
   background:transparent;
-  border:none;
+  border:0;
   cursor:pointer;
 }
-
-.tl{top:0;left:0;}
-.tr{top:0;right:0;}
-.bl{bottom:0;left:0;}
-.br{bottom:0;right:0;}
-
 .modal{
   display:none;
   position:fixed;
@@ -76,11 +55,7 @@ h1{
   align-items:center;
   z-index:999;
 }
-
-.modal.open{
-  display:flex;
-}
-
+.modal.open{display:flex}
 .sheet{
   width:min(92vw,520px);
   background:white;
@@ -88,13 +63,11 @@ h1{
   padding:24px;
   box-shadow:0 20px 60px rgba(0,0,0,.25);
 }
-
 .sheet h2{
   margin:0 0 18px;
   text-align:center;
   font-size:28px;
 }
-
 .search{
   width:100%;
   box-sizing:border-box;
@@ -104,17 +77,12 @@ h1{
   font-size:18px;
   outline:none;
 }
-
-.search:focus{
-  border-color:#2b7fff;
-}
-
+.search:focus{border-color:#2b7fff}
 .results{
   margin-top:16px;
   max-height:320px;
   overflow:auto;
 }
-
 .results a{
   display:block;
   padding:14px;
@@ -125,10 +93,6 @@ h1{
   color:#0b1b46;
   font-weight:700;
   border:1px solid #e6ebf5;
-}
-
-.results a:hover{
-  background:#eef4ff;
 }
 </style>
 </head>
@@ -142,73 +106,58 @@ h1{
 
 <div class="modal" id="modal">
   <div class="sheet">
-    <h2 id="monthTitle">Recherche ton nom</h2>
+    <h2>Recherche ton nom</h2>
     <input class="search" id="search" placeholder="Votre nom">
     <div class="results" id="results"></div>
   </div>
 </div>
 
 <script>
-const packs = [
-  {img:"assets/mois/01.2026.jpg", months:["2026-01"]},
-  {img:"assets/mois/02.2026.jpg", months:["2026-02"]},
-  {img:"assets/mois/03.2026.jpg", months:["2026-03"]},
-  {img:"assets/mois/04.2026.jpg", months:["2026-04"]},
-  {img:"assets/mois/05.2026.jpg", months:["2026-05"]},
-  {img:"assets/mois/06.2026.jpg", months:["2026-06"]},
-  {img:"assets/mois/07.2026.jpg", months:["2026-07"]},
-  {img:"assets/mois/08.2026.jpg", months:["2026-08"]},
-  {img:"assets/mois/09.2026.jpg", months:["2026-09"]},
-  {img:"assets/mois/10.2026.jpg", months:["2026-10"]},
-  {img:"assets/mois/11.2026.jpg", months:["2026-11"]},
-  {img:"assets/mois/12.2026.jpg", months:["2026-12"]},
+function formatMonth(date){
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const yyyy = date.getFullYear();
+  return `${mm}.${yyyy}`;
+}
 
-  {img:"assets/mois/01.2027.jpg", months:["2027-01"]},
-  {img:"assets/mois/02.2027.jpg", months:["2027-02"]},
-  {img:"assets/mois/03.2027.jpg", months:["2027-03"]},
-  {img:"assets/mois/04.2027.jpg", months:["2027-04"]},
-  {img:"assets/mois/05.2027.jpg", months:["2027-05"]},
-  {img:"assets/mois/06.2027.jpg", months:["2027-06"]},
-  {img:"assets/mois/07.2027.jpg", months:["2027-07"]},
-  {img:"assets/mois/08.2027.jpg", months:["2027-08"]},
-  {img:"assets/mois/09.2027.jpg", months:["2027-09"]},
-  {img:"assets/mois/10.2027.jpg", months:["2027-10"]},
-  {img:"assets/mois/11.2027.jpg", months:["2027-11"]},
-  {img:"assets/mois/12.2027.jpg", months:["2027-12"]}
+function nextMonth(date){
+  return new Date(date.getFullYear(), date.getMonth() + 1, 1);
+}
+
+const today = new Date();
+const visibleMonths = [
+  formatMonth(today),
+  formatMonth(nextMonth(today))
 ];
 
 const agents = [
   {name:"TEST AGENT", pdf:"#"}
 ];
 
+let selectedMonth = "";
+
 const packsDiv = document.getElementById("packs");
 const modal = document.getElementById("modal");
 const search = document.getElementById("search");
 const results = document.getElementById("results");
 
-packs.forEach(pack=>{
+visibleMonths.forEach(month=>{
   const div = document.createElement("div");
   div.className = "pack";
 
   div.innerHTML = `
-    <img src="${pack.img}" alt="">
-    <button class="zone tl"></button>
-    <button class="zone tr"></button>
-    <button class="zone bl"></button>
-    <button class="zone br"></button>
+    <img src="assets/mois/${month}.jpg" alt="">
+    <button class="zone"></button>
   `;
 
-  div.querySelectorAll(".zone").forEach((z,i)=>{
-    z.onclick = ()=>{
-      openSearch(pack.months[i] || pack.months[0]);
-    };
-  });
+  div.querySelector(".zone").onclick = ()=>{
+    selectedMonth = month;
+    openSearch();
+  };
 
   packsDiv.appendChild(div);
 });
 
-function openSearch(month){
-  document.getElementById("monthTitle").textContent = "Recherche ton nom";
+function openSearch(){
   search.value = "";
   results.innerHTML = "";
   modal.classList.add("open");
