@@ -34,11 +34,7 @@
       font-family:"Trebuchet MS","Arial Rounded MT Bold",-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
     }
 
-    a {
-      color:inherit;
-      text-decoration:none;
-      -webkit-tap-highlight-color:transparent;
-    }
+    a { color:inherit; text-decoration:none; -webkit-tap-highlight-color:transparent; }
 
     .page {
       width:min(760px,100%);
@@ -47,11 +43,7 @@
       overflow:hidden;
     }
 
-    .signature {
-      position:relative;
-      text-align:center;
-      padding:4px 0 20px;
-    }
+    .signature { position:relative; text-align:center; padding:4px 0 20px; }
 
     .spark {
       position:absolute;
@@ -84,7 +76,6 @@
       font-weight:1000;
       text-transform:uppercase;
       transform:rotate(-2deg);
-      text-shadow:2px 2px 0 #fff, 0 6px 0 rgba(7,24,63,.10);
     }
 
     .title-main {
@@ -94,7 +85,7 @@
       line-height:.76;
       font-weight:1000;
       transform:rotate(.9deg);
-      text-shadow:5px 5px 0 var(--navy), 0 9px 0 rgba(7,24,63,.13);
+      text-shadow:5px 5px 0 var(--navy);
     }
 
     .brush-line {
@@ -131,7 +122,7 @@
       background:rgba(255,253,247,.94);
       border:3px solid #168fc2;
       border-radius:30px;
-      box-shadow:0 13px 0 rgba(7,24,63,.09),0 19px 34px rgba(7,24,63,.12);
+      box-shadow:0 13px 0 rgba(7,24,63,.09);
       transform:rotate(var(--r,0deg));
     }
 
@@ -144,7 +135,6 @@
       font-size:clamp(29px,8vw,48px);
       font-weight:1000;
       text-transform:uppercase;
-      transform:rotate(-1.1deg);
     }
 
     .module-sub {
@@ -177,44 +167,19 @@
       text-align:center;
     }
 
-    .toon-btn:nth-child(2){
-      transform:rotate(1deg);
-    }
+    .toon-btn:nth-child(2){ transform:rotate(1deg); }
 
     .blue { background:linear-gradient(180deg,#1188ff,#005fe8); }
     .navy { background:linear-gradient(180deg,#112654,#061533); }
     .teal { background:linear-gradient(180deg,#22bed2,#118ca0); }
     .green { background:linear-gradient(180deg,#24a84c,#14782e); }
-
-    .gold {
-      background:linear-gradient(180deg,#ffd95f,#ffb821);
-      border-color:#8a5a00;
-      color:#fff;
-    }
-
-    .light {
-      background:linear-gradient(180deg,#fffefa,#fff4d4);
-      color:#283244;
-      border-color:#3a4253;
-    }
+    .gold { background:linear-gradient(180deg,#ffd95f,#ffb821); border-color:#8a5a00; }
+    .light { background:linear-gradient(180deg,#fffefa,#fff4d4); color:#283244; border-color:#3a4253; }
 
     .wide-under {
       margin:11px auto 0;
       width:88%;
       min-height:50px;
-    }
-
-    .footer-help {
-      margin:20px 8px 0;
-      padding:17px 18px 18px 58px;
-      background:linear-gradient(180deg,#fff8dc,#fff0b7);
-      border:3px solid #07183f;
-      border-radius:29px;
-      transform:rotate(-1deg);
-    }
-
-    @media (max-width:430px){
-      .toon-btn { min-height:55px; }
     }
   </style>
 </head>
@@ -242,21 +207,11 @@
         <p class="module-sub">Choisis ton équipe :</p>
 
         <div class="btn-row">
-          <a class="toon-btn blue"
-             href="https://script.google.com/macros/s/AKfycbwlL7G0tOMEB6ntn8zlVJp44_TEwNY5I6Tu1fkmznY11DovvbeIeD8HdMQLgFqGwVE9/exec?folder=19viv8n9VYGPdsYh300h_L6RqxcMKlwzq">
-             Jour ☀️
-          </a>
-
-          <a class="toon-btn navy"
-             href="https://script.google.com/macros/s/AKfycbwlL7G0tOMEB6ntn8zlVJp44_TEwNY5I6Tu1fkmznY11DovvbeIeD8HdMQLgFqGwVE9/exec?folder=1TLqyqc5kcz1x_g0OhpguPTxdpaX3zkN0">
-             Nuit 🌙
-          </a>
+          <a class="toon-btn blue" href="mois.html?type=jour">Jour ☀️</a>
+          <a class="toon-btn navy" href="mois.html?type=nuit">Nuit 🌙</a>
         </div>
 
-        <a class="toon-btn gold wide-under"
-           href="https://script.google.com/macros/s/AKfycbwlL7G0tOMEB6ntn8zlVJp44_TEwNY5I6Tu1fkmznY11DovvbeIeD8HdMQLgFqGwVE9/exec?folder=14MmkXxk1VNKd_XWGcFAbS3FByQCOs9h5">
-           Stagiaires 🎓
-        </a>
+        <a class="toon-btn gold wide-under" href="mois.html?type=stagiaires">Stagiaires 🎓</a>
       </section>
 
       <section class="module">
@@ -274,15 +229,8 @@
         <p class="module-sub">Agenda collectif :</p>
 
         <div class="btn-row">
-          <a class="toon-btn blue"
-             href="webcal://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics">
-              iOS
-          </a>
-
-          <a class="toon-btn green"
-             href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com">
-             Android
-          </a>
+          <a class="toon-btn blue" href="webcal://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics"> iOS</a>
+          <a class="toon-btn green" href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com">Android</a>
         </div>
       </section>
 
