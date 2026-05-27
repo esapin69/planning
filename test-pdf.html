@@ -8,87 +8,127 @@
 <style>
 body{
   margin:0;
-  background:#fff7df;
-  font-family:"Trebuchet MS",Arial,sans-serif;
-  color:#07183f;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:#f6f7fb;
+  color:#0b1b46;
 }
+
 .page{
-  max-width:760px;
+  max-width:1200px;
   margin:auto;
-  padding:18px 12px 40px;
+  padding:20px;
 }
+
 h1{
   text-align:center;
-  font-size:42px;
-  margin:10px 0 18px;
-  text-transform:uppercase;
-  text-shadow:2px 3px 0 #d8eaf2;
+  font-size:34px;
+  margin:10px 0 30px;
+  font-weight:800;
 }
+
+#packs{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:24px;
+}
+
 .pack{
   position:relative;
-  margin:18px 0;
-  border:4px solid #07183f;
-  border-radius:24px;
+  background:white;
+  border-radius:20px;
   overflow:hidden;
-  box-shadow:0 10px 0 rgba(7,24,63,.18);
-  transform:rotate(-.4deg);
+  box-shadow:0 10px 30px rgba(0,0,0,.12);
+  cursor:pointer;
+  transition:.2s;
 }
-.pack:nth-child(even){
-  transform:rotate(.45deg);
+
+.pack:hover{
+  transform:translateY(-4px);
 }
+
 .pack img{
-  display:block;
   width:100%;
+  display:block;
+  aspect-ratio:4/3;
+  object-fit:cover;
 }
+
 .zone{
   position:absolute;
-  inset:0;
+  width:50%;
+  height:50%;
   background:transparent;
   border:none;
-  opacity:0;
   cursor:pointer;
 }
+
+.tl{top:0;left:0;}
+.tr{top:0;right:0;}
+.bl{bottom:0;left:0;}
+.br{bottom:0;right:0;}
+
 .modal{
   display:none;
   position:fixed;
   inset:0;
-  background:rgba(7,24,63,.45);
-  align-items:flex-end;
-  z-index:20;
+  background:rgba(0,0,0,.45);
+  justify-content:center;
+  align-items:center;
+  z-index:999;
 }
+
 .modal.open{
   display:flex;
 }
+
 .sheet{
-  width:100%;
-  background:#fffaf0;
-  border:4px solid #07183f;
-  border-radius:28px 28px 0 0;
-  padding:22px;
-  box-shadow:0 -12px 40px rgba(0,0,0,.25);
+  width:min(92vw,520px);
+  background:white;
+  border-radius:24px;
+  padding:24px;
+  box-shadow:0 20px 60px rgba(0,0,0,.25);
 }
+
 .sheet h2{
-  margin:0 0 12px;
-  font-size:30px;
+  margin:0 0 18px;
+  text-align:center;
+  font-size:28px;
 }
+
 .search{
   width:100%;
-  font-size:24px;
+  box-sizing:border-box;
   padding:16px;
-  border:4px solid #16a9c9;
-  border-radius:18px;
+  border:2px solid #ddd;
+  border-radius:14px;
+  font-size:18px;
+  outline:none;
 }
+
+.search:focus{
+  border-color:#2b7fff;
+}
+
+.results{
+  margin-top:16px;
+  max-height:320px;
+  overflow:auto;
+}
+
 .results a{
   display:block;
-  margin:10px 0;
-  padding:15px;
-  background:#ffd23f;
-  border:3px solid #07183f;
-  border-radius:16px;
-  font-size:22px;
-  font-weight:900;
-  color:#07183f;
+  padding:14px;
+  margin-bottom:10px;
+  background:#f7f9fc;
+  border-radius:12px;
   text-decoration:none;
+  color:#0b1b46;
+  font-weight:700;
+  border:1px solid #e6ebf5;
+}
+
+.results a:hover{
+  background:#eef4ff;
 }
 </style>
 </head>
@@ -103,38 +143,38 @@ h1{
 <div class="modal" id="modal">
   <div class="sheet">
     <h2 id="monthTitle">Recherche ton nom</h2>
-    <input class="search" id="search" placeholder="Tape au moins 2 lettres">
+    <input class="search" id="search" placeholder="Votre nom">
     <div class="results" id="results"></div>
   </div>
 </div>
 
 <script>
 const packs = [
-  {img:"actifs/mois/01.2026.jpg", month:"2026-01"},
-  {img:"actifs/mois/02.2026.jpg", month:"2026-02"},
-  {img:"actifs/mois/03.2026.jpg", month:"2026-03"},
-  {img:"actifs/mois/04.2026.jpg", month:"2026-04"},
-  {img:"actifs/mois/05.2026.jpg", month:"2026-05"},
-  {img:"actifs/mois/06.2026.jpg", month:"2026-06"},
-  {img:"actifs/mois/07.2026.jpg", month:"2026-07"},
-  {img:"actifs/mois/08.2026.jpg", month:"2026-08"},
-  {img:"actifs/mois/09.2026.jpg", month:"2026-09"},
-  {img:"actifs/mois/10.2026.jpg", month:"2026-10"},
-  {img:"actifs/mois/11.2026.jpg", month:"2026-11"},
-  {img:"actifs/mois/12.2026.jpg", month:"2026-12"},
+  {img:"assets/mois/01.2026.jpg", months:["2026-01"]},
+  {img:"assets/mois/02.2026.jpg", months:["2026-02"]},
+  {img:"assets/mois/03.2026.jpg", months:["2026-03"]},
+  {img:"assets/mois/04.2026.jpg", months:["2026-04"]},
+  {img:"assets/mois/05.2026.jpg", months:["2026-05"]},
+  {img:"assets/mois/06.2026.jpg", months:["2026-06"]},
+  {img:"assets/mois/07.2026.jpg", months:["2026-07"]},
+  {img:"assets/mois/08.2026.jpg", months:["2026-08"]},
+  {img:"assets/mois/09.2026.jpg", months:["2026-09"]},
+  {img:"assets/mois/10.2026.jpg", months:["2026-10"]},
+  {img:"assets/mois/11.2026.jpg", months:["2026-11"]},
+  {img:"assets/mois/12.2026.jpg", months:["2026-12"]},
 
-  {img:"actifs/mois/01.2027.jpg", month:"2027-01"},
-  {img:"actifs/mois/02.2027.jpg", month:"2027-02"},
-  {img:"actifs/mois/03.2027.jpg", month:"2027-03"},
-  {img:"actifs/mois/04.2027.jpg", month:"2027-04"},
-  {img:"actifs/mois/05.2027.jpg", month:"2027-05"},
-  {img:"actifs/mois/06.2027.jpg", month:"2027-06"},
-  {img:"actifs/mois/07.2027.jpg", month:"2027-07"},
-  {img:"actifs/mois/08.2027.jpg", month:"2027-08"},
-  {img:"actifs/mois/09.2027.jpg", month:"2027-09"},
-  {img:"actifs/mois/10.2027.jpg", month:"2027-10"},
-  {img:"actifs/mois/11.2027.jpg", month:"2027-11"},
-  {img:"actifs/mois/12.2027.jpg", month:"2027-12"}
+  {img:"assets/mois/01.2027.jpg", months:["2027-01"]},
+  {img:"assets/mois/02.2027.jpg", months:["2027-02"]},
+  {img:"assets/mois/03.2027.jpg", months:["2027-03"]},
+  {img:"assets/mois/04.2027.jpg", months:["2027-04"]},
+  {img:"assets/mois/05.2027.jpg", months:["2027-05"]},
+  {img:"assets/mois/06.2027.jpg", months:["2027-06"]},
+  {img:"assets/mois/07.2027.jpg", months:["2027-07"]},
+  {img:"assets/mois/08.2027.jpg", months:["2027-08"]},
+  {img:"assets/mois/09.2027.jpg", months:["2027-09"]},
+  {img:"assets/mois/10.2027.jpg", months:["2027-10"]},
+  {img:"assets/mois/11.2027.jpg", months:["2027-11"]},
+  {img:"assets/mois/12.2027.jpg", months:["2027-12"]}
 ];
 
 const agents = [
@@ -151,23 +191,28 @@ packs.forEach(pack=>{
   div.className = "pack";
 
   div.innerHTML = `
-    <img src="${pack.img}">
-    <button class="zone"></button>
+    <img src="${pack.img}" alt="">
+    <button class="zone tl"></button>
+    <button class="zone tr"></button>
+    <button class="zone bl"></button>
+    <button class="zone br"></button>
   `;
 
-  div.querySelector(".zone").onclick = ()=>{
-    openSearch(pack.month);
-  };
+  div.querySelectorAll(".zone").forEach((z,i)=>{
+    z.onclick = ()=>{
+      openSearch(pack.months[i] || pack.months[0]);
+    };
+  });
 
   packsDiv.appendChild(div);
 });
 
 function openSearch(month){
-  document.getElementById("monthTitle").textContent = "Recherche ton nom — " + month;
+  document.getElementById("monthTitle").textContent = "Recherche ton nom";
   search.value = "";
   results.innerHTML = "";
   modal.classList.add("open");
-  setTimeout(()=>search.focus(),200);
+  setTimeout(()=>search.focus(),150);
 }
 
 search.oninput = ()=>{
@@ -184,7 +229,7 @@ search.oninput = ()=>{
     .join("");
 };
 
-modal.onclick = e=>{
+modal.onclick = (e)=>{
   if(e.target === modal){
     modal.classList.remove("open");
   }
