@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PDF à imprimer</title>
+
 <style>
 body{
   margin:0;
@@ -32,23 +33,21 @@ h1{
   box-shadow:0 10px 0 rgba(7,24,63,.18);
   transform:rotate(-.4deg);
 }
-.pack:nth-child(even){transform:rotate(.45deg)}
+.pack:nth-child(even){
+  transform:rotate(.45deg);
+}
 .pack img{
   display:block;
   width:100%;
 }
 .zone{
   position:absolute;
-  width:50%;
-  height:50%;
+  inset:0;
   background:transparent;
   border:none;
   opacity:0;
+  cursor:pointer;
 }
-.tl{left:0;top:0}
-.tr{right:0;top:0}
-.bl{left:0;bottom:0}
-.br{right:0;bottom:0}
 .modal{
   display:none;
   position:fixed;
@@ -57,7 +56,9 @@ h1{
   align-items:flex-end;
   z-index:20;
 }
-.modal.open{display:flex}
+.modal.open{
+  display:flex;
+}
 .sheet{
   width:100%;
   background:#fffaf0;
@@ -86,14 +87,19 @@ h1{
   border-radius:16px;
   font-size:22px;
   font-weight:900;
+  color:#07183f;
+  text-decoration:none;
 }
 </style>
 </head>
+
 <body>
+
 <div class="page">
-<h1>PDF à imprimer</h1>
-<div id="packs"></div>
+  <h1>PDF à imprimer</h1>
+  <div id="packs"></div>
 </div>
+
 <div class="modal" id="modal">
   <div class="sheet">
     <h2 id="monthTitle">Recherche ton nom</h2>
@@ -104,38 +110,36 @@ h1{
 
 <script>
 const packs = [
-  {img:"actifs/mois/01.2026.jpg", months:["2026-01"]},
-  {img:"actifs/mois/02.2026.jpg", months:["2026-02"]},
-  {img:"actifs/mois/03.2026.jpg", months:["2026-03"]},
-  {img:"actifs/mois/04.2026.jpg", months:["2026-04"]},
-  {img:"actifs/mois/05.2026.jpg", months:["2026-05"]},
-  {img:"actifs/mois/06.2026.jpg", months:["2026-06"]},
-  {img:"actifs/mois/07.2026.jpg", months:["2026-07"]},
-  {img:"actifs/mois/08.2026.jpg", months:["2026-08"]},
-  {img:"actifs/mois/09.2026.jpg", months:["2026-09"]},
-  {img:"actifs/mois/10.2026.jpg", months:["2026-10"]},
-  {img:"actifs/mois/11.2026.jpg", months:["2026-11"]},
-  {img:"actifs/mois/12.2026.jpg", months:["2026-12"]},
+  {img:"actifs/mois/01.2026.jpg", month:"2026-01"},
+  {img:"actifs/mois/02.2026.jpg", month:"2026-02"},
+  {img:"actifs/mois/03.2026.jpg", month:"2026-03"},
+  {img:"actifs/mois/04.2026.jpg", month:"2026-04"},
+  {img:"actifs/mois/05.2026.jpg", month:"2026-05"},
+  {img:"actifs/mois/06.2026.jpg", month:"2026-06"},
+  {img:"actifs/mois/07.2026.jpg", month:"2026-07"},
+  {img:"actifs/mois/08.2026.jpg", month:"2026-08"},
+  {img:"actifs/mois/09.2026.jpg", month:"2026-09"},
+  {img:"actifs/mois/10.2026.jpg", month:"2026-10"},
+  {img:"actifs/mois/11.2026.jpg", month:"2026-11"},
+  {img:"actifs/mois/12.2026.jpg", month:"2026-12"},
 
-  {img:"actifs/mois/01.2027.jpg", months:["2027-01"]},
-  {img:"actifs/mois/02.2027.jpg", months:["2027-02"]},
-  {img:"actifs/mois/03.2027.jpg", months:["2027-03"]},
-  {img:"actifs/mois/04.2027.jpg", months:["2027-04"]},
-  {img:"actifs/mois/05.2027.jpg", months:["2027-05"]},
-  {img:"actifs/mois/06.2027.jpg", months:["2027-06"]},
-  {img:"actifs/mois/07.2027.jpg", months:["2027-07"]},
-  {img:"actifs/mois/08.2027.jpg", months:["2027-08"]},
-  {img:"actifs/mois/09.2027.jpg", months:["2027-09"]},
-  {img:"actifs/mois/10.2027.jpg", months:["2027-10"]},
-  {img:"actifs/mois/11.2027.jpg", months:["2027-11"]},
-  {img:"actifs/mois/12.2027.jpg", months:["2027-12"]}
+  {img:"actifs/mois/01.2027.jpg", month:"2027-01"},
+  {img:"actifs/mois/02.2027.jpg", month:"2027-02"},
+  {img:"actifs/mois/03.2027.jpg", month:"2027-03"},
+  {img:"actifs/mois/04.2027.jpg", month:"2027-04"},
+  {img:"actifs/mois/05.2027.jpg", month:"2027-05"},
+  {img:"actifs/mois/06.2027.jpg", month:"2027-06"},
+  {img:"actifs/mois/07.2027.jpg", month:"2027-07"},
+  {img:"actifs/mois/08.2027.jpg", month:"2027-08"},
+  {img:"actifs/mois/09.2027.jpg", month:"2027-09"},
+  {img:"actifs/mois/10.2027.jpg", month:"2027-10"},
+  {img:"actifs/mois/11.2027.jpg", month:"2027-11"},
+  {img:"actifs/mois/12.2027.jpg", month:"2027-12"}
 ];
-  
+
 const agents = [
   {name:"TEST AGENT", pdf:"#"}
 ];
-
-let currentMonth = "";
 
 const packsDiv = document.getElementById("packs");
 const modal = document.getElementById("modal");
@@ -143,40 +147,49 @@ const search = document.getElementById("search");
 const results = document.getElementById("results");
 
 packs.forEach(pack=>{
-  const div=document.createElement("div");
-  div.className="pack";
-  div.innerHTML=`<img src="${pack.img}" style="width:100%;height:100%;object-fit:cover;border-radius:18px;">
-    <button class="zone tl"></button>
-    <button class="zone tr"></button>
-    <button class="zone bl"></button>
-    <button class="zone br"></button>`;
-  div.querySelectorAll(".zone").forEach((z,i)=>{
-    z.onclick=()=>openSearch(pack.months[i]);
-  });
+  const div = document.createElement("div");
+  div.className = "pack";
+
+  div.innerHTML = `
+    <img src="${pack.img}">
+    <button class="zone"></button>
+  `;
+
+  div.querySelector(".zone").onclick = ()=>{
+    openSearch(pack.month);
+  };
+
   packsDiv.appendChild(div);
 });
 
 function openSearch(month){
-  currentMonth=month;
-  document.getElementById("monthTitle").textContent="Recherche ton nom — "+month;
-  search.value="";
-  results.innerHTML="";
+  document.getElementById("monthTitle").textContent = "Recherche ton nom — " + month;
+  search.value = "";
+  results.innerHTML = "";
   modal.classList.add("open");
   setTimeout(()=>search.focus(),200);
 }
 
-search.oninput=()=>{
-  const q=search.value.toLowerCase().trim();
-  if(q.length<2){results.innerHTML="";return;}
-  results.innerHTML=agents
-    .filter(a=>a.name.toLowerCase().includes(q))
-    .map(a=>`<a href="${a.pdf}">${a.name}</a>`)
+search.oninput = ()=>{
+  const q = search.value.toLowerCase().trim();
+
+  if(q.length < 2){
+    results.innerHTML = "";
+    return;
+  }
+
+  results.innerHTML = agents
+    .filter(a => a.name.toLowerCase().includes(q))
+    .map(a => `<a href="${a.pdf}" target="_blank">${a.name}</a>`)
     .join("");
 };
 
-modal.onclick=e=>{
-  if(e.target===modal) modal.classList.remove("open");
+modal.onclick = e=>{
+  if(e.target === modal){
+    modal.classList.remove("open");
+  }
 };
 </script>
+
 </body>
 </html>
