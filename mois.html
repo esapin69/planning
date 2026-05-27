@@ -13,7 +13,6 @@ h1{text-align:center;font-size:36px;margin:12px 0 10px;font-weight:900;text-tran
 .card{position:relative;border-radius:24px;overflow:hidden;background:white;box-shadow:0 10px 28px rgba(7,24,63,.18);border:4px solid #07183f}
 .card img{display:block;width:100%}
 .card button{position:absolute;inset:0;border:0;background:transparent;cursor:pointer}
-.missing{padding:22px;background:#fff;border:3px solid #07183f;border-radius:18px;font-size:18px;text-align:center}
 .back{display:inline-block;margin-bottom:15px;color:#07183f;text-decoration:none;font-weight:800}
 </style>
 </head>
@@ -22,11 +21,13 @@ h1{text-align:center;font-size:36px;margin:12px 0 10px;font-weight:900;text-tran
 <div class="page">
   <a class="back" href="index.html">← Retour</a>
   <h1 id="title">Choisis ton mois</h1>
-  <div class="subtitle" id="subtitle"></div>
+  <div class="subtitle">Sélectionne le mois souhaité</div>
   <div id="months"></div>
 </div>
 
 <script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxi6avzc1VByZK0kISlVxp_hE5vPJQS145w6dqwSZmgYvFJoEDmd9L2k_gEjDCr7ohG/exec";
+
 const params = new URLSearchParams(window.location.search);
 const type = params.get("type") || "jour";
 
@@ -39,7 +40,6 @@ const labels = {
 };
 
 document.getElementById("title").textContent = labels[type] || "Choisis ton mois";
-document.getElementById("subtitle").textContent = "Sélectionne le mois souhaité";
 
 function formatMonth(date){
   const mm = String(date.getMonth() + 1).padStart(2, "0");
@@ -47,56 +47,42 @@ function formatMonth(date){
   return `${mm}.${yyyy}`;
 }
 
-function nextMonth(date){
-  return new Date(date.getFullYear(), date.getMonth() + 1, 1);
-}
-
 const today = new Date();
 const visibleMonths = [formatMonth(today)];
 
 if(today.getDate() >= 20){
-  visibleMonths.push(formatMonth(nextMonth(today)));
+  visibleMonths.push(formatMonth(new Date(today.getFullYear(), today.getMonth() + 1, 1)));
 }
 
 const monthsDiv = document.getElementById("months");
 
-async function loadLinks(){
-  try{
-    const response = await fetch("liens.json?v=" + Date.now());
-    return await response.json();
-  }catch(e){
-    return {};
-  }
-}
+visibleMonths.forEach(month=>{
+  const card = document.createElement("div");
+  card.className = "card";
 
-function getTarget(type, month, links){
-  if(type === "pdf") return `pdf/${month}/`;
-  if(type === "ics") return `ics/${month}/`;
-  return links?.[type]?.[month] || "";
-}
+  card.innerHTML = `
+    <img src="Actifs/mois/${month}.jpg" alt="">
+    <button aria-label="Ouvrir ${month}"></button>
+  `;
 
-loadLinks().then(links=>{
-  visibleMonths.forEach(month=>{
-    const target = getTarget(type, month, links);
+  card.querySelector("button").onclick = ()=>{
+    if(type === "jour" || type === "nuit" || type === "stagiaires"){
+      window.location.href = `${SCRIPT_URL}?type=${type}`;
+      return;
+    }
 
-    const card = document.createElement("div");
-    card.className = "card";
+    if(type === "pdf"){
+      window.location.href = `pdf/${month}/`;
+      return;
+    }
 
-    card.innerHTML = `
-      <img src="assets/mois/${month}.jpg" alt="">
-      <button aria-label="Ouvrir ${month}"></button>
-    `;
+    if(type === "ics"){
+      window.location.href = `ics/${month}/`;
+      return;
+    }
+  };
 
-    card.querySelector("button").onclick = ()=>{
-      if(target){
-        window.location.href = target;
-      }else{
-        alert("Lien non disponible pour ce mois.");
-      }
-    };
-
-    monthsDiv.appendChild(card);
-  });
+  monthsDiv.appendChild(card);
 });
 </script>
 
