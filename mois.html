@@ -67,7 +67,7 @@ visibleMonths.forEach(month=>{
 
   card.querySelector("button").onclick = ()=>{
     if(type === "jour" || type === "nuit" || type === "stagiaires"){
-      window.location.href = `${SCRIPT_URL}?type=${type}`;
+      window.location.href = `${SCRIPT_URL}?type=${type}&month=${month}`;
       return;
     }
 
