@@ -26,8 +26,6 @@ h1{text-align:center;font-size:36px;margin:12px 0 10px;font-weight:900;text-tran
 </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzJ5MZa7x_LfYSqDqiaL50POkk7PzjrcbU9aDVZUtWb9hDhh_R1w0rK9TEkO64jSj3d/exec";
-
 const params = new URLSearchParams(window.location.search);
 const type = params.get("type") || "jour";
 
@@ -56,34 +54,34 @@ if(today.getDate() >= 20){
 
 const monthsDiv = document.getElementById("months");
 
-visibleMonths.forEach(month=>{
-  const card = document.createElement("div");
-  card.className = "card";
+fetch("liens-a-modifier.json?v=" + Date.now())
+  .then(response => response.json())
+  .then(links => {
+    visibleMonths.forEach(month => {
+      const card = document.createElement("div");
+      card.className = "card";
 
-  card.innerHTML = `
-    <img src="assets/mois/${month}.jpg" alt="${month}">
-    <button aria-label="Ouvrir ${month}"></button>
-  `;
+      card.innerHTML = `
+        <img src="assets/mois/${month}.jpg" alt="${month}">
+        <button aria-label="Ouvrir ${month}"></button>
+      `;
 
-  card.querySelector("button").onclick = ()=>{
-    if(type === "jour" || type === "nuit" || type === "stagiaires"){
-      window.location.href = `${SCRIPT_URL}?type=${type}&month=${month}`;
-      return;
-    }
+      card.querySelector("button").onclick = () => {
+        const url = links?.[type]?.[month];
 
-    if(type === "pdf"){
-      window.location.href = `pdf/${month}/`;
-      return;
-    }
+        if(url){
+          window.location.href = url;
+        } else {
+          alert("Lien pas encore disponible pour ce mois.");
+        }
+      };
 
-    if(type === "ics"){
-      window.location.href = `ics/${month}/`;
-      return;
-    }
-  };
-
-  monthsDiv.appendChild(card);
-});
+      monthsDiv.appendChild(card);
+    });
+  })
+  .catch(() => {
+    alert("Impossible de charger les liens.");
+  });
 </script>
 
 </body>
