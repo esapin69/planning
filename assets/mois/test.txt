@@ -1,1 +1,160 @@
-test
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PDF à imprimer</title>
+<style>
+body{
+  margin:0;
+  background:#fff7df;
+  font-family:"Trebuchet MS",Arial,sans-serif;
+  color:#07183f;
+}
+.page{
+  max-width:760px;
+  margin:auto;
+  padding:18px 12px 40px;
+}
+h1{
+  text-align:center;
+  font-size:42px;
+  margin:10px 0 18px;
+  text-transform:uppercase;
+  text-shadow:2px 3px 0 #d8eaf2;
+}
+.pack{
+  position:relative;
+  margin:18px 0;
+  border:4px solid #07183f;
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:0 10px 0 rgba(7,24,63,.18);
+  transform:rotate(-.4deg);
+}
+.pack:nth-child(even){transform:rotate(.45deg)}
+.pack img{
+  display:block;
+  width:100%;
+}
+.zone{
+  position:absolute;
+  width:50%;
+  height:50%;
+}
+.tl{left:0;top:0}
+.tr{right:0;top:0}
+.bl{left:0;bottom:0}
+.br{right:0;bottom:0}
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(7,24,63,.45);
+  align-items:flex-end;
+  z-index:20;
+}
+.modal.open{display:flex}
+.sheet{
+  width:100%;
+  background:#fffaf0;
+  border:4px solid #07183f;
+  border-radius:28px 28px 0 0;
+  padding:22px;
+  box-shadow:0 -12px 40px rgba(0,0,0,.25);
+}
+.sheet h2{
+  margin:0 0 12px;
+  font-size:30px;
+}
+.search{
+  width:100%;
+  font-size:24px;
+  padding:16px;
+  border:4px solid #16a9c9;
+  border-radius:18px;
+}
+.results a{
+  display:block;
+  margin:10px 0;
+  padding:15px;
+  background:#ffd23f;
+  border:3px solid #07183f;
+  border-radius:16px;
+  font-size:22px;
+  font-weight:900;
+}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>PDF à imprimer</h1>
+<div id="packs"></div>
+</div>
+<div class="modal" id="modal">
+  <div class="sheet">
+    <h2 id="monthTitle">Recherche ton nom</h2>
+    <input class="search" id="search" placeholder="Tape au moins 2 lettres">
+    <div class="results" id="results"></div>
+  </div>
+</div>
+
+<script>
+const packs = [
+  {img:"assets/mois/2026-01-04.png", months:["2026-01","2026-02","2026-03","2026-04"]},
+  {img:"assets/mois/2026-05-08.png", months:["2026-05","2026-06","2026-07","2026-08"]},
+  {img:"assets/mois/2026-09-12.png", months:["2026-09","2026-10","2026-11","2026-12"]},
+  {img:"assets/mois/2027-01-04.png", months:["2027-01","2027-02","2027-03","2027-04"]},
+  {img:"assets/mois/2027-05-08.png", months:["2027-05","2027-06","2027-07","2027-08"]},
+  {img:"assets/mois/2027-09-12.png", months:["2027-09","2027-10","2027-11","2027-12"]}
+];
+
+const agents = [
+  {name:"TEST AGENT", pdf:"#"}
+];
+
+let currentMonth = "";
+
+const packsDiv = document.getElementById("packs");
+const modal = document.getElementById("modal");
+const search = document.getElementById("search");
+const results = document.getElementById("results");
+
+packs.forEach(pack=>{
+  const div=document.createElement("div");
+  div.className="pack";
+  div.innerHTML=`<img src="${pack.img}">
+    <button class="zone tl"></button>
+    <button class="zone tr"></button>
+    <button class="zone bl"></button>
+    <button class="zone br"></button>`;
+  div.querySelectorAll(".zone").forEach((z,i)=>{
+    z.onclick=()=>openSearch(pack.months[i]);
+  });
+  packsDiv.appendChild(div);
+});
+
+function openSearch(month){
+  currentMonth=month;
+  document.getElementById("monthTitle").textContent="Recherche ton nom — "+month;
+  search.value="";
+  results.innerHTML="";
+  modal.classList.add("open");
+  setTimeout(()=>search.focus(),200);
+}
+
+search.oninput=()=>{
+  const q=search.value.toLowerCase().trim();
+  if(q.length<2){results.innerHTML="";return;}
+  results.innerHTML=agents
+    .filter(a=>a.name.toLowerCase().includes(q))
+    .map(a=>`<a href="${a.pdf}">${a.name}</a>`)
+    .join("");
+};
+
+modal.onclick=e=>{
+  if(e.target===modal) modal.classList.remove("open");
+};
+</script>
+</body>
+</html>
