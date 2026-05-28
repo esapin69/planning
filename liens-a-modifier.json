@@ -41,33 +41,32 @@
     "11.2026": "https://drive.google.com/drive/folders/1ZlpcsZZq3cjNWbuXozHZucHtVVd-o0lu",
     "12.2026": "https://drive.google.com/drive/folders/16NNZ16pBiW70RUMW8hxQmRKV0KehOGAU"
   },
-  "pdf": {
-    "01.2026": "",
-    "02.2026": "",
-    "03.2026": "",
-    "04.2026": "",
-    "05.2026": "",
-    "06.2026": "https://drive.google.com/drive/folders/16M0oWebfo8_5_NORuV9rCkw1HGLW4mKD",
-    "07.2026": "",
-    "08.2026": "",
-    "09.2026": "",
-    "10.2026": "",
-    "11.2026": "",
-    "12.2026": ""
-  },
-  "ics": {
-    "01.2026": "",
-    "02.2026": "",
-    "03.2026": "",
-    "04.2026": "",
-    "05.2026": "",
-    "06.2026": "https://drive.google.com/drive/folders/1kRUpWie_wasza4wbzN2CEqP3YSivmKGm",
-    "07.2026": "",
-    "08.2026": "",
-    "09.2026": "",
-    "10.2026": "",
-    "11.2026": "",
-    "12.2026": ""
-  }
+"pdf": {
+  "01.2026": "https://drive.google.com/drive/folders/1Hz_cL2iTXPoEBnldpPZffIl-uiBpIlSc",
+  "02.2026": "https://drive.google.com/drive/folders/1BD_atQfzZIQ-mlIom00S37J8QLUBFLwj",
+  "03.2026": "https://drive.google.com/drive/folders/1E1vqBm-5AWi2NbNlDajZB4GTAOMYpAFv",
+  "04.2026": "https://drive.google.com/drive/folders/1SyMxgsn7FuuaEXQ8OKHPlv2QgdQOmEUn",
+  "05.2026": "https://drive.google.com/drive/folders/1GRTapk6OLQfOcyryg27kH9c2VBAj-ula",
+  "06.2026": "https://drive.google.com/drive/folders/1zSUCuGeM5H4qsipVt0WITry7SEjSxchR",
+  "07.2026": "https://drive.google.com/drive/folders/12saCNdT5HL086rC3XXfAGdHd2x38WkwL",
+  "08.2026": "https://drive.google.com/drive/folders/1wlcIct_JASk9olewLpMKLfIQ8fL8d_Ab",
+  "09.2026": "https://drive.google.com/drive/folders/10J0NGEoQWHalWo10CalOYl-1VVigVKI-",
+  "10.2026": "https://drive.google.com/drive/folders/1heuegDPXICuJ7KMCbmgdIugxB6w5LZPM",
+  "11.2026": "https://drive.google.com/drive/folders/1ujFMfm1Dg7ZRiJXhqky7Xx7KhQ-EYvUk",
+  "12.2026": "https://drive.google.com/drive/folders/1DOlaDcMb683EhSFYo6FQprYw9tG5Rfq0"
+},
+"ics": {
+  "01.2026": "https://drive.google.com/drive/folders/1otNgV5-gG-anzRb3jA3JeybjCHhNcX8q",
+  "02.2026": "https://drive.google.com/drive/folders/19iCxbs8Oodfuoc_cR6eIr00Lg-XGJmo9",
+  "03.2026": "https://drive.google.com/drive/folders/1Xhj9-YzPVRVtJV6XsdiaIabIN79ml8yJ",
+  "04.2026": "https://drive.google.com/drive/folders/1GDnrbm4N0O1waXEbbBnGs_t0V3T44mZc",
+  "05.2026": "https://drive.google.com/drive/folders/1C_e0_bhbKuDj04jP_1RGkSjWA1SNXNBf",
+  "06.2026": "https://drive.google.com/drive/folders/1e4JjO0gCiDmu4foI_mhy8Sd1jaSn2uC3",
+  "07.2026": "https://drive.google.com/drive/folders/1hKiMeKmOCJ97kUr59up5Wxb0mjjpn4iR",
+  "08.2026": "https://drive.google.com/drive/folders/1wf20aPG7yxEXZGWS0FboEBb60S_LAj0_",
+  "09.2026": "https://drive.google.com/drive/folders/1ajBtBhD2EyK5ggXnHU2tlDSKkIgHmPFo",
+  "10.2026": "https://drive.google.com/drive/folders/1M3O4NthmqpaYMkUBzq8BkvnNDoxFuQOW",
+  "11.2026": "https://drive.google.com/drive/folders/17JbjyOoFDFXGH9ipm_w_WCGGX0w7hVFt",
+  "12.2026": "https://drive.google.com/drive/folders/1aa7g5N8HQZXz7ShDBmZKmAQa480jq3aa"
 }
-
+}
