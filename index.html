@@ -3,49 +3,74 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GHE Planning</title>
+<title>Planning GHE brancardier</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#fff7df;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
-.wrap{position:relative;max-width:760px;margin:0 auto}
-.home{display:block;width:100%;height:auto}
-.hotspot{position:absolute;display:block;background:transparent;border:0}
+body{
+  margin:0;
+  background:#fff7df;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+.page{
+  position:relative;
+  max-width:760px;
+  margin:0 auto;
+}
+.home{
+  display:block;
+  width:100%;
+  height:auto;
+}
+.zone{
+  position:absolute;
+  display:block;
+  background:rgba(255,0,0,0);
+  border:0;
+}
 
-.jour{left:13%;top:31.8%;width:34%;height:10.2%}
-.nuit{left:53%;top:31.2%;width:34%;height:10.8%}
-.stagiaires{left:14%;top:43.2%;width:34%;height:7.3%}
-.chefs{left:53%;top:43.2%;width:34%;height:7.3%}
+/* Boutons sur l'image */
+.jour{left:10%;top:31%;width:40%;height:12%}
+.nuit{left:52%;top:31%;width:38%;height:12%}
+.stagiaires{left:12%;top:44%;width:36%;height:8%}
+.chefs{left:52%;top:44%;width:37%;height:8%}
 
-.pdf{left:15%;top:58.4%;width:33%;height:6.3%}
-.ics{left:53%;top:58.4%;width:34%;height:6.3%}
+.pdf{left:12%;top:59%;width:36%;height:7%}
+.agenda{left:52%;top:59%;width:36%;height:7%}
 
-.ios{left:17%;top:72.4%;width:32%;height:5.8%}
-.android{left:53%;top:72.4%;width:32%;height:5.8%}
-.collectif{left:28%;top:80.2%;width:47%;height:5.8%}
+.ios{left:14%;top:73%;width:35%;height:6%}
+.android{left:52%;top:73%;width:35%;height:6%}
+.importics{left:25%;top:80%;width:52%;height:6%}
 
-.equipe{left:27%;top:89.7%;width:45%;height:4.8%}
-.changement{left:75%;top:88.2%;width:21%;height:8.8%}
+.mur{left:27%;top:90%;width:46%;height:5%}
+.changement{left:73%;top:88%;width:24%;height:10%}
 </style>
 </head>
 
 <body>
-<div class="wrap">
-<img class="home" src="assets/Home.PNG" alt="Planning GHE brancardier">
 
-  <a class="hotspot jour" href="mois.html?type=jour" aria-label="Planning jour"></a>
-  <a class="hotspot nuit" href="mois.html?type=nuit" aria-label="Planning nuit"></a>
-  <a class="hotspot stagiaires" href="mois.html?type=stagiaires" aria-label="Planning stagiaires"></a>
-  <a class="hotspot chefs" href="https://drive.google.com/drive/folders/1SxVWZlY41s0QamCSZq9M1XVTpI_Ogc9-" aria-label="Planning chefs d'équipe"></a>
+<div class="page">
+  <img class="home" src="assets/Home.PNG" alt="Planning GHE brancardier">
 
-  <a class="hotspot pdf" href="mois.html?type=pdf" aria-label="Capture et imprimer"></a>
-  <a class="hotspot ics" href="mois.html?type=ics" aria-label="Ajouter à mon agenda"></a>
+  <a class="zone jour" href="mois.html?type=jour" aria-label="Planning jour"></a>
+  <a class="zone nuit" href="mois.html?type=nuit" aria-label="Planning nuit"></a>
+  <a class="zone stagiaires" href="mois.html?type=stagiaires" aria-label="Planning stagiaires"></a>
 
-  <a class="hotspot ios" href="webcal://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics" aria-label="Agenda collectif iOS"></a>
-  <a class="hotspot android" href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com" aria-label="Agenda collectif Android"></a>
-  <a class="hotspot collectif" href="mois.html?type=collectif-ics" aria-label="Importer le fichier ICS"></a>
+  <a class="zone chefs" href="https://drive.google.com/drive/folders/1SxVWZlY41s0QamCSZq9M1XVTpI_Ogc9-" aria-label="Planning chefs d'équipe"></a>
 
-  <a class="hotspot equipe" href="https://drive.google.com/drive/folders/1jhmY4Kw-v3-E5WMus77Q73Vghwk5-Cpd" aria-label="Mur de l'équipe"></a>
-  <a class="hotspot changement" href="https://drive.google.com/drive/folders/1XI4-1avrFkj5fLUMF5vgLfPtTaH40AXt" aria-label="Demander un changement"></a>
+  <a class="zone pdf" href="mois.html?type=pdf" aria-label="Capture et imprimer"></a>
+  <a class="zone agenda" href="mois.html?type=ics" aria-label="Ajouter à mon agenda"></a>
+
+  <a class="zone ios" href="webcal://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics" aria-label="Agenda collectif iOS"></a>
+
+  <a class="zone android" href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com" aria-label="Agenda collectif Android"></a>
+
+  <a class="zone importics" href="mois.html?type=collectif-ics" aria-label="Importer le fichier ICS"></a>
+
+  <a class="zone mur" href="https://drive.google.com/drive/folders/1jhmY4Kw-v3-E5WMus77Q73Vghwk5-Cpd" aria-label="Mur de l'équipe"></a>
+
+  <a class="zone changement" href="https://drive.google.com/drive/folders/1XI4-1avrFkj5fLUMF5vgLfPtTaH40AXt" aria-label="Demander un changement"></a>
 </div>
+
 </body>
 </html>
