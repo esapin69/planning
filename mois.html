@@ -30,11 +30,12 @@ const params = new URLSearchParams(window.location.search);
 const type = params.get("type") || "jour";
 
 const labels = {
-  jour: "Planning équipe du jour",
+  jour: "Esprit d’équipe du jour",
   nuit: "Planning équipe de nuit",
   stagiaires: "Planning stagiaires",
   pdf: "PDF à imprimer",
-  ics: "Sur ton agenda"
+  ics: "Sur ton agenda",
+  "collectif-ics": "Télécharger le fichier ICS"
 };
 
 document.getElementById("title").textContent = labels[type] || "Choisis ton mois";
