@@ -1,124 +1,203 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Choisis ton mois</title>
-<style>
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#fff7df;color:#07183f}
-.page{max-width:900px;margin:auto;padding:20px}
-h1{text-align:center;font-size:36px;margin:12px 0 10px;font-weight:900;text-transform:uppercase}
-.subtitle{text-align:center;font-size:20px;margin-bottom:24px}
-#months{display:grid;grid-template-columns:1fr;gap:22px}
-.card{position:relative;border-radius:24px;overflow:hidden;background:white;box-shadow:0 10px 28px rgba(7,24,63,.18);border:4px solid #07183f}
-.card img{display:block;width:100%}
-.card button{position:absolute;inset:0;border:0;background:transparent;cursor:pointer}
-.back{display:inline-block;margin-bottom:15px;color:#07183f;text-decoration:none;font-weight:800}
-</style>
-</head>
-<body>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>GHE Planning</title>
+  <meta name="description" content="Planning brancardier GHE : accès rapide aux plannings, planning personnel et agenda collectif.">
+  <meta name="theme-color" content="#fff7df">
 
-<div class="page">
-  <a class="back" href="index.html">← Retour</a>
-  <h1 id="title">Choisis ton mois</h1>
-  <div class="subtitle">Sélectionne le mois souhaité</div>
-  <div id="months"></div>
-</div>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
-<script>
-const params = new URLSearchParams(window.location.search);
-const type = params.get("type") || "jour";
+  <meta property="og:title" content="GHE Planning Brancardier">
+  <meta property="og:description" content="Consulter les plannings et calendriers de l’équipe GHE.">
+  <meta property="og:image" content="og-image.jpg">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
 
-const labels = {
-  jour: "Esprit d’équipe du jour",
-  nuit: "Planning équipe de nuit",
-  stagiaires: "Planning stagiaires",
-  pdf: "PDF à imprimer",
-  ics: "Sur ton agenda",
-  "collectif-ics": "Télécharger le fichier ICS"
-};
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-const monthImageNames = {
-  "01.2026": "Janvier 2026.PNG",
-  "02.2026": "Février 2026.PNG",
-  "03.2026": "Mars 2026.PNG",
-  "04.2026": "Avril 2026.PNG",
-  "05.2026": "Mai 2026.PNG",
-  "06.2026": "Juin 2026.PNG",
-  "07.2026": "Juillet 2026.PNG",
-  "08.2026": "Août 2026.PNG",
-  "09.2026": "Septembre 2026.PNG",
-  "10.2026": "Octobre 2026.PNG",
-  "11.2026": "Novembre 2026.PNG",
-  "12.2026": "Décembre 2026.PNG",
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #fff7df;
+      color: #07183f;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
 
-  "01.2027": "Janvier 2027.PNG",
-  "02.2027": "Février 2027.PNG",
-  "03.2027": "Mars 2027.PNG",
-  "04.2027": "Avril 2027.PNG",
-  "05.2027": "Mai 2027.PNG",
-  "06.2027": "Juin 2027.PNG",
-  "07.2027": "Juillet 2027.PNG",
-  "08.2027": "Août 2027.PNG",
-  "09.2027": "Septembre 2027.PNG",
-  "10.2027": "Octobre 2027.PNG",
-  "11.2027": "Novembre 2027.PNG",
-  "12.2027": "Décembre 2027.PNG"
-};
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-document.getElementById("title").textContent = labels[type] || "Choisis ton mois";
+    .home-wrap {
+      position: relative;
+      width: min(100vw, 760px);
+      margin: 0 auto;
+      background: #fff7df;
+    }
 
-function formatMonth(date){
-  const mm = String(date.getMonth() + 1).padStart(2, "0");
-  const yyyy = date.getFullYear();
-  return `${mm}.${yyyy}`;
-}
+    .home-img {
+      display: block;
+      width: 100%;
+      height: auto;
+      user-select: none;
+      -webkit-user-select: none;
+      pointer-events: none;
+    }
 
-const today = new Date();
-const visibleMonths = [formatMonth(today)];
+    .hotspot {
+      position: absolute;
+      display: block;
+      z-index: 5;
+      background: rgba(255, 0, 0, 0);
+      -webkit-tap-highlight-color: transparent;
+      border-radius: 18px;
+    }
 
-if(today.getDate() >= 20){
-  visibleMonths.push(formatMonth(new Date(today.getFullYear(), today.getMonth() + 1, 1)));
-}
+    .hotspot:focus-visible {
+      outline: 3px solid rgba(0, 107, 255, .85);
+      outline-offset: 3px;
+    }
 
-const monthsDiv = document.getElementById("months");
+    /*
+      Les positions sont en pourcentage de l’image.
+      Si un bouton tombe un peu à côté, on ajuste uniquement ces valeurs.
+    */
 
-fetch("./liens-a-modifier.json?v=" + Date.now())
-  .then(response => response.json())
-  .then(links => {
-    visibleMonths.forEach(month => {
-      const card = document.createElement("div");
-      card.className = "card";
+    /* Bloc 1 — Planning officiel */
+    .btn-jour {
+      left: 10%;
+      top: 25.8%;
+      width: 37%;
+      height: 6.5%;
+    }
 
-      const imageName = monthImageNames[month];
+    .btn-nuit {
+      left: 53%;
+      top: 25.8%;
+      width: 37%;
+      height: 6.5%;
+    }
 
-      if(!imageName){
-        console.warn("Image manquante pour le mois :", month);
-        return;
+    .btn-stagiaires {
+      left: 12%;
+      top: 33.1%;
+      width: 34%;
+      height: 5.3%;
+    }
+
+    .btn-chefs {
+      left: 54%;
+      top: 33.1%;
+      width: 34%;
+      height: 5.3%;
+    }
+
+    /* Bloc 2 — Planning personnel */
+    .btn-pdf {
+      left: 9%;
+      top: 48.9%;
+      width: 39%;
+      height: 6.2%;
+    }
+
+    .btn-ics-perso {
+      left: 53%;
+      top: 48.9%;
+      width: 38%;
+      height: 6.2%;
+    }
+
+    /* Bloc 3 — Agenda collectif */
+    .btn-ios {
+      left: 9%;
+      top: 67.1%;
+      width: 38%;
+      height: 5.8%;
+    }
+
+    .btn-android {
+      left: 53%;
+      top: 67.1%;
+      width: 38%;
+      height: 5.8%;
+    }
+
+    .btn-collectif-ics {
+      left: 22%;
+      top: 74.2%;
+      width: 56%;
+      height: 5.4%;
+    }
+
+    /* Bas de page */
+    .btn-mur-equipe {
+      left: 24%;
+      top: 88.1%;
+      width: 52%;
+      height: 4.6%;
+    }
+
+    .btn-changement {
+      left: 78%;
+      top: 92.6%;
+      width: 14%;
+      height: 3.8%;
+      border-radius: 999px;
+    }
+
+    @media (min-width: 761px) {
+      body {
+        background:
+          radial-gradient(circle at 10% 10%, rgba(0,107,255,.10), transparent 25%),
+          radial-gradient(circle at 90% 90%, rgba(255,207,56,.20), transparent 30%),
+          #fff7df;
       }
 
-      card.innerHTML = `
-        <img src="assets/mois/${imageName}" alt="${month}">
-        <button aria-label="Ouvrir ${month}"></button>
-      `;
+      .home-wrap {
+        box-shadow: 0 18px 60px rgba(7,24,63,.18);
+      }
+    }
+  </style>
+</head>
 
-      card.querySelector("button").onclick = () => {
-        const url = links?.[type]?.[month];
+<body>
+  <main class="home-wrap" aria-label="Accueil Planning GHE">
 
-        if(url){
-          window.location.href = url;
-        } else {
-          alert("Lien pas encore disponible pour ce mois.");
-        }
-      };
+    <img
+      class="home-img"
+      src="assets/home.jpg"
+      alt="Planning GHE brancardier"
+    >
 
-      monthsDiv.appendChild(card);
-    });
-  })
-  .catch(() => {
-    alert("Impossible de charger les liens.");
-  });
-</script>
+    <!-- Planning officiel -->
+    <a class="hotspot btn-jour" href="mois.html?type=jour" aria-label="Planning jour"></a>
+    <a class="hotspot btn-nuit" href="mois.html?type=nuit" aria-label="Planning nuit"></a>
+    <a class="hotspot btn-stagiaires" href="mois.html?type=stagiaires" aria-label="Planning stagiaires"></a>
+    <a class="hotspot btn-chefs" href="https://drive.google.com/drive/folders/1SxVWZlY41s0QamCSZq9M1XVTpI_Ogc9-" aria-label="Planning chefs d'équipe"></a>
 
+    <!-- Planning personnel -->
+    <a class="hotspot btn-pdf" href="mois.html?type=pdf" aria-label="Capture et impression du planning personnel"></a>
+    <a class="hotspot btn-ics-perso" href="mois.html?type=ics" aria-label="Ajouter le planning personnel à mon agenda"></a>
+
+    <!-- Agenda collectif -->
+    <a class="hotspot btn-ios" href="webcal://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics" aria-label="S'abonner sur iOS"></a>
+
+    <a class="hotspot btn-android" href="https://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics" aria-label="S'abonner sur Android ou Google Agenda"></a>
+
+    <a class="hotspot btn-collectif-ics" href="mois.html?type=collectif-ics" aria-label="Télécharger le fichier ICS collectif"></a>
+
+    <!-- Bonus discret -->
+    <a class="hotspot btn-mur-equipe" href="https://drive.google.com/drive/folders/1jhmY4Kw-v3-E5WMus77Q73Vghwk5-Cpd" aria-label="Ouvrir le mur de l'équipe"></a>
+
+    <a class="hotspot btn-changement" href="https://drive.google.com/drive/folders/1XI4-1avrFkj5fLUMF5vgLfPtTaH40AXt" aria-label="Demander un changement"></a>
+
+  </main>
 </body>
 </html>
