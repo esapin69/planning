@@ -18,7 +18,7 @@
   <style>
     :root {
       --ink:#07183f; --blue:#006bff; --navy:#061a44; --cyan:#16a9c9;
-      --green:#16823c; --yellow:#ffcf38;
+      --green:#16823c; --yellow:#ffcf38; --purple:#7c3aed;
     }
 
     * { box-sizing:border-box; }
@@ -174,12 +174,20 @@
     .teal { background:linear-gradient(180deg,#22bed2,#118ca0); }
     .green { background:linear-gradient(180deg,#24a84c,#14782e); }
     .gold { background:linear-gradient(180deg,#ffd95f,#ffb821); border-color:#8a5a00; }
+    .purple { background:linear-gradient(180deg,#a855f7,#6d28d9); border-color:#3b0764; }
     .light { background:linear-gradient(180deg,#fffefa,#fff4d4); color:#283244; border-color:#3a4253; }
 
     .wide-under {
       margin:11px auto 0;
       width:88%;
       min-height:50px;
+    }
+
+    .wide-under.slim {
+      width:82%;
+      min-height:48px;
+      font-size:clamp(18px,5.2vw,28px);
+      transform:rotate(.8deg);
     }
   </style>
 </head>
@@ -226,12 +234,14 @@
 
       <section class="module">
         <h2 class="module-title">Qui travaille et à quelle heure ?</h2>
-        <p class="module-sub">Agenda collectif :</p>
+        <p class="module-sub">Abonne-toi à l’agenda collectif :</p>
 
         <div class="btn-row">
           <a class="toon-btn blue" href="webcal://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics"> iOS</a>
           <a class="toon-btn green" href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com">Android</a>
         </div>
+
+        <a class="toon-btn purple wide-under slim" href="mois.html?type=collectif-ics">Télécharger ICS</a>
       </section>
 
     </main>
