@@ -1,203 +1,51 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>GHE Planning</title>
-  <meta name="description" content="Planning brancardier GHE : accès rapide aux plannings, planning personnel et agenda collectif.">
-  <meta name="theme-color" content="#fff7df">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GHE Planning</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#fff7df;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.wrap{position:relative;max-width:760px;margin:0 auto}
+.home{display:block;width:100%;height:auto}
+.hotspot{position:absolute;display:block;background:transparent;border:0}
 
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="favicon.ico">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+.jour{left:13%;top:31.8%;width:34%;height:10.2%}
+.nuit{left:53%;top:31.2%;width:34%;height:10.8%}
+.stagiaires{left:14%;top:43.2%;width:34%;height:7.3%}
+.chefs{left:53%;top:43.2%;width:34%;height:7.3%}
 
-  <meta property="og:title" content="GHE Planning Brancardier">
-  <meta property="og:description" content="Consulter les plannings et calendriers de l’équipe GHE.">
-  <meta property="og:image" content="og-image.jpg">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
+.pdf{left:15%;top:58.4%;width:33%;height:6.3%}
+.ics{left:53%;top:58.4%;width:34%;height:6.3%}
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+.ios{left:17%;top:72.4%;width:32%;height:5.8%}
+.android{left:53%;top:72.4%;width:32%;height:5.8%}
+.collectif{left:28%;top:80.2%;width:47%;height:5.8%}
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: #fff7df;
-      color: #07183f;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-    }
-
-    body {
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    .home-wrap {
-      position: relative;
-      width: min(100vw, 760px);
-      margin: 0 auto;
-      background: #fff7df;
-    }
-
-    .home-img {
-      display: block;
-      width: 100%;
-      height: auto;
-      user-select: none;
-      -webkit-user-select: none;
-      pointer-events: none;
-    }
-
-    .hotspot {
-      position: absolute;
-      display: block;
-      z-index: 5;
-      background: rgba(255, 0, 0, 0);
-      -webkit-tap-highlight-color: transparent;
-      border-radius: 18px;
-    }
-
-    .hotspot:focus-visible {
-      outline: 3px solid rgba(0, 107, 255, .85);
-      outline-offset: 3px;
-    }
-
-    /*
-      Les positions sont en pourcentage de l’image.
-      Si un bouton tombe un peu à côté, on ajuste uniquement ces valeurs.
-    */
-
-    /* Bloc 1 — Planning officiel */
-    .btn-jour {
-      left: 10%;
-      top: 25.8%;
-      width: 37%;
-      height: 6.5%;
-    }
-
-    .btn-nuit {
-      left: 53%;
-      top: 25.8%;
-      width: 37%;
-      height: 6.5%;
-    }
-
-    .btn-stagiaires {
-      left: 12%;
-      top: 33.1%;
-      width: 34%;
-      height: 5.3%;
-    }
-
-    .btn-chefs {
-      left: 54%;
-      top: 33.1%;
-      width: 34%;
-      height: 5.3%;
-    }
-
-    /* Bloc 2 — Planning personnel */
-    .btn-pdf {
-      left: 9%;
-      top: 48.9%;
-      width: 39%;
-      height: 6.2%;
-    }
-
-    .btn-ics-perso {
-      left: 53%;
-      top: 48.9%;
-      width: 38%;
-      height: 6.2%;
-    }
-
-    /* Bloc 3 — Agenda collectif */
-    .btn-ios {
-      left: 9%;
-      top: 67.1%;
-      width: 38%;
-      height: 5.8%;
-    }
-
-    .btn-android {
-      left: 53%;
-      top: 67.1%;
-      width: 38%;
-      height: 5.8%;
-    }
-
-    .btn-collectif-ics {
-      left: 22%;
-      top: 74.2%;
-      width: 56%;
-      height: 5.4%;
-    }
-
-    /* Bas de page */
-    .btn-mur-equipe {
-      left: 24%;
-      top: 88.1%;
-      width: 52%;
-      height: 4.6%;
-    }
-
-    .btn-changement {
-      left: 78%;
-      top: 92.6%;
-      width: 14%;
-      height: 3.8%;
-      border-radius: 999px;
-    }
-
-    @media (min-width: 761px) {
-      body {
-        background:
-          radial-gradient(circle at 10% 10%, rgba(0,107,255,.10), transparent 25%),
-          radial-gradient(circle at 90% 90%, rgba(255,207,56,.20), transparent 30%),
-          #fff7df;
-      }
-
-      .home-wrap {
-        box-shadow: 0 18px 60px rgba(7,24,63,.18);
-      }
-    }
-  </style>
+.equipe{left:27%;top:89.7%;width:45%;height:4.8%}
+.changement{left:75%;top:88.2%;width:21%;height:8.8%}
+</style>
 </head>
 
 <body>
-  <main class="home-wrap" aria-label="Accueil Planning GHE">
+<div class="wrap">
+  <img class="home" src="assets/home.jpg" alt="Planning GHE brancardier">
 
-    <img
-      class="home-img"
-      src="assets/home.jpg"
-      alt="Planning GHE brancardier"
-    >
+  <a class="hotspot jour" href="mois.html?type=jour" aria-label="Planning jour"></a>
+  <a class="hotspot nuit" href="mois.html?type=nuit" aria-label="Planning nuit"></a>
+  <a class="hotspot stagiaires" href="mois.html?type=stagiaires" aria-label="Planning stagiaires"></a>
+  <a class="hotspot chefs" href="https://drive.google.com/drive/folders/1SxVWZlY41s0QamCSZq9M1XVTpI_Ogc9-" aria-label="Planning chefs d'équipe"></a>
 
-    <!-- Planning officiel -->
-    <a class="hotspot btn-jour" href="mois.html?type=jour" aria-label="Planning jour"></a>
-    <a class="hotspot btn-nuit" href="mois.html?type=nuit" aria-label="Planning nuit"></a>
-    <a class="hotspot btn-stagiaires" href="mois.html?type=stagiaires" aria-label="Planning stagiaires"></a>
-    <a class="hotspot btn-chefs" href="https://drive.google.com/drive/folders/1SxVWZlY41s0QamCSZq9M1XVTpI_Ogc9-" aria-label="Planning chefs d'équipe"></a>
+  <a class="hotspot pdf" href="mois.html?type=pdf" aria-label="Capture et imprimer"></a>
+  <a class="hotspot ics" href="mois.html?type=ics" aria-label="Ajouter à mon agenda"></a>
 
-    <!-- Planning personnel -->
-    <a class="hotspot btn-pdf" href="mois.html?type=pdf" aria-label="Capture et impression du planning personnel"></a>
-    <a class="hotspot btn-ics-perso" href="mois.html?type=ics" aria-label="Ajouter le planning personnel à mon agenda"></a>
+  <a class="hotspot ios" href="webcal://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics" aria-label="Agenda collectif iOS"></a>
+  <a class="hotspot android" href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com" aria-label="Agenda collectif Android"></a>
+  <a class="hotspot collectif" href="mois.html?type=collectif-ics" aria-label="Importer le fichier ICS"></a>
 
-    <!-- Agenda collectif -->
-    <a class="hotspot btn-ios" href="webcal://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics" aria-label="S'abonner sur iOS"></a>
-
-    <a class="hotspot btn-android" href="https://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics" aria-label="S'abonner sur Android ou Google Agenda"></a>
-
-    <a class="hotspot btn-collectif-ics" href="mois.html?type=collectif-ics" aria-label="Télécharger le fichier ICS collectif"></a>
-
-    <!-- Bonus discret -->
-    <a class="hotspot btn-mur-equipe" href="https://drive.google.com/drive/folders/1jhmY4Kw-v3-E5WMus77Q73Vghwk5-Cpd" aria-label="Ouvrir le mur de l'équipe"></a>
-
-    <a class="hotspot btn-changement" href="https://drive.google.com/drive/folders/1XI4-1avrFkj5fLUMF5vgLfPtTaH40AXt" aria-label="Demander un changement"></a>
-
-  </main>
+  <a class="hotspot equipe" href="https://drive.google.com/drive/folders/1jhmY4Kw-v3-E5WMus77Q73Vghwk5-Cpd" aria-label="Mur de l'équipe"></a>
+  <a class="hotspot changement" href="https://drive.google.com/drive/folders/1XI4-1avrFkj5fLUMF5vgLfPtTaH40AXt" aria-label="Demander un changement"></a>
+</div>
 </body>
 </html>
