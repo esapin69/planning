@@ -4,58 +4,220 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Planning GHE</title>
+
 <style>
-body{margin:0;background:#fff7df;color:#07183f;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
-.page{max-width:760px;margin:auto;padding:24px 16px 40px}
-h1{text-align:center;font-size:54px;margin:10px 0 0;font-weight:1000}
-h2{text-align:center;margin:0 0 24px;font-size:30px;color:#0876b8}
-.box{background:#fffaf0;border:4px solid #07183f;border-radius:26px;padding:18px;margin:18px 0;box-shadow:0 10px 0 rgba(7,24,63,.18)}
-.title{font-size:28px;font-weight:1000;margin-bottom:14px;text-align:center}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.btn{display:flex;align-items:center;justify-content:center;min-height:76px;border:4px solid #07183f;border-radius:22px;color:white;font-size:25px;font-weight:1000;text-align:center;text-decoration:none;box-shadow:0 8px 0 rgba(0,0,0,.25)}
-.big{min-height:105px;font-size:34px}
-.blue{background:#0678ff}.navy{background:#06183f}.gold{background:#ffc72c;color:#fff}.purple{background:#6b35b4}.teal{background:#0799a8}.green{background:#16823c}.red{background:#d71920}
-.small{min-height:58px;font-size:21px}
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at top,#fff9e8 0,#f6edcf 55%,#efe2bb 100%);
+  color:#07183f;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+
+.page{
+  max-width:760px;
+  margin:auto;
+  padding:24px 16px 44px;
+}
+
+.header{
+  text-align:center;
+  margin:10px 0 26px;
+}
+
+h1{
+  font-size:52px;
+  line-height:.95;
+  margin:0;
+  font-weight:1000;
+  letter-spacing:1px;
+  text-shadow:0 3px 0 rgba(255,200,70,.55);
+}
+
+h2{
+  margin:10px 0 0;
+  font-size:30px;
+  color:#0876b8;
+  font-weight:1000;
+}
+
+.box{
+  position:relative;
+  background:#fff8e9;
+  border:4px solid #07183f;
+  border-radius:28px;
+  padding:24px 16px 20px;
+  margin:26px 0;
+  box-shadow:
+    0 12px 0 rgba(7,24,63,.18),
+    inset 0 0 0 2px rgba(255,199,44,.22);
+}
+
+.title{
+  display:inline-block;
+  position:relative;
+  left:50%;
+  transform:translateX(-50%) rotate(-1deg);
+  background:#ead39a;
+  color:#07183f;
+  border:3px solid #07183f;
+  border-radius:10px;
+  padding:8px 18px;
+  margin:-8px auto 20px;
+  font-size:26px;
+  font-weight:1000;
+  text-align:center;
+  box-shadow:0 6px 0 rgba(7,24,63,.2);
+  text-transform:uppercase;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+
+.btn{
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:84px;
+  padding:12px;
+  border:4px solid #07183f;
+  border-radius:24px;
+  color:#f8f0dc;
+  font-size:24px;
+  font-weight:1000;
+  line-height:1.05;
+  text-align:center;
+  text-decoration:none;
+  letter-spacing:.3px;
+  box-shadow:
+    0 9px 0 rgba(0,0,0,.28),
+    inset 0 0 0 3px rgba(255,199,44,.5);
+  text-shadow:0 2px 0 rgba(0,0,0,.28);
+}
+
+.btn::after{
+  content:"";
+  position:absolute;
+  inset:8px;
+  border:2px dashed rgba(255,218,110,.55);
+  border-radius:17px;
+  pointer-events:none;
+}
+
+.btn::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(255,255,255,.22),transparent 28%),
+    linear-gradient(135deg,rgba(255,255,255,.16),transparent 45%);
+  pointer-events:none;
+}
+
+.btn span{
+  position:relative;
+  z-index:1;
+}
+
+.big{
+  min-height:108px;
+  font-size:35px;
+}
+
+.small{
+  min-height:66px;
+  font-size:22px;
+}
+
+.full{
+  grid-column:1 / -1;
+}
+
+.blue{background:linear-gradient(145deg,#0b85ff,#064fc0)}
+.navy{background:linear-gradient(145deg,#10285f,#020b24)}
+.gold{background:linear-gradient(145deg,#ffc933,#c88400)}
+.purple{background:linear-gradient(145deg,#7a3fc2,#45207f)}
+.teal{background:linear-gradient(145deg,#10a9b8,#05737f)}
+.green{background:linear-gradient(145deg,#178f42,#075e28)}
+.red{background:linear-gradient(145deg,#f21d25,#a90712)}
+.orange{background:linear-gradient(145deg,#ff9f1c,#d45b00)}
+
+.danger{
+  border-radius:26px;
+  background:radial-gradient(circle at 50% 25%,#ff3a3a,#c9000b 65%);
+}
+
+@media(max-width:520px){
+  .page{padding:18px 12px 36px}
+  h1{font-size:44px}
+  h2{font-size:26px}
+  .box{padding:22px 12px 18px}
+  .title{font-size:22px}
+  .grid{gap:13px}
+  .btn{font-size:21px;min-height:76px}
+  .big{font-size:31px;min-height:98px}
+  .small{font-size:19px}
+}
 </style>
 </head>
+
 <body>
 <div class="page">
-<h1>PLANNING GHE</h1>
-<h2>brancardier</h2>
 
-<div class="box">
-<div class="title">Planning officiel</div>
-<div class="grid">
-<a class="btn big blue" href="mois.html?type=jour">JOUR ☀️</a>
-<a class="btn big navy" href="mois.html?type=nuit">NUIT 🌙</a>
-<a class="btn gold" href="mois.html?type=stagiaires">STAGIAIRES 🎓</a>
-<a class="btn purple" href="https://drive.google.com/drive/folders/1SxVWZlY41s0QamCSZq9M1XVTpI_Ogc9-">CHEFS D’ÉQUIPE 👥</a>
-</div>
-</div>
+  <div class="header">
+    <h1>PLANNING<br>GHE</h1>
+    <h2>brancardier</h2>
+  </div>
 
-<div class="box">
-<div class="title">Mon planning personnel</div>
-<div class="grid">
-<a class="btn teal" href="mois.html?type=pdf">CAPTURE & IMPRIMER 🖨️</a>
-<a class="btn teal" href="mois.html?type=ics">AJOUTER À MON AGENDA 📅</a>
-</div>
-</div>
+  <div class="box">
+    <div class="title">Planning officiel</div>
+    <div class="grid">
+      <a class="btn big blue" href="mois.html?type=jour"><span>JOUR ☀️</span></a>
+      <a class="btn big navy" href="mois.html?type=nuit"><span>NUIT 🌙</span></a>
+      <a class="btn gold" href="mois.html?type=stagiaires"><span>STAGIAIRES 🎓</span></a>
+      <a class="btn purple" href="https://drive.google.com/drive/folders/1SxVWZlY41s0QamCSZq9M1XVTpI_Ogc9-"><span>CHEFS<br>D’ÉQUIPE 👥</span></a>
+    </div>
+  </div>
 
-<div class="box">
-<div class="title">Infos équipe du jour</div>
-<div class="grid">
-<a class="btn blue" href="webcal://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics">iOS 🍎</a>
-<a class="btn green" href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com">ANDROID 🤖</a>
-</div>
-<a class="btn purple small" style="margin-top:14px" href="mois.html?type=collectif-ics">IMPORT MANUEL (.ICS)</a>
-</div>
+  <div class="box">
+    <div class="title">Mon planning personnel</div>
+    <div class="grid">
+      <a class="btn teal" href="mois.html?type=pdf"><span>CAPTURE<br>& IMPRIMER 🖨️</span></a>
+      <a class="btn teal" href="mois.html?type=ics"><span>AJOUTER<br>À MON AGENDA 📅</span></a>
+    </div>
+  </div>
 
-<div class="box">
-<div class="grid">
-<a class="btn purple small" href="https://drive.google.com/drive/folders/1jhmY4Kw-v3-E5WMus77Q73Vghwk5-Cpd">MUR DE L’ÉQUIPE 👥</a>
-<a class="btn red small" href="https://drive.google.com/drive/folders/1XI4-1avrFkj5fLUMF5vgLfPtTaH40AXt">DEMANDER UN CHANGEMENT 🔴</a>
-</div>
-</div>
+  <div class="box">
+    <div class="title">Formations</div>
+    <div class="grid">
+      <a class="btn orange full" href="formations.html">
+        <span>DATES<br>& FORMULAIRES 📋</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="title">Infos équipe du jour</div>
+    <div class="grid">
+      <a class="btn blue" href="webcal://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics"><span>iOS 🍎</span></a>
+      <a class="btn green" href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com"><span>ANDROID 🤖</span></a>
+      <a class="btn purple small full" href="mois.html?type=collectif-ics"><span>IMPORT MANUEL (.ICS)</span></a>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="grid">
+      <a class="btn purple small" href="https://drive.google.com/drive/folders/1jhmY4Kw-v3-E5WMus77Q73Vghwk5-Cpd"><span>MUR DE<br>L’ÉQUIPE 👥</span></a>
+      <a class="btn red danger small" href="https://drive.google.com/drive/folders/1XI4-1avrFkj5fLUMF5vgLfPtTaH40AXt"><span>DEMANDER<br>UN CHANGEMENT</span></a>
+    </div>
+  </div>
 
 </div>
 </body>
