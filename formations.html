@@ -21,10 +21,7 @@ body{
   padding:24px 16px 44px;
 }
 
-.header{
-  text-align:center;
-  margin:10px 0 26px;
-}
+.header{text-align:center;margin:10px 0 26px}
 
 h1{
   font-size:48px;
@@ -78,7 +75,7 @@ h2{
 
 .grid{
   display:grid;
-  grid-template-columns:1fr;
+  grid-template-columns:1fr 1fr;
   gap:16px;
 }
 
@@ -109,6 +106,17 @@ h2{
   inset:8px;
   border:2px dashed rgba(255,218,110,.55);
   border-radius:17px;
+  pointer-events:none;
+}
+
+.btn::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(255,255,255,.22),transparent 28%),
+    linear-gradient(135deg,rgba(255,255,255,.16),transparent 45%);
+  pointer-events:none;
 }
 
 .btn span{
@@ -116,21 +124,22 @@ h2{
   z-index:1;
 }
 
+.full{grid-column:1 / -1}
+.small{min-height:62px;font-size:21px}
+
 .orange{background:linear-gradient(145deg,#ff9f1c,#d45b00)}
 .blue{background:linear-gradient(145deg,#0b85ff,#064fc0)}
+.green{background:linear-gradient(145deg,#178f42,#075e28)}
 .purple{background:linear-gradient(145deg,#7a3fc2,#45207f)}
 .navy{background:linear-gradient(145deg,#10285f,#020b24)}
-
-.small{
-  min-height:62px;
-  font-size:21px;
-}
 
 @media(max-width:520px){
   .page{padding:18px 12px 36px}
   h1{font-size:42px}
   h2{font-size:23px}
+  .box{padding:22px 12px 18px}
   .title{font-size:21px}
+  .grid{gap:13px}
   .btn{font-size:21px;min-height:80px}
   .small{font-size:19px}
 }
@@ -142,36 +151,56 @@ h2{
 
   <div class="header">
     <h1>FORMATIONS</h1>
-    <h2>dates, documents & retours</h2>
-  </div>
-
-  <div class="box">
-    <div class="title">Dates formations</div>
-    <p class="text">
-      Consulte ici les dates, horaires et documents mis à jour.
-    </p>
-    <div class="grid">
-      <a class="btn orange" href="https://drive.google.com/drive/folders/16_VrofzHjShXW4uhXKeeugsPdQURDdyk" target="_blank" rel="noopener">
-        <span>OUVRIR LES DATES<br>DE FORMATION 📁</span>
-      </a>
-    </div>
+    <h2>convocations, calendrier & retours</h2>
   </div>
 
   <div class="box">
     <div class="title">Retour formation</div>
     <p class="text">
-      Après une formation, remplis le formulaire pour indiquer ce qui a été dit.
+      Tu reviens d’une formation ? Partage les informations importantes avec l’équipe.
     </p>
     <div class="grid">
-      <a class="btn blue" href="https://docs.google.com/forms/d/1toa3uNjlocKOdH_Y41UQSF2QNm_CtmKEX6Kb1o0AHrs/viewform" target="_blank" rel="noopener">
-        <span>REMPLIR LE<br>FORMULAIRE 📝</span>
+      <a class="btn orange full" href="https://docs.google.com/forms/d/1toa3uNjlocKOdH_Y41UQSF2QNm_CtmKEX6Kb1o0AHrs/viewform" target="_blank" rel="noopener">
+        <span>COMPTE-RENDU<br>DE FORMATION 📝</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="title">Convocations officielles</div>
+    <p class="text">
+      Consulte les PDF officiels : dates, horaires et agents convoqués.
+    </p>
+    <div class="grid">
+      <a class="btn blue full" href="https://drive.google.com/drive/folders/1QZowEb7jxOmzQIl2yKx6KGB9RdvCxP6w" target="_blank" rel="noopener">
+        <span>OUVRIR LES<br>PDF OFFICIELS 📄</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="title">Gestion formations</div>
+    <p class="text">
+      Accès organisation : calendrier global et fichiers ICS des formations.
+    </p>
+    <div class="grid">
+      <a class="btn blue" href="webcal://calendar.google.com/calendar/ical/c5da5df12db0eba65a14410cada08fea4e5a8037ddd256b03e7426cb22cb751b%40group.calendar.google.com/public/basic.ics">
+        <span>iOS 🍎</span>
+      </a>
+
+      <a class="btn green" href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fical%2Fc5da5df12db0eba65a14410cada08fea4e5a8037ddd256b03e7426cb22cb751b%2540group.calendar.google.com%2Fpublic%2Fbasic.ics" target="_blank" rel="noopener">
+        <span>ANDROID 🤖</span>
+      </a>
+
+      <a class="btn purple small full" href="https://drive.google.com/drive/folders/1D9sjfbM4kZPmp5-qIH4SZuzn6U6k-tDY" target="_blank" rel="noopener">
+        <span>IMPORT MANUEL (.ICS)</span>
       </a>
     </div>
   </div>
 
   <div class="box">
     <div class="grid">
-      <a class="btn navy small" href="index.html">
+      <a class="btn navy small full" href="/">
         <span>RETOUR ACCUEIL ⬅️</span>
       </a>
     </div>
