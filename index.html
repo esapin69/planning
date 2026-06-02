@@ -16,16 +16,8 @@ body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
 }
 
-.page{
-  max-width:760px;
-  margin:auto;
-  padding:24px 16px 44px;
-}
-
-.header{
-  text-align:center;
-  margin:10px 0 26px;
-}
+.page{max-width:760px;margin:auto;padding:24px 16px 44px}
+.header{text-align:center;margin:10px 0 26px}
 
 h1{
   font-size:52px;
@@ -36,12 +28,7 @@ h1{
   text-shadow:0 3px 0 rgba(255,200,70,.55);
 }
 
-h2{
-  margin:10px 0 0;
-  font-size:30px;
-  color:#0876b8;
-  font-weight:1000;
-}
+h2{margin:10px 0 0;font-size:30px;color:#0876b8;font-weight:1000}
 
 .box{
   position:relative;
@@ -50,9 +37,7 @@ h2{
   border-radius:28px;
   padding:24px 16px 20px;
   margin:26px 0;
-  box-shadow:
-    0 12px 0 rgba(7,24,63,.18),
-    inset 0 0 0 2px rgba(255,199,44,.22);
+  box-shadow:0 12px 0 rgba(7,24,63,.18), inset 0 0 0 2px rgba(255,199,44,.22);
 }
 
 .title{
@@ -73,11 +58,8 @@ h2{
   text-transform:uppercase;
 }
 
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:16px;
-}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 
 .btn{
   position:relative;
@@ -96,9 +78,7 @@ h2{
   text-align:center;
   text-decoration:none;
   letter-spacing:.3px;
-  box-shadow:
-    0 9px 0 rgba(0,0,0,.28),
-    inset 0 0 0 3px rgba(255,199,44,.5);
+  box-shadow:0 9px 0 rgba(0,0,0,.28), inset 0 0 0 3px rgba(255,199,44,.5);
   text-shadow:0 2px 0 rgba(0,0,0,.28);
 }
 
@@ -121,24 +101,11 @@ h2{
   pointer-events:none;
 }
 
-.btn span{
-  position:relative;
-  z-index:1;
-}
-
-.big{
-  min-height:108px;
-  font-size:35px;
-}
-
-.small{
-  min-height:66px;
-  font-size:22px;
-}
-
-.full{
-  grid-column:1 / -1;
-}
+.btn span{position:relative;z-index:1}
+.big{min-height:108px;font-size:35px}
+.tall{min-height:150px;font-size:27px}
+.small{min-height:66px;font-size:22px}
+.full{grid-column:1 / -1}
 
 .blue{background:linear-gradient(145deg,#0b85ff,#064fc0)}
 .navy{background:linear-gradient(145deg,#10285f,#020b24)}
@@ -149,10 +116,7 @@ h2{
 .red{background:linear-gradient(145deg,#f21d25,#a90712)}
 .orange{background:linear-gradient(145deg,#ff9f1c,#d45b00)}
 
-.danger{
-  border-radius:26px;
-  background:radial-gradient(circle at 50% 25%,#ff3a3a,#c9000b 65%);
-}
+.danger{border-radius:26px;background:radial-gradient(circle at 50% 25%,#ff3a3a,#c9000b 65%)}
 
 @media(max-width:520px){
   .page{padding:18px 12px 36px}
@@ -161,8 +125,10 @@ h2{
   .box{padding:22px 12px 18px}
   .title{font-size:22px}
   .grid{gap:13px}
+  .grid-three{gap:10px}
   .btn{font-size:21px;min-height:76px}
   .big{font-size:31px;min-height:98px}
+  .tall{min-height:135px;font-size:23px}
   .small{font-size:19px}
 }
 </style>
@@ -178,10 +144,10 @@ h2{
 
   <div class="box">
     <div class="title">Planning officiel</div>
-    <div class="grid">
-      <a class="btn big blue" href="mois.html?type=jour"><span>JOUR ☀️</span></a>
-      <a class="btn big navy" href="mois.html?type=nuit"><span>NUIT 🌙</span></a>
-      <a class="btn purple full" href="https://drive.google.com/drive/folders/1SxVWZlY41s0QamCSZq9M1XVTpI_Ogc9-"><span>CHEFS D’ÉQUIPE 👥</span></a>
+    <div class="grid-three">
+      <a class="btn tall blue" href="mois.html?type=jour"><span>JOUR<br>☀️</span></a>
+      <a class="btn tall navy" href="mois.html?type=nuit"><span>NUIT<br>🌙</span></a>
+      <a class="btn tall purple" href="https://drive.google.com/drive/folders/1SxVWZlY41s0QamCSZq9M1XVTpI_Ogc9-"><span>CHEFS<br>D’ÉQUIPE<br>👥</span></a>
     </div>
   </div>
 
