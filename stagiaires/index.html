@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stagiaires</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:linear-gradient(180deg,#fff8df 0%,#eaf6ff 45%,#dbeafe 100%);
+  color:#0f172a;
+}
+
+.page{
+  max-width:760px;
+  margin:auto;
+  padding:12px 10px 34px;
+}
+
+.banner{
+  width:100%;
+  display:block;
+  border-radius:24px;
+  border:4px solid #08285f;
+  box-shadow:0 10px 0 rgba(8,40,95,.18),0 18px 34px rgba(15,23,42,.18);
+  margin-bottom:18px;
+}
+
+.intro{
+  text-align:center;
+  margin:8px 0 22px;
+}
+
+.kicker{
+  color:#0891b2;
+  font-size:12px;
+  font-weight:1000;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+
+h1{
+  margin:6px 0 8px;
+  color:#08285f;
+  font-size:34px;
+  line-height:1;
+  font-weight:1000;
+  text-shadow:0 3px 0 rgba(255,209,102,.55);
+}
+
+.status{
+  display:inline-block;
+  background:#fff7d6;
+  color:#78350f;
+  border:3px solid #f59e0b;
+  border-radius:999px;
+  padding:10px 16px;
+  font-size:15px;
+  font-weight:1000;
+}
+
+.section-title{
+  font-size:24px;
+  margin:24px 0 12px;
+  color:#08285f;
+  font-weight:1000;
+  text-transform:uppercase;
+}
+
+.cards{
+  display:grid;
+  gap:24px;
+}
+
+.card{
+  background:#fff;
+  border:4px solid #08285f;
+  border-radius:30px;
+  overflow:hidden;
+  box-shadow:0 11px 0 rgba(8,40,95,.18),0 18px 30px rgba(15,23,42,.12);
+}
+
+.card-head{
+  background:linear-gradient(135deg,#08285f,#0891b2);
+  color:white;
+  padding:18px;
+}
+
+.stagiaire{
+  font-size:28px;
+  font-weight:1000;
+  line-height:1;
+  text-transform:uppercase;
+}
+
+.count{
+  margin-top:6px;
+  font-size:14px;
+  font-weight:900;
+  opacity:.95;
+}
+
+.card-body{
+  padding:16px;
+  display:grid;
+  gap:14px;
+}
+
+.affectation{
+  background:#f8fafc;
+  border:2px solid #e2e8f0;
+  border-left:8px solid #f59e0b;
+  border-radius:22px;
+  padding:14px;
+}
+
+.date{
+  color:#08285f;
+  font-size:20px;
+  font-weight:1000;
+  margin-bottom:10px;
+}
+
+.row{
+  margin:7px 0;
+  font-size:16px;
+  line-height:1.35;
+}
+
+.label{
+  color:#64748b;
+  font-size:12px;
+  font-weight:1000;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+}
+
+.value{
+  font-weight:900;
+  color:#0f172a;
+}
+
+.ref{
+  margin-top:12px;
+  background:#ecfdf5;
+  border-radius:18px;
+  padding:12px;
+  border-left:7px solid #22c55e;
+}
+
+.phone{
+  color:#08285f;
+  text-decoration:none;
+  font-weight:1000;
+}
+
+.empty,.error{
+  background:#fff7d6;
+  border:4px solid #f59e0b;
+  border-radius:24px;
+  padding:22px;
+  font-size:18px;
+  font-weight:1000;
+  color:#78350f;
+}
+
+.back{
+  display:block;
+  text-align:center;
+  margin-top:24px;
+  background:#08285f;
+  color:white;
+  text-decoration:none;
+  padding:14px 18px;
+  border-radius:18px;
+  font-weight:1000;
+}
+
+.footer{
+  text-align:center;
+  color:#64748b;
+  font-size:12px;
+  margin-top:24px;
+  font-weight:700;
+}
+</style>
+</head>
+
+<body>
+<div class="page">
+
+  <img class="banner" src="https://drive.google.com/uc?export=view&id=1GQCxh0xRGB3Im-U4NztNjuOeRPO_ndUx" alt="Bienvenue stagiaire">
+
+  <div class="intro">
+    <div class="kicker">Accueil stagiaires</div>
+    <h1>Fil des affectations</h1>
+    <div class="status" id="status">Chargement...</div>
+  </div>
+
+  <div class="section-title">Stagiaires à venir</div>
+  <div id="app" class="cards"></div>
+
+  <a class="back" href="/">🏠 Retour accueil</a>
+  <div class="footer" id="footer"></div>
+
+</div>
+
+<script>
+const app = document.getElementById("app");
+const statusEl = document.getElementById("status");
+const footer = document.getElementById("footer");
+
+function esc(value){
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function phoneHtml(phone){
+  if(!phone) return "Non renseigné";
+  const href = "tel:" + String(phone).replace(/\s+/g,"");
+  return `<a class="phone" href="${esc(href)}">${esc(phone)}</a>`;
+}
+
+function groupByStagiaire(items){
+  const groups = {};
+
+  items.forEach(item => {
+    const key = item.stagiaire || "Stagiaire non renseigné";
+    if(!groups[key]) groups[key] = [];
+    groups[key].push(item);
+  });
+
+  return Object.entries(groups).map(([stagiaire, affectations]) => ({
+    stagiaire,
+    affectations
+  }));
+}
+
+function affectationHtml(item){
+  return `
+    <div class="affectation">
+      <div class="date">📅 ${esc(item.dateLabel || item.dateISO)}</div>
+
+      <div class="row">
+        <div class="label">Horaire stagiaire</div>
+        <div class="value">${esc(item.codeStagiaire || "")} — ${esc(item.horaireStagiaire || "Non renseigné")}</div>
+      </div>
+
+      <div class="ref">
+        <div class="row">
+          <div class="label">Référent du jour</div>
+          <div class="value">👨‍⚕️ ${esc(item.referent || "Non renseigné")}</div>
+        </div>
+
+        <div class="row">
+          <div class="label">Horaire référent</div>
+          <div class="value">${esc(item.codeReferent || "")} — ${esc(item.horaireReferent || "Non renseigné")}</div>
+        </div>
+
+        <div class="row">
+          <div class="label">Contact</div>
+          <div class="value">🏷️ GHE : ${esc(item.ghe || "Non renseigné")}</div>
+          <div class="value">📞 Téléphone : ${phoneHtml(item.telephone)}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function stagiaireCard(group){
+  const count = group.affectations.length;
+
+  return `
+    <article class="card">
+      <div class="card-head">
+        <div class="stagiaire">🎓 ${esc(group.stagiaire)}</div>
+        <div class="count">${count} date${count > 1 ? "s" : ""} prévue${count > 1 ? "s" : ""}</div>
+      </div>
+
+      <div class="card-body">
+        ${group.affectations.map(affectationHtml).join("")}
+      </div>
+    </article>
+  `;
+}
+
+async function load(){
+  try{
+    const response = await fetch("/api/stagiaires", { cache:"no-store" });
+    const data = await response.json();
+
+    if(!data.ok){
+      throw new Error(data.error || "Réponse invalide");
+    }
+
+    const items = data.items || [];
+    const groups = groupByStagiaire(items);
+
+    statusEl.textContent = `${items.length} affectation(s) • ${groups.length} stagiaire(s)`;
+
+    if(!items.length){
+      app.innerHTML = `<div class="empty">Aucune prochaine affectation trouvée.</div>`;
+      return;
+    }
+
+    app.innerHTML = groups.map(stagiaireCard).join("");
+
+    if(data.generatedAt){
+      footer.textContent = "Dernière mise à jour : " + new Date(data.generatedAt).toLocaleString("fr-FR");
+    }
+
+  }catch(error){
+    statusEl.textContent = "Erreur de chargement";
+    app.innerHTML = `<div class="error">Impossible de charger les stagiaires pour le moment.</div>`;
+    console.error(error);
+  }
+}
+
+load();
+</script>
+</body>
+</html>
