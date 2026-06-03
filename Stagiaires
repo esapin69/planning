@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f8fafc;
+      color: #1f2937;
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .banner {
+      width: 100%;
+      border-radius: 24px;
+      box-shadow: 0 12px 30px rgba(30, 58, 95, 0.18);
+      margin-bottom: 20px;
+    }
+
+    .panel {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 24px;
+      border: 1px solid #dbeafe;
+      box-shadow: 0 10px 28px rgba(30, 58, 95, 0.10);
+    }
+
+    .top {
+      text-align: center;
+    }
+
+    .label {
+      color: #f59e0b;
+      font-weight: 900;
+      font-size: 13px;
+      letter-spacing: 1px;
+    }
+
+    h1 {
+      color: #1e3a5f;
+      margin: 8px 0;
+      font-size: 32px;
+    }
+
+    .date {
+      font-size: 16px;
+      margin-bottom: 18px;
+    }
+
+    .count {
+      display: inline-block;
+      background: #22c55e;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-weight: 900;
+      margin-bottom: 20px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 18px 0 8px;
+    }
+
+    .button {
+      display: inline-block;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      background: #f59e0b;
+      color: white;
+      font-weight: 900;
+      padding: 14px 22px;
+      border-radius: 14px;
+      font-size: 15px;
+    }
+
+    .button.blue {
+      background: #1e3a5f;
+    }
+
+    .cards {
+      margin-top: 22px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 22px;
+      border: 1px solid #dbeafe;
+      overflow: hidden;
+      margin: 18px 0;
+      box-shadow: 0 8px 22px rgba(30,58,95,0.12);
+    }
+
+    .card-header {
+      background: #1e3a5f;
+      color: white;
+      padding: 16px 18px;
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .card-body {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .info {
+      border-radius: 14px;
+      padding: 14px 16px;
+    }
+
+    .info.orange {
+      background: #fef3c7;
+      border-left: 6px solid #f59e0b;
+    }
+
+    .info.blue {
+      background: #dbeafe;
+      border-left: 6px solid #2563eb;
+    }
+
+    .info.green {
+      background: #ecfdf5;
+      border-left: 6px solid #22c55e;
+    }
+
+    .info-title {
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .6px;
+      margin-bottom: 6px;
+      color: #374151;
+    }
+
+    .big {
+      font-size: 20px;
+      font-weight: 900;
+      color: #111827;
+    }
+
+    .empty {
+      background: #fff7d6;
+      border: 1px solid #ffd84d;
+      color: #5c4300;
+      border-radius: 18px;
+      padding: 22px;
+      margin-top: 22px;
+      text-align: center;
+      font-weight: 800;
+    }
+
+    .footer {
+      text-align: center;
+      color: #6b7280;
+      font-size: 12px;
+      margin-top: 22px;
+    }
+
+    .admin {
+      display: <?!= isAdmin ? 'block' : 'none' ?>;
+      margin-top: 22px;
+      background: #111827;
+      color: white;
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      font-weight: 800;
+      color: #1e3a5f;
+    }
+
+    @media (max-width: 640px) {
+      h1 {
+        font-size: 26px;
+      }
+
+      .panel {
+        padding: 18px;
+      }
+
+      .button {
+        width: 100%;
+        box-sizing: border-box;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <div id="app" class="loading">Chargement des stagiaires du jour...</div>
+  </div>
+
+  <script>
+    google.script.run
+      .withSuccessHandler(renderPage)
+      .withFailureHandler(renderError)
+      .getPageStagiairesData();
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function renderPage(data) {
+      const stagiairesHtml = data.stagiaires.length
+        ? data.stagiaires.map((s, index) => `
+          <div class="card">
+            <div class="card-header">
+              🧑‍🎓 Stagiaire ${index + 1} — ${escapeHtml(s.stagiaire)}
+            </div>
+
+            <div class="card-body">
+              <div class="info orange">
+                <div class="info-title">HORAIRE</div>
+                <div class="big">${escapeHtml(s.codeHoraire)} — ${escapeHtml(s.horaireComplet)}</div>
+              </div>
+
+              <div class="info blue">
+                <div class="info-title">AGENT RÉFÉRENT</div>
+                <div class="big">👩‍⚕️ ${escapeHtml(s.referent)}</div>
+              </div>
+
+              <div class="info green">
+                <div>🏷️ <strong>GHE :</strong> ${escapeHtml(s.ghe)}</div>
+                <div>📞 <strong>Téléphone :</strong> ${escapeHtml(s.telephone)}</div>
+              </div>
+            </div>
+          </div>
+        `).join("")
+        : `<div class="empty">Aucun stagiaire prévu aujourd’hui.</div>`;
+
+      document.getElementById("app").className = "";
+      document.getElementById("app").innerHTML = `
+        <img class="banner" src="${escapeHtml(data.imageUrl)}">
+
+        <div class="panel">
+          <div class="top">
+            <div class="label">ACCUEIL STAGIAIRES</div>
+            <h1>Stagiaires du jour</h1>
+
+            <div class="date">📅 ${escapeHtml(data.date)}</div>
+
+            <div class="count">
+              ${data.count} stagiaire${data.count > 1 ? "s" : ""} prévu${data.count > 1 ? "s" : ""} aujourd’hui
+            </div>
+
+            <div class="actions">
+              <a class="button" href="${escapeHtml(data.lienPlanning)}" target="_blank">
+                📅 Voir le planning du mois
+              </a>
+            </div>
+          </div>
+
+          <div class="cards">
+            ${stagiairesHtml}
+          </div>
+
+          <div class="admin">
+            <h3>🛠️ Administration</h3>
+            <p>Zone réservée. Le dictionnaire agents reste une source interne et n’est pas affiché en brut.</p>
+            <button class="button blue" onclick="location.reload()">🔄 Actualiser les données</button>
+          </div>
+
+          <div class="footer">
+            Dernière mise à jour : ${escapeHtml(data.updatedAt)}<br>
+            Données affichées depuis le suivi stagiaires.
+          </div>
+        </div>
+      `;
+    }
+
+    function renderError(error) {
+      document.getElementById("app").innerHTML = `
+        <div class="panel">
+          <h1>Erreur de chargement</h1>
+          <p>${escapeHtml(error.message || error)}</p>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
