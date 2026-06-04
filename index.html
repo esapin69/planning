@@ -3,179 +3,670 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Planning GHE</title>
+<title>Planning GHE — Brancardiers</title>
 
 <style>
-*{box-sizing:border-box}
+/* =========================================================
+   PLANNING GHE — PAGE ACCUEIL
+   Direction visuelle : fait main / feutre noir épais / BD.
+   Images à placer dans :
+   assets/images/
+   01-accueil-planning-acces.jpg
+   02-mon-planning-personnel.jpg
+   03-organisation.jpg
+   04-demander-changement.jpg
+   05-abonnement-planning.jpg
+========================================================= */
 
-body{
-  margin:0;
-  background:radial-gradient(circle at top,#fff9e8 0,#f6edcf 55%,#efe2bb 100%);
-  color:#07183f;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-.page{max-width:760px;margin:auto;padding:24px 16px 44px}
-.header{text-align:center;margin:10px 0 26px}
-
-h1{
-  font-size:52px;
-  line-height:.95;
-  margin:0;
-  font-weight:1000;
-  letter-spacing:1px;
-  text-shadow:0 3px 0 rgba(255,200,70,.55);
+:root {
+  --ink: #07183f;
+  --ink2: #020b24;
+  --paper: #fff7df;
+  --paper2: #f4e7bf;
+  --shadow: rgba(3, 11, 35, .24);
+  --gold: #ffd35c;
+  --blue: #0b83ff;
+  --teal: #08aeb8;
+  --green: #16a04d;
+  --orange: #ff9917;
+  --yellow: #ffc928;
+  --red: #e9121d;
+  --purple: #7136b8;
 }
 
-h2{margin:10px 0 0;font-size:30px;color:#0876b8;font-weight:1000}
-
-.box{
-  position:relative;
-  background:#fff8e9;
-  border:4px solid #07183f;
-  border-radius:28px;
-  padding:24px 16px 20px;
-  margin:26px 0;
-  box-shadow:0 12px 0 rgba(7,24,63,.18), inset 0 0 0 2px rgba(255,199,44,.22);
+html {
+  scroll-behavior: smooth;
 }
 
-.title{
-  color:#07183f;
-  font-size:30px;
-  font-weight:1000;
-  text-align:center;
-  margin:0 0 22px;
-  text-transform:uppercase;
-  letter-spacing:.5px;
-  line-height:1.05;
-  text-shadow:0 3px 0 rgba(255,200,70,.45);
-}
-
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.grid-three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-
-.btn{
-  position:relative;
-  overflow:hidden;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:84px;
-  padding:12px;
-  border:4px solid #07183f;
-  border-radius:24px;
-  color:#f8f0dc;
-  font-size:24px;
-  font-weight:1000;
-  line-height:1.05;
-  text-align:center;
-  text-decoration:none;
-  letter-spacing:.3px;
-  box-shadow:0 9px 0 rgba(0,0,0,.28), inset 0 0 0 3px rgba(255,199,44,.5);
-  text-shadow:0 2px 0 rgba(0,0,0,.28);
-}
-
-.btn::after{
-  content:"";
-  position:absolute;
-  inset:8px;
-  border:2px dashed rgba(255,218,110,.55);
-  border-radius:17px;
-  pointer-events:none;
-}
-
-.btn::before{
-  content:"";
-  position:absolute;
-  inset:0;
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: Impact, "Arial Black", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background:
-    radial-gradient(circle at 20% 20%,rgba(255,255,255,.22),transparent 28%),
-    linear-gradient(135deg,rgba(255,255,255,.16),transparent 45%);
-  pointer-events:none;
+    radial-gradient(circle at 10% 0%, rgba(255, 255, 255, .9) 0 8%, transparent 28%),
+    radial-gradient(circle at 90% 5%, rgba(255, 231, 143, .55) 0 9%, transparent 30%),
+    linear-gradient(180deg, #fff8e5 0%, #f2e7c1 58%, #eadbac 100%);
+  min-height: 100vh;
 }
 
-.btn span{position:relative;z-index:1}
-.tall{min-height:150px;font-size:27px}
-.small{min-height:66px;font-size:22px}
-.full{grid-column:1 / -1}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: .22;
+  background-image:
+    repeating-linear-gradient(8deg, rgba(7, 24, 63, .05) 0 1px, transparent 1px 9px),
+    repeating-linear-gradient(-7deg, rgba(255, 184, 35, .08) 0 1px, transparent 1px 11px);
+  mix-blend-mode: multiply;
+}
 
-.blue{background:linear-gradient(145deg,#0b85ff,#064fc0)}
-.navy{background:linear-gradient(145deg,#10285f,#020b24)}
-.gold{background:linear-gradient(145deg,#ffc933,#c88400)}
-.purple{background:linear-gradient(145deg,#7a3fc2,#45207f)}
-.teal{background:linear-gradient(145deg,#10a9b8,#05737f)}
-.green{background:linear-gradient(145deg,#178f42,#075e28)}
-.red{background:linear-gradient(145deg,#f21d25,#a90712)}
-.orange{background:linear-gradient(145deg,#ff9f1c,#d45b00)}
+.page {
+  width: min(760px, 100%);
+  margin: auto;
+  padding: 18px 13px 48px;
+}
 
-.danger{border-radius:26px;background:radial-gradient(circle at 50% 25%,#ff3a3a,#c9000b 65%)}
+.site-header {
+  text-align: center;
+  padding: 18px 6px 20px;
+}
 
-@media(max-width:520px){
-  .page{padding:18px 12px 36px}
-  h1{font-size:44px}
-  h2{font-size:26px}
-  .box{padding:22px 12px 18px}
-  .title{font-size:27px}
-  .grid{gap:13px}
-  .grid-three{gap:10px}
-  .btn{font-size:21px;min-height:76px}
-  .tall{min-height:135px;font-size:23px}
-  .small{font-size:19px}
+.site-title {
+  margin: 0;
+  font-size: clamp(50px, 12vw, 86px);
+  line-height: .86;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-shadow:
+    0 4px 0 #ffe193,
+    2px 7px 0 rgba(7, 24, 63, .12);
+}
+
+.site-subtitle {
+  margin: 12px 0 0;
+  font-size: clamp(29px, 7vw, 48px);
+  line-height: .95;
+  color: #0778bd;
+  text-shadow: 0 3px 0 rgba(255, 211, 92, .55);
+}
+
+/* =============================
+   CARTES / BLOCS
+============================= */
+
+.hand-card {
+  position: relative;
+  margin: 24px 0 30px;
+  padding: 18px 14px 18px;
+  border: 6px solid var(--ink);
+  border-radius: 34px 29px 37px 31px;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(255,255,255,.72), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,.42), transparent 42%),
+    var(--paper);
+  box-shadow:
+    0 13px 0 rgba(7, 24, 63, .18),
+    0 16px 0 rgba(0,0,0,.12),
+    inset 0 0 0 3px rgba(255, 214, 103, .35);
+  overflow: visible;
+}
+
+.hand-card::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 2px solid rgba(255, 210, 85, .38);
+  border-radius: 25px 28px 24px 30px;
+  pointer-events: none;
+}
+
+.hand-card::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 38px 31px 41px 34px;
+  border: 2px solid rgba(7, 24, 63, .34);
+  transform: rotate(-.35deg);
+  pointer-events: none;
+}
+
+.block-title {
+  position: relative;
+  z-index: 1;
+  margin: 4px 0 18px;
+  text-align: center;
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: .7px;
+  font-size: clamp(31px, 7vw, 50px);
+  line-height: .95;
+  text-shadow:
+    0 4px 0 #ffe09a,
+    2px 6px 0 rgba(7, 24, 63, .12);
+}
+
+.block-title.small-title {
+  font-size: clamp(28px, 6.5vw, 43px);
+}
+
+/* =============================
+   IMAGES DE SECTION
+============================= */
+
+.scene-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 0 14px;
+  border: 6px solid var(--ink);
+  border-radius: 28px 25px 31px 23px;
+  box-shadow:
+    0 10px 0 rgba(7, 24, 63, .18),
+    0 13px 0 rgba(0,0,0,.12);
+  background: #fff;
+}
+
+.scene-img.tight {
+  margin-bottom: 16px;
+}
+
+.hero-card {
+  padding: 13px 12px 16px;
+  transform: rotate(-.15deg);
+}
+
+.hero-card .scene-img {
+  margin-bottom: 15px;
+}
+
+/* =============================
+   BOUTONS BASE
+============================= */
+
+.grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 14px;
+}
+
+.grid.two {
+  grid-template-columns: 1fr 1fr;
+}
+
+.grid.three {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 11px;
+}
+
+.btn {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 86px;
+  padding: 12px 10px;
+  border: 6px solid var(--ink);
+  border-radius: 27px 23px 30px 24px;
+  text-decoration: none;
+  text-align: center;
+  color: #fff9e7;
+  font-size: clamp(20px, 5vw, 31px);
+  line-height: .92;
+  letter-spacing: .4px;
+  text-transform: uppercase;
+  text-shadow:
+    0 3px 0 rgba(0,0,0,.38),
+    1px 5px 0 rgba(255, 210, 90, .34);
+  box-shadow:
+    0 9px 0 rgba(7, 24, 63, .32),
+    0 12px 0 rgba(0,0,0,.14),
+    inset 0 0 0 4px rgba(255, 226, 135, .34);
+  overflow: hidden;
+  transform: rotate(var(--tilt, 0deg));
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn > span {
+  position: relative;
+  z-index: 3;
+}
+
+.btn .emoji {
+  display: block;
+  margin-top: 6px;
+  font-size: .82em;
+  line-height: 1;
+  filter: drop-shadow(0 2px 0 rgba(7,24,63,.32));
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  z-index: 2;
+  border: 3px dashed rgba(255, 225, 142, .55);
+  border-radius: 19px 21px 18px 23px;
+  pointer-events: none;
+}
+
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.26), transparent 30%),
+    repeating-linear-gradient(-10deg, rgba(255,255,255,.08) 0 2px, transparent 2px 9px),
+    linear-gradient(135deg, rgba(255,255,255,.08), transparent 48%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.btn:active {
+  transform: translateY(4px) rotate(var(--tilt, 0deg));
+  box-shadow:
+    0 5px 0 rgba(7, 24, 63, .32),
+    0 8px 0 rgba(0,0,0,.14),
+    inset 0 0 0 4px rgba(255, 226, 135, .34);
+}
+
+/* =============================
+   VARIANTES PAR BLOC
+============================= */
+
+/* Accueil : 3 gros raccourcis */
+.quick .btn {
+  min-height: 104px;
+  font-size: clamp(18px, 4.8vw, 30px);
+}
+
+.quick-planning {
+  --tilt: -.8deg;
+  background:
+    radial-gradient(circle at 20% 18%, #65d8ff, transparent 30%),
+    linear-gradient(145deg, #19a8ff 0%, #0767d4 60%, #0645a7 100%);
+}
+
+.quick-personal {
+  --tilt: .65deg;
+  background:
+    radial-gradient(circle at 20% 18%, #72f1e6, transparent 32%),
+    linear-gradient(145deg, #14c3c1 0%, #078796 58%, #07566d 100%);
+}
+
+.quick-org {
+  --tilt: -.25deg;
+  background:
+    radial-gradient(circle at 20% 18%, #ffec7a, transparent 36%),
+    linear-gradient(145deg, #ffd443 0%, #f19910 58%, #d66600 100%);
+}
+
+/* Planning officiel */
+.official-card {
+  margin-top: 20px;
+}
+
+.official-card .btn {
+  min-height: 142px;
+  border-radius: 29px 25px 32px 24px;
+  font-size: clamp(23px, 6vw, 39px);
+}
+
+.btn-day {
+  --tilt: -.6deg;
+  background:
+    radial-gradient(circle at 25% 20%, #63dcff, transparent 32%),
+    linear-gradient(145deg, #19a9ff, #075bc8 62%, #063e9f);
+}
+
+.btn-night {
+  --tilt: .45deg;
+  background:
+    radial-gradient(circle at 35% 22%, rgba(255,255,255,.18), transparent 29%),
+    linear-gradient(145deg, #1a326f, #06183f 58%, #020817);
+}
+
+.btn-chief {
+  --tilt: -.25deg;
+  background:
+    radial-gradient(circle at 30% 20%, #d989ff, transparent 34%),
+    linear-gradient(145deg, #9547d4, #61229b 60%, #37105f);
+}
+
+/* Mon planning personnel : téléphone + papier */
+.personal-card {
+  transform: rotate(.12deg);
+}
+
+.btn-print {
+  --tilt: -.45deg;
+  background:
+    radial-gradient(circle at 20% 18%, #81f2ee, transparent 31%),
+    linear-gradient(145deg, #24c8c5, #078c96 60%, #066071);
+}
+
+.btn-agenda {
+  --tilt: .48deg;
+  background:
+    radial-gradient(circle at 20% 18%, #74e7ff, transparent 32%),
+    linear-gradient(145deg, #1bb8d6, #0785a7 58%, #075070);
+}
+
+/* Organisation : briefing / dossier */
+.org-card {
+  transform: rotate(-.1deg);
+}
+
+.btn-formations {
+  --tilt: -.55deg;
+  background:
+    radial-gradient(circle at 22% 18%, #ffe077, transparent 34%),
+    linear-gradient(145deg, #ffad23, #f27b00 56%, #c94f00);
+}
+
+.btn-stagiaires {
+  --tilt: .55deg;
+  background:
+    radial-gradient(circle at 25% 15%, #fff08e, transparent 36%),
+    linear-gradient(145deg, #ffd943, #f1aa0a 58%, #d47600);
+}
+
+/* Demander un changement : un seul bandeau rouge */
+.change-card {
+  transform: rotate(.15deg);
+}
+
+.change-btn {
+  --tilt: -.25deg;
+  width: 100%;
+  min-height: 70px;
+  margin-top: 6px;
+  border-radius: 24px 20px 26px 21px;
+  font-size: clamp(23px, 6vw, 39px);
+  color: #fff7df;
+  background:
+    radial-gradient(circle at 50% 18%, #ff6767, transparent 31%),
+    repeating-linear-gradient(-7deg, rgba(255,255,255,.08) 0 2px, transparent 2px 8px),
+    linear-gradient(145deg, #ff262f 0%, #d80714 57%, #9f0610 100%);
+  box-shadow:
+    0 8px 0 rgba(90,0,0,.38),
+    0 11px 0 rgba(0,0,0,.15),
+    inset 0 0 0 4px rgba(255, 219, 112, .28);
+}
+
+.change-btn::before {
+  border-color: rgba(255, 222, 122, .58);
+}
+
+/* S'abonner au planning */
+.subscribe-card {
+  transform: rotate(-.08deg);
+}
+
+.btn-ios {
+  --tilt: -.45deg;
+  background:
+    radial-gradient(circle at 22% 17%, #b7ecff, transparent 32%),
+    linear-gradient(145deg, #48baff, #1273d6 58%, #0c4ca4);
+}
+
+.btn-android {
+  --tilt: .45deg;
+  background:
+    radial-gradient(circle at 22% 17%, #79f08d, transparent 32%),
+    linear-gradient(145deg, #2fcf5a, #11883c 58%, #075a26);
+}
+
+.btn-ics {
+  --tilt: -.15deg;
+  grid-column: 1 / -1;
+  min-height: 78px;
+  background:
+    radial-gradient(circle at 20% 18%, #d9a8ff, transparent 32%),
+    linear-gradient(145deg, #8d53dc, #6331ad 60%, #3e176e);
+}
+
+/* =============================
+   PETITS TEXTES
+============================= */
+
+.micro-note {
+  position: relative;
+  z-index: 1;
+  margin: 12px 0 0;
+  text-align: center;
+  font-family: "Arial Black", Impact, system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.25;
+  color: rgba(7, 24, 63, .78);
+}
+
+/* =============================
+   RESPONSIVE
+============================= */
+
+@media (max-width: 520px) {
+  .page {
+    padding: 14px 10px 42px;
+  }
+
+  .site-header {
+    padding-top: 14px;
+  }
+
+  .hand-card {
+    margin: 20px 0 27px;
+    padding: 15px 11px 16px;
+    border-width: 5px;
+    border-radius: 28px 24px 31px 25px;
+  }
+
+  .scene-img {
+    border-width: 5px;
+    border-radius: 23px 20px 25px 19px;
+  }
+
+  .grid.two {
+    gap: 11px;
+  }
+
+  .grid.three {
+    gap: 8px;
+  }
+
+  .btn {
+    min-height: 78px;
+    padding: 10px 7px;
+    border-width: 5px;
+    border-radius: 23px 19px 25px 20px;
+  }
+
+  .btn::before {
+    inset: 8px;
+    border-width: 2px;
+  }
+
+  .quick .btn {
+    min-height: 92px;
+  }
+
+  .official-card .btn {
+    min-height: 132px;
+  }
+
+  .change-btn {
+    min-height: 64px;
+  }
+
+  .btn-ics {
+    min-height: 72px;
+  }
+}
+
+@media (max-width: 390px) {
+  .grid.three {
+    gap: 7px;
+  }
+
+  .official-card .btn {
+    font-size: 22px;
+  }
+
+  .quick .btn {
+    font-size: 17px;
+  }
+
+  .btn {
+    font-size: 19px;
+  }
 }
 </style>
 </head>
 
 <body>
-<div class="page">
+<main class="page">
 
-  <div class="header">
-    <h1>PLANNING<br>GHE</h1>
-    <h2>brancardier</h2>
-  </div>
+  <header class="site-header">
+    <h1 class="site-title">PLANNING<br>GHE</h1>
+    <div class="site-subtitle">brancardier</div>
+  </header>
 
-  <div class="box">
-    <div class="title">Planning officiel</div>
-    <div class="grid-three">
-      <a class="btn tall blue" href="mois.html?type=jour"><span>JOUR<br>☀️</span></a>
-      <a class="btn tall navy" href="mois.html?type=nuit"><span>NUIT<br>🌙</span></a>
-      <a class="btn tall purple" href="https://drive.google.com/drive/folders/1SxVWZlY41s0QamCSZq9M1XVTpI_Ogc9-"><span>CHEF<br>👥</span></a>
+  <!-- 1. ACCUEIL -->
+  <section class="hand-card hero-card" id="accueil">
+    <img
+      class="scene-img"
+      src="assets/images/01-accueil-planning-acces.jpg"
+      alt="Planning et accès faciles GHE"
+    >
+
+    <div class="grid three quick" aria-label="Raccourcis principaux">
+      <a class="btn quick-planning" href="#planning-officiel">
+        <span>PLANNING<span class="emoji">☀️🌙</span></span>
+      </a>
+
+      <a class="btn quick-personal" href="#mon-planning">
+        <span>MON<br>PLANNING<span class="emoji">🖨️📅</span></span>
+      </a>
+
+      <a class="btn quick-org" href="#organisation">
+        <span>ORGANI<br>SATION<span class="emoji">📋🎓</span></span>
+      </a>
     </div>
-  </div>
+  </section>
 
-  <div class="box">
-    <div class="title">Mon planning personnel</div>
-    <div class="grid">
-      <a class="btn teal" href="mois.html?type=pdf"><span>CAPTURE<br>& IMPRIMER 🖨️</span></a>
-      <a class="btn teal" href="mois.html?type=ics"><span>AJOUTER<br>À MON AGENDA 📅</span></a>
+  <!-- 2. PLANNING OFFICIEL -->
+  <section class="hand-card official-card" id="planning-officiel">
+    <h2 class="block-title">Planning officiel</h2>
+
+    <div class="grid three" aria-label="Planning officiel">
+      <a class="btn btn-day" href="mois.html?type=jour">
+        <span>JOUR<span class="emoji">☀️</span></span>
+      </a>
+
+      <a class="btn btn-night" href="mois.html?type=nuit">
+        <span>NUIT<span class="emoji">🌙</span></span>
+      </a>
+
+      <a class="btn btn-chief" href="mois.html?type=chef">
+        <span>CHEF<span class="emoji">👥</span></span>
+      </a>
     </div>
-  </div>
+  </section>
 
-  <div class="box">
-    <div class="title">Infos équipe du jour</div>
-    <div class="grid">
-      <a class="btn blue" href="webcal://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics"><span>iOS 🍎</span></a>
-      <a class="btn green" href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com"><span>ANDROID 🤖</span></a>
-      <a class="btn purple small full" href="mois.html?type=collectif-ics"><span>IMPORT MANUEL (.ICS)</span></a>
+  <!-- 3. MON PLANNING PERSONNEL -->
+  <section class="hand-card personal-card" id="mon-planning">
+    <img
+      class="scene-img tight"
+      src="assets/images/02-mon-planning-personnel.jpg"
+      alt="Agents consultant leur planning personnel sur papier, téléphone et tablette"
+    >
+
+    <h2 class="block-title small-title">Mon planning personnel</h2>
+
+    <div class="grid two" aria-label="Mon planning personnel">
+      <a class="btn btn-print" href="mois.html?type=pdf">
+        <span>CAPTURE<br>& IMPRIMER<span class="emoji">🖨️</span></span>
+      </a>
+
+      <a class="btn btn-agenda" href="mois.html?type=ics">
+        <span>AJOUTER<br>À MON AGENDA<span class="emoji">📅</span></span>
+      </a>
     </div>
-  </div>
+  </section>
 
-  <div class="box">
-    <div class="title">Organisation</div>
-    <div class="grid">
-      <a class="btn orange" href="/formations.html"><span>FORMATIONS 📋</span></a>
-      <a class="btn gold" href="/stagiaires.html">
-  <span>STAGIAIRES 🎓</span>
-</a>
+  <!-- 4. ORGANISATION -->
+  <section class="hand-card org-card" id="organisation">
+    <img
+      class="scene-img tight"
+      src="assets/images/03-organisation.jpg"
+      alt="Équipe de brancardiers autour d'un plan d'organisation"
+    >
+
+    <h2 class="block-title">Organisation</h2>
+
+    <div class="grid two" aria-label="Organisation">
+      <a class="btn btn-formations" href="/formations.html">
+        <span>FORMATIONS<span class="emoji">📋</span></span>
+      </a>
+
+      <a class="btn btn-stagiaires" href="/stagiaires.html">
+        <span>STAGIAIRES<span class="emoji">🎓</span></span>
+      </a>
     </div>
-  </div>
+  </section>
 
-  <div class="box">
-    <div class="grid">
-      <a class="btn purple small" href="https://drive.google.com/drive/folders/1jhmY4Kw-v3-E5WMus77Q73Vghwk5-Cpd"><span>MUR DE<br>L’ÉQUIPE 👥</span></a>
-      <a class="btn red danger small" href="https://drive.google.com/drive/folders/1XI4-1avrFkj5fLUMF5vgLfPtTaH40AXt"><span>DEMANDER<br>UN CHANGEMENT</span></a>
+  <!-- 5. DEMANDER UN CHANGEMENT -->
+  <section class="hand-card change-card" id="demander-changement">
+    <img
+      class="scene-img tight"
+      src="assets/images/04-demander-changement.jpg"
+      alt="Demande de changement de planning"
+    >
+
+    <a class="btn change-btn" href="https://drive.google.com/drive/folders/1XI4-1avrFkj5fLUMF5vgLfPtTaH40AXt">
+      <span>DEMANDER UN CHANGEMENT</span>
+    </a>
+  </section>
+
+  <!-- 6. S'ABONNER AU PLANNING -->
+  <section class="hand-card subscribe-card" id="abonnement">
+    <img
+      class="scene-img tight"
+      src="assets/images/05-abonnement-planning.jpg"
+      alt="Abonnement au planning avec iPhone Android et fichier ICS"
+    >
+
+    <h2 class="block-title small-title">S’abonner au planning</h2>
+
+    <div class="grid two" aria-label="S'abonner au planning">
+
+      <a class="btn btn-ios" href="webcal://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics">
+        <span>iOS<span class="emoji">🍎</span></span>
+      </a>
+
+      <a class="btn btn-android" href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com">
+        <span>ANDROID<span class="emoji">🤖</span></span>
+      </a>
+
+      <a class="btn btn-ics" href="mois.html?type=collectif-ics">
+        <span>IMPORT MANUEL (.ICS)</span>
+      </a>
     </div>
-  </div>
 
-</div>
+
+  </section>
+
+</main>
 </body>
 </html>
+
