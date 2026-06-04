@@ -18,24 +18,22 @@ body{
   overflow-x:hidden;
 }
 
-/* BANNIÈRE */
+/* BANNIÈRE TÊTE DE PAGE */
 .hero{
   width:100%;
   background:#fff7df;
   overflow:hidden;
   border-bottom:5px solid #07183f;
-  box-shadow:0 8px 0 rgba(7,24,63,.08);
 }
 
 .hero img{
   display:block;
   width:100%;
-  height:clamp(135px, 30vw, 260px);
+  height:150px;
   object-fit:cover;
   object-position:center;
 }
 
-/* Si la bannière ne charge pas */
 .hero.missing{
   min-height:150px;
   display:flex;
@@ -46,83 +44,77 @@ body{
   border:5px dashed #07183f;
   text-align:center;
   font-weight:900;
+  font-size:22px;
 }
 
 /* PAGE */
 .page{
   max-width:900px;
   margin:auto;
-  padding:18px 16px 36px;
+  padding:22px 16px 40px;
 }
 
 .back{
   display:inline-block;
-  margin-bottom:14px;
+  margin-bottom:18px;
   color:#07183f;
   text-decoration:none;
   font-weight:900;
-  font-size:16px;
+  font-size:24px;
 }
 
 /* TITRE */
 h1{
   text-align:center;
-  font-size:clamp(34px, 10vw, 54px);
+  font-size:clamp(42px, 11vw, 64px);
   line-height:.9;
-  margin:6px 0 8px;
+  margin:10px 0 12px;
   font-weight:1000;
   text-transform:uppercase;
-  letter-spacing:-1px;
+  letter-spacing:-2px;
   color:#07183f;
   text-shadow:
-    2px 2px 0 #ffffff,
-    4px 4px 0 rgba(7,24,63,.16);
+    3px 3px 0 #ffffff,
+    6px 6px 0 rgba(7,24,63,.18);
 }
 
 .subtitle{
   text-align:center;
-  font-size:18px;
-  font-weight:800;
-  margin:0 0 24px;
-  opacity:.85;
+  font-size:24px;
+  font-weight:900;
+  margin:0 0 28px;
+  opacity:.88;
 }
 
-/* CARTES MOIS EN HORIZONTAL */
-.months-track{
+/* LISTE DES CARTES */
+.months-list{
   display:flex;
-  gap:14px;
-  overflow-x:auto;
-  overflow-y:hidden;
-  scroll-snap-type:x mandatory;
-  -webkit-overflow-scrolling:touch;
-  padding:4px 22px 22px 2px;
+  flex-direction:column;
+  gap:28px;
 }
 
-.months-track::-webkit-scrollbar{
-  display:none;
-}
-
+/* CARTE PLEINE LARGEUR DANS LA PAGE */
 .card{
   position:relative;
-  flex:0 0 calc((100% - 28px) / 2.45);
-  aspect-ratio:1 / 1.28;
-  border-radius:24px;
+  width:100%;
+  border-radius:28px;
   overflow:hidden;
   background:#ffffff;
-  border:4px solid #07183f;
+  border:6px solid #07183f;
   box-shadow:
-    0 9px 0 #07183f,
-    0 16px 28px rgba(7,24,63,.20);
-  scroll-snap-align:start;
+    0 10px 0 #07183f,
+    0 18px 30px rgba(7,24,63,.18);
 }
 
+/* Image rectangle dans la carte */
 .card img{
   display:block;
   width:100%;
-  height:100%;
+  height:auto;
   object-fit:cover;
 }
 
+/* Bouton invisible sur toute la carte */
 .card button{
   position:absolute;
   inset:0;
@@ -133,37 +125,30 @@ h1{
 }
 
 .card:active{
-  transform:scale(.97);
+  transform:scale(.985);
 }
 
-/* SI UNE IMAGE DE MOIS MANQUE */
+/* Si image mois absente */
 .card.missing{
+  min-height:210px;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:16px;
+  padding:20px;
   text-align:center;
   font-weight:900;
-  font-size:16px;
+  font-size:20px;
 }
 
-/* MESSAGE ERREUR */
+/* Message erreur */
 .empty{
   background:white;
-  border:4px dashed #07183f;
-  border-radius:24px;
-  padding:22px;
+  border:5px dashed #07183f;
+  border-radius:28px;
+  padding:26px;
   text-align:center;
   font-weight:900;
-  box-shadow:0 8px 0 rgba(7,24,63,.12);
-}
-
-/* GRAND ÉCRAN : MAX 3 CARTES VISIBLES */
-@media(min-width:700px){
-  .card{
-    flex-basis:calc((100% - 28px) / 3);
-    max-width:270px;
-  }
+  font-size:20px;
 }
 </style>
 </head>
@@ -171,10 +156,7 @@ h1{
 <body>
 
 <header class="hero" id="hero">
-  <img
-    id="banner"
-    src="Image/Mois/Banni%C3%A8re%20page%20des%20Mois.PNG"
-    alt="Bannière choix du mois">
+  <img id="banner" alt="Bannière choix du mois">
 </header>
 
 <main class="page">
@@ -185,7 +167,7 @@ h1{
 
   <div class="subtitle" id="subtitle">Sélectionne le mois souhaité</div>
 
-  <div id="months" class="months-track"></div>
+  <div id="months" class="months-list"></div>
 
 </main>
 
@@ -205,15 +187,33 @@ const labels = {
 document.getElementById("subtitle").textContent =
   labels[type] || "Sélectionne le mois souhaité";
 
-/* SÉCURITÉ BANNIÈRE */
+/* BANNIÈRE : plusieurs essais pour éviter le bug accent/espace */
 const banner = document.getElementById("banner");
 const hero = document.getElementById("hero");
 
-banner.onerror = () => {
-  banner.remove();
-  hero.classList.add("missing");
-  hero.textContent = "Bannière introuvable : Image/Mois/Bannière page des Mois.PNG";
-};
+const bannerPaths = [
+  "Image/Mois/Bannière page des Mois.PNG",
+  "Image/Mois/Banni%C3%A8re%20page%20des%20Mois.PNG",
+  "./Image/Mois/Bannière page des Mois.PNG",
+  "./Image/Mois/Banni%C3%A8re%20page%20des%20Mois.PNG"
+];
+
+let bannerIndex = 0;
+
+function tryBanner(){
+  if(bannerIndex >= bannerPaths.length){
+    banner.remove();
+    hero.classList.add("missing");
+    hero.textContent = "Bannière introuvable";
+    return;
+  }
+
+  banner.src = bannerPaths[bannerIndex] + "?v=" + Date.now();
+  bannerIndex++;
+}
+
+banner.onerror = tryBanner;
+tryBanner();
 
 /* IMAGES DES MOIS */
 const monthImages = [
@@ -234,9 +234,13 @@ const monthImages = [
 const today = new Date();
 const currentMonth = today.getMonth() + 1;
 
+/*
+  MODE SIMPLE :
+  - mois actuel visible
+  - mois suivant visible à partir du 20
+*/
 let visibleMonths = monthImages.filter(month => month.number === currentMonth);
 
-/* À PARTIR DU 20, ON AFFICHE AUSSI LE MOIS SUIVANT */
 if(today.getDate() >= 20){
   const nextMonthNumber = currentMonth === 12 ? 1 : currentMonth + 1;
   visibleMonths.push(
@@ -245,10 +249,10 @@ if(today.getDate() >= 20){
 }
 
 /*
-POUR TESTER TOUTES LES CARTES VISUELLEMENT,
-décommente temporairement cette ligne :
+  SI TU VEUX AFFICHER LES 12 MOIS,
+  remplace la ligne au-dessus par celle-ci :
 
-visibleMonths = monthImages;
+  visibleMonths = monthImages;
 */
 
 const monthsDiv = document.getElementById("months");
