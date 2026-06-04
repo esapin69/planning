@@ -6,9 +6,7 @@
 <title>Choisis ton mois</title>
 
 <style>
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
   margin:0;
@@ -18,86 +16,87 @@ body{
   overflow-x:hidden;
 }
 
-/* BANNIÈRE TÊTE DE PAGE */
+/* BANNIÈRE */
 .hero{
   width:100%;
   background:#fff7df;
   overflow:hidden;
-  border-bottom:5px solid #07183f;
+  border-bottom:4px solid #07183f;
 }
 
 .hero img{
   display:block;
   width:100%;
-  height:150px;
+  height:140px;
   object-fit:cover;
   object-position:center;
 }
 
-.hero.missing{
-  min-height:150px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:18px;
-  background:white;
-  border:5px dashed #07183f;
-  text-align:center;
-  font-weight:900;
-  font-size:22px;
+/* Si la bannière ne charge pas, on cache proprement */
+.hero.hidden{
+  display:none;
 }
 
 /* PAGE */
 .page{
   max-width:900px;
   margin:auto;
-  padding:22px 16px 40px;
+  padding:20px 16px 42px;
 }
 
 .back{
   display:inline-block;
-  margin-bottom:18px;
+  margin-bottom:16px;
   color:#07183f;
   text-decoration:none;
   font-weight:900;
-  font-size:24px;
+  font-size:22px;
 }
 
-/* TITRE */
-h1{
+/* TITRE PLUS PROPRE */
+.title-box{
+  margin:4px auto 22px;
+  max-width:620px;
+  padding:16px 14px 18px;
+  background:#fffdf3;
+  border:4px solid #07183f;
+  border-radius:28px;
+  box-shadow:0 7px 0 #07183f;
   text-align:center;
-  font-size:clamp(42px, 11vw, 64px);
-  line-height:.9;
-  margin:10px 0 12px;
+}
+
+h1{
+  margin:0;
+  font-size:clamp(30px, 8vw, 46px);
+  line-height:1;
   font-weight:1000;
   text-transform:uppercase;
-  letter-spacing:-2px;
+  letter-spacing:-1px;
   color:#07183f;
   text-shadow:
-    3px 3px 0 #ffffff,
-    6px 6px 0 rgba(7,24,63,.18);
+    2px 2px 0 #ffffff,
+    4px 4px 0 rgba(7,24,63,.14);
 }
 
 .subtitle{
-  text-align:center;
-  font-size:24px;
+  margin:10px 0 0;
+  font-size:clamp(20px, 5.4vw, 28px);
   font-weight:900;
-  margin:0 0 28px;
-  opacity:.88;
+  color:#243154;
 }
 
-/* LISTE DES CARTES */
+/* CARTES MOIS */
 .months-list{
   display:flex;
   flex-direction:column;
   gap:28px;
 }
 
-/* CARTE PLEINE LARGEUR DANS LA PAGE */
+/* Carte pleine largeur utile */
 .card{
   position:relative;
   width:100%;
-  border-radius:28px;
+  border-radius:30px;
   overflow:hidden;
   background:#ffffff;
   border:6px solid #07183f;
@@ -106,15 +105,12 @@ h1{
     0 18px 30px rgba(7,24,63,.18);
 }
 
-/* Image rectangle dans la carte */
 .card img{
   display:block;
   width:100%;
   height:auto;
-  object-fit:cover;
 }
 
-/* Bouton invisible sur toute la carte */
 .card button{
   position:absolute;
   inset:0;
@@ -128,7 +124,6 @@ h1{
   transform:scale(.985);
 }
 
-/* Si image mois absente */
 .card.missing{
   min-height:210px;
   display:flex;
@@ -140,7 +135,6 @@ h1{
   font-size:20px;
 }
 
-/* Message erreur */
 .empty{
   background:white;
   border:5px dashed #07183f;
@@ -163,9 +157,10 @@ h1{
 
   <a class="back" href="index.html">← Retour</a>
 
-  <h1>Choisis ton mois</h1>
-
-  <div class="subtitle" id="subtitle">Sélectionne le mois souhaité</div>
+  <div class="title-box">
+    <h1>Choisis ton mois</h1>
+    <div class="subtitle" id="subtitle">Sélectionne le mois souhaité</div>
+  </div>
 
   <div id="months" class="months-list"></div>
 
@@ -187,24 +182,28 @@ const labels = {
 document.getElementById("subtitle").textContent =
   labels[type] || "Sélectionne le mois souhaité";
 
-/* BANNIÈRE : plusieurs essais pour éviter le bug accent/espace */
+/* BANNIÈRE : local + fallback GitHub RAW */
 const banner = document.getElementById("banner");
 const hero = document.getElementById("hero");
 
 const bannerPaths = [
   "Image/Mois/Bannière page des Mois.PNG",
   "Image/Mois/Banni%C3%A8re%20page%20des%20Mois.PNG",
+
   "./Image/Mois/Bannière page des Mois.PNG",
-  "./Image/Mois/Banni%C3%A8re%20page%20des%20Mois.PNG"
+  "./Image/Mois/Banni%C3%A8re%20page%20des%20Mois.PNG",
+
+  "/Image/Mois/Bannière page des Mois.PNG",
+  "/Image/Mois/Banni%C3%A8re%20page%20des%20Mois.PNG",
+
+  "https://raw.githubusercontent.com/esapin69/planning/main/Image/Mois/Banni%C3%A8re%20page%20des%20Mois.PNG"
 ];
 
 let bannerIndex = 0;
 
 function tryBanner(){
   if(bannerIndex >= bannerPaths.length){
-    banner.remove();
-    hero.classList.add("missing");
-    hero.textContent = "Bannière introuvable";
+    hero.classList.add("hidden");
     return;
   }
 
@@ -234,11 +233,6 @@ const monthImages = [
 const today = new Date();
 const currentMonth = today.getMonth() + 1;
 
-/*
-  MODE SIMPLE :
-  - mois actuel visible
-  - mois suivant visible à partir du 20
-*/
 let visibleMonths = monthImages.filter(month => month.number === currentMonth);
 
 if(today.getDate() >= 20){
@@ -249,10 +243,8 @@ if(today.getDate() >= 20){
 }
 
 /*
-  SI TU VEUX AFFICHER LES 12 MOIS,
-  remplace la ligne au-dessus par celle-ci :
-
-  visibleMonths = monthImages;
+Pour tester toutes les images :
+visibleMonths = monthImages;
 */
 
 const monthsDiv = document.getElementById("months");
