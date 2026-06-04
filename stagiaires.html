@@ -1,330 +1,551 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Stagiaires</title>
+  <base target="_top">
 
-<style>
-*{box-sizing:border-box}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-  background:linear-gradient(180deg,#fff8df 0%,#eaf6ff 45%,#dbeafe 100%);
-  color:#0f172a;
-}
+  <title>Planning stagiaires</title>
 
-.page{
-  max-width:760px;
-  margin:auto;
-  padding:12px 10px 34px;
-}
+  <style>
+    :root {
+      --navy: #102b63;
+      --navy-dark: #0b2558;
+      --blue: #0f8ba7;
+      --sky: #dfeeff;
+      --card: #ffffff;
+      --muted: #6c778d;
+      --green-bg: #ecfff5;
+      --green: #30c95f;
+      --orange: #f5a623;
+      --cream: #fff8df;
+      --danger: #d93535;
+      --danger-bg: #fff0f0;
+      --shadow: rgba(16, 43, 99, 0.20);
+    }
 
-.banner{
-  width:100%;
-  display:block;
-  border-radius:24px;
-  border:4px solid #08285f;
-  box-shadow:0 10px 0 rgba(8,40,95,.18),0 18px 34px rgba(15,23,42,.18);
-  margin-bottom:18px;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-.intro{
-  text-align:center;
-  margin:8px 0 22px;
-}
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        linear-gradient(180deg, #eef9ff 0%, #dcecff 55%, #fffdf1 100%);
+      color: #10172a;
+    }
 
-.kicker{
-  color:#0891b2;
-  font-size:12px;
-  font-weight:1000;
-  letter-spacing:1.5px;
-  text-transform:uppercase;
-}
+    .page {
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 18px 20px 42px;
+    }
 
-h1{
-  margin:6px 0 8px;
-  color:#08285f;
-  font-size:34px;
-  line-height:1;
-  font-weight:1000;
-  text-shadow:0 3px 0 rgba(255,209,102,.55);
-}
+    .hero {
+      border: 7px solid var(--navy);
+      border-radius: 38px;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 18px 0 rgba(16, 43, 99, 0.20);
+      margin: 8px 0 34px;
+    }
 
-.status{
-  display:inline-block;
-  background:#fff7d6;
-  color:#78350f;
-  border:3px solid #f59e0b;
-  border-radius:999px;
-  padding:10px 16px;
-  font-size:15px;
-  font-weight:1000;
-}
+    .hero img {
+      width: 100%;
+      display: block;
+    }
 
-.section-title{
-  font-size:24px;
-  margin:24px 0 12px;
-  color:#08285f;
-  font-weight:1000;
-  text-transform:uppercase;
-}
+    .top-label {
+      text-align: center;
+      color: #3a97b3;
+      font-weight: 900;
+      font-size: clamp(22px, 4vw, 30px);
+      letter-spacing: 7px;
+      margin: 0;
+    }
 
-.cards{
-  display:grid;
-  gap:24px;
-}
+    h1 {
+      text-align: center;
+      color: var(--navy);
+      font-size: clamp(48px, 10vw, 76px);
+      line-height: 0.95;
+      margin: 12px 0 22px;
+      font-weight: 1000;
+      letter-spacing: -2px;
+      text-shadow: 0 7px 0 #ffe9a3;
+    }
 
-.card{
-  background:#fff;
-  border:4px solid #08285f;
-  border-radius:30px;
-  overflow:hidden;
-  box-shadow:0 11px 0 rgba(8,40,95,.18),0 18px 30px rgba(15,23,42,.12);
-}
+    .status {
+      width: fit-content;
+      margin: 0 auto 44px;
+      padding: 16px 32px;
+      border-radius: 999px;
+      background: #fff8df;
+      color: #713915;
+      border: 5px solid var(--orange);
+      font-weight: 1000;
+      font-size: 28px;
+    }
 
-.card-head{
-  background:linear-gradient(135deg,#08285f,#0891b2);
-  color:white;
-  padding:18px;
-}
+    .section-title {
+      color: var(--navy);
+      font-size: clamp(34px, 7vw, 50px);
+      font-weight: 1000;
+      text-transform: uppercase;
+      margin: 34px 0 22px;
+      letter-spacing: -1px;
+    }
 
-.stagiaire{
-  font-size:28px;
-  font-weight:1000;
-  line-height:1;
-  text-transform:uppercase;
-}
+    .day-card {
+      background: white;
+      border: 6px solid var(--navy);
+      border-radius: 38px;
+      box-shadow: 0 22px 0 rgba(16, 43, 99, 0.18);
+      overflow: hidden;
+      margin: 0 0 34px;
+    }
 
-.count{
-  margin-top:6px;
-  font-size:14px;
-  font-weight:900;
-  opacity:.95;
-}
+    .day-header {
+      padding: 24px 30px;
+      background: linear-gradient(120deg, #0d3d7a, #0b9ab0);
+      color: white;
+    }
 
-.card-body{
-  padding:16px;
-  display:grid;
-  gap:14px;
-}
+    .day-title {
+      font-size: clamp(34px, 7vw, 50px);
+      line-height: 1;
+      font-weight: 1000;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-.affectation{
-  background:#f8fafc;
-  border:2px solid #e2e8f0;
-  border-left:8px solid #f59e0b;
-  border-radius:22px;
-  padding:14px;
-}
+    .day-count {
+      margin-top: 10px;
+      font-size: 24px;
+      font-weight: 900;
+      opacity: 0.95;
+    }
 
-.date{
-  color:#08285f;
-  font-size:20px;
-  font-weight:1000;
-  margin-bottom:10px;
-}
+    .day-body {
+      padding: 28px 30px 34px;
+    }
 
-.row{
-  margin:7px 0;
-  font-size:16px;
-  line-height:1.35;
-}
+    .assignment-card {
+      position: relative;
+      background: #fbfdff;
+      border: 4px solid #e3e8f0;
+      border-left: 18px solid var(--orange);
+      border-radius: 34px;
+      padding: 28px 28px 30px;
+      margin: 0 0 28px;
+      box-shadow: 0 12px 22px rgba(16, 43, 99, 0.06);
+    }
 
-.label{
-  color:#64748b;
-  font-size:12px;
-  font-weight:1000;
-  text-transform:uppercase;
-  letter-spacing:.8px;
-}
+    .assignment-card:last-child {
+      margin-bottom: 0;
+    }
 
-.value{
-  font-weight:900;
-  color:#0f172a;
-}
+    .assignment-card.has-alert {
+      border-left-color: var(--danger);
+    }
 
-.ref{
-  margin-top:12px;
-  background:#ecfdf5;
-  border-radius:18px;
-  padding:12px;
-  border-left:7px solid #22c55e;
-}
+    .date-line {
+      color: var(--navy);
+      font-size: clamp(32px, 6vw, 44px);
+      font-weight: 1000;
+      line-height: 1.05;
+      margin: 0 0 22px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-.phone{
-  color:#08285f;
-  text-decoration:none;
-  font-weight:1000;
-}
+    .label {
+      color: var(--muted);
+      font-size: clamp(20px, 4vw, 28px);
+      letter-spacing: 5px;
+      font-weight: 1000;
+      text-transform: uppercase;
+      margin: 20px 0 4px;
+    }
 
-.empty,.error{
-  background:#fff7d6;
-  border:4px solid #f59e0b;
-  border-radius:24px;
-  padding:22px;
-  font-size:18px;
-  font-weight:1000;
-  color:#78350f;
-}
+    .value {
+      color: #111827;
+      font-size: clamp(26px, 5.3vw, 36px);
+      font-weight: 1000;
+      line-height: 1.12;
+      margin: 0;
+    }
 
-.back{
-  display:block;
-  text-align:center;
-  margin-top:24px;
-  background:#08285f;
-  color:white;
-  text-decoration:none;
-  padding:14px 18px;
-  border-radius:18px;
-  font-weight:1000;
-}
+    .small-value {
+      color: #111827;
+      font-size: clamp(22px, 4.6vw, 31px);
+      font-weight: 1000;
+      line-height: 1.16;
+      margin: 0;
+    }
 
-.footer{
-  text-align:center;
-  color:#64748b;
-  font-size:12px;
-  margin-top:24px;
-  font-weight:700;
-}
-</style>
+    .agent-box {
+      margin-top: 28px;
+      padding: 28px 28px;
+      background: var(--green-bg);
+      border-radius: 30px;
+      border-left: 16px solid var(--green);
+    }
+
+    .agent-box.warning {
+      background: var(--danger-bg);
+      border-left-color: var(--danger);
+    }
+
+    .referent-box {
+      margin-top: 22px;
+      padding: 28px 28px;
+      background: var(--green-bg);
+      border-radius: 30px;
+      border-left: 16px solid var(--green);
+    }
+
+    .referent-box.warning {
+      background: var(--danger-bg);
+      border-left-color: var(--danger);
+    }
+
+    .line {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin: 8px 0;
+    }
+
+    .emoji {
+      flex: 0 0 auto;
+      width: 36px;
+      text-align: center;
+      font-size: 28px;
+      line-height: 1.05;
+    }
+
+    .line-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .alert-list {
+      margin-top: 22px;
+      padding: 18px 20px;
+      border-radius: 24px;
+      background: var(--danger-bg);
+      color: #7f1d1d;
+      border: 3px solid #ffd1d1;
+      font-size: 20px;
+      font-weight: 850;
+      line-height: 1.25;
+    }
+
+    .alert-list div + div {
+      margin-top: 8px;
+    }
+
+    .empty {
+      background: white;
+      border-radius: 34px;
+      padding: 34px;
+      border: 5px solid #e5e7eb;
+      color: var(--navy);
+      font-weight: 1000;
+      font-size: 28px;
+      text-align: center;
+      margin-bottom: 34px;
+    }
+
+    .home-btn {
+      width: 100%;
+      border: none;
+      border-radius: 28px;
+      background: var(--navy);
+      color: white;
+      font-size: clamp(26px, 5vw, 36px);
+      font-weight: 1000;
+      padding: 26px 20px;
+      margin: 28px 0;
+      cursor: pointer;
+    }
+
+    .footer {
+      color: #65758f;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 900;
+      margin: 22px 0 0;
+    }
+
+    .mini {
+      font-size: 18px;
+      font-weight: 800;
+      color: #6b7280;
+      margin-top: 6px;
+      word-break: break-word;
+    }
+
+    .refresh-btn {
+      display: block;
+      margin: 10px auto 28px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 900;
+      font-size: 18px;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    @media (max-width: 420px) {
+      .page {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .day-body {
+        padding: 24px 20px 28px;
+      }
+
+      .assignment-card {
+        padding: 24px 18px 26px;
+      }
+
+      .agent-box,
+      .referent-box {
+        padding: 24px 18px;
+      }
+    }
+  </style>
 </head>
 
 <body>
-<div class="page">
+  <div class="page">
+    <div class="hero">
+      <img
+        src="https://dummyimage.com/1400x360/ffffff/102b63&text=BIENVENUE+STAGIAIRE+!"
+        alt="Bienvenue stagiaire"
+      >
+    </div>
 
-  <img class="banner" src="Image/Photo,%20Accueil,%20stagiaire.jpeg" alt="Bienvenue stagiaire">
-
-  <div class="intro">
-    <div class="kicker">Accueil stagiaires</div>
+    <p class="top-label">ACCUEIL STAGIAIRES</p>
     <h1>Fil des affectations</h1>
-    <div class="status" id="status">Chargement...</div>
+
+    <div id="status" class="status">Chargement…</div>
+
+    <h2 class="section-title">Stagiaires à venir</h2>
+
+    <main id="app"></main>
+
+    <button class="home-btn" onclick="retourAccueil()">🏠 Retour accueil</button>
+
+    <button class="refresh-btn" onclick="refreshManual()">Rafraîchir maintenant</button>
+
+    <div id="footer" class="footer"></div>
   </div>
 
-  <div class="section-title">Stagiaires à venir</div>
-  <div id="app" class="cards"></div>
+  <script>
+    const DATA = <?!= DATA_JSON ?>;
 
-  <a class="back" href="/">🏠 Retour accueil</a>
-  <div class="footer" id="footer"></div>
+    document.addEventListener('DOMContentLoaded', function () {
+      render(DATA);
+    });
 
-</div>
+    function render(data) {
+      const app = document.getElementById('app');
+      const status = document.getElementById('status');
+      const footer = document.getElementById('footer');
 
-<script>
-const app = document.getElementById("app");
-const statusEl = document.getElementById("status");
-const footer = document.getElementById("footer");
+      if (!data || !data.ok) {
+        status.textContent = 'Cache absent';
+        app.innerHTML = `
+          <div class="empty">
+            Cache non généré.<br>
+            Lance <strong>refreshCacheNow</strong> dans Apps Script.
+          </div>
+        `;
+        footer.textContent = '';
+        return;
+      }
 
-function esc(value){
-  return String(value || "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
+      status.textContent = `${data.totalAffectations || 0} affectation(s)`;
 
-function phoneHtml(phone){
-  if(!phone) return "Non renseigné";
-  const href = "tel:" + String(phone).replace(/\s+/g,"");
-  return `<a class="phone" href="${esc(href)}">${esc(phone)}</a>`;
-}
+      if (!data.dates || data.dates.length === 0) {
+        app.innerHTML = `
+          <div class="empty">
+            Aucun stagiaire à venir.
+          </div>
+        `;
+        footer.textContent = `Dernière mise à jour : ${escapeHtml(data.generatedAtLabel || '')}`;
+        return;
+      }
 
-function groupByStagiaire(items){
-  const groups = {};
+      app.innerHTML = data.dates.map(renderDay).join('');
 
-  items.forEach(item => {
-    const key = item.stagiaire || "Stagiaire non renseigné";
-    if(!groups[key]) groups[key] = [];
-    groups[key].push(item);
-  });
-
-  return Object.entries(groups).map(([stagiaire, affectations]) => ({
-    stagiaire,
-    affectations
-  }));
-}
-
-function affectationHtml(item){
-  return `
-    <div class="affectation">
-      <div class="date">📅 ${esc(item.dateLabel || item.dateISO)}</div>
-
-      <div class="row">
-        <div class="label">Horaire stagiaire</div>
-        <div class="value">${esc(item.codeStagiaire || "")} — ${esc(item.horaireStagiaire || "Non renseigné")}</div>
-      </div>
-
-      <div class="ref">
-        <div class="row">
-          <div class="label">Référent du jour</div>
-          <div class="value">👨‍⚕️ ${esc(item.referent || "Non renseigné")}</div>
-        </div>
-
-        <div class="row">
-          <div class="label">Horaire référent</div>
-          <div class="value">${esc(item.codeReferent || "")} — ${esc(item.horaireReferent || "Non renseigné")}</div>
-        </div>
-
-        <div class="row">
-          <div class="label">Contact</div>
-          <div class="value">🏷️ GHE : ${esc(item.ghe || "Non renseigné")}</div>
-          <div class="value">📞 Téléphone : ${phoneHtml(item.telephone)}</div>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function stagiaireCard(group){
-  const count = group.affectations.length;
-
-  return `
-    <article class="card">
-      <div class="card-head">
-        <div class="stagiaire">🎓 ${esc(group.stagiaire)}</div>
-        <div class="count">${count} date${count > 1 ? "s" : ""} prévue${count > 1 ? "s" : ""}</div>
-      </div>
-
-      <div class="card-body">
-        ${group.affectations.map(affectationHtml).join("")}
-      </div>
-    </article>
-  `;
-}
-
-async function load(){
-  try{
-    const response = await fetch("/api/stagiaires", { cache:"no-store" });
-    const data = await response.json();
-
-    if(!data.ok){
-      throw new Error(data.error || "Réponse invalide");
+      footer.textContent = `Dernière mise à jour : ${data.generatedAtLabel || ''}`;
     }
 
-    const items = data.items || [];
-    const groups = groupByStagiaire(items);
+    function renderDay(day) {
+      const count = day.affectations.length;
+      const countLabel = count > 1 ? `${count} affectations prévues` : `1 affectation prévue`;
 
-    statusEl.textContent = `${items.length} affectation(s) • ${groups.length} stagiaire(s)`;
+      return `
+        <section class="day-card">
+          <div class="day-header">
+            <h3 class="day-title">📅 ${escapeHtml(day.dateLabel)}</h3>
+            <div class="day-count">${escapeHtml(countLabel)}</div>
+          </div>
 
-    if(!items.length){
-      app.innerHTML = `<div class="empty">Aucune prochaine affectation trouvée.</div>`;
-      return;
+          <div class="day-body">
+            ${day.affectations.map(renderAssignment).join('')}
+          </div>
+        </section>
+      `;
     }
 
-    app.innerHTML = groups.map(stagiaireCard).join("");
+    function renderAssignment(item) {
+      const hasAlert = item.alertes && item.alertes.length > 0;
 
-    if(data.generatedAt){
-      footer.textContent = "Dernière mise à jour : " + new Date(data.generatedAt).toLocaleString("fr-FR");
+      const stagiaireWarning =
+        !item.stagiairePlanning ||
+        !item.stagiairePlanning.found ||
+        item.stagiairePlanning.isRepos;
+
+      const referentWarning =
+        item.referent &&
+        item.referent !== 'Non renseigné' &&
+        (!item.referentPlanning ||
+          !item.referentPlanning.found ||
+          item.referentPlanning.isRepos);
+
+      return `
+        <article class="assignment-card ${hasAlert ? 'has-alert' : ''}">
+          <h4 class="date-line">🎓 ${escapeHtml(item.stagiaire)}</h4>
+
+          <div class="label">Formation</div>
+          <p class="value">${escapeHtml(item.horaireFormation)}</p>
+
+          <div class="label">Lieu / service formation</div>
+          <p class="small-value">${escapeHtml(item.lieuFormation)}</p>
+
+          <div class="agent-box ${stagiaireWarning ? 'warning' : ''}">
+            <div class="label">Affectation agent ce jour</div>
+
+            <div class="line">
+              <div class="emoji">🕒</div>
+              <div class="line-text">
+                <p class="small-value">${escapeHtml(item.stagiairePlanning.horaire)}</p>
+              </div>
+            </div>
+
+            <div class="line">
+              <div class="emoji">🏥</div>
+              <div class="line-text">
+                <p class="small-value">${escapeHtml(item.stagiairePlanning.service)}</p>
+              </div>
+            </div>
+
+            ${item.stagiairePlanning.source ? `
+              <div class="mini">Source : ${escapeHtml(item.stagiairePlanning.source)}</div>
+            ` : ''}
+          </div>
+
+          <div class="referent-box ${referentWarning ? 'warning' : ''}">
+            <div class="label">Référent du jour</div>
+
+            <div class="line">
+              <div class="emoji">👨‍⚕️</div>
+              <div class="line-text">
+                <p class="value">${escapeHtml(item.referent)}</p>
+              </div>
+            </div>
+
+            <div class="label">Horaire référent ce jour</div>
+
+            <div class="line">
+              <div class="emoji">🕒</div>
+              <div class="line-text">
+                <p class="small-value">${escapeHtml(item.referentPlanning.horaire)}</p>
+              </div>
+            </div>
+
+            <div class="line">
+              <div class="emoji">🏥</div>
+              <div class="line-text">
+                <p class="small-value">${escapeHtml(item.referentPlanning.service)}</p>
+              </div>
+            </div>
+
+            <div class="label">Contact</div>
+
+            <div class="line">
+              <div class="emoji">🏷️</div>
+              <div class="line-text">
+                <p class="small-value">GHE : ${escapeHtml(item.ghe)}</p>
+              </div>
+            </div>
+
+            <div class="line">
+              <div class="emoji">📞</div>
+              <div class="line-text">
+                <p class="small-value">Téléphone : ${escapeHtml(item.telephone)}</p>
+              </div>
+            </div>
+
+            ${item.referentPlanning.source ? `
+              <div class="mini">Source : ${escapeHtml(item.referentPlanning.source)}</div>
+            ` : ''}
+          </div>
+
+          ${hasAlert ? renderAlerts(item.alertes) : ''}
+        </article>
+      `;
     }
 
-  }catch(error){
-    statusEl.textContent = "Erreur de chargement";
-    app.innerHTML = `<div class="error">Impossible de charger les stagiaires pour le moment.</div>`;
-    console.error(error);
-  }
-}
+    function renderAlerts(alertes) {
+      return `
+        <div class="alert-list">
+          ${alertes.map(a => `<div>⚠️ ${escapeHtml(a)}</div>`).join('')}
+        </div>
+      `;
+    }
 
-load();
-</script>
+    function refreshManual() {
+      const status = document.getElementById('status');
+      status.textContent = 'Mise à jour…';
+
+      google.script.run
+        .withSuccessHandler(function () {
+          window.location.reload();
+        })
+        .withFailureHandler(function (err) {
+          status.textContent = 'Erreur mise à jour';
+          alert(err && err.message ? err.message : err);
+        })
+        .refreshCacheNow();
+    }
+
+    function retourAccueil() {
+      window.location.href = './';
+    }
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
 </body>
 </html>
