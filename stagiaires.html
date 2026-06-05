@@ -36,7 +36,7 @@ body{
   border-radius:24px;
   padding:18px;
   box-shadow:7px 7px 0 #171717;
-  margin-bottom:24px;
+  margin-bottom:18px;
 }
 
 h1{
@@ -55,127 +55,181 @@ h1{
 .status{
   text-align:center;
   font-weight:900;
-  color:#777;
-  margin:26px 0;
+  color:#6b7280;
+  margin:18px 0;
 }
 
-.day-block{
-  background:#fffaf0;
+.summary{
+  background:#102f68;
+  color:white;
   border:4px solid #171717;
   border-radius:26px;
-  padding:16px;
-  margin-bottom:28px;
-  box-shadow:7px 7px 0 #171717;
+  padding:18px;
+  box-shadow:8px 8px 0 #171717;
+  margin-bottom:24px;
 }
 
-.day-title{
-  font-size:27px;
-  font-weight:900;
-  color:#102f68;
-  margin:0 0 16px;
-}
-
-.inner-card{
-  position:relative;
-  border:3px solid #171717;
-  border-radius:22px;
-  padding:16px 14px 16px 22px;
-  margin-bottom:16px;
-  background:#fffdf7;
-  overflow:hidden;
-}
-
-.inner-card:last-child{margin-bottom:0}
-
-.inner-card.stagiaire::before{
-  content:"";
-  position:absolute;
-  left:0;
-  top:0;
-  bottom:0;
-  width:12px;
-  background:#f5a000;
-}
-
-.inner-card.agent::before{
-  content:"";
-  position:absolute;
-  left:0;
-  top:0;
-  bottom:0;
-  width:12px;
-  background:#20c765;
-}
-
-.card-title{
-  font-size:23px;
-  font-weight:900;
-  text-transform:uppercase;
-  border-bottom:3px dashed #171717;
-  padding-bottom:8px;
-  margin-bottom:14px;
-}
-
-.person{
-  padding:10px 0;
-  border-bottom:2px dashed #c8c0b0;
-}
-
-.person:last-child{border-bottom:0}
-
-.person-name{
-  font-size:21px;
+.summary-title{
+  font-size:24px;
   font-weight:900;
   margin-bottom:10px;
 }
 
-.line{
-  display:grid;
-  grid-template-columns:105px 1fr;
-  gap:10px;
-  margin:7px 0;
+.summary-big{
+  font-size:32px;
+  font-weight:900;
+  margin-bottom:8px;
+}
+
+.summary-line{
   font-size:17px;
+  font-weight:800;
+  margin:7px 0;
 }
 
-.label{
-  color:#5f6b7c;
+.carousel-label{
+  font-size:22px;
   font-weight:900;
-  text-transform:uppercase;
-  font-size:14px;
-  letter-spacing:1px;
+  margin:8px 0 12px;
 }
 
-.value{
+.carousel{
+  display:flex;
+  gap:18px;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  padding:4px 4px 18px;
+}
+
+.carousel::-webkit-scrollbar{
+  display:none;
+}
+
+.day-slide{
+  min-width:92%;
+  scroll-snap-align:start;
+  background:#fffaf0;
+  border:4px solid #171717;
+  border-radius:28px;
+  padding:16px;
+  box-shadow:8px 8px 0 #171717;
+}
+
+.day-title{
+  font-size:30px;
   font-weight:900;
+  color:#102f68;
+  margin:0 0 6px;
+}
+
+.day-subtitle{
+  font-size:16px;
+  font-weight:900;
+  color:#667085;
+  margin-bottom:18px;
+}
+
+.pair-card{
+  position:relative;
+  background:#fffdf7;
+  border:4px solid #171717;
+  border-radius:24px;
+  padding:18px 16px 18px 24px;
+  margin-bottom:18px;
+  overflow:hidden;
+}
+
+.pair-card::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:13px;
+  background:linear-gradient(#f5a000 0 50%, #20c765 50% 100%);
+}
+
+.pair-title{
+  font-size:23px;
+  font-weight:900;
+  margin-bottom:16px;
+  border-bottom:4px dashed #171717;
+  padding-bottom:8px;
+}
+
+.person-zone{
+  padding:12px;
+  border-radius:18px;
+  margin-bottom:12px;
+  background:#f7f7f2;
+  border:2px dashed #d8d0bf;
+}
+
+.person-name{
+  font-size:24px;
+  font-weight:900;
+  margin-bottom:10px;
 }
 
 .agent-head{
   display:flex;
   align-items:center;
   gap:14px;
-  margin-bottom:12px;
 }
 
 .avatar{
-  width:62px;
-  height:62px;
+  width:66px;
+  height:66px;
   border-radius:50%;
   object-fit:cover;
-  border:3px solid #171717;
+  border:4px solid #171717;
   background:#eee;
 }
 
 .avatar-placeholder{
-  width:62px;
-  height:62px;
+  width:66px;
+  height:66px;
   border-radius:50%;
-  border:3px solid #171717;
+  border:4px solid #171717;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:28px;
-  font-weight:900;
+  font-size:30px;
   background:#f1d58a;
+}
+
+.info{
+  margin-top:10px;
+}
+
+.info-label{
+  font-size:13px;
+  font-weight:900;
+  color:#667085;
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+.info-value{
+  font-size:21px;
+  font-weight:900;
+  color:#171717;
+  line-height:1.25;
+  margin-top:3px;
+}
+
+.badge{
+  display:inline-block;
+  margin-top:10px;
+  padding:8px 12px;
+  border-radius:999px;
+  border:3px solid #171717;
+  font-weight:900;
+  background:#e9ffeF;
+}
+
+.badge.warn{
+  background:#fff1c7;
 }
 
 .empty{
@@ -190,17 +244,18 @@ h1{
 
 .back{
   display:block;
-  width:max-content;
-  margin:30px auto 10px;
-  padding:13px 20px;
+  width:100%;
+  text-align:center;
+  margin:28px auto 10px;
+  padding:17px 20px;
   border:4px solid #171717;
-  border-radius:16px;
-  background:#fffaf0;
-  color:#171717;
-  font-size:18px;
+  border-radius:20px;
+  background:#102f68;
+  color:white;
+  font-size:22px;
   font-weight:900;
   text-decoration:none;
-  box-shadow:5px 5px 0 #171717;
+  box-shadow:6px 6px 0 #171717;
 }
 </style>
 </head>
@@ -212,16 +267,23 @@ h1{
 
   <section class="intro">
     <h1>Espace stagiaires</h1>
-    <p>Retrouve les stagiaires prévus par date, avec l’agent affilié et les informations utiles du jour.</p>
+    <p>Les stagiaires prévus par date, avec leur référent du jour et les infos utiles.</p>
   </section>
 
-  <div id="status" class="status">API pas encore branchée.</div>
+  <div id="status" class="status">Chargement…</div>
 
-  <main id="results">
-    <div class="empty">Aucune donnée affichée pour le moment.</div>
+  <section id="summary" class="summary">
+    <div class="summary-title">🧭 Point stagiaires</div>
+    <div class="summary-big">Chargement…</div>
+  </section>
+
+  <div class="carousel-label">📅 Journées prévues</div>
+
+  <main id="results" class="carousel">
+    <div class="empty">Chargement des stagiaires…</div>
   </main>
 
-  <a class="back" href="index.html">← Retour à l’accueil</a>
+  <a class="back" href="index.html">🏠 Retour accueil</a>
 
 </div>
 
@@ -230,6 +292,24 @@ const API_URL = "https://script.google.com/macros/s/AKfycbzZITQIw7jbrJHyPl7xfcFj
 
 function clean(value){
   return value && String(value).trim() !== "" ? String(value).trim() : "Non renseigné";
+}
+
+function isMissing(value){
+  return !value || String(value).trim() === "" || String(value).trim() === "Non renseigné";
+}
+
+function todayFr(){
+  const d = new Date();
+  const dd = String(d.getDate()).padStart(2,"0");
+  const mm = String(d.getMonth()+1).padStart(2,"0");
+  const yyyy = d.getFullYear();
+  return dd + "/" + mm + "/" + yyyy;
+}
+
+function parseFr(date){
+  const p = String(date).split("/");
+  if(p.length !== 3) return 0;
+  return new Date(p[2], p[1]-1, p[0]).getTime();
 }
 
 function groupByDate(data){
@@ -241,27 +321,58 @@ function groupByDate(data){
     if(!groups[date]){
       groups[date] = {
         date,
-        stagiaires: [],
-        agents: {}
+        pairs:[]
       };
     }
 
-    groups[date].stagiaires.push({
-      nom: item.stagiaire_nom,
-      horaire: item.stagiaire_horaire
+    groups[date].pairs.push({
+      stagiaire_nom:item.stagiaire_nom,
+      stagiaire_horaire:item.stagiaire_horaire,
+      agent_nom:item.agent_nom,
+      agent_horaire:item.agent_horaire,
+      agent_telephone:item.agent_telephone,
+      agent_avatar:item.agent_avatar
     });
-
-    const agentKey = clean(item.agent_nom);
-
-    groups[date].agents[agentKey] = {
-      nom: item.agent_nom,
-      horaire: item.agent_horaire,
-      telephone: item.agent_telephone,
-      avatar: item.agent_avatar
-    };
   });
 
-  return Object.values(groups);
+  return Object.values(groups).sort((a,b)=>parseFr(a.date)-parseFr(b.date));
+}
+
+function renderSummary(groups){
+  const box = document.getElementById("summary");
+  const today = todayFr();
+  const todayGroup = groups.find(g => g.date === today);
+  const nextGroup = groups.find(g => parseFr(g.date) >= parseFr(today));
+
+  if(todayGroup){
+    const count = todayGroup.pairs.length;
+    const missingPhones = todayGroup.pairs.filter(p => isMissing(p.agent_telephone)).length;
+
+    box.innerHTML = `
+      <div class="summary-title">📍 Aujourd’hui</div>
+      <div class="summary-big">${count} stagiaire${count>1 ? "s" : ""}</div>
+      <div class="summary-line">🟢 ${count} référent${count>1 ? "s" : ""} affilié${count>1 ? "s" : ""}</div>
+      <div class="summary-line">☎️ ${missingPhones} téléphone${missingPhones>1 ? "s" : ""} manquant${missingPhones>1 ? "s" : ""}</div>
+      <div class="summary-line">${missingPhones ? "⚠️ Vérifier les contacts" : "✅ Infos principales OK"}</div>
+    `;
+    return;
+  }
+
+  if(nextGroup){
+    box.innerHTML = `
+      <div class="summary-title">📍 Aujourd’hui</div>
+      <div class="summary-big">Aucun stagiaire aujourd’hui</div>
+      <div class="summary-line">➡️ Prochaine présence : ${nextGroup.date}</div>
+      <div class="summary-line">🎓 ${nextGroup.pairs.length} stagiaire${nextGroup.pairs.length>1 ? "s" : ""} prévu${nextGroup.pairs.length>1 ? "s" : ""}</div>
+    `;
+    return;
+  }
+
+  box.innerHTML = `
+    <div class="summary-title">📍 Aujourd’hui</div>
+    <div class="summary-big">Aucun stagiaire prévu</div>
+    <div class="summary-line">✅ Rien à préparer pour le moment</div>
+  `;
 }
 
 function render(data, updatedAt){
@@ -270,7 +381,8 @@ function render(data, updatedAt){
 
   if(!data || data.length === 0){
     status.textContent = "Aucune donnée trouvée.";
-    results.innerHTML = `<div class="empty">Aucun stagiaire prévu pour le moment.</div>`;
+    results.innerHTML = `<div class="empty">Aucun stagiaire prévu.</div>`;
+    renderSummary([]);
     return;
   }
 
@@ -280,75 +392,76 @@ function render(data, updatedAt){
     ? "Dernière mise à jour : " + new Date(updatedAt).toLocaleString("fr-FR")
     : "Données chargées.";
 
+  renderSummary(groups);
+
   results.innerHTML = groups.map(group => {
-    const stagiairesHtml = group.stagiaires.map(stagiaire => `
-      <div class="person">
-        <div class="person-name">🎓 ${clean(stagiaire.nom)}</div>
-        <div class="line">
-          <div class="label">Horaire</div>
-          <div class="value">${clean(stagiaire.horaire)}</div>
-        </div>
-      </div>
-    `).join("");
+    const cards = group.pairs.map(pair => {
+      const phoneMissing = isMissing(pair.agent_telephone);
 
-    const agentsHtml = Object.values(group.agents).map(agent => `
-      <div class="person">
-        <div class="agent-head">
-          ${
-            agent.avatar
-            ? `<img class="avatar" src="${agent.avatar}" alt="${clean(agent.nom)}">`
-            : `<div class="avatar-placeholder">👤</div>`
-          }
-          <div class="person-name">${clean(agent.nom)}</div>
-        </div>
+      return `
+        <article class="pair-card">
+          <div class="pair-title">Binôme du jour</div>
 
-        <div class="line">
-          <div class="label">Horaire</div>
-          <div class="value">${clean(agent.horaire)}</div>
-        </div>
+          <div class="person-zone">
+            <div class="person-name">🎓 ${clean(pair.stagiaire_nom)}</div>
+            <div class="info">
+              <div class="info-label">🕒 Horaire stagiaire</div>
+              <div class="info-value">${clean(pair.stagiaire_horaire)}</div>
+            </div>
+          </div>
 
-        <div class="line">
-          <div class="label">Téléphone</div>
-          <div class="value">${clean(agent.telephone)}</div>
-        </div>
-      </div>
-    `).join("");
+          <div class="person-zone">
+            <div class="agent-head">
+              ${
+                pair.agent_avatar
+                ? `<img class="avatar" src="${pair.agent_avatar}" alt="${clean(pair.agent_nom)}">`
+                : `<div class="avatar-placeholder">👤</div>`
+              }
+              <div class="person-name">🟢 ${clean(pair.agent_nom)}</div>
+            </div>
+
+            <div class="info">
+              <div class="info-label">🕒 Horaire référent</div>
+              <div class="info-value">${clean(pair.agent_horaire)}</div>
+            </div>
+
+            <div class="info">
+              <div class="info-label">☎️ Contact / GHE</div>
+              <div class="info-value">${clean(pair.agent_telephone)}</div>
+            </div>
+
+            <div class="badge ${phoneMissing ? "warn" : ""}">
+              ${phoneMissing ? "⚠️ Contact à vérifier" : "✅ Contact renseigné"}
+            </div>
+          </div>
+        </article>
+      `;
+    }).join("");
 
     return `
-      <section class="day-block">
+      <section class="day-slide">
         <h2 class="day-title">📅 ${group.date}</h2>
-
-        <div class="inner-card stagiaire">
-          <div class="card-title">Stagiaire(s)</div>
-          ${stagiairesHtml}
-        </div>
-
-        <div class="inner-card agent">
-          <div class="card-title">Agent affilié</div>
-          ${agentsHtml}
-        </div>
+        <div class="day-subtitle">${group.pairs.length} stagiaire${group.pairs.length>1 ? "s" : ""} prévu${group.pairs.length>1 ? "s" : ""}</div>
+        ${cards}
       </section>
     `;
   }).join("");
 }
 
 function loadWithJsonp(){
-  if(!API_URL){
-    return;
-  }
-
   const callbackName = "stagiairesCallback_" + Date.now();
 
   window[callbackName] = function(payload){
-    const data = payload.resultats || [];
-    render(data, payload.updatedAt);
+    render(payload.resultats || [], payload.updatedAt);
     delete window[callbackName];
   };
 
   const script = document.createElement("script");
-  script.src = API_URL + (API_URL.includes("?") ? "&" : "?") + "callback=" + callbackName;
+  script.src = API_URL + "?callback=" + callbackName;
+
   script.onerror = function(){
     document.getElementById("status").textContent = "Erreur : API inaccessible.";
+    document.getElementById("results").innerHTML = `<div class="empty">Impossible de charger les données.</div>`;
   };
 
   document.body.appendChild(script);
