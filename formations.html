@@ -6,262 +6,293 @@
   <title>Espace formation</title>
 
   <style>
-    * { box-sizing: border-box; }
+    *{box-sizing:border-box}
 
     :root{
-      --bg:#fff8df;
-      --ink:#0f172a;
-      --muted:#5b6475;
-      --card:#ffffff;
-      --line:#e8e2c9;
-      --accent:#ffb703;
-      --accent-2:#ffe29a;
-      --danger:#d62828;
-      --danger-soft:#ffe2e2;
-      --ok:#1f7a1f;
-      --shadow:0 12px 28px rgba(15, 23, 42, .10);
-      --radius:24px;
+      --bg:#fff3c7;
+      --ink:#101426;
+      --muted:#687082;
+      --paper:#fffdf7;
+      --line:#161616;
+      --soft:#f9f2df;
+      --green:#1f8a4c;
+      --orange:#f59e0b;
+      --red:#d62828;
+      --red-soft:#ffe1e1;
+      --shadow:8px 8px 0 #171717;
     }
 
     body{
       margin:0;
-      background:
-        radial-gradient(circle at top, #fffdf4 0%, #fff6d9 35%, #fff0c1 100%);
+      background:radial-gradient(circle at top,#fffdf3 0%,#fff0b8 70%,#ffe49a 100%);
       color:var(--ink);
       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
     }
 
     .page{
-      max-width:920px;
+      max-width:980px;
       margin:auto;
-      padding:16px 14px 30px;
+      padding:14px 14px 44px;
     }
 
     .hero{
-      overflow:hidden;
-      background:var(--card);
-      border:3px solid #111;
+      background:#fffdf7;
+      border:4px solid var(--line);
       border-radius:30px;
-      box-shadow:8px 8px 0 #111;
-      margin-bottom:18px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      margin-bottom:22px;
     }
 
     .hero img{
       width:100%;
       display:block;
-      object-fit:cover;
     }
 
-    .hero-content{
-      padding:18px 18px 20px;
+    .hero-body{
+      padding:18px;
     }
 
     h1{
       margin:0 0 10px;
-      font-size:clamp(30px, 7vw, 54px);
-      line-height:.95;
-      letter-spacing:-.02em;
+      font-size:clamp(32px,7vw,60px);
+      line-height:.92;
       text-transform:uppercase;
+      letter-spacing:-.04em;
     }
 
     .intro{
       margin:0;
+      color:#424b5f;
       font-size:16px;
       line-height:1.45;
-      color:#2d3748;
+      font-weight:650;
     }
 
-    .topbar{
+    .section-head{
       display:flex;
-      align-items:flex-end;
       justify-content:space-between;
+      align-items:flex-end;
       gap:12px;
-      margin:18px 2px 12px;
-      flex-wrap:wrap;
+      margin:20px 4px 12px;
     }
 
-    .topbar h2{
+    .section-head h2{
       margin:0;
-      font-size:26px;
+      font-size:28px;
     }
 
-    .status{
-      font-size:14px;
+    #status{
       color:var(--muted);
-      font-weight:700;
+      font-weight:800;
+      font-size:14px;
+      text-align:right;
     }
 
-    .slider-wrap{
-      position:relative;
-    }
-
-    .slider{
+    .days-slider{
       display:flex;
-      gap:14px;
+      gap:18px;
       overflow-x:auto;
-      padding:8px 4px 10px;
       scroll-snap-type:x mandatory;
       -webkit-overflow-scrolling:touch;
+      padding:6px 2px 16px;
       scrollbar-width:none;
     }
 
-    .slider::-webkit-scrollbar{
-      display:none;
-    }
+    .days-slider::-webkit-scrollbar{display:none}
 
-    .card{
-      flex:0 0 88%;
+    .day-slide{
+      flex:0 0 92%;
       scroll-snap-align:start;
-      background:var(--card);
-      border:2px solid #111;
-      border-radius:28px;
+      background:#fffefa;
+      border:4px solid var(--line);
+      border-radius:34px;
       box-shadow:var(--shadow);
-      padding:18px;
+      padding:16px;
+      min-height:420px;
       position:relative;
-      overflow:hidden;
     }
 
-    @media (min-width:760px){
-      .card{
-        flex:0 0 62%;
-      }
+    @media(min-width:800px){
+      .day-slide{flex:0 0 72%}
     }
 
-    .card.today{
-      background:linear-gradient(180deg,#fffef8 0%, #fff7d8 100%);
+    .day-slide.today{
       box-shadow:
-        0 0 0 3px #111 inset,
-        0 0 0 8px rgba(255,183,3,.18),
-        0 0 35px rgba(255,183,3,.45);
-      border-color:#111;
+        8px 8px 0 #171717,
+        0 0 0 8px rgba(255,183,3,.22),
+        0 0 38px rgba(255,183,3,.42);
+      background:linear-gradient(180deg,#fffef9,#fff6d8);
     }
 
-    .card.alert{
-      border-color:var(--danger);
-      box-shadow:
-        0 0 0 2px rgba(214,40,40,.12),
-        0 12px 28px rgba(214,40,40,.14);
-    }
-
-    .badge-row{
+    .day-top{
       display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-bottom:14px;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
+      margin-bottom:16px;
+      border-bottom:3px dashed rgba(0,0,0,.18);
+      padding-bottom:14px;
     }
 
-    .badge{
+    .day-date{
       display:inline-flex;
       align-items:center;
-      gap:6px;
-      padding:8px 12px;
+      gap:8px;
+      border:3px solid var(--line);
       border-radius:999px;
-      font-size:13px;
-      font-weight:800;
-      border:2px solid #111;
-      background:#fff;
+      padding:9px 14px;
+      font-weight:950;
+      background:white;
+      font-size:17px;
     }
 
-    .badge.today-badge{
+    .day-stats{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .pill{
+      border:3px solid var(--line);
+      border-radius:999px;
+      padding:8px 12px;
+      background:#fff;
+      font-weight:950;
+      font-size:14px;
+    }
+
+    .pill.today-pill{
       background:#ffe58f;
     }
 
-    .badge.alert-badge{
-      background:var(--danger-soft);
-      border-color:var(--danger);
-      color:var(--danger);
+    .pill.alert-pill{
+      color:var(--red);
+      border-color:var(--red);
+      background:var(--red-soft);
     }
 
-    .formation-name{
-      font-size:28px;
-      line-height:1.05;
-      margin:0 0 14px;
-      font-weight:900;
-    }
-
-    .grid{
+    .formations-list{
       display:grid;
-      gap:10px;
+      gap:14px;
     }
 
-    .row{
-      display:flex;
+    .formation-card{
+      background:var(--paper);
+      border:3px solid var(--line);
+      border-radius:26px;
+      padding:15px;
+      box-shadow:5px 5px 0 rgba(0,0,0,.16);
+    }
+
+    .formation-card.alert{
+      border-color:var(--red);
+      box-shadow:5px 5px 0 rgba(214,40,40,.18);
+    }
+
+    .formation-card.ok{
+      border-color:var(--green);
+    }
+
+    .formation-title{
+      margin:0 0 12px;
+      font-size:clamp(24px,5vw,38px);
+      line-height:.98;
+      letter-spacing:-.035em;
+      font-weight:1000;
+    }
+
+    .info-grid{
+      display:grid;
+      gap:9px;
+    }
+
+    .info-row{
+      display:grid;
+      grid-template-columns:38px 1fr;
       gap:10px;
-      align-items:flex-start;
-      padding:10px 12px;
+      align-items:center;
+      background:#fffaf0;
+      border:2px solid #eadfbd;
       border-radius:18px;
-      background:#fffdf5;
-      border:1px solid var(--line);
+      padding:10px 12px;
     }
 
     .icon{
-      flex:0 0 auto;
-      width:30px;
-      height:30px;
+      font-size:25px;
       display:grid;
       place-items:center;
-      font-size:18px;
     }
 
     .label{
       font-size:12px;
       color:var(--muted);
-      font-weight:800;
       text-transform:uppercase;
-      letter-spacing:.03em;
-      margin-bottom:2px;
+      letter-spacing:.07em;
+      font-weight:950;
     }
 
     .value{
-      font-size:16px;
-      font-weight:700;
-      line-height:1.3;
+      font-size:18px;
+      font-weight:950;
+      line-height:1.2;
     }
 
-    .call{
+    .phone{
       color:inherit;
       text-decoration:none;
     }
 
-    .call:hover{
-      text-decoration:underline;
-    }
-
     .alert-box{
-      margin-top:14px;
+      margin-top:12px;
+      border:3px solid var(--red);
+      background:var(--red-soft);
+      border-radius:22px;
       padding:14px;
-      border-radius:20px;
-      border:2px solid var(--danger);
-      background:var(--danger-soft);
-      color:#7f1d1d;
-      font-weight:800;
+      color:#8f1d1d;
+      font-size:18px;
+      font-weight:950;
+      line-height:1.25;
     }
 
-    .empty,
-    .error{
-      background:#fff;
-      border:2px dashed #bbb;
+    .ok-box{
+      margin-top:12px;
+      border:3px solid var(--green);
+      background:#dcfce7;
       border-radius:22px;
-      padding:22px 18px;
+      padding:12px 14px;
+      color:#14532d;
+      font-size:16px;
+      font-weight:950;
+    }
+
+    .empty,.error{
+      background:white;
+      border:3px dashed #999;
+      border-radius:24px;
+      padding:24px;
       color:var(--muted);
+      font-weight:850;
       text-align:center;
     }
 
     .hint{
-      margin-top:8px;
       text-align:center;
-      font-size:13px;
-      color:var(--muted);
-      font-weight:700;
+      color:#6b7280;
+      font-size:14px;
+      font-weight:900;
+      padding-bottom:30px;
     }
   </style>
 </head>
+
 <body>
   <main class="page">
 
     <section class="hero">
       <img src="./Image/Autre%20page/Photo_Formation.png" alt="Espace formation">
-      <div class="hero-content">
+      <div class="hero-body">
         <h1>Espace formation</h1>
         <p class="intro">
           Merci de prévenir l’agent concerné dès qu’une formation apparaît, afin qu’il puisse s’organiser à l’avance.
@@ -269,20 +300,19 @@
       </div>
     </section>
 
-    <div class="topbar">
+    <div class="section-head">
       <h2>Résultats en direct</h2>
-      <div class="status" id="status">Chargement…</div>
+      <div id="status">Chargement…</div>
     </div>
 
-    <section class="slider-wrap">
-      <div class="slider" id="slider"></div>
-      <div class="hint">Fais glisser pour voir les formations suivantes →</div>
-    </section>
+    <section id="daysSlider" class="days-slider"></section>
+
+    <div class="hint">Swipe à gauche ou à droite pour changer de jour →</div>
 
   </main>
 
   <script>
-    const slider = document.getElementById("slider");
+    const slider = document.getElementById("daysSlider");
     const status = document.getElementById("status");
 
     function escapeHtml(value){
@@ -294,17 +324,11 @@
         .replaceAll("'","&#039;");
     }
 
-    function phoneHref(phone){
-      return "tel:" + String(phone || "").replace(/\s/g, "");
-    }
-
     function parseDate(value){
       if(!value) return null;
-
       if(/^\d{4}-\d{2}-\d{2}/.test(value)){
         return new Date(value + "T00:00:00");
       }
-
       const d = new Date(value);
       return isNaN(d) ? null : d;
     }
@@ -316,108 +340,132 @@
         a.getDate() === b.getDate();
     }
 
-    function sortItems(items){
-      return [...items].sort((a,b) => {
+    function phoneHref(phone){
+      return "tel:" + String(phone || "").replace(/\s/g,"");
+    }
+
+    function groupByDate(items){
+      const groups = {};
+
+      items.forEach(item => {
+        const key = item.date || "date-inconnue";
+        if(!groups[key]){
+          groups[key] = {
+            date: key,
+            dateLabel: item.dateLabel || key,
+            items: []
+          };
+        }
+        groups[key].items.push(item);
+      });
+
+      return Object.values(groups).sort((a,b) => {
+        const today = new Date();
         const da = parseDate(a.date);
         const db = parseDate(b.date);
-        if(!da && !db) return 0;
-        if(!da) return 1;
-        if(!db) return -1;
-        return da - db;
+
+        const aToday = isSameDay(da,today) ? 0 : 1;
+        const bToday = isSameDay(db,today) ? 0 : 1;
+
+        if(aToday !== bToday) return aToday - bToday;
+        return String(a.date).localeCompare(String(b.date));
       });
     }
 
-    function card(item){
-      const today = new Date();
-      const itemDate = parseDate(item.date);
-      const todayFlag = isSameDay(itemDate, today);
-      const alerte = !!item.alerte;
+    function formationCard(item){
+      const hasAlert = !!item.alerte;
+      const cls = hasAlert ? "formation-card alert" : "formation-card ok";
 
-      const classes = [
-        "card",
-        todayFlag ? "today" : "",
-        alerte ? "alert" : ""
-      ].join(" ").trim();
-
-      const dateLabel = item.dateLabel || item.date || "Date non renseignée";
-      const formation = item.formation || item.titre || "Formation";
-      const agent = item.agent || "Agent non renseigné";
-      const horaireFormation = item.horaireFormation || "Non renseigné";
-      const horaireAgent = item.horaireAgent || "Non renseigné";
-      const ghe = item.ghe || "Non renseigné";
-      const telephone = item.telephone || "";
-      const messageAlerte = item.messageAlerte || "Vérifier l’horaire prévu de l’agent.";
+      const tel = item.telephone && item.telephone !== "Non renseigné"
+        ? `<a class="phone" href="${phoneHref(item.telephone)}">${escapeHtml(item.telephone)}</a>`
+        : `Non renseigné`;
 
       return `
-        <article class="${classes}">
-          <div class="badge-row">
-            <div class="badge">📅 ${escapeHtml(dateLabel)}</div>
-            ${todayFlag ? `<div class="badge today-badge">✨ Aujourd’hui</div>` : ``}
-            ${alerte ? `<div class="badge alert-badge">⚠️ Alerte</div>` : ``}
-          </div>
+        <article class="${cls}">
+          <h3 class="formation-title">${escapeHtml(item.formation || "Formation")}</h3>
 
-          <h3 class="formation-name">${escapeHtml(formation)}</h3>
-
-          <div class="grid">
-            <div class="row">
+          <div class="info-grid">
+            <div class="info-row">
               <div class="icon">👤</div>
               <div>
                 <div class="label">Agent</div>
-                <div class="value">${escapeHtml(agent)}</div>
+                <div class="value">${escapeHtml(item.agent || "Non renseigné")}</div>
               </div>
             </div>
 
-            <div class="row">
+            <div class="info-row">
               <div class="icon">🕒</div>
               <div>
                 <div class="label">Horaire formation</div>
-                <div class="value">${escapeHtml(horaireFormation)}</div>
+                <div class="value">${escapeHtml(item.horaireFormation || "Non renseigné")}</div>
               </div>
             </div>
 
-            <div class="row">
+            <div class="info-row">
               <div class="icon">⏰</div>
               <div>
                 <div class="label">Horaire agent prévu</div>
-                <div class="value">${escapeHtml(horaireAgent)}</div>
+                <div class="value">${escapeHtml(item.horaireAgent || "Non trouvé")}</div>
               </div>
             </div>
 
-            <div class="row">
+            <div class="info-row">
               <div class="icon">🏥</div>
               <div>
                 <div class="label">GHE</div>
-                <div class="value">${escapeHtml(ghe)}</div>
+                <div class="value">${escapeHtml(item.ghe || "Non renseigné")}</div>
               </div>
             </div>
 
-            <div class="row">
+            <div class="info-row">
               <div class="icon">📞</div>
               <div>
                 <div class="label">Téléphone</div>
-                <div class="value">
-                  ${
-                    telephone
-                      ? `<a class="call" href="${phoneHref(telephone)}">${escapeHtml(telephone)}</a>`
-                      : `Non renseigné`
-                  }
-                </div>
+                <div class="value">${tel}</div>
               </div>
             </div>
           </div>
 
-          ${alerte ? `
-            <div class="alert-box">
-              ⚠️ ${escapeHtml(messageAlerte)}
+          ${
+            hasAlert
+              ? `<div class="alert-box">⚠️ ${escapeHtml(item.messageAlerte || "À vérifier.")}</div>`
+              : `<div class="ok-box">✅ Aucun problème détecté sur l’horaire.</div>`
+          }
+        </article>
+      `;
+    }
+
+    function daySlide(group){
+      const today = new Date();
+      const isToday = isSameDay(parseDate(group.date), today);
+      const alertCount = group.items.filter(item => item.alerte).length;
+
+      return `
+        <article class="day-slide ${isToday ? "today" : ""}">
+          <div class="day-top">
+            <div class="day-date">📅 ${escapeHtml(group.dateLabel)}</div>
+
+            <div class="day-stats">
+              ${isToday ? `<div class="pill today-pill">✨ Aujourd’hui</div>` : ``}
+              <div class="pill">${group.items.length} formation(s)</div>
+              ${
+                alertCount
+                  ? `<div class="pill alert-pill">⚠️ ${alertCount} alerte(s)</div>`
+                  : `<div class="pill">✅ OK</div>`
+              }
             </div>
-          ` : ``}
+          </div>
+
+          <div class="formations-list">
+            ${group.items.map(formationCard).join("")}
+          </div>
         </article>
       `;
     }
 
     async function loadFormations(){
       try{
-        status.textContent = "Chargement des formations…";
+        status.textContent = "Chargement…";
 
         const response = await fetch("/api/formations", { cache:"no-store" });
         const data = await response.json();
@@ -426,35 +474,22 @@
           throw new Error(data.error || "Réponse invalide");
         }
 
-        const items = sortItems(data.items || []);
-        const today = new Date();
+        const items = data.items || [];
+        const groups = groupByDate(items);
 
-        items.sort((a,b) => {
-          const aToday = isSameDay(parseDate(a.date), today) ? 0 : 1;
-          const bToday = isSameDay(parseDate(b.date), today) ? 0 : 1;
-          if(aToday !== bToday) return aToday - bToday;
+        status.textContent = `${items.length} formation(s) • ${groups.length} jour(s)`;
 
-          const da = parseDate(a.date);
-          const db = parseDate(b.date);
-          if(!da && !db) return 0;
-          if(!da) return 1;
-          if(!db) return -1;
-          return da - db;
-        });
-
-        status.textContent = `${items.length} formation(s) trouvée(s)`;
-
-        if(!items.length){
-          slider.innerHTML = `<div class="empty">Aucune formation à afficher pour le moment.</div>`;
+        if(!groups.length){
+          slider.innerHTML = `<div class="empty">Aucune formation à afficher.</div>`;
           return;
         }
 
-        slider.innerHTML = items.map(card).join("");
+        slider.innerHTML = groups.map(daySlide).join("");
 
       }catch(error){
         console.error(error);
-        status.textContent = "Erreur de chargement";
-        slider.innerHTML = `<div class="error">Impossible de charger les formations pour le moment.</div>`;
+        status.textContent = "Erreur";
+        slider.innerHTML = `<div class="error">Impossible de charger les formations.</div>`;
       }
     }
 
