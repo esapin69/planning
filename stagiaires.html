@@ -26,8 +26,8 @@ body{
   display:block;
   border:4px solid #171717;
   border-radius:26px;
-  box-shadow:8px 8px 0 #171717;
-  margin-bottom:22px;
+  box-shadow:7px 7px 0 #171717;
+  margin-bottom:18px;
 }
 
 .intro{
@@ -35,12 +35,12 @@ body{
   border:4px solid #171717;
   border-radius:24px;
   padding:18px;
-  box-shadow:7px 7px 0 #171717;
+  box-shadow:6px 6px 0 #171717;
   margin-bottom:18px;
 }
 
 h1{
-  margin:0 0 10px;
+  margin:0 0 8px;
   font-size:34px;
   line-height:1;
   text-transform:uppercase;
@@ -50,13 +50,14 @@ h1{
   margin:0;
   font-size:17px;
   font-weight:800;
+  line-height:1.35;
 }
 
 .status{
   text-align:center;
   font-weight:900;
   color:#6b7280;
-  margin:18px 0;
+  margin:16px 0;
 }
 
 .summary{
@@ -65,29 +66,29 @@ h1{
   border:4px solid #171717;
   border-radius:26px;
   padding:18px;
-  box-shadow:8px 8px 0 #171717;
-  margin-bottom:24px;
+  box-shadow:7px 7px 0 #171717;
+  margin-bottom:22px;
 }
 
 .summary-title{
-  font-size:24px;
+  font-size:23px;
   font-weight:900;
-  margin-bottom:10px;
+  margin-bottom:8px;
 }
 
 .summary-big{
-  font-size:32px;
+  font-size:30px;
   font-weight:900;
   margin-bottom:8px;
 }
 
 .summary-line{
-  font-size:17px;
+  font-size:16px;
   font-weight:800;
-  margin:7px 0;
+  margin:6px 0;
 }
 
-.carousel-label{
+.carousel-title{
   font-size:22px;
   font-weight:900;
   margin:8px 0 12px;
@@ -101,9 +102,7 @@ h1{
   padding:4px 4px 18px;
 }
 
-.carousel::-webkit-scrollbar{
-  display:none;
-}
+.carousel::-webkit-scrollbar{display:none}
 
 .day-slide{
   min-width:92%;
@@ -111,22 +110,22 @@ h1{
   background:#fffaf0;
   border:4px solid #171717;
   border-radius:28px;
-  padding:16px;
-  box-shadow:8px 8px 0 #171717;
+  padding:15px;
+  box-shadow:7px 7px 0 #171717;
 }
 
 .day-title{
-  font-size:30px;
+  font-size:28px;
   font-weight:900;
   color:#102f68;
-  margin:0 0 6px;
+  margin:0 0 5px;
 }
 
-.day-subtitle{
-  font-size:16px;
+.day-sub{
+  font-size:15px;
   font-weight:900;
   color:#667085;
-  margin-bottom:18px;
+  margin-bottom:15px;
 }
 
 .pair-card{
@@ -134,8 +133,8 @@ h1{
   background:#fffdf7;
   border:4px solid #171717;
   border-radius:24px;
-  padding:18px 16px 18px 24px;
-  margin-bottom:18px;
+  padding:16px 14px 16px 24px;
+  margin-bottom:16px;
   overflow:hidden;
 }
 
@@ -145,41 +144,43 @@ h1{
   left:0;
   top:0;
   bottom:0;
-  width:13px;
-  background:linear-gradient(#f5a000 0 50%, #20c765 50% 100%);
+  width:12px;
+  background:linear-gradient(#f5a000 0 50%,#20c765 50% 100%);
 }
 
 .pair-title{
-  font-size:23px;
+  font-size:22px;
   font-weight:900;
-  margin-bottom:16px;
-  border-bottom:4px dashed #171717;
+  margin-bottom:13px;
+  border-bottom:3px dashed #171717;
   padding-bottom:8px;
 }
 
-.person-zone{
-  padding:12px;
-  border-radius:18px;
-  margin-bottom:12px;
+.zone{
   background:#f7f7f2;
   border:2px dashed #d8d0bf;
+  border-radius:18px;
+  padding:12px;
+  margin-bottom:11px;
 }
 
-.person-name{
-  font-size:24px;
+.name{
+  font-size:23px;
   font-weight:900;
   margin-bottom:10px;
+  line-height:1.15;
 }
 
 .agent-head{
   display:flex;
   align-items:center;
-  gap:14px;
+  gap:12px;
+  margin-bottom:10px;
 }
 
 .avatar{
-  width:66px;
-  height:66px;
+  width:62px;
+  height:62px;
   border-radius:50%;
   object-fit:cover;
   border:4px solid #171717;
@@ -187,19 +188,20 @@ h1{
 }
 
 .avatar-placeholder{
-  width:66px;
-  height:66px;
+  width:62px;
+  height:62px;
   border-radius:50%;
   border:4px solid #171717;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:30px;
+  font-size:28px;
   background:#f1d58a;
+  flex:0 0 auto;
 }
 
 .info{
-  margin-top:10px;
+  margin-top:9px;
 }
 
 .info-label{
@@ -207,15 +209,16 @@ h1{
   font-weight:900;
   color:#667085;
   text-transform:uppercase;
-  letter-spacing:1px;
+  letter-spacing:.7px;
+  margin-bottom:3px;
 }
 
 .info-value{
-  font-size:21px;
+  font-size:20px;
   font-weight:900;
   color:#171717;
   line-height:1.25;
-  margin-top:3px;
+  word-break:break-word;
 }
 
 .badge{
@@ -225,7 +228,7 @@ h1{
   border-radius:999px;
   border:3px solid #171717;
   font-weight:900;
-  background:#e9ffeF;
+  background:#e9ffef;
 }
 
 .badge.warn{
@@ -233,6 +236,7 @@ h1{
 }
 
 .empty{
+  min-width:100%;
   text-align:center;
   font-size:18px;
   font-weight:900;
@@ -246,13 +250,13 @@ h1{
   display:block;
   width:100%;
   text-align:center;
-  margin:28px auto 10px;
-  padding:17px 20px;
+  margin:26px auto 10px;
+  padding:16px 20px;
   border:4px solid #171717;
   border-radius:20px;
   background:#102f68;
   color:white;
-  font-size:22px;
+  font-size:21px;
   font-weight:900;
   text-decoration:none;
   box-shadow:6px 6px 0 #171717;
@@ -267,7 +271,7 @@ h1{
 
   <section class="intro">
     <h1>Espace stagiaires</h1>
-    <p>Les stagiaires prévus par date, avec leur référent du jour et les infos utiles.</p>
+    <p>Les stagiaires prévus par date, avec leur référent affilié et les infos utiles du jour.</p>
   </section>
 
   <div id="status" class="status">Chargement…</div>
@@ -277,7 +281,7 @@ h1{
     <div class="summary-big">Chargement…</div>
   </section>
 
-  <div class="carousel-label">📅 Journées prévues</div>
+  <div class="carousel-title">📅 Journées prévues</div>
 
   <main id="results" class="carousel">
     <div class="empty">Chargement des stagiaires…</div>
@@ -290,20 +294,20 @@ h1{
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbzZITQIw7jbrJHyPl7xfcFjv8H1zQrq7yF73ekVx3S23Efjo2fWRsZ-YIiWNOMYCs3r/exec";
 
-function clean(value){
-  return value && String(value).trim() !== "" ? String(value).trim() : "Non renseigné";
+function clean(v){
+  return v && String(v).trim() !== "" ? String(v).trim() : "Non renseigné";
 }
 
-function isMissing(value){
-  return !value || String(value).trim() === "" || String(value).trim() === "Non renseigné";
+function missing(v){
+  const x = String(v || "").trim();
+  return !x || x === "Non renseigné" || x === "Référent non renseigné";
 }
 
 function todayFr(){
   const d = new Date();
-  const dd = String(d.getDate()).padStart(2,"0");
-  const mm = String(d.getMonth()+1).padStart(2,"0");
-  const yyyy = d.getFullYear();
-  return dd + "/" + mm + "/" + yyyy;
+  return String(d.getDate()).padStart(2,"0") + "/" +
+         String(d.getMonth()+1).padStart(2,"0") + "/" +
+         d.getFullYear();
 }
 
 function parseFr(date){
@@ -319,10 +323,7 @@ function groupByDate(data){
     const date = clean(item.date);
 
     if(!groups[date]){
-      groups[date] = {
-        date,
-        pairs:[]
-      };
+      groups[date] = {date, pairs:[]};
     }
 
     groups[date].pairs.push({
@@ -346,14 +347,15 @@ function renderSummary(groups){
 
   if(todayGroup){
     const count = todayGroup.pairs.length;
-    const missingPhones = todayGroup.pairs.filter(p => isMissing(p.agent_telephone)).length;
+    const missingRefs = todayGroup.pairs.filter(p => missing(p.agent_nom)).length;
+    const missingPhones = todayGroup.pairs.filter(p => missing(p.agent_telephone)).length;
 
     box.innerHTML = `
       <div class="summary-title">📍 Aujourd’hui</div>
-      <div class="summary-big">${count} stagiaire${count>1 ? "s" : ""}</div>
-      <div class="summary-line">🟢 ${count} référent${count>1 ? "s" : ""} affilié${count>1 ? "s" : ""}</div>
-      <div class="summary-line">☎️ ${missingPhones} téléphone${missingPhones>1 ? "s" : ""} manquant${missingPhones>1 ? "s" : ""}</div>
-      <div class="summary-line">${missingPhones ? "⚠️ Vérifier les contacts" : "✅ Infos principales OK"}</div>
+      <div class="summary-big">${count} stagiaire${count>1?"s":""}</div>
+      <div class="summary-line">🟢 ${count - missingRefs} référent${count - missingRefs>1?"s":""} trouvé${count - missingRefs>1?"s":""}</div>
+      <div class="summary-line">☎️ ${missingPhones} contact${missingPhones>1?"s":""} à vérifier</div>
+      <div class="summary-line">${missingRefs || missingPhones ? "⚠️ Vérification utile" : "✅ Tout est prêt"}</div>
     `;
     return;
   }
@@ -363,7 +365,7 @@ function renderSummary(groups){
       <div class="summary-title">📍 Aujourd’hui</div>
       <div class="summary-big">Aucun stagiaire aujourd’hui</div>
       <div class="summary-line">➡️ Prochaine présence : ${nextGroup.date}</div>
-      <div class="summary-line">🎓 ${nextGroup.pairs.length} stagiaire${nextGroup.pairs.length>1 ? "s" : ""} prévu${nextGroup.pairs.length>1 ? "s" : ""}</div>
+      <div class="summary-line">🎓 ${nextGroup.pairs.length} stagiaire${nextGroup.pairs.length>1?"s":""} prévu${nextGroup.pairs.length>1?"s":""}</div>
     `;
     return;
   }
@@ -396,42 +398,43 @@ function render(data, updatedAt){
 
   results.innerHTML = groups.map(group => {
     const cards = group.pairs.map(pair => {
-      const phoneMissing = isMissing(pair.agent_telephone);
+      const phoneMissing = missing(pair.agent_telephone);
+      const refMissing = missing(pair.agent_nom);
 
       return `
         <article class="pair-card">
           <div class="pair-title">Binôme du jour</div>
 
-          <div class="person-zone">
-            <div class="person-name">🎓 ${clean(pair.stagiaire_nom)}</div>
+          <div class="zone">
+            <div class="name">🎓 ${clean(pair.stagiaire_nom)}</div>
             <div class="info">
-              <div class="info-label">🕒 Horaire stagiaire</div>
-              <div class="info-value">${clean(pair.stagiaire_horaire)}</div>
+              <div class="info-label">Horaire stagiaire</div>
+              <div class="info-value">🕒 ${clean(pair.stagiaire_horaire)}</div>
             </div>
           </div>
 
-          <div class="person-zone">
+          <div class="zone">
             <div class="agent-head">
               ${
                 pair.agent_avatar
                 ? `<img class="avatar" src="${pair.agent_avatar}" alt="${clean(pair.agent_nom)}">`
                 : `<div class="avatar-placeholder">👤</div>`
               }
-              <div class="person-name">🟢 ${clean(pair.agent_nom)}</div>
+              <div class="name">🟢 ${clean(pair.agent_nom)}</div>
             </div>
 
             <div class="info">
-              <div class="info-label">🕒 Horaire référent</div>
-              <div class="info-value">${clean(pair.agent_horaire)}</div>
+              <div class="info-label">Horaire référent</div>
+              <div class="info-value">🕒 ${clean(pair.agent_horaire)}</div>
             </div>
 
             <div class="info">
-              <div class="info-label">☎️ Contact / GHE</div>
-              <div class="info-value">${clean(pair.agent_telephone)}</div>
+              <div class="info-label">Contact / GHE</div>
+              <div class="info-value">☎️ ${clean(pair.agent_telephone)}</div>
             </div>
 
-            <div class="badge ${phoneMissing ? "warn" : ""}">
-              ${phoneMissing ? "⚠️ Contact à vérifier" : "✅ Contact renseigné"}
+            <div class="badge ${phoneMissing || refMissing ? "warn" : ""}">
+              ${phoneMissing || refMissing ? "⚠️ À vérifier" : "✅ Infos référent OK"}
             </div>
           </div>
         </article>
@@ -441,7 +444,7 @@ function render(data, updatedAt){
     return `
       <section class="day-slide">
         <h2 class="day-title">📅 ${group.date}</h2>
-        <div class="day-subtitle">${group.pairs.length} stagiaire${group.pairs.length>1 ? "s" : ""} prévu${group.pairs.length>1 ? "s" : ""}</div>
+        <div class="day-sub">${group.pairs.length} stagiaire${group.pairs.length>1?"s":""} prévu${group.pairs.length>1?"s":""}</div>
         ${cards}
       </section>
     `;
