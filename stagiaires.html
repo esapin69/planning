@@ -3,138 +3,204 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Formations GHE</title>
+<title>Espace stagiaires</title>
 
 <style>
 *{box-sizing:border-box}
 
 body{
   margin:0;
-  background:radial-gradient(circle at top,#fff9e8 0,#f6edcf 55%,#efe2bb 100%);
-  color:#07183f;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-family:Arial,sans-serif;
+  background:#f4efe4;
+  color:#171717;
 }
 
-.page{max-width:760px;margin:auto;padding:24px 16px 44px}
-.header{text-align:center;margin:10px 0 26px}
+.page{
+  max-width:760px;
+  margin:auto;
+  padding:14px;
+}
+
+.hero{
+  width:100%;
+  display:block;
+  border:4px solid #171717;
+  border-radius:26px;
+  box-shadow:8px 8px 0 #171717;
+  margin-bottom:22px;
+}
+
+.intro{
+  background:#fffaf0;
+  border:4px solid #171717;
+  border-radius:24px;
+  padding:18px;
+  box-shadow:7px 7px 0 #171717;
+  margin-bottom:24px;
+}
 
 h1{
-  font-size:52px;
-  line-height:.95;
-  margin:0;
-  font-weight:1000;
-  letter-spacing:1px;
-  text-shadow:0 3px 0 rgba(255,200,70,.55);
-}
-
-h2{
-  margin:10px 0 0;
-  font-size:27px;
-  color:#0876b8;
-  font-weight:1000;
-}
-
-.box{
-  background:#fff8e9;
-  border:4px solid #07183f;
-  border-radius:28px;
-  padding:24px 16px 20px;
-  margin:26px 0;
-  box-shadow:0 12px 0 rgba(7,24,63,.18), inset 0 0 0 2px rgba(255,199,44,.22);
-}
-
-.title{
-  color:#07183f;
-  font-size:30px;
-  font-weight:1000;
-  text-align:center;
-  margin:0 0 16px;
+  margin:0 0 10px;
+  font-size:34px;
+  line-height:1;
   text-transform:uppercase;
-  letter-spacing:.5px;
-  line-height:1.05;
-  text-shadow:0 3px 0 rgba(255,200,70,.45);
 }
 
-.text{
-  font-size:19px;
+.intro p{
+  margin:0;
+  font-size:17px;
   font-weight:800;
-  line-height:1.35;
+}
+
+.status{
   text-align:center;
-  margin:0 0 18px;
+  font-weight:900;
+  color:#777;
+  margin:26px 0;
 }
 
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:16px;
+.day-block{
+  background:#fffaf0;
+  border:4px solid #171717;
+  border-radius:26px;
+  padding:16px;
+  margin-bottom:28px;
+  box-shadow:7px 7px 0 #171717;
 }
 
-.btn{
+.day-title{
+  font-size:27px;
+  font-weight:900;
+  color:#102f68;
+  margin:0 0 16px;
+}
+
+.inner-card{
   position:relative;
+  border:3px solid #171717;
+  border-radius:22px;
+  padding:16px 14px 16px 22px;
+  margin-bottom:16px;
+  background:#fffdf7;
   overflow:hidden;
+}
+
+.inner-card:last-child{margin-bottom:0}
+
+.inner-card.stagiaire::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:12px;
+  background:#f5a000;
+}
+
+.inner-card.agent::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:12px;
+  background:#20c765;
+}
+
+.card-title{
+  font-size:23px;
+  font-weight:900;
+  text-transform:uppercase;
+  border-bottom:3px dashed #171717;
+  padding-bottom:8px;
+  margin-bottom:14px;
+}
+
+.person{
+  padding:10px 0;
+  border-bottom:2px dashed #c8c0b0;
+}
+
+.person:last-child{border-bottom:0}
+
+.person-name{
+  font-size:21px;
+  font-weight:900;
+  margin-bottom:10px;
+}
+
+.line{
+  display:grid;
+  grid-template-columns:105px 1fr;
+  gap:10px;
+  margin:7px 0;
+  font-size:17px;
+}
+
+.label{
+  color:#5f6b7c;
+  font-weight:900;
+  text-transform:uppercase;
+  font-size:14px;
+  letter-spacing:1px;
+}
+
+.value{
+  font-weight:900;
+}
+
+.agent-head{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:12px;
+}
+
+.avatar{
+  width:62px;
+  height:62px;
+  border-radius:50%;
+  object-fit:cover;
+  border:3px solid #171717;
+  background:#eee;
+}
+
+.avatar-placeholder{
+  width:62px;
+  height:62px;
+  border-radius:50%;
+  border:3px solid #171717;
   display:flex;
   align-items:center;
   justify-content:center;
-  min-height:88px;
-  padding:14px;
-  border:4px solid #07183f;
-  border-radius:24px;
-  color:#f8f0dc;
-  font-size:24px;
-  font-weight:1000;
-  line-height:1.05;
+  font-size:28px;
+  font-weight:900;
+  background:#f1d58a;
+}
+
+.empty{
   text-align:center;
-  text-decoration:none;
-  letter-spacing:.3px;
-  box-shadow:0 9px 0 rgba(0,0,0,.28), inset 0 0 0 3px rgba(255,199,44,.5);
-  text-shadow:0 2px 0 rgba(0,0,0,.28);
+  font-size:18px;
+  font-weight:900;
+  padding:22px;
+  border:3px dashed #171717;
+  border-radius:18px;
+  background:#fffdf7;
 }
-
-.btn::after{
-  content:"";
-  position:absolute;
-  inset:8px;
-  border:2px dashed rgba(255,218,110,.55);
-  border-radius:17px;
-  pointer-events:none;
-}
-
-.btn::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:
-    radial-gradient(circle at 20% 20%,rgba(255,255,255,.22),transparent 28%),
-    linear-gradient(135deg,rgba(255,255,255,.16),transparent 45%);
-  pointer-events:none;
-}
-
-.btn span{position:relative;z-index:1}
-
-.full{grid-column:1 / -1}
-.small{min-height:62px;font-size:21px}
-
-.orange{background:linear-gradient(145deg,#ff9f1c,#d45b00)}
-.blue{background:linear-gradient(145deg,#0b85ff,#064fc0)}
-.green{background:linear-gradient(145deg,#178f42,#075e28)}
-.purple{background:linear-gradient(145deg,#7a3fc2,#45207f)}
-.navy{background:linear-gradient(145deg,#10285f,#020b24)}
 
 .back{
   display:block;
-  margin:28px auto 0;
-  max-width:360px;
-}
-
-@media(max-width:520px){
-  .page{padding:18px 12px 36px}
-  h1{font-size:44px}
-  h2{font-size:24px}
-  .box{padding:22px 12px 18px}
-  .title{font-size:27px}
-  .grid{gap:13px}
-  .btn{font-size:21px;min-height:80px}
-  .small{font-size:19px}
+  width:max-content;
+  margin:30px auto 10px;
+  padding:13px 20px;
+  border:4px solid #171717;
+  border-radius:16px;
+  background:#fffaf0;
+  color:#171717;
+  font-size:18px;
+  font-weight:900;
+  text-decoration:none;
+  box-shadow:5px 5px 0 #171717;
 }
 </style>
 </head>
@@ -142,59 +208,154 @@ h2{
 <body>
 <div class="page">
 
-  <div class="header">
-    <h1>FORMATIONS</h1>
-    <h2>convocations, calendrier & retours</h2>
-  </div>
+  <img class="hero" src="Image/Autre page/Photo_stagiaire.png" alt="Espace stagiaires">
 
-  <div class="box">
-    <div class="title">Retour formation</div>
-    <p class="text">
-      Tu reviens d’une formation ? Partage les informations importantes avec l’équipe.
-    </p>
-    <div class="grid">
-      <a class="btn orange full" href="https://docs.google.com/forms/d/1toa3uNjlocKOdH_Y41UQSF2QNm_CtmKEX6Kb1o0AHrs/viewform" target="_blank" rel="noopener">
-        <span>COMPTE-RENDU<br>DE FORMATION 📝</span>
-      </a>
-    </div>
-  </div>
+  <section class="intro">
+    <h1>Espace stagiaires</h1>
+    <p>Retrouve les stagiaires prévus par date, avec l’agent affilié et les informations utiles du jour.</p>
+  </section>
 
-  <div class="box">
-    <div class="title">Convocations officielles</div>
-    <p class="text">
-      Consulte les PDF officiels : dates, horaires et agents convoqués.
-    </p>
-    <div class="grid">
-      <a class="btn blue full" href="https://drive.google.com/drive/folders/1QZowEb7jxOmzQIl2yKx6KGB9RdvCxP6w" target="_blank" rel="noopener">
-        <span>OUVRIR LES<br>PDF OFFICIELS 📄</span>
-      </a>
-    </div>
-  </div>
+  <div id="status" class="status">API pas encore branchée.</div>
 
-  <div class="box">
-    <div class="title">Gestion formations</div>
-    <p class="text">
-      Accès organisation : calendrier global et fichiers ICS des formations.
-    </p>
-    <div class="grid">
-      <a class="btn blue" href="webcal://calendar.google.com/calendar/ical/c5da5df12db0eba65a14410cada08fea4e5a8037ddd256b03e7426cb22cb751b%40group.calendar.google.com/public/basic.ics">
-        <span>iOS 🍎</span>
-      </a>
+  <main id="results">
+    <div class="empty">Aucune donnée affichée pour le moment.</div>
+  </main>
 
-      <a class="btn green" href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fical%2Fc5da5df12db0eba65a14410cada08fea4e5a8037ddd256b03e7426cb22cb751b%2540group.calendar.google.com%2Fpublic%2Fbasic.ics" target="_blank" rel="noopener">
-        <span>ANDROID 🤖</span>
-      </a>
-
-      <a class="btn purple small full" href="https://drive.google.com/drive/folders/1D9sjfbM4kZPmp5-qIH4SZuzn6U6k-tDY" target="_blank" rel="noopener">
-        <span>IMPORT MANUEL (.ICS)</span>
-      </a>
-    </div>
-  </div>
-
-  <a class="btn navy small back" href="/">
-    <span>RETOUR ACCUEIL ⬅️</span>
-  </a>
+  <a class="back" href="index.html">← Retour à l’accueil</a>
 
 </div>
+
+<script>
+const API_URL = "";
+
+function clean(value){
+  return value && String(value).trim() !== "" ? String(value).trim() : "Non renseigné";
+}
+
+function groupByDate(data){
+  const groups = {};
+
+  data.forEach(item => {
+    const date = clean(item.date);
+
+    if(!groups[date]){
+      groups[date] = {
+        date,
+        stagiaires: [],
+        agents: {}
+      };
+    }
+
+    groups[date].stagiaires.push({
+      nom: item.stagiaire_nom,
+      horaire: item.stagiaire_horaire
+    });
+
+    const agentKey = clean(item.agent_nom);
+
+    groups[date].agents[agentKey] = {
+      nom: item.agent_nom,
+      horaire: item.agent_horaire,
+      telephone: item.agent_telephone,
+      avatar: item.agent_avatar
+    };
+  });
+
+  return Object.values(groups);
+}
+
+function render(data, updatedAt){
+  const results = document.getElementById("results");
+  const status = document.getElementById("status");
+
+  if(!data || data.length === 0){
+    status.textContent = "Aucune donnée trouvée.";
+    results.innerHTML = `<div class="empty">Aucun stagiaire prévu pour le moment.</div>`;
+    return;
+  }
+
+  const groups = groupByDate(data);
+
+  status.textContent = updatedAt
+    ? "Dernière mise à jour : " + new Date(updatedAt).toLocaleString("fr-FR")
+    : "Données chargées.";
+
+  results.innerHTML = groups.map(group => {
+    const stagiairesHtml = group.stagiaires.map(stagiaire => `
+      <div class="person">
+        <div class="person-name">🎓 ${clean(stagiaire.nom)}</div>
+        <div class="line">
+          <div class="label">Horaire</div>
+          <div class="value">${clean(stagiaire.horaire)}</div>
+        </div>
+      </div>
+    `).join("");
+
+    const agentsHtml = Object.values(group.agents).map(agent => `
+      <div class="person">
+        <div class="agent-head">
+          ${
+            agent.avatar
+            ? `<img class="avatar" src="${agent.avatar}" alt="${clean(agent.nom)}">`
+            : `<div class="avatar-placeholder">👤</div>`
+          }
+          <div class="person-name">${clean(agent.nom)}</div>
+        </div>
+
+        <div class="line">
+          <div class="label">Horaire</div>
+          <div class="value">${clean(agent.horaire)}</div>
+        </div>
+
+        <div class="line">
+          <div class="label">Téléphone</div>
+          <div class="value">${clean(agent.telephone)}</div>
+        </div>
+      </div>
+    `).join("");
+
+    return `
+      <section class="day-block">
+        <h2 class="day-title">📅 ${group.date}</h2>
+
+        <div class="inner-card stagiaire">
+          <div class="card-title">Stagiaire(s)</div>
+          ${stagiairesHtml}
+        </div>
+
+        <div class="inner-card agent">
+          <div class="card-title">Agent affilié</div>
+          ${agentsHtml}
+        </div>
+      </section>
+    `;
+  }).join("");
+}
+
+function loadWithJsonp(){
+  if(!API_URL){
+    return;
+  }
+
+  const callbackName = "stagiairesCallback_" + Date.now();
+
+  window[callbackName] = function(payload){
+    const data = payload.resultats || [];
+    render(data, payload.updatedAt);
+    delete window[callbackName];
+  };
+
+  const script = document.createElement("script");
+  script.src = API_URL + (API_URL.includes("?") ? "&" : "?") + "callback=" + callbackName;
+  script.onerror = function(){
+    document.getElementById("status").textContent = "Erreur : API inaccessible.";
+  };
+
+  document.body.appendChild(script);
+}
+
+loadWithJsonp();
+</script>
+
 </body>
 </html>
