@@ -1,3 +1,298 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Espace stagiaires</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4efe4;
+  color:#171717;
+}
+
+.page{
+  max-width:760px;
+  margin:auto;
+  padding:14px;
+}
+
+.hero{
+  width:100%;
+  display:block;
+  border:4px solid #171717;
+  border-radius:26px;
+  box-shadow:7px 7px 0 #171717;
+  margin-bottom:18px;
+  background:#fff;
+}
+
+.intro{
+  background:#fffaf0;
+  border:4px solid #171717;
+  border-radius:24px;
+  padding:18px;
+  box-shadow:6px 6px 0 #171717;
+  margin-bottom:18px;
+}
+
+h1{
+  margin:0 0 8px;
+  font-size:34px;
+  line-height:1;
+  text-transform:uppercase;
+}
+
+.intro p{
+  margin:0;
+  font-size:17px;
+  font-weight:800;
+  line-height:1.35;
+}
+
+.status{
+  text-align:center;
+  font-weight:900;
+  color:#6b7280;
+  margin:16px 0;
+}
+
+.summary{
+  background:#102f68;
+  color:white;
+  border:4px solid #171717;
+  border-radius:26px;
+  padding:18px;
+  box-shadow:7px 7px 0 #171717;
+  margin-bottom:22px;
+}
+
+.summary-title{
+  font-size:23px;
+  font-weight:900;
+  margin-bottom:8px;
+}
+
+.summary-big{
+  font-size:30px;
+  font-weight:900;
+  margin-bottom:8px;
+}
+
+.summary-line{
+  font-size:16px;
+  font-weight:800;
+  margin:6px 0;
+}
+
+.carousel-title{
+  font-size:22px;
+  font-weight:900;
+  margin:8px 0 12px;
+}
+
+.carousel{
+  display:flex;
+  gap:18px;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  padding:4px 4px 18px;
+}
+
+.carousel::-webkit-scrollbar{display:none}
+
+.day-slide{
+  min-width:92%;
+  scroll-snap-align:start;
+  background:#fffaf0;
+  border:4px solid #171717;
+  border-radius:28px;
+  padding:15px;
+  box-shadow:7px 7px 0 #171717;
+}
+
+.day-title{
+  font-size:28px;
+  font-weight:900;
+  color:#102f68;
+  margin:0 0 5px;
+}
+
+.day-sub{
+  font-size:15px;
+  font-weight:900;
+  color:#667085;
+  margin-bottom:15px;
+}
+
+.pair-card{
+  position:relative;
+  background:#fffdf7;
+  border:4px solid #171717;
+  border-radius:24px;
+  padding:16px 14px 16px 24px;
+  margin-bottom:16px;
+  overflow:hidden;
+}
+
+.pair-card::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:12px;
+  background:linear-gradient(#f5a000 0 50%,#20c765 50% 100%);
+}
+
+.pair-title{
+  font-size:22px;
+  font-weight:900;
+  margin-bottom:13px;
+  border-bottom:3px dashed #171717;
+  padding-bottom:8px;
+}
+
+.zone{
+  background:#f7f7f2;
+  border:2px dashed #d8d0bf;
+  border-radius:18px;
+  padding:12px;
+  margin-bottom:11px;
+}
+
+.name{
+  font-size:23px;
+  font-weight:900;
+  margin-bottom:10px;
+  line-height:1.15;
+}
+
+.agent-head{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:10px;
+}
+
+.avatar{
+  width:62px;
+  height:62px;
+  border-radius:50%;
+  object-fit:cover;
+  border:4px solid #171717;
+  background:#eee;
+  flex:0 0 auto;
+}
+
+.avatar-placeholder{
+  width:62px;
+  height:62px;
+  border-radius:50%;
+  border:4px solid #171717;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  background:#f1d58a;
+  flex:0 0 auto;
+}
+
+.info{
+  margin-top:9px;
+}
+
+.info-label{
+  font-size:13px;
+  font-weight:900;
+  color:#667085;
+  text-transform:uppercase;
+  letter-spacing:.7px;
+  margin-bottom:3px;
+}
+
+.info-value{
+  font-size:20px;
+  font-weight:900;
+  color:#171717;
+  line-height:1.25;
+  word-break:break-word;
+}
+
+.badge{
+  display:inline-block;
+  margin-top:10px;
+  padding:8px 12px;
+  border-radius:999px;
+  border:3px solid #171717;
+  font-weight:900;
+  background:#e9ffef;
+}
+
+.badge.warn{
+  background:#fff1c7;
+}
+
+.empty{
+  min-width:100%;
+  text-align:center;
+  font-size:18px;
+  font-weight:900;
+  padding:22px;
+  border:3px dashed #171717;
+  border-radius:18px;
+  background:#fffdf7;
+}
+
+.back{
+  display:block;
+  width:100%;
+  text-align:center;
+  margin:26px auto 10px;
+  padding:16px 20px;
+  border:4px solid #171717;
+  border-radius:20px;
+  background:#102f68;
+  color:white;
+  font-size:21px;
+  font-weight:900;
+  text-decoration:none;
+  box-shadow:6px 6px 0 #171717;
+}
+</style>
+</head>
+
+<body>
+<div class="page">
+
+  <img class="hero" src="Image/Autre page/Photo_stagiaire.png" alt="Espace stagiaires">
+
+  <section class="intro">
+    <h1>Espace stagiaires</h1>
+    <p>Les stagiaires prévus par date, avec leur référent affilié et les infos utiles du jour.</p>
+  </section>
+
+  <div id="status" class="status">Chargement…</div>
+
+  <section id="summary" class="summary">
+    <div class="summary-title">🧭 Point stagiaires</div>
+    <div class="summary-big">Chargement…</div>
+  </section>
+
+  <div class="carousel-title">📅 Journées prévues</div>
+
+  <main id="results" class="carousel">
+    <div class="empty">Chargement des stagiaires…</div>
+  </main>
+
+  <a class="back" href="index.html">🏠 Retour accueil</a>
+
+</div>
+
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbzZITQIw7jbrJHyPl7xfcFjv8H1zQrq7yF73ekVx3S23Efjo2fWRsZ-YIiWNOMYCs3r/exec";
 
@@ -59,32 +354,29 @@ function renderSummary(groups){
     const missingGhe = todayGroup.pairs.filter(p => missing(p.agent_ghe)).length;
     const missingPhones = todayGroup.pairs.filter(p => missing(p.agent_telephone)).length;
 
-    box.innerHTML = `
-      <div class="summary-title">📍 Aujourd’hui</div>
-      <div class="summary-big">${count} stagiaire${count>1?"s":""}</div>
-      <div class="summary-line">🟢 ${count - missingRefs} référent${count - missingRefs>1?"s":""} trouvé${count - missingRefs>1?"s":""}</div>
-      <div class="summary-line">🏥 ${missingGhe} GHE à vérifier</div>
-      <div class="summary-line">☎️ ${missingPhones} téléphone${missingPhones>1?"s":""} à vérifier</div>
-      <div class="summary-line">${missingRefs || missingGhe || missingPhones ? "⚠️ Vérification utile" : "✅ Tout est prêt"}</div>
-    `;
+    box.innerHTML =
+      '<div class="summary-title">📍 Aujourd’hui</div>' +
+      '<div class="summary-big">' + count + ' stagiaire' + (count>1?'s':'') + '</div>' +
+      '<div class="summary-line">🟢 ' + (count - missingRefs) + ' référent' + (count - missingRefs>1?'s':'') + ' trouvé' + (count - missingRefs>1?'s':'') + '</div>' +
+      '<div class="summary-line">🏥 ' + missingGhe + ' GHE à vérifier</div>' +
+      '<div class="summary-line">☎️ ' + missingPhones + ' téléphone' + (missingPhones>1?'s':'') + ' à vérifier</div>' +
+      '<div class="summary-line">' + ((missingRefs || missingGhe || missingPhones) ? '⚠️ Vérification utile' : '✅ Tout est prêt') + '</div>';
     return;
   }
 
   if(nextGroup){
-    box.innerHTML = `
-      <div class="summary-title">📍 Aujourd’hui</div>
-      <div class="summary-big">Aucun stagiaire aujourd’hui</div>
-      <div class="summary-line">➡️ Prochaine présence : ${nextGroup.date}</div>
-      <div class="summary-line">🎓 ${nextGroup.pairs.length} stagiaire${nextGroup.pairs.length>1?"s":""} prévu${nextGroup.pairs.length>1?"s":""}</div>
-    `;
+    box.innerHTML =
+      '<div class="summary-title">📍 Aujourd’hui</div>' +
+      '<div class="summary-big">Aucun stagiaire aujourd’hui</div>' +
+      '<div class="summary-line">➡️ Prochaine présence : ' + nextGroup.date + '</div>' +
+      '<div class="summary-line">🎓 ' + nextGroup.pairs.length + ' stagiaire' + (nextGroup.pairs.length>1?'s':'') + ' prévu' + (nextGroup.pairs.length>1?'s':'') + '</div>';
     return;
   }
 
-  box.innerHTML = `
-    <div class="summary-title">📍 Aujourd’hui</div>
-    <div class="summary-big">Aucun stagiaire prévu</div>
-    <div class="summary-line">✅ Rien à préparer pour le moment</div>
-  `;
+  box.innerHTML =
+    '<div class="summary-title">📍 Aujourd’hui</div>' +
+    '<div class="summary-big">Aucun stagiaire prévu</div>' +
+    '<div class="summary-line">✅ Rien à préparer pour le moment</div>';
 }
 
 function render(data, updatedAt){
@@ -93,7 +385,7 @@ function render(data, updatedAt){
 
   if(!data || data.length === 0){
     status.textContent = "Aucune donnée trouvée.";
-    results.innerHTML = `<div class="empty">Aucun stagiaire prévu.</div>`;
+    results.innerHTML = '<div class="empty">Aucun stagiaire prévu.</div>';
     renderSummary([]);
     return;
   }
@@ -112,58 +404,58 @@ function render(data, updatedAt){
       const gheMissing = missing(pair.agent_ghe);
       const phoneMissing = missing(pair.agent_telephone);
 
-      return `
-        <article class="pair-card">
-          <div class="pair-title">Binôme du jour</div>
+      const avatarHtml = pair.agent_avatar
+        ? '<img class="avatar" src="' + clean(pair.agent_avatar) + '" alt="' + clean(pair.agent_nom) + '">'
+        : '<div class="avatar-placeholder">👤</div>';
 
-          <div class="zone">
-            <div class="name">🎓 ${clean(pair.stagiaire_nom)}</div>
-            <div class="info">
-              <div class="info-label">Horaire stagiaire</div>
-              <div class="info-value">🕒 ${clean(pair.stagiaire_horaire)}</div>
-            </div>
-          </div>
+      return (
+        '<article class="pair-card">' +
+          '<div class="pair-title">Binôme du jour</div>' +
 
-          <div class="zone">
-            <div class="agent-head">
-              ${
-                pair.agent_avatar
-                ? `<img class="avatar" src="${pair.agent_avatar}" alt="${clean(pair.agent_nom)}">`
-                : `<div class="avatar-placeholder">👤</div>`
-              }
-              <div class="name">🟢 ${clean(pair.agent_nom)}</div>
-            </div>
+          '<div class="zone">' +
+            '<div class="name">🎓 ' + clean(pair.stagiaire_nom) + '</div>' +
+            '<div class="info">' +
+              '<div class="info-label">Horaire stagiaire</div>' +
+              '<div class="info-value">🕒 ' + clean(pair.stagiaire_horaire) + '</div>' +
+            '</div>' +
+          '</div>' +
 
-            <div class="info">
-              <div class="info-label">Horaire référent</div>
-              <div class="info-value">🕒 ${clean(pair.agent_horaire)}</div>
-            </div>
+          '<div class="zone">' +
+            '<div class="agent-head">' +
+              avatarHtml +
+              '<div class="name">🟢 ' + clean(pair.agent_nom) + '</div>' +
+            '</div>' +
 
-            <div class="info">
-              <div class="info-label">GHE</div>
-              <div class="info-value">🏥 ${clean(pair.agent_ghe)}</div>
-            </div>
+            '<div class="info">' +
+              '<div class="info-label">Horaire référent</div>' +
+              '<div class="info-value">🕒 ' + clean(pair.agent_horaire) + '</div>' +
+            '</div>' +
 
-            <div class="info">
-              <div class="info-label">Téléphone</div>
-              <div class="info-value">☎️ ${clean(pair.agent_telephone)}</div>
-            </div>
+            '<div class="info">' +
+              '<div class="info-label">GHE</div>' +
+              '<div class="info-value">🏥 ' + clean(pair.agent_ghe) + '</div>' +
+            '</div>' +
 
-            <div class="badge ${refMissing || gheMissing || phoneMissing ? "warn" : ""}">
-              ${refMissing || gheMissing || phoneMissing ? "⚠️ À vérifier" : "✅ Infos référent OK"}
-            </div>
-          </div>
-        </article>
-      `;
+            '<div class="info">' +
+              '<div class="info-label">Téléphone</div>' +
+              '<div class="info-value">☎️ ' + clean(pair.agent_telephone) + '</div>' +
+            '</div>' +
+
+            '<div class="badge ' + ((refMissing || gheMissing || phoneMissing) ? 'warn' : '') + '">' +
+              ((refMissing || gheMissing || phoneMissing) ? '⚠️ À vérifier' : '✅ Infos référent OK') +
+            '</div>' +
+          '</div>' +
+        '</article>'
+      );
     }).join("");
 
-    return `
-      <section class="day-slide">
-        <h2 class="day-title">📅 ${group.date}</h2>
-        <div class="day-sub">${group.pairs.length} stagiaire${group.pairs.length>1?"s":""} prévu${group.pairs.length>1?"s":""}</div>
-        ${cards}
-      </section>
-    `;
+    return (
+      '<section class="day-slide">' +
+        '<h2 class="day-title">📅 ' + group.date + '</h2>' +
+        '<div class="day-sub">' + group.pairs.length + ' stagiaire' + (group.pairs.length>1?'s':'') + ' prévu' + (group.pairs.length>1?'s':'') + '</div>' +
+        cards +
+      '</section>'
+    );
   }).join("");
 }
 
@@ -180,7 +472,7 @@ function loadWithJsonp(){
 
   script.onerror = function(){
     document.getElementById("status").textContent = "Erreur : API inaccessible.";
-    document.getElementById("results").innerHTML = `<div class="empty">Impossible de charger les données.</div>`;
+    document.getElementById("results").innerHTML = '<div class="empty">Impossible de charger les données.</div>';
   };
 
   document.body.appendChild(script);
@@ -188,3 +480,6 @@ function loadWithJsonp(){
 
 loadWithJsonp();
 </script>
+
+</body>
+</html>
