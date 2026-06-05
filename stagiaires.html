@@ -1,551 +1,200 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Formations GHE</title>
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*{box-sizing:border-box}
 
-  <title>Planning stagiaires</title>
+body{
+  margin:0;
+  background:radial-gradient(circle at top,#fff9e8 0,#f6edcf 55%,#efe2bb 100%);
+  color:#07183f;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
 
-  <style>
-    :root {
-      --navy: #102b63;
-      --navy-dark: #0b2558;
-      --blue: #0f8ba7;
-      --sky: #dfeeff;
-      --card: #ffffff;
-      --muted: #6c778d;
-      --green-bg: #ecfff5;
-      --green: #30c95f;
-      --orange: #f5a623;
-      --cream: #fff8df;
-      --danger: #d93535;
-      --danger-bg: #fff0f0;
-      --shadow: rgba(16, 43, 99, 0.20);
-    }
+.page{max-width:760px;margin:auto;padding:24px 16px 44px}
+.header{text-align:center;margin:10px 0 26px}
 
-    * {
-      box-sizing: border-box;
-    }
+h1{
+  font-size:52px;
+  line-height:.95;
+  margin:0;
+  font-weight:1000;
+  letter-spacing:1px;
+  text-shadow:0 3px 0 rgba(255,200,70,.55);
+}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        linear-gradient(180deg, #eef9ff 0%, #dcecff 55%, #fffdf1 100%);
-      color: #10172a;
-    }
+h2{
+  margin:10px 0 0;
+  font-size:27px;
+  color:#0876b8;
+  font-weight:1000;
+}
 
-    .page {
-      width: 100%;
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 18px 20px 42px;
-    }
+.box{
+  background:#fff8e9;
+  border:4px solid #07183f;
+  border-radius:28px;
+  padding:24px 16px 20px;
+  margin:26px 0;
+  box-shadow:0 12px 0 rgba(7,24,63,.18), inset 0 0 0 2px rgba(255,199,44,.22);
+}
 
-    .hero {
-      border: 7px solid var(--navy);
-      border-radius: 38px;
-      overflow: hidden;
-      background: white;
-      box-shadow: 0 18px 0 rgba(16, 43, 99, 0.20);
-      margin: 8px 0 34px;
-    }
+.title{
+  color:#07183f;
+  font-size:30px;
+  font-weight:1000;
+  text-align:center;
+  margin:0 0 16px;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  line-height:1.05;
+  text-shadow:0 3px 0 rgba(255,200,70,.45);
+}
 
-    .hero img {
-      width: 100%;
-      display: block;
-    }
+.text{
+  font-size:19px;
+  font-weight:800;
+  line-height:1.35;
+  text-align:center;
+  margin:0 0 18px;
+}
 
-    .top-label {
-      text-align: center;
-      color: #3a97b3;
-      font-weight: 900;
-      font-size: clamp(22px, 4vw, 30px);
-      letter-spacing: 7px;
-      margin: 0;
-    }
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
 
-    h1 {
-      text-align: center;
-      color: var(--navy);
-      font-size: clamp(48px, 10vw, 76px);
-      line-height: 0.95;
-      margin: 12px 0 22px;
-      font-weight: 1000;
-      letter-spacing: -2px;
-      text-shadow: 0 7px 0 #ffe9a3;
-    }
+.btn{
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:88px;
+  padding:14px;
+  border:4px solid #07183f;
+  border-radius:24px;
+  color:#f8f0dc;
+  font-size:24px;
+  font-weight:1000;
+  line-height:1.05;
+  text-align:center;
+  text-decoration:none;
+  letter-spacing:.3px;
+  box-shadow:0 9px 0 rgba(0,0,0,.28), inset 0 0 0 3px rgba(255,199,44,.5);
+  text-shadow:0 2px 0 rgba(0,0,0,.28);
+}
 
-    .status {
-      width: fit-content;
-      margin: 0 auto 44px;
-      padding: 16px 32px;
-      border-radius: 999px;
-      background: #fff8df;
-      color: #713915;
-      border: 5px solid var(--orange);
-      font-weight: 1000;
-      font-size: 28px;
-    }
+.btn::after{
+  content:"";
+  position:absolute;
+  inset:8px;
+  border:2px dashed rgba(255,218,110,.55);
+  border-radius:17px;
+  pointer-events:none;
+}
 
-    .section-title {
-      color: var(--navy);
-      font-size: clamp(34px, 7vw, 50px);
-      font-weight: 1000;
-      text-transform: uppercase;
-      margin: 34px 0 22px;
-      letter-spacing: -1px;
-    }
+.btn::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(255,255,255,.22),transparent 28%),
+    linear-gradient(135deg,rgba(255,255,255,.16),transparent 45%);
+  pointer-events:none;
+}
 
-    .day-card {
-      background: white;
-      border: 6px solid var(--navy);
-      border-radius: 38px;
-      box-shadow: 0 22px 0 rgba(16, 43, 99, 0.18);
-      overflow: hidden;
-      margin: 0 0 34px;
-    }
+.btn span{position:relative;z-index:1}
 
-    .day-header {
-      padding: 24px 30px;
-      background: linear-gradient(120deg, #0d3d7a, #0b9ab0);
-      color: white;
-    }
+.full{grid-column:1 / -1}
+.small{min-height:62px;font-size:21px}
 
-    .day-title {
-      font-size: clamp(34px, 7vw, 50px);
-      line-height: 1;
-      font-weight: 1000;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+.orange{background:linear-gradient(145deg,#ff9f1c,#d45b00)}
+.blue{background:linear-gradient(145deg,#0b85ff,#064fc0)}
+.green{background:linear-gradient(145deg,#178f42,#075e28)}
+.purple{background:linear-gradient(145deg,#7a3fc2,#45207f)}
+.navy{background:linear-gradient(145deg,#10285f,#020b24)}
 
-    .day-count {
-      margin-top: 10px;
-      font-size: 24px;
-      font-weight: 900;
-      opacity: 0.95;
-    }
+.back{
+  display:block;
+  margin:28px auto 0;
+  max-width:360px;
+}
 
-    .day-body {
-      padding: 28px 30px 34px;
-    }
-
-    .assignment-card {
-      position: relative;
-      background: #fbfdff;
-      border: 4px solid #e3e8f0;
-      border-left: 18px solid var(--orange);
-      border-radius: 34px;
-      padding: 28px 28px 30px;
-      margin: 0 0 28px;
-      box-shadow: 0 12px 22px rgba(16, 43, 99, 0.06);
-    }
-
-    .assignment-card:last-child {
-      margin-bottom: 0;
-    }
-
-    .assignment-card.has-alert {
-      border-left-color: var(--danger);
-    }
-
-    .date-line {
-      color: var(--navy);
-      font-size: clamp(32px, 6vw, 44px);
-      font-weight: 1000;
-      line-height: 1.05;
-      margin: 0 0 22px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .label {
-      color: var(--muted);
-      font-size: clamp(20px, 4vw, 28px);
-      letter-spacing: 5px;
-      font-weight: 1000;
-      text-transform: uppercase;
-      margin: 20px 0 4px;
-    }
-
-    .value {
-      color: #111827;
-      font-size: clamp(26px, 5.3vw, 36px);
-      font-weight: 1000;
-      line-height: 1.12;
-      margin: 0;
-    }
-
-    .small-value {
-      color: #111827;
-      font-size: clamp(22px, 4.6vw, 31px);
-      font-weight: 1000;
-      line-height: 1.16;
-      margin: 0;
-    }
-
-    .agent-box {
-      margin-top: 28px;
-      padding: 28px 28px;
-      background: var(--green-bg);
-      border-radius: 30px;
-      border-left: 16px solid var(--green);
-    }
-
-    .agent-box.warning {
-      background: var(--danger-bg);
-      border-left-color: var(--danger);
-    }
-
-    .referent-box {
-      margin-top: 22px;
-      padding: 28px 28px;
-      background: var(--green-bg);
-      border-radius: 30px;
-      border-left: 16px solid var(--green);
-    }
-
-    .referent-box.warning {
-      background: var(--danger-bg);
-      border-left-color: var(--danger);
-    }
-
-    .line {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      margin: 8px 0;
-    }
-
-    .emoji {
-      flex: 0 0 auto;
-      width: 36px;
-      text-align: center;
-      font-size: 28px;
-      line-height: 1.05;
-    }
-
-    .line-text {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .alert-list {
-      margin-top: 22px;
-      padding: 18px 20px;
-      border-radius: 24px;
-      background: var(--danger-bg);
-      color: #7f1d1d;
-      border: 3px solid #ffd1d1;
-      font-size: 20px;
-      font-weight: 850;
-      line-height: 1.25;
-    }
-
-    .alert-list div + div {
-      margin-top: 8px;
-    }
-
-    .empty {
-      background: white;
-      border-radius: 34px;
-      padding: 34px;
-      border: 5px solid #e5e7eb;
-      color: var(--navy);
-      font-weight: 1000;
-      font-size: 28px;
-      text-align: center;
-      margin-bottom: 34px;
-    }
-
-    .home-btn {
-      width: 100%;
-      border: none;
-      border-radius: 28px;
-      background: var(--navy);
-      color: white;
-      font-size: clamp(26px, 5vw, 36px);
-      font-weight: 1000;
-      padding: 26px 20px;
-      margin: 28px 0;
-      cursor: pointer;
-    }
-
-    .footer {
-      color: #65758f;
-      text-align: center;
-      font-size: 24px;
-      font-weight: 900;
-      margin: 22px 0 0;
-    }
-
-    .mini {
-      font-size: 18px;
-      font-weight: 800;
-      color: #6b7280;
-      margin-top: 6px;
-      word-break: break-word;
-    }
-
-    .refresh-btn {
-      display: block;
-      margin: 10px auto 28px;
-      border: 0;
-      background: transparent;
-      color: var(--muted);
-      font-weight: 900;
-      font-size: 18px;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-
-    @media (max-width: 420px) {
-      .page {
-        padding-left: 16px;
-        padding-right: 16px;
-      }
-
-      .day-body {
-        padding: 24px 20px 28px;
-      }
-
-      .assignment-card {
-        padding: 24px 18px 26px;
-      }
-
-      .agent-box,
-      .referent-box {
-        padding: 24px 18px;
-      }
-    }
-  </style>
+@media(max-width:520px){
+  .page{padding:18px 12px 36px}
+  h1{font-size:44px}
+  h2{font-size:24px}
+  .box{padding:22px 12px 18px}
+  .title{font-size:27px}
+  .grid{gap:13px}
+  .btn{font-size:21px;min-height:80px}
+  .small{font-size:19px}
+}
+</style>
 </head>
 
 <body>
-  <div class="page">
-    <div class="hero">
-      <img
-        src="https://dummyimage.com/1400x360/ffffff/102b63&text=BIENVENUE+STAGIAIRE+!"
-        alt="Bienvenue stagiaire"
-      >
-    </div>
+<div class="page">
 
-    <p class="top-label">ACCUEIL STAGIAIRES</p>
-    <h1>Fil des affectations</h1>
-
-    <div id="status" class="status">Chargement…</div>
-
-    <h2 class="section-title">Stagiaires à venir</h2>
-
-    <main id="app"></main>
-
-    <button class="home-btn" onclick="retourAccueil()">🏠 Retour accueil</button>
-
-    <button class="refresh-btn" onclick="refreshManual()">Rafraîchir maintenant</button>
-
-    <div id="footer" class="footer"></div>
+  <div class="header">
+    <h1>FORMATIONS</h1>
+    <h2>convocations, calendrier & retours</h2>
   </div>
 
-  <script>
-    const DATA = <?!= DATA_JSON ?>;
+  <div class="box">
+    <div class="title">Retour formation</div>
+    <p class="text">
+      Tu reviens d’une formation ? Partage les informations importantes avec l’équipe.
+    </p>
+    <div class="grid">
+      <a class="btn orange full" href="https://docs.google.com/forms/d/1toa3uNjlocKOdH_Y41UQSF2QNm_CtmKEX6Kb1o0AHrs/viewform" target="_blank" rel="noopener">
+        <span>COMPTE-RENDU<br>DE FORMATION 📝</span>
+      </a>
+    </div>
+  </div>
 
-    document.addEventListener('DOMContentLoaded', function () {
-      render(DATA);
-    });
+  <div class="box">
+    <div class="title">Convocations officielles</div>
+    <p class="text">
+      Consulte les PDF officiels : dates, horaires et agents convoqués.
+    </p>
+    <div class="grid">
+      <a class="btn blue full" href="https://drive.google.com/drive/folders/1QZowEb7jxOmzQIl2yKx6KGB9RdvCxP6w" target="_blank" rel="noopener">
+        <span>OUVRIR LES<br>PDF OFFICIELS 📄</span>
+      </a>
+    </div>
+  </div>
 
-    function render(data) {
-      const app = document.getElementById('app');
-      const status = document.getElementById('status');
-      const footer = document.getElementById('footer');
+  <div class="box">
+    <div class="title">Gestion formations</div>
+    <p class="text">
+      Accès organisation : calendrier global et fichiers ICS des formations.
+    </p>
+    <div class="grid">
+      <a class="btn blue" href="webcal://calendar.google.com/calendar/ical/c5da5df12db0eba65a14410cada08fea4e5a8037ddd256b03e7426cb22cb751b%40group.calendar.google.com/public/basic.ics">
+        <span>iOS 🍎</span>
+      </a>
 
-      if (!data || !data.ok) {
-        status.textContent = 'Cache absent';
-        app.innerHTML = `
-          <div class="empty">
-            Cache non généré.<br>
-            Lance <strong>refreshCacheNow</strong> dans Apps Script.
-          </div>
-        `;
-        footer.textContent = '';
-        return;
-      }
+      <a class="btn green" href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fical%2Fc5da5df12db0eba65a14410cada08fea4e5a8037ddd256b03e7426cb22cb751b%2540group.calendar.google.com%2Fpublic%2Fbasic.ics" target="_blank" rel="noopener">
+        <span>ANDROID 🤖</span>
+      </a>
 
-      status.textContent = `${data.totalAffectations || 0} affectation(s)`;
+      <a class="btn purple small full" href="https://drive.google.com/drive/folders/1D9sjfbM4kZPmp5-qIH4SZuzn6U6k-tDY" target="_blank" rel="noopener">
+        <span>IMPORT MANUEL (.ICS)</span>
+      </a>
+    </div>
+  </div>
 
-      if (!data.dates || data.dates.length === 0) {
-        app.innerHTML = `
-          <div class="empty">
-            Aucun stagiaire à venir.
-          </div>
-        `;
-        footer.textContent = `Dernière mise à jour : ${escapeHtml(data.generatedAtLabel || '')}`;
-        return;
-      }
+  <a class="btn navy small back" href="/">
+    <span>RETOUR ACCUEIL ⬅️</span>
+  </a>
 
-      app.innerHTML = data.dates.map(renderDay).join('');
-
-      footer.textContent = `Dernière mise à jour : ${data.generatedAtLabel || ''}`;
-    }
-
-    function renderDay(day) {
-      const count = day.affectations.length;
-      const countLabel = count > 1 ? `${count} affectations prévues` : `1 affectation prévue`;
-
-      return `
-        <section class="day-card">
-          <div class="day-header">
-            <h3 class="day-title">📅 ${escapeHtml(day.dateLabel)}</h3>
-            <div class="day-count">${escapeHtml(countLabel)}</div>
-          </div>
-
-          <div class="day-body">
-            ${day.affectations.map(renderAssignment).join('')}
-          </div>
-        </section>
-      `;
-    }
-
-    function renderAssignment(item) {
-      const hasAlert = item.alertes && item.alertes.length > 0;
-
-      const stagiaireWarning =
-        !item.stagiairePlanning ||
-        !item.stagiairePlanning.found ||
-        item.stagiairePlanning.isRepos;
-
-      const referentWarning =
-        item.referent &&
-        item.referent !== 'Non renseigné' &&
-        (!item.referentPlanning ||
-          !item.referentPlanning.found ||
-          item.referentPlanning.isRepos);
-
-      return `
-        <article class="assignment-card ${hasAlert ? 'has-alert' : ''}">
-          <h4 class="date-line">🎓 ${escapeHtml(item.stagiaire)}</h4>
-
-          <div class="label">Formation</div>
-          <p class="value">${escapeHtml(item.horaireFormation)}</p>
-
-          <div class="label">Lieu / service formation</div>
-          <p class="small-value">${escapeHtml(item.lieuFormation)}</p>
-
-          <div class="agent-box ${stagiaireWarning ? 'warning' : ''}">
-            <div class="label">Affectation agent ce jour</div>
-
-            <div class="line">
-              <div class="emoji">🕒</div>
-              <div class="line-text">
-                <p class="small-value">${escapeHtml(item.stagiairePlanning.horaire)}</p>
-              </div>
-            </div>
-
-            <div class="line">
-              <div class="emoji">🏥</div>
-              <div class="line-text">
-                <p class="small-value">${escapeHtml(item.stagiairePlanning.service)}</p>
-              </div>
-            </div>
-
-            ${item.stagiairePlanning.source ? `
-              <div class="mini">Source : ${escapeHtml(item.stagiairePlanning.source)}</div>
-            ` : ''}
-          </div>
-
-          <div class="referent-box ${referentWarning ? 'warning' : ''}">
-            <div class="label">Référent du jour</div>
-
-            <div class="line">
-              <div class="emoji">👨‍⚕️</div>
-              <div class="line-text">
-                <p class="value">${escapeHtml(item.referent)}</p>
-              </div>
-            </div>
-
-            <div class="label">Horaire référent ce jour</div>
-
-            <div class="line">
-              <div class="emoji">🕒</div>
-              <div class="line-text">
-                <p class="small-value">${escapeHtml(item.referentPlanning.horaire)}</p>
-              </div>
-            </div>
-
-            <div class="line">
-              <div class="emoji">🏥</div>
-              <div class="line-text">
-                <p class="small-value">${escapeHtml(item.referentPlanning.service)}</p>
-              </div>
-            </div>
-
-            <div class="label">Contact</div>
-
-            <div class="line">
-              <div class="emoji">🏷️</div>
-              <div class="line-text">
-                <p class="small-value">GHE : ${escapeHtml(item.ghe)}</p>
-              </div>
-            </div>
-
-            <div class="line">
-              <div class="emoji">📞</div>
-              <div class="line-text">
-                <p class="small-value">Téléphone : ${escapeHtml(item.telephone)}</p>
-              </div>
-            </div>
-
-            ${item.referentPlanning.source ? `
-              <div class="mini">Source : ${escapeHtml(item.referentPlanning.source)}</div>
-            ` : ''}
-          </div>
-
-          ${hasAlert ? renderAlerts(item.alertes) : ''}
-        </article>
-      `;
-    }
-
-    function renderAlerts(alertes) {
-      return `
-        <div class="alert-list">
-          ${alertes.map(a => `<div>⚠️ ${escapeHtml(a)}</div>`).join('')}
-        </div>
-      `;
-    }
-
-    function refreshManual() {
-      const status = document.getElementById('status');
-      status.textContent = 'Mise à jour…';
-
-      google.script.run
-        .withSuccessHandler(function () {
-          window.location.reload();
-        })
-        .withFailureHandler(function (err) {
-          status.textContent = 'Erreur mise à jour';
-          alert(err && err.message ? err.message : err);
-        })
-        .refreshCacheNow();
-    }
-
-    function retourAccueil() {
-      window.location.href = './';
-    }
-
-    function escapeHtml(value) {
-      return String(value || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
-  </script>
+</div>
 </body>
 </html>
