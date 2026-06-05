@@ -1,395 +1,464 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Espace stagiaires</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Espace formation</title>
 
-<style>
-*{
-  box-sizing:border-box;
-}
+  <style>
+    * { box-sizing: border-box; }
 
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#f4efe4;
-  color:#171717;
-}
+    :root{
+      --bg:#fff8df;
+      --ink:#0f172a;
+      --muted:#5b6475;
+      --card:#ffffff;
+      --line:#e8e2c9;
+      --accent:#ffb703;
+      --accent-2:#ffe29a;
+      --danger:#d62828;
+      --danger-soft:#ffe2e2;
+      --ok:#1f7a1f;
+      --shadow:0 12px 28px rgba(15, 23, 42, .10);
+      --radius:24px;
+    }
 
-.page{
-  max-width:760px;
-  margin:auto;
-  padding:14px;
-}
+    body{
+      margin:0;
+      background:
+        radial-gradient(circle at top, #fffdf4 0%, #fff6d9 35%, #fff0c1 100%);
+      color:var(--ink);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    }
 
-.hero{
-  width:100%;
-  display:block;
-  border:4px solid #171717;
-  border-radius:26px;
-  box-shadow:8px 8px 0 #171717;
-  margin-bottom:22px;
-}
+    .page{
+      max-width:920px;
+      margin:auto;
+      padding:16px 14px 30px;
+    }
 
-.intro{
-  background:#fffaf0;
-  border:4px solid #171717;
-  border-radius:24px;
-  padding:18px;
-  box-shadow:7px 7px 0 #171717;
-  margin-bottom:24px;
-}
+    .hero{
+      overflow:hidden;
+      background:var(--card);
+      border:3px solid #111;
+      border-radius:30px;
+      box-shadow:8px 8px 0 #111;
+      margin-bottom:18px;
+    }
 
-h1{
-  margin:0 0 10px;
-  font-size:34px;
-  line-height:1;
-  text-transform:uppercase;
-}
+    .hero img{
+      width:100%;
+      display:block;
+      object-fit:cover;
+    }
 
-.intro p{
-  margin:0;
-  font-size:17px;
-  font-weight:700;
-}
+    .hero-content{
+      padding:18px 18px 20px;
+    }
 
-.status{
-  text-align:center;
-  font-weight:800;
-  color:#777;
-  margin:26px 0;
-}
+    h1{
+      margin:0 0 10px;
+      font-size:clamp(30px, 7vw, 54px);
+      line-height:.95;
+      letter-spacing:-.02em;
+      text-transform:uppercase;
+    }
 
-.day-block{
-  background:#fffaf0;
-  border:4px solid #171717;
-  border-radius:26px;
-  padding:16px;
-  margin-bottom:28px;
-  box-shadow:7px 7px 0 #171717;
-}
+    .intro{
+      margin:0;
+      font-size:16px;
+      line-height:1.45;
+      color:#2d3748;
+    }
 
-.day-title{
-  font-size:25px;
-  font-weight:900;
-  text-transform:uppercase;
-  color:#5f5f5f;
-  margin:0 0 16px;
-}
+    .topbar{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+      margin:18px 2px 12px;
+      flex-wrap:wrap;
+    }
 
-.inner-card{
-  border:3px solid #171717;
-  border-radius:20px;
-  padding:14px;
-  margin-bottom:14px;
-  background:#fffdf7;
-}
+    .topbar h2{
+      margin:0;
+      font-size:26px;
+    }
 
-.inner-card:last-child{
-  margin-bottom:0;
-}
+    .status{
+      font-size:14px;
+      color:var(--muted);
+      font-weight:700;
+    }
 
-.card-title{
-  font-size:24px;
-  font-weight:900;
-  text-transform:uppercase;
-  border-bottom:3px dashed #171717;
-  padding-bottom:8px;
-  margin-bottom:14px;
-}
+    .slider-wrap{
+      position:relative;
+    }
 
-.person{
-  padding:10px 0;
-  border-bottom:2px dashed #c8c0b0;
-}
+    .slider{
+      display:flex;
+      gap:14px;
+      overflow-x:auto;
+      padding:8px 4px 10px;
+      scroll-snap-type:x mandatory;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+    }
 
-.person:last-child{
-  border-bottom:0;
-}
+    .slider::-webkit-scrollbar{
+      display:none;
+    }
 
-.person-name{
-  font-size:20px;
-  font-weight:900;
-  margin-bottom:10px;
-}
+    .card{
+      flex:0 0 88%;
+      scroll-snap-align:start;
+      background:var(--card);
+      border:2px solid #111;
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      padding:18px;
+      position:relative;
+      overflow:hidden;
+    }
 
-.line{
-  display:grid;
-  grid-template-columns:110px 1fr;
-  gap:10px;
-  margin:7px 0;
-  font-size:17px;
-}
+    @media (min-width:760px){
+      .card{
+        flex:0 0 62%;
+      }
+    }
 
-.label{
-  color:#555;
-  font-weight:800;
-}
+    .card.today{
+      background:linear-gradient(180deg,#fffef8 0%, #fff7d8 100%);
+      box-shadow:
+        0 0 0 3px #111 inset,
+        0 0 0 8px rgba(255,183,3,.18),
+        0 0 35px rgba(255,183,3,.45);
+      border-color:#111;
+    }
 
-.value{
-  font-weight:900;
-}
+    .card.alert{
+      border-color:var(--danger);
+      box-shadow:
+        0 0 0 2px rgba(214,40,40,.12),
+        0 12px 28px rgba(214,40,40,.14);
+    }
 
-.agent-head{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  margin-bottom:12px;
-}
+    .badge-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-bottom:14px;
+    }
 
-.avatar{
-  width:62px;
-  height:62px;
-  border-radius:50%;
-  object-fit:cover;
-  border:3px solid #171717;
-  background:#eee;
-}
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:800;
+      border:2px solid #111;
+      background:#fff;
+    }
 
-.avatar-placeholder{
-  width:62px;
-  height:62px;
-  border-radius:50%;
-  border:3px solid #171717;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:28px;
-  font-weight:900;
-  background:#f1d58a;
-}
+    .badge.today-badge{
+      background:#ffe58f;
+    }
 
-.back{
-  display:block;
-  width:max-content;
-  margin:30px auto 10px;
-  padding:13px 20px;
-  border:4px solid #171717;
-  border-radius:16px;
-  background:#fffaf0;
-  color:#171717;
-  font-size:18px;
-  font-weight:900;
-  text-decoration:none;
-  box-shadow:5px 5px 0 #171717;
-}
+    .badge.alert-badge{
+      background:var(--danger-soft);
+      border-color:var(--danger);
+      color:var(--danger);
+    }
 
-.empty{
-  text-align:center;
-  font-size:18px;
-  font-weight:900;
-  padding:20px;
-  border:3px dashed #171717;
-  border-radius:18px;
-  background:#fffdf7;
-}
-</style>
+    .formation-name{
+      font-size:28px;
+      line-height:1.05;
+      margin:0 0 14px;
+      font-weight:900;
+    }
+
+    .grid{
+      display:grid;
+      gap:10px;
+    }
+
+    .row{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding:10px 12px;
+      border-radius:18px;
+      background:#fffdf5;
+      border:1px solid var(--line);
+    }
+
+    .icon{
+      flex:0 0 auto;
+      width:30px;
+      height:30px;
+      display:grid;
+      place-items:center;
+      font-size:18px;
+    }
+
+    .label{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.03em;
+      margin-bottom:2px;
+    }
+
+    .value{
+      font-size:16px;
+      font-weight:700;
+      line-height:1.3;
+    }
+
+    .call{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .call:hover{
+      text-decoration:underline;
+    }
+
+    .alert-box{
+      margin-top:14px;
+      padding:14px;
+      border-radius:20px;
+      border:2px solid var(--danger);
+      background:var(--danger-soft);
+      color:#7f1d1d;
+      font-weight:800;
+    }
+
+    .empty,
+    .error{
+      background:#fff;
+      border:2px dashed #bbb;
+      border-radius:22px;
+      padding:22px 18px;
+      color:var(--muted);
+      text-align:center;
+    }
+
+    .hint{
+      margin-top:8px;
+      text-align:center;
+      font-size:13px;
+      color:var(--muted);
+      font-weight:700;
+    }
+  </style>
 </head>
-
 <body>
-<div class="page">
+  <main class="page">
 
-  <img class="hero" src="Image/Autre page/Photo_stagiaire.png" alt="Espace stagiaires">
+    <section class="hero">
+      <img src="./Image/Autre%20page/Photo_Formation.png" alt="Espace formation">
+      <div class="hero-content">
+        <h1>Espace formation</h1>
+        <p class="intro">
+          Merci de prévenir l’agent concerné dès qu’une formation apparaît, afin qu’il puisse s’organiser à l’avance.
+        </p>
+      </div>
+    </section>
 
-  <section class="intro">
-    <h1>Espace stagiaires</h1>
-    <p>Retrouve les stagiaires prévus par date, avec l’agent affilié et les informations utiles du jour.</p>
-  </section>
+    <div class="topbar">
+      <h2>Résultats en direct</h2>
+      <div class="status" id="status">Chargement…</div>
+    </div>
 
-  <div id="status" class="status">Chargement des données…</div>
+    <section class="slider-wrap">
+      <div class="slider" id="slider"></div>
+      <div class="hint">Fais glisser pour voir les formations suivantes →</div>
+    </section>
 
-  <main id="results"></main>
+  </main>
 
-  <a class="back" href="index.html">← Retour à l’accueil</a>
+  <script>
+    const slider = document.getElementById("slider");
+    const status = document.getElementById("status");
 
-</div>
-
-<script>
-const API_URL = "";
-
-const demoData = [
-  {
-    date: "Aujourd’hui",
-    stagiaire_nom: "Exemple stagiaire",
-    stagiaire_horaire: "08h00 - 16h00",
-    agent_nom: "Agent affilié",
-    agent_horaire: "08h00 - 16h00",
-    agent_telephone: "À renseigner",
-    agent_avatar: ""
-  }
-];
-
-function clean(value){
-  return value && String(value).trim() !== "" ? String(value).trim() : "Non renseigné";
-}
-
-function getValue(item, keys){
-  for(const key of keys){
-    if(item[key] !== undefined && item[key] !== null && String(item[key]).trim() !== ""){
-      return item[key];
-    }
-  }
-  return "";
-}
-
-function groupByDate(data){
-  const groups = {};
-
-  data.forEach(item => {
-    const date = clean(getValue(item, ["date", "jour", "Date", "Jour"]));
-
-    if(!groups[date]){
-      groups[date] = {
-        date,
-        stagiaires: [],
-        agents: {}
-      };
+    function escapeHtml(value){
+      return String(value ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
     }
 
-    const stagiaireNom = clean(getValue(item, [
-      "stagiaire_nom",
-      "nom_stagiaire",
-      "stagiaire",
-      "Stagiaire"
-    ]));
+    function phoneHref(phone){
+      return "tel:" + String(phone || "").replace(/\s/g, "");
+    }
 
-    const stagiaireHoraire = clean(getValue(item, [
-      "stagiaire_horaire",
-      "horaire_stagiaire",
-      "horaire",
-      "Horaire"
-    ]));
+    function parseDate(value){
+      if(!value) return null;
 
-    groups[date].stagiaires.push({
-      nom: stagiaireNom,
-      horaire: stagiaireHoraire
-    });
+      if(/^\d{4}-\d{2}-\d{2}/.test(value)){
+        return new Date(value + "T00:00:00");
+      }
 
-    const agentNom = clean(getValue(item, [
-      "agent_nom",
-      "nom_agent",
-      "agent",
-      "Agent"
-    ]));
+      const d = new Date(value);
+      return isNaN(d) ? null : d;
+    }
 
-    const agentHoraire = clean(getValue(item, [
-      "agent_horaire",
-      "horaire_agent",
-      "horaire_agent_affilie"
-    ]));
+    function isSameDay(a,b){
+      return a && b &&
+        a.getFullYear() === b.getFullYear() &&
+        a.getMonth() === b.getMonth() &&
+        a.getDate() === b.getDate();
+    }
 
-    const agentTelephone = clean(getValue(item, [
-      "agent_telephone",
-      "telephone_agent",
-      "telephone",
-      "tel",
-      "Téléphone"
-    ]));
+    function sortItems(items){
+      return [...items].sort((a,b) => {
+        const da = parseDate(a.date);
+        const db = parseDate(b.date);
+        if(!da && !db) return 0;
+        if(!da) return 1;
+        if(!db) return -1;
+        return da - db;
+      });
+    }
 
-    const agentAvatar = getValue(item, [
-      "agent_avatar",
-      "avatar_agent",
-      "avatar",
-      "Avatar"
-    ]);
+    function card(item){
+      const today = new Date();
+      const itemDate = parseDate(item.date);
+      const todayFlag = isSameDay(itemDate, today);
+      const alerte = !!item.alerte;
 
-    groups[date].agents[agentNom] = {
-      nom: agentNom,
-      horaire: agentHoraire,
-      telephone: agentTelephone,
-      avatar: agentAvatar
-    };
-  });
+      const classes = [
+        "card",
+        todayFlag ? "today" : "",
+        alerte ? "alert" : ""
+      ].join(" ").trim();
 
-  return Object.values(groups);
-}
+      const dateLabel = item.dateLabel || item.date || "Date non renseignée";
+      const formation = item.formation || item.titre || "Formation";
+      const agent = item.agent || "Agent non renseigné";
+      const horaireFormation = item.horaireFormation || "Non renseigné";
+      const horaireAgent = item.horaireAgent || "Non renseigné";
+      const ghe = item.ghe || "Non renseigné";
+      const telephone = item.telephone || "";
+      const messageAlerte = item.messageAlerte || "Vérifier l’horaire prévu de l’agent.";
 
-function render(data){
-  const results = document.getElementById("results");
-  const status = document.getElementById("status");
+      return `
+        <article class="${classes}">
+          <div class="badge-row">
+            <div class="badge">📅 ${escapeHtml(dateLabel)}</div>
+            ${todayFlag ? `<div class="badge today-badge">✨ Aujourd’hui</div>` : ``}
+            ${alerte ? `<div class="badge alert-badge">⚠️ Alerte</div>` : ``}
+          </div>
 
-  if(!data || data.length === 0){
-    status.textContent = "";
-    results.innerHTML = `<div class="empty">Aucun stagiaire prévu pour le moment.</div>`;
-    return;
-  }
+          <h3 class="formation-name">${escapeHtml(formation)}</h3>
 
-  const groups = groupByDate(data);
+          <div class="grid">
+            <div class="row">
+              <div class="icon">👤</div>
+              <div>
+                <div class="label">Agent</div>
+                <div class="value">${escapeHtml(agent)}</div>
+              </div>
+            </div>
 
-  status.textContent = API_URL ? "Données en direct" : "Mode test : API pas encore branchée.";
+            <div class="row">
+              <div class="icon">🕒</div>
+              <div>
+                <div class="label">Horaire formation</div>
+                <div class="value">${escapeHtml(horaireFormation)}</div>
+              </div>
+            </div>
 
-  results.innerHTML = groups.map(group => {
-    const stagiairesHtml = group.stagiaires.map(stagiaire => `
-      <div class="person">
-        <div class="person-name">${clean(stagiaire.nom)}</div>
-        <div class="line">
-          <div class="label">horaire</div>
-          <div class="value">${clean(stagiaire.horaire)}</div>
-        </div>
-      </div>
-    `).join("");
+            <div class="row">
+              <div class="icon">⏰</div>
+              <div>
+                <div class="label">Horaire agent prévu</div>
+                <div class="value">${escapeHtml(horaireAgent)}</div>
+              </div>
+            </div>
 
-    const agentsHtml = Object.values(group.agents).map(agent => `
-      <div class="person">
-        <div class="agent-head">
-          ${
-            agent.avatar
-            ? `<img class="avatar" src="${agent.avatar}" alt="${clean(agent.nom)}">`
-            : `<div class="avatar-placeholder">👤</div>`
-          }
-          <div class="person-name">${clean(agent.nom)}</div>
-        </div>
+            <div class="row">
+              <div class="icon">🏥</div>
+              <div>
+                <div class="label">GHE</div>
+                <div class="value">${escapeHtml(ghe)}</div>
+              </div>
+            </div>
 
-        <div class="line">
-          <div class="label">horaire</div>
-          <div class="value">${clean(agent.horaire)}</div>
-        </div>
+            <div class="row">
+              <div class="icon">📞</div>
+              <div>
+                <div class="label">Téléphone</div>
+                <div class="value">
+                  ${
+                    telephone
+                      ? `<a class="call" href="${phoneHref(telephone)}">${escapeHtml(telephone)}</a>`
+                      : `Non renseigné`
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <div class="line">
-          <div class="label">téléphone</div>
-          <div class="value">${clean(agent.telephone)}</div>
-        </div>
-      </div>
-    `).join("");
+          ${alerte ? `
+            <div class="alert-box">
+              ⚠️ ${escapeHtml(messageAlerte)}
+            </div>
+          ` : ``}
+        </article>
+      `;
+    }
 
-    return `
-      <section class="day-block">
-        <h2 class="day-title">${group.date}</h2>
+    async function loadFormations(){
+      try{
+        status.textContent = "Chargement des formations…";
 
-        <div class="inner-card">
-          <div class="card-title">Stagiaire(s)</div>
-          ${stagiairesHtml}
-        </div>
+        const response = await fetch("/api/formations", { cache:"no-store" });
+        const data = await response.json();
 
-        <div class="inner-card">
-          <div class="card-title">Agent affilié</div>
-          ${agentsHtml}
-        </div>
-      </section>
-    `;
-  }).join("");
-}
+        if(!data.ok){
+          throw new Error(data.error || "Réponse invalide");
+        }
 
-async function loadData(){
-  if(!API_URL){
-    render(demoData);
-    return;
-  }
+        const items = sortItems(data.items || []);
+        const today = new Date();
 
-  try{
-    const response = await fetch(API_URL);
-    const data = await response.json();
-    render(Array.isArray(data) ? data : data.resultats);
-  }catch(error){
-    document.getElementById("status").textContent = "Erreur : impossible de charger les données.";
-    render([]);
-  }
-}
+        items.sort((a,b) => {
+          const aToday = isSameDay(parseDate(a.date), today) ? 0 : 1;
+          const bToday = isSameDay(parseDate(b.date), today) ? 0 : 1;
+          if(aToday !== bToday) return aToday - bToday;
 
-loadData();
-setInterval(loadData, 30000);
-</script>
+          const da = parseDate(a.date);
+          const db = parseDate(b.date);
+          if(!da && !db) return 0;
+          if(!da) return 1;
+          if(!db) return -1;
+          return da - db;
+        });
 
+        status.textContent = `${items.length} formation(s) trouvée(s)`;
+
+        if(!items.length){
+          slider.innerHTML = `<div class="empty">Aucune formation à afficher pour le moment.</div>`;
+          return;
+        }
+
+        slider.innerHTML = items.map(card).join("");
+
+      }catch(error){
+        console.error(error);
+        status.textContent = "Erreur de chargement";
+        slider.innerHTML = `<div class="error">Impossible de charger les formations pour le moment.</div>`;
+      }
+    }
+
+    loadFormations();
+  </script>
 </body>
 </html>
