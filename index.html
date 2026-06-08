@@ -8,8 +8,8 @@
 <style>
 /* =========================================================
    PLANNING GHE — ACCUEIL
-   Version retouchée : boutons HTML renforcés façon plaques / écussons.
-   Les boutons pourront être remplacés plus tard par des images.
+   Version retouchée : page sans titre de tête.
+   La page commence directement par la photo d'accueil.
 
    Images actuellement utilisées :
    Image/Bannière/01-accueil-planning-acces.png
@@ -61,34 +61,7 @@ body::before{
 .page{
   width:min(760px,100%);
   margin:auto;
-  padding:18px 12px 48px;
-}
-
-.site-header{
-  text-align:center;
-  padding:22px 4px 24px;
-}
-
-.site-title{
-  margin:0;
-  color:var(--ink);
-  font-size:clamp(54px,13vw,92px);
-  line-height:.84;
-  letter-spacing:1px;
-  text-transform:uppercase;
-  text-shadow:
-    0 4px 0 #f8d67d,
-    4px 8px 0 rgba(7,24,63,.16);
-}
-
-.site-subtitle{
-  margin-top:13px;
-  color:#0877bd;
-  font-size:clamp(31px,7.8vw,52px);
-  line-height:.9;
-  text-shadow:
-    0 3px 0 #f8d67d,
-    2px 5px 0 rgba(7,24,63,.12);
+  padding:10px 12px 48px;
 }
 
 /* =============================
@@ -97,7 +70,7 @@ body::before{
 
 .hand-card{
   position:relative;
-  margin:24px 0 32px;
+  margin:18px 0 32px;
   padding:17px 13px 18px;
   background:
     radial-gradient(circle at 12% 0%,rgba(255,255,255,.75),transparent 34%),
@@ -109,6 +82,10 @@ body::before{
     0 13px 0 rgba(7,24,63,.20),
     0 18px 0 rgba(0,0,0,.12),
     inset 0 0 0 3px rgba(255,215,115,.42);
+}
+
+.hero-card{
+  margin-top:6px;
 }
 
 .hand-card::before{
@@ -165,7 +142,7 @@ body::before{
 .scene-img.tight{margin-bottom:14px}
 
 /* =============================
-   BOUTONS — VERSION PATCH HTML
+   BOUTONS
 ============================= */
 
 .grid{
@@ -317,9 +294,9 @@ body::before{
 ============================= */
 
 @media(max-width:520px){
-  .page{padding:14px 10px 42px}
-  .site-header{padding-top:14px;padding-bottom:22px}
-  .hand-card{margin:21px 0 29px;padding:14px 10px 15px;border-width:5px;border-radius:30px 25px 33px 26px}
+  .page{padding:8px 10px 42px}
+  .hand-card{margin:16px 0 29px;padding:14px 10px 15px;border-width:5px;border-radius:30px 25px 33px 26px}
+  .hero-card{margin-top:4px}
   .hand-card::before{inset:7px;border-width:2px}
   .scene-img{border-width:5px;border-radius:23px 20px 26px 20px;margin-bottom:12px}
   .block-title{font-size:clamp(34px,8.4vw,52px);margin:14px 0 17px}
@@ -346,11 +323,6 @@ body::before{
 
 <body>
 <main class="page">
-
-  <header class="site-header">
-    <h1 class="site-title">PLANNING<br>GHE</h1>
-    <div class="site-subtitle">brancardier</div>
-  </header>
 
   <!-- 1. ACCUEIL + PLANNING OFFICIEL -->
   <section class="hand-card hero-card" id="accueil">
