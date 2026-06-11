@@ -362,7 +362,6 @@ button.btn{width:100%}
 }
 
 .agent-btn:active{transform:translateY(3px)}
-.agent-btn.is-hidden{display:none}
 
 .selected-avatar-wrap{
   position:relative;
@@ -658,35 +657,27 @@ const agentNameDisplay = document.getElementById("agentNameDisplay");
 const agentList = document.getElementById("agentList");
 const agentSearch = document.getElementById("agentSearch");
 
-function loadJsonp(url){
-  return new Promise(function(resolve,reject){
-    const callbackName = "GHE_JSONP_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
-    const script = document.createElement("script");
-    script.id = callbackName;
-
-    window[callbackName] = function(data){
-      delete window[callbackName];
-      script.remove();
-      resolve(data);
-    };
-
-    script.onerror = function(){
-      delete window[callbackName];
-      script.remove();
-      reject(new Error("Impossible de joindre la passerelle."));
-    };
-
-    script.src = url + (url.includes("?") ? "&" : "?") + "callback=" + encodeURIComponent(callbackName) + "&t=" + Date.now();
-    document.body.appendChild(script);
-  });
-}
-
 function normaliserRecherche(v){
   return String(v || "")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toUpperCase()
     .trim();
+}
+
+function estFauxAgent(nom){
+  const n = normaliserRecherche(nom);
+
+  if(!n) return true;
+  if(n.includes("FIXE")) return true;
+  if(n.includes("HORAIRE")) return true;
+  if(n.includes("TOTAL")) return true;
+  if(n.includes("QUOTITE")) return true;
+  if(n.includes("NOM PRENOM")) return true;
+  if(/^\d/.test(n)) return true;
+  if(/\d{1,2}[.,:H]\d{2}/.test(n)) return true;
+
+  return false;
 }
 
 function openModal(id){
@@ -895,7 +886,7 @@ function actionPlanningPersonnel(action){
 
 function normaliserAgentDepuisApi(a){
   const agentKey = a.agent || a.key || "";
-  const nom = a.nom || a.nomComplet || a.fullName || agentKey.replace(/_/g, " ");
+  const nom = a.nom || a.nomComplet || a.nom_complet || a.fullName || agentKey.replace(/_/g, " ");
 
   return {
     agent: agentKey,
@@ -943,7 +934,18 @@ async function chargerAgents(){
   agentList.innerHTML = '<div class="modal-text">Chargement des agents...</div>';
 
   try{
-    const data = await loadJsonp(PASSERELLE_AGENTS + "?mode=list");
+    const url = PASSERELLE_AGENTS + "?mode=list&t=" + Date.now();
+
+    const res = await fetch(url, {
+      method: "GET",
+      cache: "no-store"
+    });
+
+    if(!res.ok){
+      throw new Error("HTTP " + res.status);
+    }
+
+    const data = await res.json();
 
     if(!data || data.ok === false){
       throw new Error(data && data.erreur ? data.erreur : "Réponse passerelle invalide.");
@@ -956,6 +958,7 @@ async function chargerAgents(){
     agents = data.agents
       .map(normaliserAgentDepuisApi)
       .filter(a => a.agent && a.nom)
+      .filter(a => !estFauxAgent(a.nom))
       .sort((a,b) => String(a.nom).localeCompare(String(b.nom), "fr"));
 
     agentsDejaCharges = true;
