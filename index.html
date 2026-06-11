@@ -889,31 +889,54 @@ function renderAgents(filtre){
   });
 }
 
-async function chargerAgents(){
-  try{
-    const res = await fetch(PASSERELLE_AGENTS + "?mode=list");
-    const data = await res.json();
+function chargerAgents(){
+  agentList.innerHTML = '<div class="modal-text">Chargement des agents...</div>';
 
-    if(!data.ok || !Array.isArray(data.agents)){
-      throw new Error("Liste agents invalide");
+  const callbackName = "GHE_AGENTS_" + Date.now();
+
+  window[callbackName] = function(data){
+    try{
+      if(!data.ok || !Array.isArray(data.agents)){
+        throw new Error(data.erreur || "Liste agents invalide");
+      }
+
+      agents = data.agents
+        .map(a => ({
+          agent:a.agent,
+          nom:a.nom,
+          avatar_image_url:a.avatar_image_url || "",
+          avatar_thumb_url:a.avatar_thumb_url || "",
+          avatar_statut:a.avatar_statut || ""
+        }))
+        .sort((a,b) => String(a.nom).localeCompare(String(b.nom), "fr"));
+
+      renderAgents("");
+
+    }catch(err){
+      agentList.innerHTML = '<div class="modal-text">Impossible de charger les agents.</div>';
+      console.error(err);
+
+    }finally{
+      delete window[callbackName];
+      const oldScript = document.getElementById(callbackName);
+      if(oldScript) oldScript.remove();
     }
+  };
 
-    agents = data.agents
-      .map(a => ({
-        agent:a.agent,
-        nom:a.nom,
-        avatar_image_url:a.avatar_image_url || "",
-        avatar_thumb_url:a.avatar_thumb_url || "",
-        avatar_statut:a.avatar_statut || ""
-      }))
-      .sort((a,b) => String(a.nom).localeCompare(String(b.nom), "fr"));
+  const script = document.createElement("script");
+  script.id = callbackName;
+  script.src = PASSERELLE_AGENTS
+    + "?mode=list"
+    + "&callback=" + encodeURIComponent(callbackName)
+    + "&t=" + Date.now();
 
-    renderAgents("");
-
-  }catch(err){
+  script.onerror = function(){
     agentList.innerHTML = '<div class="modal-text">Impossible de charger les agents.</div>';
-    console.error(err);
-  }
+    delete window[callbackName];
+    script.remove();
+  };
+
+  document.body.appendChild(script);
 }
 
 agentSearch.addEventListener("input", function(){
