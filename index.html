@@ -7,11 +7,12 @@
 
 <style>
 /* =========================================================
-   PLANNING GHE — ACCUEIL STABLE
-   Décisions verrouillées :
-   - 4 blocs seulement : Planning officiel / Mon planning personnel / Changement / Organisation
+   PLANNING GHE — ACCUEIL FINAL
+   - Planning officiel
+   - Mon planning personnel
+   - Demander un changement
+   - Organisation
    - Plus de bloc séparé "S'abonner au planning"
-   - Les images existantes restent la base visuelle
 ========================================================= */
 
 *,*::before,*::after{box-sizing:border-box}
@@ -304,7 +305,7 @@ button.btn{width:100%}
   line-height:1.25;
 }
 
-.small-label{
+.section-label{
   position:relative;
   z-index:3;
   margin:16px 0 10px;
@@ -335,31 +336,64 @@ button.btn{width:100%}
   text-shadow:0 3px 0 #f8d67d;
 }
 
-select{
+.search-agent{
   position:relative;
   z-index:3;
   width:100%;
-  margin:4px 0 14px;
-  padding:20px 14px;
-  border:6px solid var(--ink);
+  margin:2px 0 12px;
+  padding:17px 14px;
+  border:5px solid var(--ink);
   border-radius:22px;
   background:#fff9e8;
   color:var(--ink);
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  font-size:22px;
+  font-size:19px;
   font-weight:900;
+  outline:none;
 }
 
-.agent-name{
+.agent-list{
+  position:relative;
+  z-index:3;
+  display:grid;
+  gap:10px;
+  max-height:52vh;
+  overflow:auto;
+  padding:2px 2px 8px;
+}
+
+.agent-btn{
+  min-height:58px;
+  padding:10px 12px;
+  border:4px solid var(--ink);
+  border-radius:19px;
+  background:#fff9e8;
+  color:var(--ink);
+  font-family:Impact,"Arial Black",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:clamp(22px,5.3vw,34px);
+  line-height:.92;
+  text-transform:uppercase;
+  text-align:center;
+  box-shadow:0 5px 0 rgba(7,24,63,.18);
+  cursor:pointer;
+}
+
+.agent-btn:active{transform:translateY(3px)}
+.agent-btn.is-hidden{display:none}
+
+.agent-title{
   position:relative;
   z-index:3;
   display:none;
   margin:0 0 12px;
   text-align:center;
   text-transform:uppercase;
-  font-size:clamp(28px,7vw,48px);
-  line-height:.9;
-  text-shadow:0 4px 0 #f8d67d;
+  font-size:clamp(40px,10vw,70px);
+  line-height:.8;
+  color:var(--ink);
+  text-shadow:
+    0 5px 0 #f8d67d,
+    5px 8px 0 rgba(7,24,63,.16);
 }
 
 .hidden{display:none!important}
@@ -450,29 +484,30 @@ select{
 <!-- MODAL MON PLANNING PERSONNEL -->
 <div class="modal" id="modal-personnel" aria-hidden="true">
   <div class="modal-panel">
-    <h2 class="modal-title">Mon planning personnel</h2>
-
     <div id="agentChoiceBox">
-      <p class="modal-text">Choisis ton nom.</p>
-      <select id="agentSelect">
-        <option value="">Chargement des agents...</option>
-      </select>
+      <h2 class="modal-title">Choisis ton nom</h2>
+      <input class="search-agent" id="agentSearch" type="search" placeholder="Rechercher mon nom">
+      <div class="agent-list" id="agentList">
+        <div class="modal-text">Chargement des agents...</div>
+      </div>
     </div>
 
     <div id="agentSelectedBox" class="hidden">
-      <div class="agent-name" id="agentNameDisplay"></div>
+      <div class="section-label">Mon planning personnel</div>
+      <div class="agent-title" id="agentNameDisplay"></div>
 
+      <div class="section-label">Consulter mon planning</div>
       <div class="modal-grid two">
         <button class="btn btn-teal" type="button" data-personal-action="preview">
-          <span><span class="icon">👁️</span>APERÇU<span class="mini">À partir d’aujourd’hui</span></span>
+          <span><span class="icon">👁️</span>APERÇU</span>
         </button>
 
         <button class="btn btn-orange" type="button" data-personal-action="print">
-          <span><span class="icon">🖨️</span>À IMPRIMER<span class="mini">Choix du mois</span></span>
+          <span><span class="icon">🖨️</span>À IMPRIMER</span>
         </button>
       </div>
 
-      <div class="small-label">Ajouter à mon agenda</div>
+      <div class="section-label">Ajouter à mon agenda</div>
 
       <div class="modal-grid two">
         <button class="btn btn-ios" type="button" data-personal-action="ios">
@@ -573,10 +608,14 @@ const CALENDRIERS = {
   }
 };
 
-const agentSelect = document.getElementById("agentSelect");
+let agents = [];
+let agentActuel = "";
+
 const agentChoiceBox = document.getElementById("agentChoiceBox");
 const agentSelectedBox = document.getElementById("agentSelectedBox");
 const agentNameDisplay = document.getElementById("agentNameDisplay");
+const agentList = document.getElementById("agentList");
+const agentSearch = document.getElementById("agentSearch");
 
 function openModal(id){
   document.querySelectorAll(".modal").forEach(m => {
@@ -603,6 +642,7 @@ document.addEventListener("click", function(e){
   const closeBtn = e.target.closest("[data-close]");
   const calendarBtn = e.target.closest("[data-calendar-choice]");
   const personalBtn = e.target.closest("[data-personal-action]");
+  const agentBtn = e.target.closest("[data-agent-key]");
 
   if(closeBtn){
     closeModals();
@@ -622,6 +662,11 @@ document.addEventListener("click", function(e){
 
   if(personalBtn){
     actionPlanningPersonnel(personalBtn.dataset.personalAction);
+    return;
+  }
+
+  if(agentBtn){
+    choisirAgent(agentBtn.dataset.agentKey, agentBtn.dataset.agentName);
     return;
   }
 
@@ -653,48 +698,29 @@ function urlAgent(agentKey){
   return PASSERELLE_AGENTS + "?mode=ics&agent=" + encodeURIComponent(agentKey);
 }
 
-function agentChoisi(){
-  return String(agentSelect.value || "").trim();
-}
-
-function nomAgentChoisi(){
-  const opt = agentSelect.options[agentSelect.selectedIndex];
-  return opt ? opt.textContent : "";
-}
-
-function majZoneAgent(){
-  const agent = agentChoisi();
-
-  if(agent){
-    agentChoiceBox.classList.add("hidden");
-    agentSelectedBox.classList.remove("hidden");
-    agentNameDisplay.style.display = "block";
-    agentNameDisplay.textContent = nomAgentChoisi();
-    try{ localStorage.setItem("ghe_agent", agent); }catch(e){}
-  }else{
-    agentChoiceBox.classList.remove("hidden");
-    agentSelectedBox.classList.add("hidden");
-    agentNameDisplay.style.display = "none";
-    agentNameDisplay.textContent = "";
-  }
+function choisirAgent(key, nom){
+  agentActuel = key;
+  agentChoiceBox.classList.add("hidden");
+  agentSelectedBox.classList.remove("hidden");
+  agentNameDisplay.style.display = "block";
+  agentNameDisplay.textContent = nom || key.replace(/_/g, " ");
 }
 
 function actionPlanningPersonnel(action){
-  const agent = agentChoisi();
-  if(!agent){
+  if(!agentActuel){
     alert("Choisis d’abord ton nom.");
     return;
   }
 
-  const lien = urlAgent(agent);
+  const lien = urlAgent(agentActuel);
 
   if(action === "preview"){
-    window.location.href = "apercu.html?type=agent&agent=" + encodeURIComponent(agent);
+    window.location.href = "apercu.html?type=agent&agent=" + encodeURIComponent(agentActuel);
     return;
   }
 
   if(action === "print"){
-    window.location.href = "mois.html?type=agent&agent=" + encodeURIComponent(agent);
+    window.location.href = "mois.html?type=agent&agent=" + encodeURIComponent(agentActuel);
     return;
   }
 
@@ -708,6 +734,31 @@ function actionPlanningPersonnel(action){
   }
 }
 
+function renderAgents(filtre){
+  const q = String(filtre || "").toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  agentList.innerHTML = "";
+
+  const visibles = agents.filter(agent => {
+    const nom = String(agent.nom || "").toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return !q || nom.includes(q);
+  });
+
+  if(visibles.length === 0){
+    agentList.innerHTML = '<div class="modal-text">Aucun agent trouvé.</div>';
+    return;
+  }
+
+  visibles.forEach(agent => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "agent-btn";
+    btn.dataset.agentKey = agent.agent;
+    btn.dataset.agentName = agent.nom;
+    btn.textContent = agent.nom;
+    agentList.appendChild(btn);
+  });
+}
+
 async function chargerAgents(){
   try{
     const res = await fetch(PASSERELLE_AGENTS + "?mode=list");
@@ -717,29 +768,22 @@ async function chargerAgents(){
       throw new Error("Liste agents invalide");
     }
 
-    agentSelect.innerHTML = '<option value="">Choisis ton nom</option>';
+    agents = data.agents
+      .map(a => ({agent:a.agent, nom:a.nom}))
+      .sort((a,b) => String(a.nom).localeCompare(String(b.nom), "fr"));
 
-    data.agents
-      .sort((a,b) => String(a.nom).localeCompare(String(b.nom), "fr"))
-      .forEach(agent => {
-        const opt = document.createElement("option");
-        opt.value = agent.agent;
-        opt.textContent = agent.nom;
-        agentSelect.appendChild(opt);
-      });
-
-    /* On ne pré-sélectionne volontairement pas l'agent :
-       le choix doit rester volontaire et imposant à l'ouverture. */
+    renderAgents("");
 
   }catch(err){
-    agentSelect.innerHTML = '<option value="">Impossible de charger les agents</option>';
+    agentList.innerHTML = '<div class="modal-text">Impossible de charger les agents.</div>';
     console.error(err);
   }
-
-  majZoneAgent();
 }
 
-agentSelect.addEventListener("change", majZoneAgent);
+agentSearch.addEventListener("input", function(){
+  renderAgents(agentSearch.value);
+});
+
 chargerAgents();
 </script>
 
