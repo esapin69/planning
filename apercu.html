@@ -236,18 +236,35 @@ function titrePage(){
   return "Aperçu";
 }
 
-function sourceUrl(){
-  if(type === "agent" && agent){
-    return PASSERELLE + "?mode=ics&agent=" + encodeURIComponent(agent);
-  }
-  if(type === "formations"){
-    return PASSERELLE + "?mode=ics_collectif&type=formation";
-  }
-  if(type === "stagiaires"){
-    return PASSERELLE + "?mode=ics_collectif&type=stagiaires";
-  }
-  return "";
+/****************************************************
+ * JSONP — évite les blocages Safari / iPhone
+ ****************************************************/
+
+function loadJsonp(url){
+  return new Promise(function(resolve,reject){
+    const callbackName = "jsonp_ghe_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
+
+    window[callbackName] = function(data){
+      delete window[callbackName];
+      script.remove();
+      resolve(data);
+    };
+
+    const script = document.createElement("script");
+    script.src = url + (url.includes("?") ? "&" : "?") + "callback=" + callbackName;
+    script.onerror = function(){
+      delete window[callbackName];
+      script.remove();
+      reject(new Error("Erreur JSONP"));
+    };
+
+    document.body.appendChild(script);
+  });
 }
+
+/****************************************************
+ * AVATAR
+ ****************************************************/
 
 function afficherAvatarDepuisSources(sources){
   avatarWrap.classList.add("is-visible");
@@ -288,8 +305,7 @@ async function loadAvatar(){
   avatarWrap.classList.add("is-visible");
 
   try{
-    const res = await fetch(PASSERELLE + "?mode=avatar&agent=" + encodeURIComponent(agent));
-    const data = await res.json();
+    const data = await loadJsonp(PASSERELLE + "?mode=avatar&agent=" + encodeURIComponent(agent));
 
     const sources = [
       data.avatar_image_url || "",
@@ -302,6 +318,182 @@ async function loadAvatar(){
     afficherAvatarDepuisSources([]);
   }
 }
+
+/****************************************************
+ * AFFICHAGE AGENDA JSON AGENT
+ ****************************************************/
+
+function parseDateIso(dateIso){
+  const p = String(dateIso || "").split("-").map(Number);
+  if(p.length !== 3 || !p[0] || !p[1] || !p[2]) return null;
+  return new Date(p[0], p[1] - 1, p[2], 0, 0, 0);
+}
+
+function formatDate(d){
+  return d.toLocaleDateString("fr-FR", {
+    weekday:"long",
+    day:"2-digit",
+    month:"long",
+    year:"numeric"
+  });
+}
+
+function normalizeRaw(v){
+  return String(v || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase();
+}
+
+function classifyAgendaEvent(event){
+  const raw = normalizeRaw(
+    (event.pastille || "") + " " +
+    (event.titre || "") + " " +
+    (event.type || "") + " " +
+    (event.shift_code || "") + " " +
+    (event.description || "")
+  );
+
+  if(raw.includes("SYR") || raw.includes("SYNDICAT")){
+    return {emoji:"🪧", label:"SYNDICAT", repos:false};
+  }
+
+  if(raw.includes("FORMATION")){
+    return {emoji:"🎓", label:"FORMATION", repos:false};
+  }
+
+  if(raw.includes("STAGIAIRE")){
+    return {emoji:"🧑‍🎓", label:"STAGIAIRE", repos:false};
+  }
+
+  if(raw.includes("NUIT") || /\bN\b/.test(raw)){
+    return {emoji:"⚫", label:"NUIT", repos:false};
+  }
+
+  if(raw.includes("SOIR") || /\bS\b/.test(raw)){
+    return {emoji:"🟡", label:"SOIR", repos:false};
+  }
+
+  if(raw.includes("J4") || /\bJ4\b/.test(raw)){
+    return {emoji:"🟠", label:"J4", repos:false};
+  }
+
+  if(raw.includes("JOURNEE") || raw.includes("JOUR") || /\bJ\b/.test(raw)){
+    return {emoji:"🟢", label:"JOURNÉE", repos:false};
+  }
+
+  if(raw.includes("MATIN") || /\bM\b/.test(raw)){
+    return {emoji:"🔵", label:"MATIN", repos:false};
+  }
+
+  if(raw.includes("CONGE") || raw.includes("CA")){
+    return {emoji:"🏝️", label:"CA", detail:"Congé annuel", repos:true};
+  }
+
+  if(raw.includes("RTT")){
+    return {emoji:"🏝️", label:"RTT", detail:"RTT", repos:true};
+  }
+
+  if(raw.includes("RC") || raw.includes("RECUP")){
+    return {emoji:"🏝️", label:"RC", detail:"Récupération", repos:true};
+  }
+
+  if(raw.includes("RH") || raw.includes("REPOS HEBDO") || raw.includes("REPOS HEBDOMADAIRE")){
+    return {emoji:"🏝️", label:"RH", detail:"Repos hebdo", repos:true};
+  }
+
+  if(raw.includes("REPOS") || raw.includes("ABSENT") || raw.includes("ABS")){
+    return {emoji:"🏝️", label:"REPOS", detail:"Repos / absence", repos:true};
+  }
+
+  return {
+    emoji: event.pastille || "📌",
+    label: String(event.titre || event.shift_code || "ÉVÉNEMENT").toUpperCase(),
+    repos:false
+  };
+}
+
+function renderAgendaEvents(events){
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  const futurs = (events || [])
+    .map(e => {
+      return Object.assign({}, e, {dateObj: parseDateIso(e.date)});
+    })
+    .filter(e => e.dateObj && e.dateObj >= today)
+    .sort((a,b) => a.dateObj - b.dateObj);
+
+  if(futurs.length === 0){
+    contentEl.className = "status";
+    contentEl.textContent = "Aucun élément à afficher à partir d’aujourd’hui.";
+    return;
+  }
+
+  contentEl.className = "";
+  contentEl.innerHTML = "";
+
+  let currentKey = "";
+
+  futurs.forEach(e => {
+    const key = e.dateObj.toDateString();
+
+    if(key !== currentKey){
+      currentKey = key;
+      const day = document.createElement("div");
+      day.className = "day";
+      day.textContent = formatDate(e.dateObj);
+      contentEl.appendChild(day);
+    }
+
+    const shift = classifyAgendaEvent(e);
+
+    const card = document.createElement("article");
+    card.className = "event";
+
+    const top = document.createElement("div");
+    top.className = "event-top";
+
+    const icon = document.createElement("div");
+    icon.className = "shift-icon";
+    icon.textContent = shift.emoji;
+
+    const label = document.createElement("p");
+    label.className = "shift-title";
+    label.textContent = shift.label;
+
+    top.appendChild(icon);
+    top.appendChild(label);
+    card.appendChild(top);
+
+    if(e.horaire && !shift.repos){
+      const time = document.createElement("div");
+      time.className = "time";
+      time.textContent = e.horaire.replace("-", " → ");
+      card.appendChild(time);
+    }
+
+    if(shift.detail){
+      const detail = document.createElement("p");
+      detail.className = "detail";
+      detail.textContent = shift.detail;
+      card.appendChild(detail);
+    }
+
+    if(e.alerte){
+      const alerte = document.createElement("p");
+      alerte.className = "detail";
+      alerte.textContent = "⚠️ " + e.alerte;
+      card.appendChild(alerte);
+    }
+
+    contentEl.appendChild(card);
+  });
+}
+
+/****************************************************
+ * ANCIEN MODE ICS — gardé pour formations / stagiaires
+ ****************************************************/
 
 function unfoldIcs(text){
   return String(text || "").replace(/\r?\n[ \t]/g, "");
@@ -344,15 +536,6 @@ function sameDay(a,b){
   return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 }
 
-function formatDate(d){
-  return d.toLocaleDateString("fr-FR", {
-    weekday:"long",
-    day:"2-digit",
-    month:"long",
-    year:"numeric"
-  });
-}
-
 function formatTimeRange(start,end){
   const allDay = start.getHours() === 0 && start.getMinutes() === 0 && (!end || (end.getHours() === 0 && end.getMinutes() === 0));
   if(allDay) return "";
@@ -386,19 +569,23 @@ function parseEvents(ics){
 }
 
 function classifyShift(event){
-  const raw = (event.summary + " " + event.description).toUpperCase();
+  const raw = normalizeRaw(event.summary + " " + event.description);
+
+  if(raw.includes("SYR") || raw.includes("SYNDICAT")) return {emoji:"🪧", label:"SYNDICAT", repos:false};
+  if(raw.includes("FORMATION")) return {emoji:"🎓", label:"FORMATION", repos:false};
+  if(raw.includes("STAGIAIRE")) return {emoji:"🧑‍🎓", label:"STAGIAIRE", repos:false};
 
   if(/\bN\b|NUIT/.test(raw)) return {emoji:"⚫", label:"NUIT", repos:false};
   if(/\bS\b|SOIR/.test(raw)) return {emoji:"🟡", label:"SOIR", repos:false};
   if(/\bJ4\b/.test(raw)) return {emoji:"🟠", label:"J4", repos:false};
-  if(/\bJ\b|JOURN[ÉE]E|JOURNEE/.test(raw)) return {emoji:"🟢", label:"JOURNÉE", repos:false};
+  if(/\bJ\b|JOURNEE|JOUR/.test(raw)) return {emoji:"🟢", label:"JOURNÉE", repos:false};
   if(/\bM\b|MATIN/.test(raw)) return {emoji:"🔵", label:"MATIN", repos:false};
 
-  if(/\bCA\b|CONG[ÉE] ANNUEL|CONGE ANNUEL/.test(raw)) return {emoji:"🏝️", label:"CA", detail:"Congé annuel", repos:true};
+  if(/\bCA\b|CONGE ANNUEL/.test(raw)) return {emoji:"🏝️", label:"CA", detail:"Congé annuel", repos:true};
   if(/\bRTT\b/.test(raw)) return {emoji:"🏝️", label:"RTT", detail:"RTT", repos:true};
-  if(/\bRC\b|R[ÉE]CUP|RECUP/.test(raw)) return {emoji:"🏝️", label:"RC", detail:"Récupération", repos:true};
+  if(/\bRC\b|RECUP/.test(raw)) return {emoji:"🏝️", label:"RC", detail:"Récupération", repos:true};
   if(/\bRH\b|REPOS HEBDO|REPOS HEBDOMADAIRE/.test(raw)) return {emoji:"🏝️", label:"RH", detail:"Repos hebdo", repos:true};
-  if(/REPOS|OFF/.test(raw)) return {emoji:"🏝️", label:"REPOS", detail:"Repos", repos:true};
+  if(/REPOS|OFF|ABS/.test(raw)) return {emoji:"🏝️", label:"REPOS", detail:"Repos / absence", repos:true};
 
   return {emoji:"📌", label: cleanShortLabel(event.summary), repos:false};
 }
@@ -414,7 +601,7 @@ function cleanShortLabel(summary){
   return s;
 }
 
-function renderEvents(events){
+function renderIcsEvents(events){
   const today = new Date();
   today.setHours(0,0,0,0);
 
@@ -489,12 +676,45 @@ function renderEvents(events){
   });
 }
 
+/****************************************************
+ * INIT
+ ****************************************************/
+
 async function init(){
   titleEl.textContent = titrePage();
   subtitleEl.textContent = "À partir d’aujourd’hui";
   await loadAvatar();
 
-  const url = sourceUrl();
+  if(type === "agent" && agent){
+    try{
+      const data = await loadJsonp(PASSERELLE + "?mode=agenda&agent=" + encodeURIComponent(agent));
+
+      if(!data || data.ok === false){
+        throw new Error(data && data.erreur ? data.erreur : "Agenda invalide");
+      }
+
+      if(data.nom){
+        titleEl.textContent = data.nom;
+      }
+
+      renderAgendaEvents(data.events || []);
+      return;
+
+    }catch(e){
+      console.error(e);
+      contentEl.className = "status";
+      contentEl.textContent = "Aperçu indisponible. Vérifie que la passerelle Apps Script est bien à jour.";
+      return;
+    }
+  }
+
+  let url = "";
+
+  if(type === "formations"){
+    url = PASSERELLE + "?mode=ics_collectif&type=formation";
+  }else if(type === "stagiaires"){
+    url = PASSERELLE + "?mode=ics_collectif&type=stagiaires";
+  }
 
   if(!url){
     contentEl.textContent = "Aperçu impossible : lien manquant.";
@@ -509,7 +729,7 @@ async function init(){
       throw new Error("ICS invalide");
     }
 
-    renderEvents(parseEvents(text));
+    renderIcsEvents(parseEvents(text));
   }catch(e){
     console.error(e);
     contentEl.textContent = "Aperçu indisponible. Vérifie que la passerelle Apps Script est bien à jour.";
