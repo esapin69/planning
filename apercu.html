@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aperçu Planning GHE</title>
+
+<style>
+*,*::before,*::after{box-sizing:border-box}
+
+:root{
+  --ink:#07183f;
+  --paper:#fff7dd;
+  --gold:#d3a24b;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--ink);
+  font-family:Impact,"Arial Black",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 15% 0%,rgba(255,255,255,.95) 0 9%,transparent 31%),
+    radial-gradient(circle at 88% 4%,rgba(255,218,116,.46) 0 9%,transparent 32%),
+    repeating-linear-gradient(-6deg,rgba(7,24,63,.035) 0 1px,transparent 1px 13px),
+    linear-gradient(180deg,#fff9e8 0%,#f5e8bf 57%,#ead9a5 100%);
+}
+
+.page{
+  width:min(820px,100%);
+  margin:auto;
+  padding:16px 12px 48px;
+}
+
+.card{
+  position:relative;
+  margin:12px 0 22px;
+  padding:16px 12px 18px;
+  background:var(--paper);
+  border:6px solid var(--ink);
+  border-radius:34px 28px 38px 29px;
+  box-shadow:0 13px 0 rgba(7,24,63,.20),0 18px 0 rgba(0,0,0,.12);
+}
+
+h1{
+  margin:0 0 14px;
+  text-align:center;
+  text-transform:uppercase;
+  font-size:clamp(38px,10vw,70px);
+  line-height:.85;
+  text-shadow:0 4px 0 #f8d67d,4px 7px 0 rgba(7,24,63,.13);
+}
+
+.sub{
+  margin:0 0 14px;
+  text-align:center;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-weight:900;
+  font-size:16px;
+  line-height:1.25;
+}
+
+.back{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:62px;
+  margin-bottom:14px;
+  padding:10px;
+  color:#fff4ce;
+  text-decoration:none;
+  text-align:center;
+  text-transform:uppercase;
+  border:5px solid #061738;
+  border-radius:22px;
+  background:linear-gradient(145deg,#777,#444,#222);
+  box-shadow:0 7px 0 rgba(7,24,63,.35);
+  font-size:clamp(22px,5vw,34px);
+}
+
+.day{
+  margin:18px 0 10px;
+  padding:8px 12px;
+  border:4px solid var(--ink);
+  border-radius:18px;
+  background:#fff9e8;
+  text-align:center;
+  text-transform:uppercase;
+  font-size:clamp(24px,6vw,42px);
+  line-height:.9;
+  box-shadow:0 5px 0 rgba(7,24,63,.18);
+}
+
+.event{
+  margin:10px 0;
+  padding:12px;
+  border:4px solid var(--ink);
+  border-radius:22px;
+  background:white;
+  box-shadow:0 6px 0 rgba(7,24,63,.16);
+}
+
+.time{
+  display:inline-block;
+  margin-bottom:8px;
+  padding:5px 9px;
+  border-radius:12px;
+  background:#07183f;
+  color:#fff4ce;
+  font-size:20px;
+  line-height:.9;
+}
+
+.summary{
+  margin:0;
+  font-size:clamp(24px,6vw,38px);
+  line-height:.95;
+  text-transform:uppercase;
+}
+
+.meta{
+  margin:8px 0 0;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-weight:800;
+  font-size:14px;
+  line-height:1.25;
+}
+
+.status{
+  text-align:center;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-weight:900;
+  font-size:17px;
+  line-height:1.3;
+  padding:18px 10px;
+}
+
+@media(max-width:520px){
+  .card{border-width:5px;padding:14px 10px}
+}
+</style>
+</head>
+
+<body>
+<main class="page">
+  <a class="back" href="index.html">← Retour accueil</a>
+
+  <section class="card">
+    <h1 id="title">Aperçu</h1>
+    <p class="sub" id="subtitle">À partir d’aujourd’hui</p>
+    <div id="content" class="status">Chargement...</div>
+  </section>
+</main>
+
+<script>
+const PASSERELLE = "https://script.google.com/macros/s/AKfycbyW9kBVybPGv2XFW2fpiJcZ0AEFrgTCwd5_gkt1ykBpOvVyT5B24EgqQt4kVPwiIcDb/exec";
+
+const params = new URLSearchParams(window.location.search);
+const type = String(params.get("type") || "").toLowerCase();
+const agent = String(params.get("agent") || "").trim();
+
+const titleEl = document.getElementById("title");
+const subtitleEl = document.getElementById("subtitle");
+const contentEl = document.getElementById("content");
+
+function titrePage(){
+  if(type === "agent"){
+    return agent ? agent.replace(/_/g, " ") : "Agent";
+  }
+  if(type === "formations") return "Formations";
+  if(type === "stagiaires") return "Stagiaires";
+  return "Aperçu";
+}
+
+function sourceUrl(){
+  if(type === "agent" && agent){
+    return PASSERELLE + "?mode=ics&agent=" + encodeURIComponent(agent);
+  }
+  if(type === "formations"){
+    return PASSERELLE + "?mode=ics_collectif&type=formation";
+  }
+  if(type === "stagiaires"){
+    return PASSERELLE + "?mode=ics_collectif&type=stagiaires";
+  }
+  return "";
+}
+
+function unfoldIcs(text){
+  return String(text || "").replace(/\r?\n[ \t]/g, "");
+}
+
+function getField(block, name){
+  const re = new RegExp("^" + name + "(?:;[^:]*)?:(.*)$", "mi");
+  const m = block.match(re);
+  return m ? m[1].trim() : "";
+}
+
+function cleanText(v){
+  return String(v || "")
+    .replace(/\\n/g, " ")
+    .replace(/\\,/g, ",")
+    .replace(/\\;/g, ";")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function parseIcsDate(value){
+  if(!value) return null;
+
+  value = String(value).trim();
+
+  if(/^\d{8}$/.test(value)){
+    return new Date(
+      Number(value.slice(0,4)),
+      Number(value.slice(4,6)) - 1,
+      Number(value.slice(6,8)),
+      0,0,0
+    );
+  }
+
+  const m = value.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z?)$/);
+  if(!m) return null;
+
+  if(m[7] === "Z"){
+    return new Date(Date.UTC(
+      Number(m[1]),
+      Number(m[2]) - 1,
+      Number(m[3]),
+      Number(m[4]),
+      Number(m[5]),
+      Number(m[6])
+    ));
+  }
+
+  return new Date(
+    Number(m[1]),
+    Number(m[2]) - 1,
+    Number(m[3]),
+    Number(m[4]),
+    Number(m[5]),
+    Number(m[6])
+  );
+}
+
+function sameDay(a,b){
+  return a.getFullYear() === b.getFullYear()
+    && a.getMonth() === b.getMonth()
+    && a.getDate() === b.getDate();
+}
+
+function formatDate(d){
+  return d.toLocaleDateString("fr-FR", {
+    weekday:"long",
+    day:"2-digit",
+    month:"long",
+    year:"numeric"
+  });
+}
+
+function formatTimeRange(start,end){
+  const allDay = start.getHours() === 0 && start.getMinutes() === 0 && (!end || (end.getHours() === 0 && end.getMinutes() === 0));
+  if(allDay) return "Journée";
+
+  const f = new Intl.DateTimeFormat("fr-FR", {hour:"2-digit", minute:"2-digit"});
+  if(end && sameDay(start,end)){
+    return f.format(start) + " – " + f.format(end);
+  }
+  return f.format(start);
+}
+
+function parseEvents(ics){
+  const text = unfoldIcs(ics);
+  const blocks = text.match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g) || [];
+
+  return blocks.map(block => {
+    const start = parseIcsDate(getField(block, "DTSTART"));
+    const end = parseIcsDate(getField(block, "DTEND"));
+    return {
+      start,
+      end,
+      summary: cleanText(getField(block, "SUMMARY")),
+      location: cleanText(getField(block, "LOCATION")),
+      description: cleanText(getField(block, "DESCRIPTION"))
+    };
+  }).filter(e => e.start);
+}
+
+function renderEvents(events){
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  const futurs = events
+    .filter(e => e.start >= today)
+    .sort((a,b) => a.start - b.start);
+
+  if(futurs.length === 0){
+    contentEl.className = "status";
+    contentEl.textContent = "Aucun élément à afficher à partir d’aujourd’hui.";
+    return;
+  }
+
+  contentEl.className = "";
+  contentEl.innerHTML = "";
+
+  let currentKey = "";
+
+  futurs.forEach(e => {
+    const key = e.start.toDateString();
+
+    if(key !== currentKey){
+      currentKey = key;
+      const day = document.createElement("div");
+      day.className = "day";
+      day.textContent = formatDate(e.start);
+      contentEl.appendChild(day);
+    }
+
+    const card = document.createElement("article");
+    card.className = "event";
+
+    const time = document.createElement("div");
+    time.className = "time";
+    time.textContent = formatTimeRange(e.start,e.end);
+    card.appendChild(time);
+
+    const summary = document.createElement("p");
+    summary.className = "summary";
+    summary.textContent = e.summary || "Sans titre";
+    card.appendChild(summary);
+
+    if(e.location){
+      const loc = document.createElement("p");
+      loc.className = "meta";
+      loc.textContent = "Lieu : " + e.location;
+      card.appendChild(loc);
+    }
+
+    if(e.description){
+      const desc = document.createElement("p");
+      desc.className = "meta";
+      desc.textContent = e.description;
+      card.appendChild(desc);
+    }
+
+    contentEl.appendChild(card);
+  });
+}
+
+async function init(){
+  titleEl.textContent = titrePage();
+  subtitleEl.textContent = "À partir d’aujourd’hui";
+
+  const url = sourceUrl();
+
+  if(!url){
+    contentEl.textContent = "Aperçu impossible : lien manquant.";
+    return;
+  }
+
+  try{
+    const res = await fetch(url);
+    const text = await res.text();
+
+    if(!res.ok || !text.includes("BEGIN:VCALENDAR")){
+      throw new Error("ICS invalide");
+    }
+
+    renderEvents(parseEvents(text));
+  }catch(e){
+    console.error(e);
+    contentEl.textContent = "Aperçu indisponible. Vérifie que la passerelle Apps Script est bien mise à jour.";
+  }
+}
+
+init();
+</script>
+</body>
+</html>

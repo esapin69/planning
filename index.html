@@ -7,20 +7,20 @@
 
 <style>
 /* =========================================================
-   PLANNING GHE — ACCUEIL V1.5
-   Ancien visuel conservé + nouveau moteur derrière.
-   Les grandes images restent au centre et deviennent cliquables.
+   PLANNING GHE — ACCUEIL STABLE
+   Décisions verrouillées :
+   - 4 blocs seulement : Planning officiel / Mon planning personnel / Changement / Organisation
+   - Plus de bloc séparé "S'abonner au planning"
+   - Les images existantes restent la base visuelle
 ========================================================= */
 
 *,*::before,*::after{box-sizing:border-box}
 
 :root{
   --ink:#07183f;
-  --ink-deep:#020919;
   --paper:#fff7dd;
   --gold:#d3a24b;
   --cream:#fff1c4;
-  --shadow:rgba(3,10,32,.26);
 }
 
 html{scroll-behavior:smooth}
@@ -143,7 +143,7 @@ body::before{
 }
 
 /* =============================
-   BOUTONS INTERNES MODALES
+   BOUTONS INTERNES
 ============================= */
 
 .modal-grid{
@@ -234,12 +234,7 @@ button.btn{width:100%}
 
 .btn:active{transform:translateY(4px)}
 
-.btn[disabled]{
-  opacity:.45;
-  filter:grayscale(.55);
-  cursor:not-allowed;
-}
-
+.btn-full{grid-column:1/-1}
 .btn-day{--main1:#34b7ff;--main2:#086bd2;--main3:#063f98;--edge:#051940}
 .btn-night{--main1:#243a74;--main2:#071a45;--main3:#020812;--edge:#061129}
 .btn-chief{--main1:#b75aff;--main2:#7130b5;--main3:#3d145f;--edge:#15072a}
@@ -309,29 +304,65 @@ button.btn{width:100%}
   line-height:1.25;
 }
 
+.small-label{
+  position:relative;
+  z-index:3;
+  margin:16px 0 10px;
+  padding:9px 10px;
+  border:3px solid rgba(7,24,63,.30);
+  border-radius:16px;
+  background:rgba(255,255,255,.46);
+  text-align:center;
+  text-transform:uppercase;
+  font-size:clamp(18px,4.7vw,28px);
+  line-height:.95;
+}
+
+.org-block{
+  position:relative;
+  z-index:3;
+  margin-top:16px;
+  padding-top:14px;
+  border-top:4px dashed rgba(7,24,63,.35);
+}
+
+.org-title{
+  margin:0 0 10px;
+  text-align:center;
+  text-transform:uppercase;
+  font-size:clamp(25px,6vw,42px);
+  line-height:.9;
+  text-shadow:0 3px 0 #f8d67d;
+}
+
 select{
   position:relative;
   z-index:3;
   width:100%;
   margin:4px 0 14px;
-  padding:16px 14px;
-  border:5px solid var(--ink);
+  padding:20px 14px;
+  border:6px solid var(--ink);
   border-radius:22px;
   background:#fff9e8;
   color:var(--ink);
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  font-size:20px;
+  font-size:22px;
   font-weight:900;
 }
 
-.helper{
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  font-size:14px;
-  font-weight:800;
-  line-height:1.25;
+.agent-name{
+  position:relative;
+  z-index:3;
+  display:none;
+  margin:0 0 12px;
   text-align:center;
-  margin:10px 0 0;
+  text-transform:uppercase;
+  font-size:clamp(28px,7vw,48px);
+  line-height:.9;
+  text-shadow:0 4px 0 #f8d67d;
 }
+
+.hidden{display:none!important}
 
 .close-btn{
   margin-top:14px;
@@ -346,8 +377,9 @@ select{
   .scene-img{border-width:5px;border-radius:23px 20px 26px 20px}
   .modal{padding:14px 8px}
   .modal-panel{border-width:5px;padding:15px 10px 18px}
-  .modal-grid.two{grid-template-columns:1fr}
-  .btn{min-height:78px;font-size:clamp(20px,5.6vw,32px)}
+  .modal-grid.two{grid-template-columns:1fr 1fr; gap:9px}
+  .btn{min-height:76px;font-size:clamp(18px,5.2vw,30px)}
+  .btn .mini{font-size:.45em}
 }
 </style>
 </head>
@@ -355,23 +387,20 @@ select{
 <body>
 <main class="page">
 
-  <!-- PLANNING GENERAL / ACCUEIL -->
-  <section class="hand-card" id="planning-general">
-    <button class="image-button" type="button" data-open="modal-general" aria-label="Ouvrir le planning général">
-      <img class="scene-img" src="Image/Bannière/01-accueil-planning-acces.png" alt="Planning et accès faciles GHE">
+  <section class="hand-card" id="planning-officiel">
+    <button class="image-button" type="button" data-open="modal-officiel" aria-label="Ouvrir le planning officiel">
+      <img class="scene-img" src="Image/Bannière/01-accueil-planning-acces.png" alt="Planning officiel GHE">
     </button>
-    <div class="tap-hint">Planning général</div>
+    <div class="tap-hint">Planning officiel</div>
   </section>
 
-  <!-- MON PLANNING PERSONNEL -->
-  <section class="hand-card" id="mon-planning">
-    <button class="image-button" type="button" data-open="modal-personal" aria-label="Ouvrir mon planning personnel">
+  <section class="hand-card" id="mon-planning-personnel">
+    <button class="image-button" type="button" data-open="modal-personnel" aria-label="Ouvrir mon planning personnel">
       <img class="scene-img" src="Image/Bannière/02-mon-planning-personnel.png" alt="Mon planning personnel">
     </button>
-    <div class="tap-hint">Mon planning</div>
+    <div class="tap-hint">Mon planning personnel</div>
   </section>
 
-  <!-- DEMANDER UN CHANGEMENT -->
   <section class="hand-card" id="demander-changement">
     <a class="image-link" href="https://docs.google.com/forms/d/e/1FAIpQLSeSD74DbSRNuiu1gF2waVTPdSg38jwRCwk3mp6XwpX-sRyh_g/viewform" target="_blank" rel="noopener" aria-label="Demander un changement">
       <img class="scene-img" src="Image/Bannière/04-demander-changement.png" alt="Demander un changement de planning">
@@ -379,28 +408,21 @@ select{
     <div class="tap-hint">Demander un changement</div>
   </section>
 
-  <!-- ORGANISATION -->
   <section class="hand-card" id="organisation">
-    <button class="image-button" type="button" data-open="modal-org" aria-label="Ouvrir organisation">
+    <button class="image-button" type="button" data-open="modal-organisation" aria-label="Ouvrir organisation">
       <img class="scene-img" src="Image/Bannière/03-organisation.png" alt="Organisation GHE">
     </button>
     <div class="tap-hint">Organisation</div>
   </section>
 
-  <!-- ABONNEMENT -->
-  <section class="hand-card" id="abonnement">
-    <button class="image-button" type="button" data-open="modal-subscribe" aria-label="S'abonner au planning">
-      <img class="scene-img" src="Image/Bannière/05-abonnement-planning.png" alt="S'abonner au planning">
-    </button>
-    <div class="tap-hint">S’abonner au planning</div>
-  </section>
-
 </main>
 
-<!-- MODAL PLANNING GENERAL -->
-<div class="modal" id="modal-general" aria-hidden="true">
+<!-- MODAL PLANNING OFFICIEL -->
+<div class="modal" id="modal-officiel" aria-hidden="true">
   <div class="modal-panel">
-    <h2 class="modal-title">Planning général</h2>
+    <h2 class="modal-title">Planning officiel</h2>
+    <p class="modal-text">Choisis le planning puis le mois.</p>
+
     <div class="modal-grid">
       <a class="btn btn-day" href="mois.html?type=jour">
         <span><span class="icon">☀️</span>JOUR</span>
@@ -411,42 +433,57 @@ select{
       <a class="btn btn-chief" href="mois.html?type=chef">
         <span><span class="icon">👥</span>CHEF</span>
       </a>
+      <a class="btn btn-copy" href="mois.html?type=stagiaires">
+        <span><span class="icon">🎓</span>STAGIAIRES</span>
+      </a>
+      <a class="btn btn-orange" href="mois.html?type=formations">
+        <span><span class="icon">📋</span>FORMATIONS</span>
+      </a>
     </div>
+
     <button class="btn btn-grey close-btn" type="button" data-close>
       <span>FERMER</span>
     </button>
   </div>
 </div>
 
-<!-- MODAL MON PLANNING -->
-<div class="modal" id="modal-personal" aria-hidden="true">
+<!-- MODAL MON PLANNING PERSONNEL -->
+<div class="modal" id="modal-personnel" aria-hidden="true">
   <div class="modal-panel">
-    <h2 class="modal-title">Mon planning</h2>
-    <p class="modal-text">Choisis ton nom, puis ajoute ton planning personnel à ton téléphone.</p>
+    <h2 class="modal-title">Mon planning personnel</h2>
 
-    <select id="agentSelect">
-      <option value="">Chargement des agents...</option>
-    </select>
-
-    <div class="modal-grid">
-      <a class="btn btn-orange" href="mois.html?type=pdf">
-        <span><span class="icon">🖨️</span>CAPTURE / IMPRIMER</span>
-      </a>
-
-      <button class="btn btn-ios personal-action" type="button" data-personal-action="ios" disabled>
-        <span><span class="icon">🍎</span>iPHONE / iPAD<span class="mini">Calendrier Apple</span></span>
-      </button>
-
-      <button class="btn btn-android personal-action" type="button" data-personal-action="android" disabled>
-        <span><span class="icon">🤖</span>ANDROID<span class="mini">Google Agenda</span></span>
-      </button>
-
-      <button class="btn btn-copy personal-action" type="button" data-personal-action="copy" disabled>
-        <span><span class="icon">🔗</span>COPIER LE LIEN</span>
-      </button>
+    <div id="agentChoiceBox">
+      <p class="modal-text">Choisis ton nom.</p>
+      <select id="agentSelect">
+        <option value="">Chargement des agents...</option>
+      </select>
     </div>
 
-    <p class="helper" id="agentHelper">Choisis ton nom pour activer les boutons iPhone, Android et copier le lien.</p>
+    <div id="agentSelectedBox" class="hidden">
+      <div class="agent-name" id="agentNameDisplay"></div>
+
+      <div class="modal-grid two">
+        <button class="btn btn-teal" type="button" data-personal-action="preview">
+          <span><span class="icon">👁️</span>APERÇU<span class="mini">À partir d’aujourd’hui</span></span>
+        </button>
+
+        <button class="btn btn-orange" type="button" data-personal-action="print">
+          <span><span class="icon">🖨️</span>À IMPRIMER<span class="mini">Choix du mois</span></span>
+        </button>
+      </div>
+
+      <div class="small-label">Ajouter à mon agenda</div>
+
+      <div class="modal-grid two">
+        <button class="btn btn-ios" type="button" data-personal-action="ios">
+          <span><span class="icon">🍎</span>APPLE</span>
+        </button>
+
+        <button class="btn btn-android" type="button" data-personal-action="android">
+          <span><span class="icon">🤖</span>ANDROID</span>
+        </button>
+      </div>
+    </div>
 
     <button class="btn btn-grey close-btn" type="button" data-close>
       <span>FERMER</span>
@@ -455,45 +492,36 @@ select{
 </div>
 
 <!-- MODAL ORGANISATION -->
-<div class="modal" id="modal-org" aria-hidden="true">
+<div class="modal" id="modal-organisation" aria-hidden="true">
   <div class="modal-panel">
     <h2 class="modal-title">Organisation</h2>
-    <div class="modal-grid">
-      <a class="btn btn-orange" href="/formations.html">
-        <span><span class="icon">📋</span>FORMATIONS</span>
-      </a>
-      <a class="btn btn-copy" href="/stagiaires.html">
-        <span><span class="icon">🎓</span>STAGIAIRES</span>
-      </a>
-    </div>
-    <button class="btn btn-grey close-btn" type="button" data-close>
-      <span>FERMER</span>
+
+    <button class="btn btn-purple btn-full" type="button" data-calendar-choice="agents">
+      <span><span class="icon">🤝</span>ESPRIT D’ÉQUIPE<span class="mini">Ajouter le planning collectif</span></span>
     </button>
-  </div>
-</div>
 
-<!-- MODAL ABONNEMENT -->
-<div class="modal" id="modal-subscribe" aria-hidden="true">
-  <div class="modal-panel">
-    <h2 class="modal-title">S’abonner</h2>
-    <p class="modal-text">Choisis le calendrier à ajouter.</p>
+    <div class="org-block">
+      <h3 class="org-title">Formations</h3>
+      <div class="modal-grid two">
+        <a class="btn btn-teal" href="apercu.html?type=formations">
+          <span><span class="icon">👁️</span>APERÇU</span>
+        </a>
+        <button class="btn btn-orange" type="button" data-calendar-choice="formation">
+          <span><span class="icon">📲</span>AGENDA</span>
+        </button>
+      </div>
+    </div>
 
-    <div class="modal-grid">
-      <button class="btn btn-day" type="button" data-calendar-choice="agents">
-        <span><span class="icon">👥</span>PLANNING DES AGENTS<span class="mini">Tous les agents</span></span>
-      </button>
-
-      <button class="btn btn-orange" type="button" data-calendar-choice="formation">
-        <span><span class="icon">📋</span>FORMATION GHE</span>
-      </button>
-
-      <button class="btn btn-copy" type="button" data-calendar-choice="stagiaires">
-        <span><span class="icon">🎓</span>STAGIAIRES GHE</span>
-      </button>
-
-      <button class="btn btn-teal" type="button" data-close data-open="modal-personal">
-        <span><span class="icon">👤</span>MON PLANNING PERSONNEL</span>
-      </button>
+    <div class="org-block">
+      <h3 class="org-title">Stagiaires</h3>
+      <div class="modal-grid two">
+        <a class="btn btn-teal" href="apercu.html?type=stagiaires">
+          <span><span class="icon">👁️</span>APERÇU</span>
+        </a>
+        <button class="btn btn-copy" type="button" data-calendar-choice="stagiaires">
+          <span><span class="icon">📲</span>AGENDA</span>
+        </button>
+      </div>
     </div>
 
     <button class="btn btn-grey close-btn" type="button" data-close>
@@ -506,20 +534,16 @@ select{
 <div class="modal" id="modal-device" aria-hidden="true">
   <div class="modal-panel">
     <h2 class="modal-title" id="deviceTitle">Ajouter</h2>
-    <p class="modal-text">Choisis ton appareil.</p>
+    <p class="modal-text" id="deviceText">Choisis ton téléphone.</p>
 
-    <div class="modal-grid">
+    <div class="modal-grid two">
       <a class="btn btn-ios" id="deviceIos" href="#">
-        <span><span class="icon">🍎</span>iPHONE / iPAD<span class="mini">Calendrier Apple</span></span>
+        <span><span class="icon">🍎</span>APPLE</span>
       </a>
 
       <a class="btn btn-android" id="deviceAndroid" href="#" target="_blank" rel="noopener">
-        <span><span class="icon">🤖</span>ANDROID<span class="mini">Google Agenda</span></span>
+        <span><span class="icon">🤖</span>ANDROID</span>
       </a>
-
-      <button class="btn btn-copy" type="button" id="deviceCopy">
-        <span><span class="icon">🔗</span>COPIER LE LIEN</span>
-      </button>
     </div>
 
     <button class="btn btn-grey close-btn" type="button" data-close>
@@ -533,21 +557,26 @@ const PASSERELLE_AGENTS = "https://script.google.com/macros/s/AKfycbyW9kBVybPGv2
 
 const CALENDRIERS = {
   agents: {
-    titre: "Planning des agents",
+    titre: "Esprit d’équipe",
+    texte: "Ajouter le planning collectif dans l’agenda du téléphone.",
     url: "https://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics"
   },
   formation: {
     titre: "Formation GHE",
+    texte: "Ajouter les formations dans l’agenda du téléphone.",
     url: "https://calendar.google.com/calendar/ical/c5da5df12db0eba65a14410cada08fea4e5a8037ddd256b03e7426cb22cb751b%40group.calendar.google.com/private-4f5072a64d36548137a30abb665ed23f/basic.ics"
   },
   stagiaires: {
     titre: "Stagiaires GHE",
+    texte: "Ajouter les stagiaires dans l’agenda du téléphone.",
     url: "https://calendar.google.com/calendar/ical/2ced33be0e6a5c88fab9bae2ffdf3b56366970e4003b1718a7dabf4c0603eae6%40group.calendar.google.com/private-d3db5a97d6dbdd8ceeeaa375c8a460ef/basic.ics"
   }
 };
 
 const agentSelect = document.getElementById("agentSelect");
-const agentHelper = document.getElementById("agentHelper");
+const agentChoiceBox = document.getElementById("agentChoiceBox");
+const agentSelectedBox = document.getElementById("agentSelectedBox");
+const agentNameDisplay = document.getElementById("agentNameDisplay");
 
 function openModal(id){
   document.querySelectorAll(".modal").forEach(m => {
@@ -570,30 +599,34 @@ function closeModals(){
 }
 
 document.addEventListener("click", function(e){
-  const closeBtn = e.target.closest("[data-close]");
   const openBtn = e.target.closest("[data-open]");
+  const closeBtn = e.target.closest("[data-close]");
+  const calendarBtn = e.target.closest("[data-calendar-choice]");
+  const personalBtn = e.target.closest("[data-personal-action]");
 
   if(closeBtn){
     closeModals();
+    return;
   }
 
   if(openBtn){
     openModal(openBtn.dataset.open);
+    return;
+  }
+
+  if(calendarBtn){
+    const key = calendarBtn.dataset.calendarChoice;
+    ouvrirChoixSupport(CALENDRIERS[key]);
+    return;
+  }
+
+  if(personalBtn){
+    actionPlanningPersonnel(personalBtn.dataset.personalAction);
+    return;
   }
 
   if(e.target.classList.contains("modal")){
     closeModals();
-  }
-
-  const calendarBtn = e.target.closest("[data-calendar-choice]");
-  if(calendarBtn){
-    const key = calendarBtn.dataset.calendarChoice;
-    ouvrirChoixSupport(CALENDRIERS[key]);
-  }
-
-  const personalBtn = e.target.closest("[data-personal-action]");
-  if(personalBtn){
-    actionPlanningPersonnel(personalBtn.dataset.personalAction);
   }
 });
 
@@ -605,25 +638,13 @@ function androidUrl(url){
   return "https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(url);
 }
 
-async function copierTexte(texte){
-  try{
-    await navigator.clipboard.writeText(texte);
-    alert("Lien copié.");
-  }catch(e){
-    prompt("Copie ce lien :", texte);
-  }
-}
-
 function ouvrirChoixSupport(cal){
   if(!cal) return;
 
   document.getElementById("deviceTitle").textContent = cal.titre;
+  document.getElementById("deviceText").textContent = cal.texte;
   document.getElementById("deviceIos").href = webcalUrl(cal.url);
   document.getElementById("deviceAndroid").href = androidUrl(cal.url);
-
-  document.getElementById("deviceCopy").onclick = function(){
-    copierTexte(cal.url);
-  };
 
   openModal("modal-device");
 }
@@ -636,31 +657,44 @@ function agentChoisi(){
   return String(agentSelect.value || "").trim();
 }
 
-function lienAgentChoisi(){
-  const agent = agentChoisi();
-  if(!agent) return "";
-  return urlAgent(agent);
+function nomAgentChoisi(){
+  const opt = agentSelect.options[agentSelect.selectedIndex];
+  return opt ? opt.textContent : "";
 }
 
-function majBoutonsAgent(){
-  const actif = !!agentChoisi();
-  document.querySelectorAll(".personal-action").forEach(btn => {
-    btn.disabled = !actif;
-  });
+function majZoneAgent(){
+  const agent = agentChoisi();
 
-  if(actif){
-    agentHelper.textContent = "Ton nom est choisi. Tu peux maintenant ajouter ton planning.";
-    try{ localStorage.setItem("ghe_agent", agentChoisi()); }catch(e){}
+  if(agent){
+    agentChoiceBox.classList.add("hidden");
+    agentSelectedBox.classList.remove("hidden");
+    agentNameDisplay.style.display = "block";
+    agentNameDisplay.textContent = nomAgentChoisi();
+    try{ localStorage.setItem("ghe_agent", agent); }catch(e){}
   }else{
-    agentHelper.textContent = "Choisis ton nom pour activer les boutons iPhone, Android et copier le lien.";
+    agentChoiceBox.classList.remove("hidden");
+    agentSelectedBox.classList.add("hidden");
+    agentNameDisplay.style.display = "none";
+    agentNameDisplay.textContent = "";
   }
 }
 
 function actionPlanningPersonnel(action){
-  const lien = lienAgentChoisi();
-
-  if(!lien){
+  const agent = agentChoisi();
+  if(!agent){
     alert("Choisis d’abord ton nom.");
+    return;
+  }
+
+  const lien = urlAgent(agent);
+
+  if(action === "preview"){
+    window.location.href = "apercu.html?type=agent&agent=" + encodeURIComponent(agent);
+    return;
+  }
+
+  if(action === "print"){
+    window.location.href = "mois.html?type=agent&agent=" + encodeURIComponent(agent);
     return;
   }
 
@@ -671,11 +705,6 @@ function actionPlanningPersonnel(action){
 
   if(action === "android"){
     window.open(androidUrl(lien), "_blank", "noopener");
-    return;
-  }
-
-  if(action === "copy"){
-    copierTexte(lien);
   }
 }
 
@@ -699,22 +728,18 @@ async function chargerAgents(){
         agentSelect.appendChild(opt);
       });
 
-    try{
-      const saved = localStorage.getItem("ghe_agent");
-      if(saved && Array.from(agentSelect.options).some(o => o.value === saved)){
-        agentSelect.value = saved;
-      }
-    }catch(e){}
+    /* On ne pré-sélectionne volontairement pas l'agent :
+       le choix doit rester volontaire et imposant à l'ouverture. */
 
   }catch(err){
     agentSelect.innerHTML = '<option value="">Impossible de charger les agents</option>';
     console.error(err);
   }
 
-  majBoutonsAgent();
+  majZoneAgent();
 }
 
-agentSelect.addEventListener("change", majBoutonsAgent);
+agentSelect.addEventListener("change", majZoneAgent);
 chargerAgents();
 </script>
 
