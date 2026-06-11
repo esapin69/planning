@@ -381,7 +381,6 @@ button.btn{width:100%}
 .agent-btn:active{transform:translateY(3px)}
 .agent-btn.is-hidden{display:none}
 
-
 .selected-avatar-wrap{
   position:relative;
   z-index:3;
@@ -424,7 +423,6 @@ button.btn{width:100%}
     0 5px 0 #f8d67d,
     5px 8px 0 rgba(7,24,63,.16);
 }
-
 
 .change-agent-button{
   position:relative;
@@ -675,12 +673,54 @@ const CALENDRIERS = {
 
 let agents = [];
 let agentActuel = "";
+let agentsDejaCharges = false;
+let chargementEnCours = false;
 
 const agentChoiceBox = document.getElementById("agentChoiceBox");
 const agentSelectedBox = document.getElementById("agentSelectedBox");
 const agentNameDisplay = document.getElementById("agentNameDisplay");
 const agentList = document.getElementById("agentList");
 const agentSearch = document.getElementById("agentSearch");
+
+/****************************************************
+ * OUTILS JSONP
+ ****************************************************/
+
+function loadJsonp(url){
+  return new Promise(function(resolve,reject){
+    const callbackName = "GHE_JSONP_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
+
+    const script = document.createElement("script");
+    script.id = callbackName;
+
+    window[callbackName] = function(data){
+      delete window[callbackName];
+      script.remove();
+      resolve(data);
+    };
+
+    script.onerror = function(){
+      delete window[callbackName];
+      script.remove();
+      reject(new Error("Impossible de joindre la passerelle."));
+    };
+
+    script.src = url + (url.includes("?") ? "&" : "?") + "callback=" + encodeURIComponent(callbackName) + "&t=" + Date.now();
+    document.body.appendChild(script);
+  });
+}
+
+function normaliserRecherche(v){
+  return String(v || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase()
+    .trim();
+}
+
+/****************************************************
+ * MODALES
+ ****************************************************/
 
 function openModal(id){
   document.querySelectorAll(".modal").forEach(m => {
@@ -692,6 +732,16 @@ function openModal(id){
   if(modal){
     modal.classList.add("is-open");
     modal.setAttribute("aria-hidden","false");
+
+    if(id === "modal-personnel"){
+      if(!agentsDejaCharges && !chargementEnCours){
+        chargerAgents();
+      }
+      setTimeout(function(){
+        if(!agentSelectedBox.classList.contains("hidden")) return;
+        agentSearch.focus();
+      }, 100);
+    }
   }
 }
 
@@ -731,7 +781,12 @@ document.addEventListener("click", function(e){
   }
 
   if(agentBtn){
-    choisirAgent(agentBtn.dataset.agentKey, agentBtn.dataset.agentName, agentBtn.dataset.avatarImageUrl, agentBtn.dataset.avatarThumbUrl);
+    choisirAgent(
+      agentBtn.dataset.agentKey,
+      agentBtn.dataset.agentName,
+      agentBtn.dataset.avatarImageUrl,
+      agentBtn.dataset.avatarThumbUrl
+    );
     return;
   }
 
@@ -739,6 +794,10 @@ document.addEventListener("click", function(e){
     closeModals();
   }
 });
+
+/****************************************************
+ * LIENS CALENDRIER
+ ****************************************************/
 
 function webcalUrl(url){
   return url.replace(/^https:\/\//i, "webcal://");
@@ -762,6 +821,10 @@ function ouvrirChoixSupport(cal){
 function urlAgent(agentKey){
   return PASSERELLE_AGENTS + "?mode=ics&agent=" + encodeURIComponent(agentKey);
 }
+
+/****************************************************
+ * AGENT SÉLECTIONNÉ
+ ****************************************************/
 
 function afficherAvatarSelection(url, thumb){
   const img = document.getElementById("selectedAvatarImg");
@@ -798,28 +861,36 @@ function afficherAvatarSelection(url, thumb){
 
 function choisirAgent(key, nom, avatarUrl, avatarThumb){
   agentActuel = key;
+
   agentChoiceBox.classList.add("hidden");
   agentSelectedBox.classList.remove("hidden");
+
   agentNameDisplay.style.display = "block";
   agentNameDisplay.textContent = nom || key.replace(/_/g, " ");
+
   afficherAvatarSelection(avatarUrl, avatarThumb);
 }
 
 function resetAgentChoice(){
   agentActuel = "";
+
   agentSelectedBox.classList.add("hidden");
   agentChoiceBox.classList.remove("hidden");
+
   agentNameDisplay.style.display = "none";
   agentNameDisplay.textContent = "";
+
   agentSearch.value = "";
   renderAgents("");
 
   const img = document.getElementById("selectedAvatarImg");
   const fallback = document.getElementById("selectedAvatarFallback");
+
   if(img){
     img.src = "";
     img.style.display = "none";
   }
+
   if(fallback){
     fallback.style.display = "block";
   }
@@ -862,17 +933,39 @@ function actionPlanningPersonnel(action){
   }
 }
 
+/****************************************************
+ * LISTE AGENTS
+ ****************************************************/
+
+function normaliserAgentDepuisApi(a){
+  const agentKey = a.agent || a.key || "";
+  const nom = a.nom || a.nomComplet || a.fullName || agentKey.replace(/_/g, " ");
+
+  return {
+    agent: agentKey,
+    nom: nom,
+    avatar_image_url: a.avatar_image_url || (a.avatar && a.avatar.avatar_image_url) || "",
+    avatar_thumb_url: a.avatar_thumb_url || (a.avatar && a.avatar.avatar_thumb_url) || "",
+    avatar_statut: a.avatar_statut || (a.avatar && a.avatar.avatar_statut) || ""
+  };
+}
+
 function renderAgents(filtre){
-  const q = String(filtre || "").toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const q = normaliserRecherche(filtre);
   agentList.innerHTML = "";
 
   const visibles = agents.filter(agent => {
-    const nom = String(agent.nom || "").toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    return !q || nom.includes(q);
+    const nom = normaliserRecherche(agent.nom);
+    const key = normaliserRecherche(agent.agent);
+    return !q || nom.includes(q) || key.includes(q);
   });
 
   if(visibles.length === 0){
-    agentList.innerHTML = '<div class="modal-text">Aucun agent trouvé.</div>';
+    if(agents.length === 0){
+      agentList.innerHTML = '<div class="modal-text">Aucun agent reçu depuis la passerelle.</div>';
+    }else{
+      agentList.innerHTML = '<div class="modal-text">Aucun agent trouvé.</div>';
+    }
     return;
   }
 
@@ -889,59 +982,49 @@ function renderAgents(filtre){
   });
 }
 
-function chargerAgents(){
+async function chargerAgents(){
+  chargementEnCours = true;
   agentList.innerHTML = '<div class="modal-text">Chargement des agents...</div>';
 
-  const callbackName = "GHE_AGENTS_" + Date.now();
+  try{
+    const data = await loadJsonp(PASSERELLE_AGENTS + "?mode=list");
 
-  window[callbackName] = function(data){
-    try{
-      if(!data.ok || !Array.isArray(data.agents)){
-        throw new Error(data.erreur || "Liste agents invalide");
-      }
-
-      agents = data.agents
-        .map(a => ({
-          agent:a.agent,
-          nom:a.nom,
-          avatar_image_url:a.avatar_image_url || "",
-          avatar_thumb_url:a.avatar_thumb_url || "",
-          avatar_statut:a.avatar_statut || ""
-        }))
-        .sort((a,b) => String(a.nom).localeCompare(String(b.nom), "fr"));
-
-      renderAgents("");
-
-    }catch(err){
-      agentList.innerHTML = '<div class="modal-text">Impossible de charger les agents.</div>';
-      console.error(err);
-
-    }finally{
-      delete window[callbackName];
-      const oldScript = document.getElementById(callbackName);
-      if(oldScript) oldScript.remove();
+    if(!data || data.ok === false){
+      throw new Error(data && data.erreur ? data.erreur : "Réponse passerelle invalide.");
     }
-  };
 
-  const script = document.createElement("script");
-  script.id = callbackName;
-  script.src = PASSERELLE_AGENTS
-    + "?mode=list"
-    + "&callback=" + encodeURIComponent(callbackName)
-    + "&t=" + Date.now();
+    if(!Array.isArray(data.agents)){
+      throw new Error("La passerelle ne renvoie pas de tableau agents.");
+    }
 
-  script.onerror = function(){
-    agentList.innerHTML = '<div class="modal-text">Impossible de charger les agents.</div>';
-    delete window[callbackName];
-    script.remove();
-  };
+    agents = data.agents
+      .map(normaliserAgentDepuisApi)
+      .filter(a => a.agent && a.nom)
+      .sort((a,b) => String(a.nom).localeCompare(String(b.nom), "fr"));
 
-  document.body.appendChild(script);
+    agentsDejaCharges = true;
+    renderAgents(agentSearch.value || "");
+
+  }catch(err){
+    console.error(err);
+    agentList.innerHTML =
+      '<div class="modal-text">' +
+      'Impossible de charger les agents.<br>' +
+      'Erreur : ' + String(err.message || err) +
+      '</div>';
+
+  }finally{
+    chargementEnCours = false;
+  }
 }
 
 agentSearch.addEventListener("input", function(){
   renderAgents(agentSearch.value);
 });
+
+/****************************************************
+ * LANCEMENT
+ ****************************************************/
 
 chargerAgents();
 </script>
