@@ -249,36 +249,15 @@ function sourceUrl(){
   return "";
 }
 
-function avatarCandidates(agentKey){
-  if(!agentKey) return [];
-  return [
-    "Image/Avatar/" + agentKey + ".png",
-    "Image/Avatar/" + agentKey + ".jpg",
-    "Image/Avatar/" + agentKey + ".jpeg",
-    "Image/Avatars/" + agentKey + ".png",
-    "Image/Avatars/" + agentKey + ".jpg",
-    "Image/avatars/" + agentKey + ".png",
-    "Image/avatar/" + agentKey + ".png",
-    "Image/Avatar/avatar-defaut.png",
-    "Image/Avatar/default.png"
-  ];
-}
-
-function loadAvatar(){
-  if(type !== "agent" || !agent){
-    avatarWrap.classList.remove("is-visible");
-    return;
-  }
-
+function afficherAvatarDepuisSources(sources){
   avatarWrap.classList.add("is-visible");
   avatarFallback.style.display = "flex";
   avatarImg.style.display = "none";
 
-  const list = avatarCandidates(agent);
   let index = 0;
 
   function tryNext(){
-    if(index >= list.length){
+    if(index >= sources.length){
       avatarImg.style.display = "none";
       avatarFallback.style.display = "flex";
       return;
@@ -294,10 +273,34 @@ function loadAvatar(){
       tryNext();
     };
 
-    avatarImg.src = list[index];
+    avatarImg.src = sources[index];
   }
 
   tryNext();
+}
+
+async function loadAvatar(){
+  if(type !== "agent" || !agent){
+    avatarWrap.classList.remove("is-visible");
+    return;
+  }
+
+  avatarWrap.classList.add("is-visible");
+
+  try{
+    const res = await fetch(PASSERELLE + "?mode=avatar&agent=" + encodeURIComponent(agent));
+    const data = await res.json();
+
+    const sources = [
+      data.avatar_image_url || "",
+      data.avatar_thumb_url || ""
+    ].filter(Boolean);
+
+    afficherAvatarDepuisSources(sources);
+  }catch(e){
+    console.error(e);
+    afficherAvatarDepuisSources([]);
+  }
 }
 
 function unfoldIcs(text){
@@ -489,7 +492,7 @@ function renderEvents(events){
 async function init(){
   titleEl.textContent = titrePage();
   subtitleEl.textContent = "À partir d’aujourd’hui";
-  loadAvatar();
+  await loadAvatar();
 
   const url = sourceUrl();
 
