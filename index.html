@@ -6,15 +6,6 @@
 <title>Planning GHE — Brancardiers</title>
 
 <style>
-/* =========================================================
-   PLANNING GHE — ACCUEIL FINAL
-   - Planning officiel
-   - Mon planning personnel
-   - Demander un changement
-   - Organisation
-   - Plus de bloc séparé "S'abonner au planning"
-========================================================= */
-
 *,*::before,*::after{box-sizing:border-box}
 
 :root{
@@ -143,10 +134,6 @@ body::before{
   box-shadow:0 5px 0 rgba(7,24,63,.18);
 }
 
-/* =============================
-   BOUTONS INTERNES
-============================= */
-
 .modal-grid{
   position:relative;
   z-index:3;
@@ -247,10 +234,6 @@ button.btn{width:100%}
 .btn-teal{--main1:#24d4c5;--main2:#078f92;--main3:#055668;--edge:#052b40}
 .btn-purple{--main1:#a66cff;--main2:#6530af;--main3:#3d176e;--edge:#100722}
 .btn-grey{--main1:#999;--main2:#555;--main3:#222}
-
-/* =============================
-   MODALES
-============================= */
 
 .modal{
   position:fixed;
@@ -445,10 +428,7 @@ button.btn{width:100%}
   cursor:pointer;
 }
 
-.change-agent-button:active{
-  transform:translateY(3px);
-}
-
+.change-agent-button:active{transform:translateY(3px)}
 .hidden{display:none!important}
 
 .close-btn{
@@ -504,7 +484,6 @@ button.btn{width:100%}
 
 </main>
 
-<!-- MODAL PLANNING OFFICIEL -->
 <div class="modal" id="modal-officiel" aria-hidden="true">
   <div class="modal-panel">
     <h2 class="modal-title">Planning officiel</h2>
@@ -534,7 +513,6 @@ button.btn{width:100%}
   </div>
 </div>
 
-<!-- MODAL MON PLANNING PERSONNEL -->
 <div class="modal" id="modal-personnel" aria-hidden="true">
   <div class="modal-panel">
     <div id="agentChoiceBox">
@@ -589,7 +567,6 @@ button.btn{width:100%}
   </div>
 </div>
 
-<!-- MODAL ORGANISATION -->
 <div class="modal" id="modal-organisation" aria-hidden="true">
   <div class="modal-panel">
     <h2 class="modal-title">Organisation</h2>
@@ -628,7 +605,6 @@ button.btn{width:100%}
   </div>
 </div>
 
-<!-- MODAL CHOIX SUPPORT -->
 <div class="modal" id="modal-device" aria-hidden="true">
   <div class="modal-panel">
     <h2 class="modal-title" id="deviceTitle">Ajouter</h2>
@@ -651,7 +627,7 @@ button.btn{width:100%}
 </div>
 
 <script>
-const PASSERELLE_AGENTS = "https://script.google.com/macros/s/AKfycbyW9kBVybPGv2XFW2fpiJcZ0AEFrgTCwd5_gkt1ykBpOvVyT5B24EgqQt4kVPwiIcDb/exec";
+const PASSERELLE_AGENTS = "https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8HZ_g_ota7tajTKLY3jvLKEF9AvSPjIbVpqcSkSRcI5OdWV9/exec";
 
 const CALENDRIERS = {
   agents: {
@@ -682,14 +658,9 @@ const agentNameDisplay = document.getElementById("agentNameDisplay");
 const agentList = document.getElementById("agentList");
 const agentSearch = document.getElementById("agentSearch");
 
-/****************************************************
- * OUTILS JSONP
- ****************************************************/
-
 function loadJsonp(url){
   return new Promise(function(resolve,reject){
     const callbackName = "GHE_JSONP_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
-
     const script = document.createElement("script");
     script.id = callbackName;
 
@@ -718,10 +689,6 @@ function normaliserRecherche(v){
     .trim();
 }
 
-/****************************************************
- * MODALES
- ****************************************************/
-
 function openModal(id){
   document.querySelectorAll(".modal").forEach(m => {
     m.classList.remove("is-open");
@@ -737,6 +704,7 @@ function openModal(id){
       if(!agentsDejaCharges && !chargementEnCours){
         chargerAgents();
       }
+
       setTimeout(function(){
         if(!agentSelectedBox.classList.contains("hidden")) return;
         agentSearch.focus();
@@ -795,10 +763,6 @@ document.addEventListener("click", function(e){
   }
 });
 
-/****************************************************
- * LIENS CALENDRIER
- ****************************************************/
-
 function webcalUrl(url){
   return url.replace(/^https:\/\//i, "webcal://");
 }
@@ -821,10 +785,6 @@ function ouvrirChoixSupport(cal){
 function urlAgent(agentKey){
   return PASSERELLE_AGENTS + "?mode=ics&agent=" + encodeURIComponent(agentKey);
 }
-
-/****************************************************
- * AGENT SÉLECTIONNÉ
- ****************************************************/
 
 function afficherAvatarSelection(url, thumb){
   const img = document.getElementById("selectedAvatarImg");
@@ -933,10 +893,6 @@ function actionPlanningPersonnel(action){
   }
 }
 
-/****************************************************
- * LISTE AGENTS
- ****************************************************/
-
 function normaliserAgentDepuisApi(a){
   const agentKey = a.agent || a.key || "";
   const nom = a.nom || a.nomComplet || a.fullName || agentKey.replace(/_/g, " ");
@@ -1021,10 +977,6 @@ async function chargerAgents(){
 agentSearch.addEventListener("input", function(){
   renderAgents(agentSearch.value);
 });
-
-/****************************************************
- * LANCEMENT
- ****************************************************/
 
 chargerAgents();
 </script>
