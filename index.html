@@ -6,30 +6,14 @@
 <title>Planning GHE — Brancardiers</title>
 
 <style>
-/* =========================================================
-   PLANNING GHE — ACCUEIL
-   Version retouchée : page sans titre de tête.
-   La page commence directement par la photo d'accueil.
-
-   Images actuellement utilisées :
-   Image/Bannière/01-accueil-planning-acces.png
-   Image/Bannière/02-mon-planning-personnel.png
-   Image/Bannière/03-organisation.png
-   Image/Bannière/04-demander-changement.png
-   Image/Bannière/05-abonnement-planning.png
-========================================================= */
-
 *,*::before,*::after{box-sizing:border-box}
 
 :root{
   --ink:#07183f;
   --ink-deep:#020919;
   --paper:#fff7dd;
-  --paper-soft:#fff2c8;
   --gold:#d3a24b;
-  --old-gold:#b98028;
   --cream:#fff1c4;
-  --shadow:rgba(3,10,32,.26);
 }
 
 html{scroll-behavior:smooth}
@@ -61,17 +45,13 @@ body::before{
 .page{
   width:min(760px,100%);
   margin:auto;
-  padding:10px 12px 48px;
+  padding:10px 12px 56px;
 }
-
-/* =============================
-   CARTES
-============================= */
 
 .hand-card{
   position:relative;
-  margin:18px 0 32px;
-  padding:17px 13px 18px;
+  margin:16px 0 30px;
+  padding:16px 12px 18px;
   background:
     radial-gradient(circle at 12% 0%,rgba(255,255,255,.75),transparent 34%),
     linear-gradient(180deg,rgba(255,255,255,.40),transparent 48%),
@@ -82,10 +62,6 @@ body::before{
     0 13px 0 rgba(7,24,63,.20),
     0 18px 0 rgba(0,0,0,.12),
     inset 0 0 0 3px rgba(255,215,115,.42);
-}
-
-.hero-card{
-  margin-top:6px;
 }
 
 .hand-card::before{
@@ -107,23 +83,6 @@ body::before{
   pointer-events:none;
 }
 
-.block-title{
-  position:relative;
-  z-index:2;
-  margin:15px 0 18px;
-  text-align:center;
-  text-transform:uppercase;
-  color:var(--ink);
-  font-size:clamp(35px,8vw,58px);
-  line-height:.88;
-  letter-spacing:1px;
-  text-shadow:
-    0 4px 0 #f8d67d,
-    4px 7px 0 rgba(7,24,63,.13);
-}
-
-.block-title.small-title{font-size:clamp(34px,7.6vw,54px)}
-
 .scene-img{
   position:relative;
   z-index:2;
@@ -139,11 +98,20 @@ body::before{
     0 14px 0 rgba(0,0,0,.10);
 }
 
-.scene-img.tight{margin-bottom:14px}
-
-/* =============================
-   BOUTONS
-============================= */
+.block-title{
+  position:relative;
+  z-index:2;
+  margin:10px 0 18px;
+  text-align:center;
+  text-transform:uppercase;
+  color:var(--ink);
+  font-size:clamp(34px,8vw,56px);
+  line-height:.88;
+  letter-spacing:1px;
+  text-shadow:
+    0 4px 0 #f8d67d,
+    4px 7px 0 rgba(7,24,63,.13);
+}
 
 .grid{
   position:relative;
@@ -153,7 +121,7 @@ body::before{
 }
 
 .grid.two{grid-template-columns:1fr 1fr}
-.grid.three{grid-template-columns:repeat(3,1fr);gap:11px}
+.grid.one{grid-template-columns:1fr}
 
 .btn{
   --main1:#277bd5;
@@ -168,8 +136,8 @@ body::before{
   display:flex;
   align-items:center;
   justify-content:center;
-  min-height:96px;
-  padding:11px 8px 12px;
+  min-height:100px;
+  padding:12px 10px;
   overflow:hidden;
   color:#fff4ce;
   text-decoration:none;
@@ -177,7 +145,7 @@ body::before{
   text-transform:uppercase;
   letter-spacing:.6px;
   line-height:.9;
-  font-size:clamp(23px,6vw,38px);
+  font-size:clamp(24px,6.2vw,42px);
   border:6px solid var(--edge);
   border-radius:26px 22px 30px 23px;
   background:
@@ -196,6 +164,13 @@ body::before{
     2px 5px 0 rgba(94,56,12,.34);
   transform:rotate(var(--tilt));
   -webkit-tap-highlight-color:transparent;
+  cursor:pointer;
+}
+
+button.btn{
+  width:100%;
+  appearance:none;
+  -webkit-appearance:none;
 }
 
 .btn::before{
@@ -206,7 +181,6 @@ body::before{
   border:3px dashed var(--stitch);
   border-radius:18px 16px 21px 17px;
   pointer-events:none;
-  filter:drop-shadow(0 1px 0 rgba(0,0,0,.25));
 }
 
 .btn::after{
@@ -234,89 +208,158 @@ body::before{
   margin-bottom:7px;
   font-size:1.18em;
   line-height:.85;
-  filter:
-    drop-shadow(0 3px 0 rgba(0,0,0,.33))
-    drop-shadow(0 0 2px rgba(255,226,154,.35));
 }
 
 .btn .mini{
   display:block;
-  margin-top:6px;
-  font-size:.50em;
-  line-height:1;
+  margin-top:7px;
+  font-size:.48em;
+  line-height:1.05;
   opacity:.95;
 }
 
 .btn:active{
   transform:translateY(4px) rotate(var(--tilt));
-  box-shadow:
-    0 5px 0 rgba(7,24,63,.34),
-    0 9px 0 rgba(0,0,0,.12),
-    inset 0 0 0 4px rgba(255,221,132,.26),
-    inset 0 -10px 16px rgba(0,0,0,.22);
 }
 
-/* Couleurs par bouton */
-.btn-day{--tilt:-.55deg;--main1:#34b7ff;--main2:#086bd2;--main3:#063f98;--edge:#051940;--stitch:rgba(255,230,137,.76)}
-.btn-night{--tilt:.45deg;--main1:#243a74;--main2:#071a45;--main3:#020812;--edge:#061129;--stitch:rgba(214,187,112,.72)}
-.btn-chief{--tilt:-.35deg;--main1:#b75aff;--main2:#7130b5;--main3:#3d145f;--edge:#15072a;--stitch:rgba(255,210,138,.68)}
+.btn-personal{--tilt:-.35deg;--main1:#24d4c5;--main2:#078f92;--main3:#055668;--edge:#052b40}
+.btn-general{--tilt:.35deg;--main1:#34b7ff;--main2:#086bd2;--main3:#063f98;--edge:#051940}
+.btn-change{--tilt:-.15deg;--main1:#ff5157;--main2:#dc0917;--main3:#930711;--edge:#160715}
+.btn-org{--tilt:.25deg;--main1:#ffb43a;--main2:#f07c00;--main3:#b74d00;--edge:#061738}
+.btn-subscribe{--tilt:-.25deg;--main1:#a66cff;--main2:#6530af;--main3:#3d176e;--edge:#100722}
 
-.btn-print{--tilt:-.45deg;--main1:#1fc9cf;--main2:#077f8d;--main3:#045260;--edge:#052b40;--stitch:rgba(232,226,150,.70)}
-.btn-agenda{--tilt:.38deg;--main1:#26d8d0;--main2:#078f92;--main3:#055668;--edge:#052b40;--stitch:rgba(232,226,150,.70)}
+.btn-day{--main1:#34b7ff;--main2:#086bd2;--main3:#063f98}
+.btn-night{--main1:#243a74;--main2:#071a45;--main3:#020812}
+.btn-chief{--main1:#b75aff;--main2:#7130b5;--main3:#3d145f}
 
-.btn-formations{--tilt:-.50deg;--main1:#ffb43a;--main2:#f07c00;--main3:#b74d00;--edge:#061738;--stitch:rgba(255,229,145,.74)}
-.btn-stagiaires{--tilt:.45deg;--main1:#ffe165;--main2:#f2ae12;--main3:#ce7600;--edge:#061738;--stitch:rgba(255,245,175,.70);color:#fff7d8}
+.btn-ios{--main1:#3db9ff;--main2:#0c6ed5;--main3:#083c91}
+.btn-android{--main1:#35d864;--main2:#12873d;--main3:#075324}
+.btn-copy{--main1:#ffe165;--main2:#f2ae12;--main3:#ce7600;color:#fff7d8}
+.btn-secondary{--main1:#6d8fb8;--main2:#2f557f;--main3:#17314f}
 
-.change-btn{
-  --tilt:-.15deg;
-  --main1:#ff5157;
-  --main2:#dc0917;
-  --main3:#930711;
-  --edge:#160715;
-  --stitch:rgba(255,213,116,.76);
+.small-link{
+  position:relative;
+  z-index:3;
+  display:block;
   width:100%;
-  min-height:82px;
-  font-size:clamp(26px,7vw,46px);
-  border-radius:24px 19px 28px 20px;
+  margin-top:16px;
+  border:0;
+  background:transparent;
+  color:var(--ink);
+  font-family:inherit;
+  font-size:clamp(24px,6vw,38px);
+  text-transform:uppercase;
+  text-decoration:underline;
+  text-decoration-thickness:3px;
+  text-underline-offset:5px;
+  cursor:pointer;
 }
 
-.btn-ios{--tilt:-.45deg;--main1:#3db9ff;--main2:#0c6ed5;--main3:#083c91;--edge:#061738;--stitch:rgba(255,230,150,.72)}
-.btn-android{--tilt:.45deg;--main1:#35d864;--main2:#12873d;--main3:#075324;--edge:#061738;--stitch:rgba(255,230,150,.72)}
-.btn-ics{--tilt:-.15deg;grid-column:1/-1;min-height:86px;--main1:#a66cff;--main2:#6530af;--main3:#3d176e;--edge:#100722;--stitch:rgba(255,222,142,.72)}
+/* MODALES */
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:50;
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  padding:18px 10px;
+  background:rgba(2,9,25,.58);
+}
 
-/* Ajustements par section */
-.hero-card .btn{min-height:124px;font-size:clamp(25px,6.5vw,43px)}
-.personal-card .btn,.org-card .btn{min-height:106px}
-.subscribe-card .btn{min-height:92px}
+.modal.is-open{display:flex}
 
-/* =============================
-   RESPONSIVE
-============================= */
+.modal-panel{
+  width:min(720px,100%);
+  max-height:88vh;
+  overflow:auto;
+  position:relative;
+  padding:18px 12px 20px;
+  background:
+    radial-gradient(circle at 12% 0%,rgba(255,255,255,.75),transparent 34%),
+    linear-gradient(180deg,rgba(255,255,255,.45),transparent 48%),
+    var(--paper);
+  border:6px solid var(--ink);
+  border-radius:34px 28px 38px 29px;
+  box-shadow:
+    0 13px 0 rgba(7,24,63,.20),
+    0 18px 0 rgba(0,0,0,.18),
+    inset 0 0 0 3px rgba(255,215,115,.42);
+}
+
+.modal-title{
+  margin:0 0 16px;
+  text-align:center;
+  text-transform:uppercase;
+  font-size:clamp(34px,8vw,58px);
+  line-height:.9;
+  text-shadow:
+    0 4px 0 #f8d67d,
+    4px 7px 0 rgba(7,24,63,.13);
+}
+
+.modal-text{
+  position:relative;
+  z-index:3;
+  margin:0 0 14px;
+  text-align:center;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-weight:800;
+  font-size:16px;
+  line-height:1.25;
+}
+
+.modal-grid{
+  position:relative;
+  z-index:3;
+  display:grid;
+  gap:12px;
+}
+
+.close-btn{
+  margin-top:14px;
+  min-height:66px;
+  font-size:clamp(22px,5vw,32px);
+  --main1:#999;
+  --main2:#555;
+  --main3:#222;
+}
+
+select{
+  position:relative;
+  z-index:3;
+  width:100%;
+  margin:4px 0 14px;
+  padding:16px 14px;
+  border:5px solid var(--ink);
+  border-radius:22px;
+  background:#fff9e8;
+  color:var(--ink);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:20px;
+  font-weight:900;
+}
+
+.helper{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:14px;
+  font-weight:800;
+  line-height:1.25;
+  text-align:center;
+  margin:10px 0 0;
+}
 
 @media(max-width:520px){
-  .page{padding:8px 10px 42px}
-  .hand-card{margin:16px 0 29px;padding:14px 10px 15px;border-width:5px;border-radius:30px 25px 33px 26px}
-  .hero-card{margin-top:4px}
+  .page{padding:8px 10px 46px}
+  .hand-card{margin:14px 0 26px;padding:13px 10px 15px;border-width:5px;border-radius:30px 25px 33px 26px}
   .hand-card::before{inset:7px;border-width:2px}
   .scene-img{border-width:5px;border-radius:23px 20px 26px 20px;margin-bottom:12px}
-  .block-title{font-size:clamp(34px,8.4vw,52px);margin:14px 0 17px}
   .grid{gap:12px}
-  .grid.three{gap:8px}
-  .btn{min-height:86px;padding:9px 6px;border-width:5px;border-radius:22px 18px 25px 19px;font-size:clamp(20px,5.5vw,30px)}
+  .grid.two{grid-template-columns:1fr}
+  .btn{min-height:84px;padding:10px 7px;border-width:5px;border-radius:22px 18px 25px 19px;font-size:clamp(22px,6vw,34px)}
   .btn::before{inset:7px;border-width:2px}
-  .btn .icon{margin-bottom:6px;font-size:1.14em}
-  .hero-card .btn{min-height:112px;font-size:clamp(22px,6vw,33px)}
-  .personal-card .btn,.org-card .btn{min-height:96px}
-  .change-btn{min-height:72px;font-size:clamp(24px,6.6vw,36px)}
-  .subscribe-card .btn{min-height:82px}
-  .btn-ics{min-height:78px}
-}
-
-@media(max-width:390px){
-  .grid.three{gap:7px}
-  .btn{font-size:19px}
-  .hero-card .btn{font-size:21px}
-  .block-title{font-size:32px}
+  .modal{padding:14px 8px}
+  .modal-panel{border-width:5px;padding:15px 10px 18px}
 }
 </style>
 </head>
@@ -324,83 +367,329 @@ body::before{
 <body>
 <main class="page">
 
-  <!-- 1. ACCUEIL + PLANNING OFFICIEL -->
-  <section class="hand-card hero-card" id="accueil">
-    <img class="scene-img" src="Image/Bannière/01-accueil-planning-acces.png" alt="Planning et accès faciles GHE">
+  <section class="hand-card" id="accueil">
+    <img class="scene-img" src="Image/Bannière/01-accueil-planning-acces.png" alt="Planning GHE">
 
-    <div class="grid three" aria-label="Planning officiel">
+    <div class="grid one" aria-label="Accueil Planning GHE">
+      <button class="btn btn-personal" type="button" data-open="modal-personal">
+        <span><span class="icon">👤</span>MON PLANNING<span class="mini">Choisir mon nom / m’abonner</span></span>
+      </button>
+
+      <button class="btn btn-general" type="button" data-open="modal-general">
+        <span><span class="icon">📅</span>PLANNING GÉNÉRAL<span class="mini">Jour / Nuit / Chef</span></span>
+      </button>
+
+      <a class="btn btn-change" href="https://docs.google.com/forms/d/e/1FAIpQLSeSD74DbSRNuiu1gF2waVTPdSg38jwRCwk3mp6XwpX-sRyh_g/viewform" target="_blank" rel="noopener">
+        <span><span class="icon">✍️</span>DEMANDER UN CHANGEMENT</span>
+      </a>
+
+      <button class="btn btn-org" type="button" data-open="modal-org">
+        <span><span class="icon">📋</span>ORGANISATION<span class="mini">Formations / Stagiaires</span></span>
+      </button>
+    </div>
+
+    <button class="small-link" type="button" data-open="modal-subscribe">
+      S’abonner au planning
+    </button>
+  </section>
+
+</main>
+
+<!-- MODAL MON PLANNING -->
+<div class="modal" id="modal-personal" aria-hidden="true">
+  <div class="modal-panel">
+    <h2 class="modal-title">Mon planning</h2>
+
+    <p class="modal-text">Choisis ton nom, puis ajoute ton planning personnel à ton téléphone.</p>
+
+    <select id="agentSelect">
+      <option value="">Chargement des agents...</option>
+    </select>
+
+    <div class="modal-grid">
+      <a class="btn btn-secondary" id="personalView" href="#" target="_blank" rel="noopener">
+        <span><span class="icon">👁️</span>VOIR MON PLANNING<span class="mini">Ou l’ouvrir dans le navigateur</span></span>
+      </a>
+
+      <a class="btn btn-ios" id="personalIos" href="#">
+        <span><span class="icon">🍎</span>iPHONE / iPAD<span class="mini">Calendrier Apple</span></span>
+      </a>
+
+      <a class="btn btn-android" id="personalAndroid" href="#" target="_blank" rel="noopener">
+        <span><span class="icon">🤖</span>ANDROID<span class="mini">Google Agenda</span></span>
+      </a>
+
+      <button class="btn btn-copy" type="button" id="personalCopy">
+        <span><span class="icon">🔗</span>COPIER LE LIEN</span>
+      </button>
+    </div>
+
+    <p class="helper">Si ton nom n’apparaît pas, attends quelques secondes ou recharge la page.</p>
+
+    <button class="btn close-btn" type="button" data-close>
+      <span>FERMER</span>
+    </button>
+  </div>
+</div>
+
+<!-- MODAL PLANNING GENERAL -->
+<div class="modal" id="modal-general" aria-hidden="true">
+  <div class="modal-panel">
+    <h2 class="modal-title">Planning général</h2>
+
+    <div class="modal-grid">
       <a class="btn btn-day" href="mois.html?type=jour">
         <span><span class="icon">☀️</span>JOUR</span>
       </a>
+
       <a class="btn btn-night" href="mois.html?type=nuit">
         <span><span class="icon">🌙</span>NUIT</span>
       </a>
+
       <a class="btn btn-chief" href="mois.html?type=chef">
         <span><span class="icon">👥</span>CHEF</span>
       </a>
     </div>
-  </section>
 
-  <!-- 2. MON PLANNING PERSONNEL -->
-  <section class="hand-card personal-card" id="mon-planning">
-    <img class="scene-img tight" src="Image/Bannière/02-mon-planning-personnel.png" alt="Agents consultant leur planning personnel sur papier, téléphone et tablette">
+    <button class="btn close-btn" type="button" data-close>
+      <span>FERMER</span>
+    </button>
+  </div>
+</div>
 
-    <h2 class="block-title small-title">Mon planning personnel</h2>
+<!-- MODAL ORGANISATION -->
+<div class="modal" id="modal-org" aria-hidden="true">
+  <div class="modal-panel">
+    <h2 class="modal-title">Organisation</h2>
 
-    <div class="grid two" aria-label="Mon planning personnel">
-      <a class="btn btn-print" href="mois.html?type=pdf">
-        <span><span class="icon">🖨️</span>CAPTURE<br>& IMPRIMER</span>
-      </a>
-      <a class="btn btn-agenda" href="mois.html?type=ics">
-        <span><span class="icon">📅</span>AJOUTER<br>À MON AGENDA</span>
-      </a>
-    </div>
-  </section>
-
-  <!-- 3. ORGANISATION -->
-  <section class="hand-card org-card" id="organisation">
-    <img class="scene-img tight" src="Image/Bannière/03-organisation.png" alt="Équipe de brancardiers autour d'un plan d'organisation">
-
-    <h2 class="block-title">Organisation</h2>
-
-    <div class="grid two" aria-label="Organisation">
-      <a class="btn btn-formations" href="/formations.html">
+    <div class="modal-grid">
+      <a class="btn btn-org" href="/formations.html">
         <span><span class="icon">📋</span>FORMATIONS</span>
       </a>
-      <a class="btn btn-stagiaires" href="/stagiaires.html">
+
+      <a class="btn btn-copy" href="/stagiaires.html">
         <span><span class="icon">🎓</span>STAGIAIRES</span>
       </a>
     </div>
-  </section>
 
-  <!-- 4. DEMANDER UN CHANGEMENT -->
-  <section class="hand-card change-card" id="demander-changement">
-    <img class="scene-img tight" src="Image/Bannière/04-demander-changement.png" alt="Demande de changement de planning">
+    <button class="btn close-btn" type="button" data-close>
+      <span>FERMER</span>
+    </button>
+  </div>
+</div>
 
-    <a class="btn change-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSeSD74DbSRNuiu1gF2waVTPdSg38jwRCwk3mp6XwpX-sRyh_g/viewform" target="_blank" rel="noopener">
-      <span>DEMANDER UN CHANGEMENT</span>
-    </a>
-  </section>
+<!-- MODAL ABONNEMENT -->
+<div class="modal" id="modal-subscribe" aria-hidden="true">
+  <div class="modal-panel">
+    <h2 class="modal-title">S’abonner</h2>
 
-  <!-- 5. S'ABONNER AU PLANNING -->
-  <section class="hand-card subscribe-card" id="abonnement">
-    <img class="scene-img tight" src="Image/Bannière/05-abonnement-planning.png" alt="Abonnement au planning avec iPhone Android et fichier ICS">
+    <p class="modal-text">Choisis d’abord le calendrier à ajouter.</p>
 
-    <h2 class="block-title small-title">S’abonner au planning</h2>
+    <div class="modal-grid">
+      <button class="btn btn-general" type="button" data-calendar-choice="agents">
+        <span><span class="icon">👥</span>PLANNING DES AGENTS<span class="mini">Tous les agents</span></span>
+      </button>
 
-    <div class="grid two" aria-label="S'abonner au planning">
-      <a class="btn btn-ios" href="webcal://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics">
-        <span><span class="icon">🍎</span>iOS<span class="mini">iPhone / iPad</span></span>
-      </a>
-      <a class="btn btn-android" href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com">
-        <span><span class="icon">🤖</span>ANDROID</span>
-      </a>
-      <a class="btn btn-ics" href="mois.html?type=collectif-ics">
-        <span><span class="icon">⬇️</span>IMPORT MANUEL (.ICS)<span class="mini">Télécharger le calendrier</span></span>
-      </a>
+      <button class="btn btn-org" type="button" data-calendar-choice="formation">
+        <span><span class="icon">📋</span>FORMATION GHE</span>
+      </button>
+
+      <button class="btn btn-copy" type="button" data-calendar-choice="stagiaires">
+        <span><span class="icon">🎓</span>STAGIAIRES GHE</span>
+      </button>
+
+      <button class="btn btn-personal" type="button" data-close data-open="modal-personal">
+        <span><span class="icon">👤</span>MON PLANNING PERSONNEL</span>
+      </button>
     </div>
-  </section>
 
-</main>
+    <button class="btn close-btn" type="button" data-close>
+      <span>FERMER</span>
+    </button>
+  </div>
+</div>
+
+<!-- MODAL CHOIX SUPPORT -->
+<div class="modal" id="modal-device" aria-hidden="true">
+  <div class="modal-panel">
+    <h2 class="modal-title" id="deviceTitle">Ajouter</h2>
+
+    <p class="modal-text">Choisis ton appareil.</p>
+
+    <div class="modal-grid">
+      <a class="btn btn-ios" id="deviceIos" href="#">
+        <span><span class="icon">🍎</span>iPHONE / iPAD<span class="mini">Calendrier Apple</span></span>
+      </a>
+
+      <a class="btn btn-android" id="deviceAndroid" href="#" target="_blank" rel="noopener">
+        <span><span class="icon">🤖</span>ANDROID<span class="mini">Google Agenda</span></span>
+      </a>
+
+      <button class="btn btn-copy" type="button" id="deviceCopy">
+        <span><span class="icon">🔗</span>COPIER LE LIEN</span>
+      </button>
+    </div>
+
+    <button class="btn close-btn" type="button" data-close>
+      <span>FERMER</span>
+    </button>
+  </div>
+</div>
+
+<script>
+const PASSERELLE_AGENTS = "https://script.google.com/macros/s/AKfycbyW9kBVybPGv2XFW2fpiJcZ0AEFrgTCwd5_gkt1ykBpOvVyT5B24EgqQt4kVPwiIcDb/exec";
+
+const CALENDRIERS = {
+  agents: {
+    titre: "Planning des agents",
+    url: "https://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics"
+  },
+  formation: {
+    titre: "Formation GHE",
+    url: "https://calendar.google.com/calendar/ical/c5da5df12db0eba65a14410cada08fea4e5a8037ddd256b03e7426cb22cb751b%40group.calendar.google.com/private-4f5072a64d36548137a30abb665ed23f/basic.ics"
+  },
+  stagiaires: {
+    titre: "Stagiaires GHE",
+    url: "https://calendar.google.com/calendar/ical/2ced33be0e6a5c88fab9bae2ffdf3b56366970e4003b1718a7dabf4c0603eae6%40group.calendar.google.com/private-d3db5a97d6dbdd8ceeeaa375c8a460ef/basic.ics"
+  }
+};
+
+const agentSelect = document.getElementById("agentSelect");
+const personalView = document.getElementById("personalView");
+const personalIos = document.getElementById("personalIos");
+const personalAndroid = document.getElementById("personalAndroid");
+const personalCopy = document.getElementById("personalCopy");
+
+function openModal(id){
+  document.querySelectorAll(".modal").forEach(m => {
+    m.classList.remove("is-open");
+    m.setAttribute("aria-hidden","true");
+  });
+
+  const modal = document.getElementById(id);
+  if(modal){
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden","false");
+  }
+}
+
+function closeModals(){
+  document.querySelectorAll(".modal").forEach(m => {
+    m.classList.remove("is-open");
+    m.setAttribute("aria-hidden","true");
+  });
+}
+
+document.addEventListener("click", function(e){
+  const openBtn = e.target.closest("[data-open]");
+  if(openBtn){
+    openModal(openBtn.dataset.open);
+  }
+
+  const closeBtn = e.target.closest("[data-close]");
+  if(closeBtn){
+    closeModals();
+  }
+
+  if(e.target.classList.contains("modal")){
+    closeModals();
+  }
+
+  const calendarBtn = e.target.closest("[data-calendar-choice]");
+  if(calendarBtn){
+    const key = calendarBtn.dataset.calendarChoice;
+    ouvrirChoixSupport(CALENDRIERS[key]);
+  }
+});
+
+function webcalUrl(url){
+  return url.replace(/^https:\/\//i, "webcal://");
+}
+
+function androidUrl(url){
+  return "https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(url);
+}
+
+async function copierTexte(texte){
+  try{
+    await navigator.clipboard.writeText(texte);
+    alert("Lien copié.");
+  }catch(e){
+    prompt("Copie ce lien :", texte);
+  }
+}
+
+function ouvrirChoixSupport(cal){
+  if(!cal) return;
+
+  document.getElementById("deviceTitle").textContent = cal.titre;
+  document.getElementById("deviceIos").href = webcalUrl(cal.url);
+  document.getElementById("deviceAndroid").href = androidUrl(cal.url);
+
+  document.getElementById("deviceCopy").onclick = function(){
+    copierTexte(cal.url);
+  };
+
+  openModal("modal-device");
+}
+
+function urlAgent(agentKey){
+  return PASSERELLE_AGENTS + "?mode=ics&agent=" + encodeURIComponent(agentKey);
+}
+
+function majLiensAgent(){
+  const agent = agentSelect.value;
+
+  if(!agent){
+    personalView.href = "#";
+    personalIos.href = "#";
+    personalAndroid.href = "#";
+    personalCopy.onclick = function(){ alert("Choisis d’abord ton nom."); };
+    return;
+  }
+
+  const lien = urlAgent(agent);
+
+  personalView.href = lien;
+  personalIos.href = webcalUrl(lien);
+  personalAndroid.href = androidUrl(lien);
+  personalCopy.onclick = function(){
+    copierTexte(lien);
+  };
+}
+
+async function chargerAgents(){
+  try{
+    const res = await fetch(PASSERELLE_AGENTS + "?mode=list");
+    const data = await res.json();
+
+    if(!data.ok || !Array.isArray(data.agents)){
+      throw new Error("Liste agents invalide");
+    }
+
+    agentSelect.innerHTML = '<option value="">Choisis ton nom</option>';
+
+    data.agents
+      .sort((a,b) => String(a.nom).localeCompare(String(b.nom), "fr"))
+      .forEach(agent => {
+        const opt = document.createElement("option");
+        opt.value = agent.agent;
+        opt.textContent = agent.nom;
+        agentSelect.appendChild(opt);
+      });
+
+  }catch(err){
+    agentSelect.innerHTML = '<option value="">Impossible de charger les agents</option>';
+    console.error(err);
+  }
+
+  majLiensAgent();
+}
+
+agentSelect.addEventListener("change", majLiensAgent);
+
+chargerAgents();
+</script>
+
 </body>
 </html>
