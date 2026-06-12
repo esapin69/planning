@@ -220,16 +220,16 @@ h1{
 }
 
 .week-label{
-  margin:22px 0 10px;
-  padding:7px 12px 8px;
-  border:4px dashed rgba(7,24,63,.32);
-  border-radius:22px;
-  background:rgba(255,255,255,.50);
-  color:rgba(7,24,63,.88);
+  margin:16px 0 8px;
+  padding:5px 10px 6px;
+  border:3px dashed rgba(7,24,63,.30);
+  border-radius:18px;
+  background:rgba(255,255,255,.46);
+  color:rgba(7,24,63,.82);
   text-align:center;
   text-transform:uppercase;
-  font-size:clamp(22px,5.8vw,38px);
-  line-height:.88;
+  font-size:clamp(17px,4.5vw,28px);
+  line-height:.9;
 }
 
 .day-card{
@@ -393,11 +393,24 @@ h1{
   opacity:.62;
 }
 
+.agenda-separator{
+  margin:26px 0 12px;
+  padding:8px 10px 9px;
+  border:3px dashed rgba(7,24,63,.34);
+  border-radius:20px;
+  background:rgba(255,255,255,.50);
+  text-align:center;
+  text-transform:uppercase;
+  color:rgba(7,24,63,.88);
+  font-size:clamp(19px,5vw,31px);
+  line-height:.9;
+}
+
 .bottom-actions{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:10px;
-  margin-top:24px;
+  margin-top:0;
 }
 
 .bottom-actions .action-btn{
@@ -500,6 +513,10 @@ h1{
 
   <section id="content" class="status">Chargement...</section>
 
+  <div class="agenda-separator" id="agendaSeparator" style="display:none;">
+    Ajouter à mon agenda
+  </div>
+
   <section class="bottom-actions" id="bottomActions"></section>
 </main>
 
@@ -520,6 +537,7 @@ const avatarImg = document.getElementById("avatarImg");
 const avatarFallback = document.getElementById("avatarFallback");
 const topActions = document.getElementById("topActions");
 const bottomActions = document.getElementById("bottomActions");
+const agendaSeparator = document.getElementById("agendaSeparator");
 
 function apiUrl(mode, extra){
   const url = new URL(PASSERELLE);
@@ -569,6 +587,8 @@ function afficherActionsAgent(){
       🖨️ Imprimer mon planning
     </a>
   `;
+
+  agendaSeparator.style.display = "block";
 
   bottomActions.innerHTML = `
     <a class="action-btn action-apple" href="${webcalUrl(ics)}">
