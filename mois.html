@@ -8,20 +8,48 @@
 <style>
 *{box-sizing:border-box}
 
+:root{
+  --ink:#07183f;
+  --paper:#fff7dd;
+  --gold:#d3a24b;
+  --cream:#fff1c4;
+}
+
+html{scroll-behavior:smooth}
+
 body{
   margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-  background:#fff7df;
-  color:#07183f;
+  min-height:100vh;
+  color:var(--ink);
+  font-family:Impact,"Arial Black",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 15% 0%,rgba(255,255,255,.95) 0 9%,transparent 31%),
+    radial-gradient(circle at 88% 4%,rgba(255,218,116,.46) 0 9%,transparent 32%),
+    repeating-linear-gradient(-6deg,rgba(7,24,63,.035) 0 1px,transparent 1px 13px),
+    linear-gradient(180deg,#fff9e8 0%,#f5e8bf 57%,#ead9a5 100%);
   overflow-x:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.22;
+  background:
+    repeating-linear-gradient(8deg,rgba(7,24,63,.055) 0 1px,transparent 1px 12px),
+    repeating-linear-gradient(-9deg,rgba(178,116,26,.075) 0 1px,transparent 1px 17px);
+  mix-blend-mode:multiply;
 }
 
 /* BANNIÈRE */
 .hero{
+  position:relative;
+  z-index:2;
   width:100%;
   background:#fff7df;
   overflow:hidden;
-  border-bottom:4px solid #07183f;
+  border-bottom:5px solid #07183f;
 }
 
 .hero img{
@@ -38,50 +66,73 @@ body{
 
 /* PAGE */
 .page{
-  max-width:900px;
+  position:relative;
+  z-index:3;
+  width:min(900px,100%);
   margin:auto;
-  padding:20px 16px 42px;
+  padding:18px 12px 46px;
 }
 
 .back{
-  display:inline-block;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:56px;
   margin-bottom:16px;
-  color:#07183f;
+  padding:9px 12px;
+  color:#fff4ce;
   text-decoration:none;
-  font-weight:900;
-  font-size:22px;
+  text-align:center;
+  text-transform:uppercase;
+  border:5px solid #061738;
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 16%,rgba(255,255,255,.22),transparent 28%),
+    repeating-linear-gradient(-7deg,rgba(255,255,255,.07) 0 2px,transparent 2px 10px),
+    linear-gradient(145deg,#777,#444,#222);
+  box-shadow:0 7px 0 rgba(7,24,63,.35);
+  font-size:clamp(20px,5vw,31px);
 }
 
 /* TITRE */
 .title-box{
-  margin:4px auto 22px;
-  max-width:620px;
-  padding:16px 14px 18px;
-  background:#fffdf3;
-  border:4px solid #07183f;
-  border-radius:28px;
-  box-shadow:0 7px 0 #07183f;
+  position:relative;
+  margin:4px auto 24px;
+  max-width:720px;
+  padding:17px 14px 18px;
+  background:
+    radial-gradient(circle at 12% 0%,rgba(255,255,255,.75),transparent 34%),
+    linear-gradient(180deg,rgba(255,255,255,.42),transparent 48%),
+    var(--paper);
+  border:6px solid #07183f;
+  border-radius:34px 28px 38px 29px;
+  box-shadow:
+    0 11px 0 rgba(7,24,63,.24),
+    0 16px 0 rgba(0,0,0,.10),
+    inset 0 0 0 3px rgba(255,215,115,.42);
   text-align:center;
 }
 
 h1{
   margin:0;
-  font-size:clamp(30px, 8vw, 46px);
-  line-height:1;
+  font-size:clamp(34px, 9vw, 60px);
+  line-height:.86;
   font-weight:1000;
   text-transform:uppercase;
   letter-spacing:-1px;
   color:#07183f;
   text-shadow:
-    2px 2px 0 #ffffff,
-    4px 4px 0 rgba(7,24,63,.14);
+    0 4px 0 #f8d67d,
+    4px 7px 0 rgba(7,24,63,.14);
 }
 
 .subtitle{
   margin:10px 0 0;
-  font-size:clamp(20px, 5.4vw, 28px);
-  font-weight:900;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:clamp(15px, 4vw, 20px);
+  font-weight:950;
   color:#243154;
+  line-height:1.25;
 }
 
 /* CARTES MOIS */
@@ -99,7 +150,7 @@ h1{
   background:#ffffff;
   border:6px solid #07183f;
   box-shadow:
-    0 10px 0 #07183f,
+    0 10px 0 rgba(7,24,63,.26),
     0 18px 30px rgba(7,24,63,.18);
 }
 
@@ -116,10 +167,11 @@ h1{
   background:transparent;
   cursor:pointer;
   z-index:3;
+  -webkit-tap-highlight-color:transparent;
 }
 
 .card:active{
-  transform:scale(.985);
+  transform:translateY(4px) scale(.985);
 }
 
 .card.missing{
@@ -129,7 +181,8 @@ h1{
   justify-content:center;
   padding:20px;
   text-align:center;
-  font-weight:900;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-weight:950;
   font-size:20px;
 }
 
@@ -139,8 +192,17 @@ h1{
   border-radius:28px;
   padding:26px;
   text-align:center;
-  font-weight:900;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-weight:950;
   font-size:20px;
+}
+
+@media(max-width:520px){
+  .page{padding:14px 10px 42px}
+  .hero img{height:118px}
+  .back{border-width:4px;min-height:52px}
+  .title-box{border-width:5px;border-radius:30px 25px 33px 26px}
+  .card{border-width:5px;border-radius:27px}
 }
 </style>
 </head>
@@ -153,10 +215,10 @@ h1{
 
 <main class="page">
 
-  <a class="back" href="index.html">← Retour</a>
+  <a class="back" href="index.html">← Retour accueil</a>
 
   <div class="title-box">
-    <h1>Choisis ton mois</h1>
+    <h1 id="pageTitle">Choisis ton mois</h1>
     <div class="subtitle" id="subtitle">Sélectionne le mois souhaité</div>
   </div>
 
@@ -167,19 +229,31 @@ h1{
 <script>
 const params = new URLSearchParams(window.location.search);
 const type = params.get("type") || "jour";
+const agent = String(params.get("agent") || "").trim();
 
 const labels = {
   jour: "Planning équipe du jour",
   nuit: "Planning équipe de nuit",
   chef: "Planning chefs d’équipe",
   stagiaires: "Planning stagiaires",
+  formations: "Planning formations",
   pdf: "PDF à imprimer",
   ics: "Sur ton agenda",
-  "collectif-ics": "Télécharger le fichier ICS"
+  "collectif-ics": "Télécharger le fichier ICS",
+  agent: "Planning personnel à imprimer"
 };
 
-document.getElementById("subtitle").textContent =
-  labels[type] || "Sélectionne le mois souhaité";
+const pageTitle = document.getElementById("pageTitle");
+const subtitle = document.getElementById("subtitle");
+
+if(type === "agent"){
+  pageTitle.textContent = "Choisis ton mois";
+  subtitle.textContent = agent
+    ? "Planning de " + agent.replace(/_/g, " ")
+    : "Agent manquant";
+}else{
+  subtitle.textContent = labels[type] || "Sélectionne le mois souhaité";
+}
 
 const links = {
   jour: {
@@ -334,13 +408,39 @@ visibleMonths = monthImages;
 
 const monthsDiv = document.getElementById("months");
 
+function ouvrirMois(month){
+  if(type === "agent"){
+    if(!agent){
+      alert("Agent manquant.");
+      return;
+    }
+
+    window.location.href =
+      "apercu.html?type=agent&agent=" +
+      encodeURIComponent(agent) +
+      "&mois=" +
+      encodeURIComponent(month.key) +
+      "&print=1";
+
+    return;
+  }
+
+  const url = links?.[type]?.[month.key];
+
+  if(url){
+    window.location.href = url;
+  }else{
+    alert("Lien pas encore disponible pour " + month.key);
+  }
+}
+
 if(!visibleMonths.length){
   monthsDiv.innerHTML = `
     <div class="empty">
       Aucun mois disponible pour le moment.
     </div>
   `;
-} else {
+}else{
   visibleMonths.forEach(month => {
     const card = document.createElement("div");
     card.className = "card";
@@ -358,15 +458,7 @@ if(!visibleMonths.length){
     const button = document.createElement("button");
     button.setAttribute("aria-label", "Ouvrir " + month.key);
 
-    button.onclick = () => {
-      const url = links?.[type]?.[month.key];
-
-      if(url){
-        window.location.href = url;
-      } else {
-        alert("Lien pas encore disponible pour " + month.key);
-      }
-    };
+    button.onclick = () => ouvrirMois(month);
 
     card.appendChild(img);
     card.appendChild(button);
