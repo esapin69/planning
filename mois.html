@@ -1,12 +1,13 @@
 <!doctype html>
-
 <html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Choisis ton mois</title>
+
 <style>
 *{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
@@ -14,6 +15,7 @@ body{
   color:#07183f;
   overflow-x:hidden;
 }
+
 /* BANNIÈRE */
 .hero{
   width:100%;
@@ -21,6 +23,7 @@ body{
   overflow:hidden;
   border-bottom:4px solid #07183f;
 }
+
 .hero img{
   display:block;
   width:100%;
@@ -28,15 +31,18 @@ body{
   object-fit:cover;
   object-position:center;
 }
+
 .hero.hidden{
   display:none;
 }
+
 /* PAGE */
 .page{
   max-width:900px;
   margin:auto;
   padding:20px 16px 42px;
 }
+
 .back{
   display:inline-block;
   margin-bottom:16px;
@@ -45,6 +51,7 @@ body{
   font-weight:900;
   font-size:22px;
 }
+
 /* TITRE */
 .title-box{
   margin:4px auto 22px;
@@ -56,33 +63,34 @@ body{
   box-shadow:0 7px 0 #07183f;
   text-align:center;
 }
+
 h1{
   margin:0;
-  font-size:clamp(34px, 9vw, 54px);
-  line-height:.95;
+  font-size:clamp(30px, 8vw, 46px);
+  line-height:1;
   font-weight:1000;
   text-transform:uppercase;
-  letter-spacing:-2px;
+  letter-spacing:-1px;
   color:#07183f;
-  font-family:"Arial Black", Impact, system-ui, sans-serif;
   text-shadow:
     2px 2px 0 #ffffff,
-    4px 4px 0 #f5c542,
-    6px 6px 0 rgba(7,24,63,.22);
+    4px 4px 0 rgba(7,24,63,.14);
 }
+
 .subtitle{
-  margin:12px 0 0;
-  font-size:clamp(19px, 5.2vw, 27px);
+  margin:10px 0 0;
+  font-size:clamp(20px, 5.4vw, 28px);
   font-weight:900;
-  color:#07183f;
-  letter-spacing:-.5px;
+  color:#243154;
 }
+
 /* CARTES MOIS */
 .months-list{
   display:flex;
   flex-direction:column;
   gap:28px;
 }
+
 .card{
   position:relative;
   width:100%;
@@ -94,11 +102,13 @@ h1{
     0 10px 0 #07183f,
     0 18px 30px rgba(7,24,63,.18);
 }
+
 .card img{
   display:block;
   width:100%;
   height:auto;
 }
+
 .card button{
   position:absolute;
   inset:0;
@@ -107,9 +117,11 @@ h1{
   cursor:pointer;
   z-index:3;
 }
+
 .card:active{
   transform:scale(.985);
 }
+
 .card.missing{
   min-height:210px;
   display:flex;
@@ -120,6 +132,7 @@ h1{
   font-weight:900;
   font-size:20px;
 }
+
 .empty{
   background:white;
   border:5px dashed #07183f;
@@ -131,23 +144,30 @@ h1{
 }
 </style>
 </head>
+
 <body>
+
 <header class="hero" id="hero">
   <img id="banner" alt="Bannière choix du mois">
 </header>
+
 <main class="page">
 
-← Retour
+  <a class="back" href="index.html">← Retour</a>
 
   <div class="title-box">
     <h1>Choisis ton mois</h1>
     <div class="subtitle" id="subtitle">Sélectionne le mois souhaité</div>
   </div>
+
   <div id="months" class="months-list"></div>
+
 </main>
+
 <script>
 const params = new URLSearchParams(window.location.search);
 const type = params.get("type") || "jour";
+
 const labels = {
   jour: "Planning équipe du jour",
   nuit: "Planning équipe de nuit",
@@ -157,9 +177,10 @@ const labels = {
   ics: "Sur ton agenda",
   "collectif-ics": "Télécharger le fichier ICS"
 };
+
 document.getElementById("subtitle").textContent =
   labels[type] || "Sélectionne le mois souhaité";
-/* LIENS DIRECTEMENT DANS LA PAGE */
+
 const links = {
   jour: {
     "01.2026": "https://drive.google.com/file/d/11-uvt93i8gz5UNio9llYzyQCv0Np9cJ1/view",
@@ -175,6 +196,7 @@ const links = {
     "11.2026": "https://drive.google.com/file/d/1YGL7FDAOzpEOybmRxLl8_FHRmvWt1JXI/view",
     "12.2026": "https://drive.google.com/file/d/1wVHL780pLKFG0bTkE3E9OJK1C2ybxH0a/view"
   },
+
   nuit: {
     "01.2026": "https://drive.google.com/file/d/1_bitf1WiI1iF5I88baLLgeMrbrhbr9to/view",
     "02.2026": "https://drive.google.com/file/d/1fuf7oliHfTIQjP-t1aV2F_4jay4D81TH/view",
@@ -189,6 +211,7 @@ const links = {
     "11.2026": "https://drive.google.com/file/d/112K6bHemoAnCninkueoPbNlzwGhPwcNp/view",
     "12.2026": "https://drive.google.com/file/d/1CiGRwL2PLs8MMTyrAiTFm-ix1rcEsebC/view"
   },
+
   chef: {
     "01.2026": "https://drive.google.com/file/d/17Vpp63QiW5rDdCPggt4eINS4ekquwAKZ/view",
     "02.2026": "https://drive.google.com/file/d/1f-lxseDTX_lISLSgigGFo1RCwa-uFatL/view",
@@ -203,6 +226,7 @@ const links = {
     "11.2026": "https://drive.google.com/file/d/1gDaYoUpWcp3siNs4CMbexQrrPsRxtb51/view",
     "12.2026": "https://drive.google.com/file/d/1W-UxjyOZfNrO6Hx8pkqvgRCVR6TUEDdR/view"
   },
+
   stagiaires: {
     "01.2026": "https://drive.google.com/drive/folders/1R_sonuVNOVrUmxLSypQmG5EO9x8kc3S8",
     "02.2026": "https://drive.google.com/drive/folders/1bGDJnmxI2ooG-d4RZvHGAXYvXxdTGpsu",
@@ -217,6 +241,7 @@ const links = {
     "11.2026": "https://drive.google.com/drive/folders/1ZlpcsZZq3cjNWbuXozHZucHtVVd-o0lu",
     "12.2026": "https://drive.google.com/drive/folders/16NNZ16pBiW70RUMW8hxQmRKV0KehOGAU"
   },
+
   pdf: {
     "01.2026": "https://drive.google.com/drive/folders/1Hz_cL2iTXPoEBnldpPZffIl-uiBpIlSc",
     "02.2026": "https://drive.google.com/drive/folders/1BD_atQfzZIQ-mlIom00S37J8QLUBFLwj",
@@ -231,6 +256,7 @@ const links = {
     "11.2026": "https://drive.google.com/drive/folders/1ujFMfm1Dg7ZRiJXhqky7Xx7KhQ-EYvUk",
     "12.2026": "https://drive.google.com/drive/folders/1DOlaDcMb683EhSFYo6FQprYw9tG5Rfq0"
   },
+
   ics: {
     "01.2026": "https://drive.google.com/drive/folders/1otNgV5-gG-anzRb3jA3JeybjCHhNcX8q",
     "02.2026": "https://drive.google.com/drive/folders/19iCxbs8Oodfuoc_cR6eIr00Lg-XGJmo9",
@@ -246,26 +272,33 @@ const links = {
     "12.2026": "https://drive.google.com/drive/folders/1aa7g5N8HQZXz7ShDBmZKmAQa480jq3aa"
   }
 };
+
 /* BANNIÈRE */
 const banner = document.getElementById("banner");
 const hero = document.getElementById("hero");
+
 const bannerPaths = [
   "Image/Mois/Banniere-mois.png",
   "./Image/Mois/Banniere-mois.png",
   "/Image/Mois/Banniere-mois.png",
   "https://raw.githubusercontent.com/esapin69/planning/main/Image/Mois/Banniere-mois.png"
 ];
+
 let bannerIndex = 0;
+
 function tryBanner(){
   if(bannerIndex >= bannerPaths.length){
     hero.classList.add("hidden");
     return;
   }
+
   banner.src = bannerPaths[bannerIndex] + "?v=" + Date.now();
   bannerIndex++;
 }
+
 banner.onerror = tryBanner;
 tryBanner();
+
 /* IMAGES DES MOIS */
 const monthImages = [
   { number: 1, key: "01.2026", image: "Image/Mois/Janvier.jpeg" },
@@ -281,20 +314,26 @@ const monthImages = [
   { number: 11, key: "11.2026", image: "Image/Mois/Novembre.jpeg" },
   { number: 12, key: "12.2026", image: "Image/Mois/Decembre.jpeg" }
 ];
+
 const today = new Date();
 const currentMonth = today.getMonth() + 1;
+
 let visibleMonths = monthImages.filter(month => month.number === currentMonth);
+
 if(today.getDate() >= 20){
   const nextMonthNumber = currentMonth === 12 ? 1 : currentMonth + 1;
   visibleMonths.push(
     ...monthImages.filter(month => month.number === nextMonthNumber)
   );
 }
+
 /*
 Pour afficher tous les mois :
 visibleMonths = monthImages;
 */
+
 const monthsDiv = document.getElementById("months");
+
 if(!visibleMonths.length){
   monthsDiv.innerHTML = `
     <div class="empty">
@@ -305,29 +344,36 @@ if(!visibleMonths.length){
   visibleMonths.forEach(month => {
     const card = document.createElement("div");
     card.className = "card";
+
     const img = document.createElement("img");
     img.src = month.image + "?v=" + Date.now();
     img.alt = "Planning " + month.key;
+
     img.onerror = () => {
       img.remove();
       card.classList.add("missing");
       card.textContent = "Image introuvable : " + month.image;
     };
+
     const button = document.createElement("button");
     button.setAttribute("aria-label", "Ouvrir " + month.key);
+
     button.onclick = () => {
       const url = links?.[type]?.[month.key];
+
       if(url){
         window.location.href = url;
       } else {
         alert("Lien pas encore disponible pour " + month.key);
       }
     };
+
     card.appendChild(img);
     card.appendChild(button);
     monthsDiv.appendChild(card);
   });
 }
 </script>
+
 </body>
 </html>
