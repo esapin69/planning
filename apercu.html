@@ -13,9 +13,16 @@
   --paper:#fff7dd;
   --cream:#fff9e8;
   --gold:#d3a24b;
-  --soft-blue:#eaf1ff;
-  --soft-weekend:#fff0dc;
-  --line:#07183f;
+  --navy:#07183f;
+  --weekend:#fff0dc;
+  --blue-soft:#eaf3ff;
+  --green-soft:#eaffef;
+  --orange-soft:#fff0d7;
+  --yellow-soft:#fff8d8;
+  --black-soft:#e9e9ee;
+  --rest-soft:#eff8ff;
+  --red-soft:#ffe8e8;
+  --purple-soft:#f2eaff;
 }
 
 html{scroll-behavior:smooth}
@@ -47,7 +54,7 @@ body::before{
 .page{
   width:min(860px,100%);
   margin:auto;
-  padding:12px 10px 48px;
+  padding:12px 10px 54px;
 }
 
 .back{
@@ -56,7 +63,7 @@ body::before{
   display:flex;
   align-items:center;
   justify-content:center;
-  min-height:56px;
+  min-height:54px;
   margin-bottom:14px;
   padding:9px 10px;
   color:#fff4ce;
@@ -77,8 +84,8 @@ body::before{
 .header{
   position:relative;
   z-index:2;
-  margin:10px 0 16px;
-  padding:12px 12px 13px;
+  margin:10px 0 14px;
+  padding:12px 12px 14px;
   background:
     radial-gradient(circle at 12% 0%,rgba(255,255,255,.75),transparent 34%),
     linear-gradient(180deg,rgba(255,255,255,.44),transparent 48%),
@@ -86,51 +93,49 @@ body::before{
   border:5px solid var(--ink);
   border-radius:30px 25px 33px 26px;
   box-shadow:
-    0 11px 0 rgba(7,24,63,.18),
-    0 15px 0 rgba(0,0,0,.10),
+    0 10px 0 rgba(7,24,63,.18),
+    0 14px 0 rgba(0,0,0,.10),
     inset 0 0 0 3px rgba(255,215,115,.38);
 }
 
 .identity{
   display:grid;
-  grid-template-columns:132px 1fr;
+  grid-template-columns:124px minmax(0,1fr);
   align-items:center;
   gap:12px;
-  min-height:132px;
+  min-height:120px;
 }
 
 .avatar-wrap{
-  width:132px;
-  height:132px;
-  display:none;
+  width:124px;
+  height:124px;
+  display:flex;
   align-items:center;
   justify-content:center;
   overflow:visible;
   background:transparent;
 }
 
-.avatar-wrap.is-visible{display:flex}
-
 .avatar-wrap img{
   width:100%;
   height:100%;
   object-fit:contain;
   display:none;
-  filter:drop-shadow(0 8px 0 rgba(7,24,63,.14));
+  filter:drop-shadow(0 7px 0 rgba(7,24,63,.13));
 }
 
 .avatar-fallback{
-  width:102px;
-  height:102px;
+  width:92px;
+  height:92px;
   display:flex;
   align-items:center;
   justify-content:center;
   border:5px solid var(--ink);
   border-radius:22px;
   background:#fff9e8;
-  font-size:44px;
+  font-size:40px;
   line-height:1;
-  box-shadow:0 7px 0 rgba(7,24,63,.18);
+  box-shadow:0 6px 0 rgba(7,24,63,.16);
 }
 
 .identity-text{
@@ -139,30 +144,65 @@ body::before{
 }
 
 h1{
-  margin:0 0 6px;
+  margin:0 0 7px;
   text-transform:uppercase;
-  font-size:clamp(35px,9.3vw,72px);
-  line-height:.82;
+  font-size:clamp(31px,8vw,60px);
+  line-height:.88;
+  letter-spacing:.2px;
+  color:var(--ink);
   text-shadow:
-    0 5px 0 #f8d67d,
-    5px 8px 0 rgba(7,24,63,.14);
+    0 3px 0 #f8d67d,
+    3px 5px 0 rgba(7,24,63,.10);
   word-break:normal;
-  overflow-wrap:anywhere;
+  overflow-wrap:normal;
+  hyphens:none;
 }
 
 .sub{
   margin:0;
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   font-weight:950;
-  font-size:clamp(14px,3.7vw,19px);
+  font-size:clamp(14px,3.6vw,19px);
   line-height:1.2;
 }
+
+.quick-actions{
+  display:grid;
+  gap:10px;
+  margin:14px 0 0;
+}
+
+.action-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:58px;
+  padding:9px 12px;
+  border:4px solid var(--ink);
+  border-radius:20px;
+  color:#fff4ce;
+  text-decoration:none;
+  text-align:center;
+  text-transform:uppercase;
+  font-size:clamp(20px,5.2vw,34px);
+  line-height:.9;
+  background:
+    radial-gradient(circle at 22% 16%,rgba(255,255,255,.30),transparent 28%),
+    repeating-linear-gradient(-7deg,rgba(255,255,255,.08) 0 2px,transparent 2px 10px),
+    linear-gradient(145deg,#ffb43a 0%,#f07c00 58%,#b74d00 100%);
+  box-shadow:
+    0 7px 0 rgba(7,24,63,.28),
+    inset 0 0 0 3px rgba(255,221,132,.25);
+  text-shadow:0 3px 0 rgba(0,0,0,.38);
+}
+
+.action-btn:active{transform:translateY(3px)}
 
 .status{
   margin-top:16px;
   text-align:center;
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  font-weight:900;
+  font-weight:950;
   font-size:17px;
   line-height:1.3;
   padding:18px 10px;
@@ -173,22 +213,22 @@ h1{
 
 .week-label{
   margin:22px 0 10px;
-  padding:8px 12px 9px;
+  padding:7px 12px 8px;
   border:4px dashed rgba(7,24,63,.32);
   border-radius:22px;
-  background:rgba(255,255,255,.46);
-  color:rgba(7,24,63,.84);
+  background:rgba(255,255,255,.50);
+  color:rgba(7,24,63,.88);
   text-align:center;
   text-transform:uppercase;
-  font-size:clamp(18px,4.8vw,31px);
-  line-height:.9;
+  font-size:clamp(22px,5.8vw,38px);
+  line-height:.88;
 }
 
 .day-card{
   position:relative;
   margin:12px 0;
   overflow:hidden;
-  border:4px solid var(--line);
+  border:4px solid var(--navy);
   border-radius:24px;
   background:white;
   box-shadow:
@@ -199,7 +239,7 @@ h1{
 .day-card.is-weekend{
   background:
     radial-gradient(circle at 12% 0%,rgba(255,255,255,.85),transparent 36%),
-    linear-gradient(180deg,#fff9ed 0%,var(--soft-weekend) 100%);
+    linear-gradient(180deg,#fff9ed 0%,var(--weekend) 100%);
 }
 
 .day-head{
@@ -207,8 +247,8 @@ h1{
   align-items:center;
   justify-content:space-between;
   gap:10px;
-  padding:10px 12px 9px;
-  border-bottom:3px solid var(--line);
+  padding:9px 12px 8px;
+  border-bottom:3px solid var(--navy);
   background:
     repeating-linear-gradient(-7deg,rgba(7,24,63,.035) 0 2px,transparent 2px 10px),
     linear-gradient(180deg,#fffdf5,#fff3c8);
@@ -222,11 +262,12 @@ h1{
 
 .date-main{
   margin:0;
-  font-family:Georgia,"Times New Roman",serif;
-  font-weight:950;
+  font-family:Impact,"Arial Black",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-weight:900;
   text-transform:uppercase;
-  font-size:clamp(21px,5.6vw,38px);
-  line-height:.92;
+  font-size:clamp(25px,6.4vw,44px);
+  line-height:.88;
+  letter-spacing:.2px;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
@@ -242,7 +283,7 @@ h1{
   font-weight:950;
   font-size:11px;
   text-transform:uppercase;
-  opacity:.8;
+  opacity:.82;
 }
 
 .event-list{
@@ -252,22 +293,32 @@ h1{
 .event-row{
   display:flex;
   align-items:center;
-  gap:10px;
-  padding:13px 12px;
+  gap:9px;
+  padding:11px 11px;
   border-top:2px solid rgba(7,24,63,.12);
   min-width:0;
+  background:white;
 }
 
 .event-row:first-child{border-top:0}
 
+.event-row.kind-matin{background:linear-gradient(90deg,var(--blue-soft),#fff)}
+.event-row.kind-journee{background:linear-gradient(90deg,var(--green-soft),#fff)}
+.event-row.kind-j4{background:linear-gradient(90deg,var(--orange-soft),#fff)}
+.event-row.kind-soir{background:linear-gradient(90deg,var(--yellow-soft),#fff)}
+.event-row.kind-nuit{background:linear-gradient(90deg,var(--black-soft),#fff)}
+.event-row.kind-repos{background:linear-gradient(90deg,var(--rest-soft),#fff)}
+.event-row.kind-maladie{background:linear-gradient(90deg,var(--red-soft),#fff)}
+.event-row.kind-special{background:linear-gradient(90deg,var(--purple-soft),#fff)}
+
 .shift-dot{
   flex:0 0 auto;
-  width:34px;
-  height:34px;
+  width:32px;
+  height:32px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:27px;
+  font-size:25px;
   line-height:1;
   border-radius:12px;
   background:#fff9e8;
@@ -276,8 +327,8 @@ h1{
 
 .shift-line{
   display:flex;
-  align-items:baseline;
-  gap:8px;
+  align-items:center;
+  gap:7px;
   min-width:0;
   width:100%;
   white-space:nowrap;
@@ -288,9 +339,9 @@ h1{
   min-width:0;
   margin:0;
   text-transform:uppercase;
-  font-size:clamp(26px,7vw,43px);
-  line-height:.9;
-  text-shadow:0 3px 0 rgba(211,162,75,.45);
+  font-size:clamp(25px,6.8vw,41px);
+  line-height:.88;
+  text-shadow:0 2px 0 rgba(211,162,75,.38);
   overflow:hidden;
   text-overflow:ellipsis;
 }
@@ -308,17 +359,17 @@ h1{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  padding:6px 10px 7px;
-  border-radius:15px;
+  padding:6px 9px 7px;
+  border-radius:14px;
   background:#07183f;
   color:#fff4ce;
-  font-size:clamp(22px,6vw,36px);
+  font-size:clamp(21px,5.6vw,34px);
   line-height:.9;
-  box-shadow:0 5px 0 rgba(7,24,63,.16);
+  box-shadow:0 4px 0 rgba(7,24,63,.16);
 }
 
 .detail{
-  margin:4px 0 0 44px;
+  margin:4px 0 0 42px;
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   font-weight:900;
   font-size:13px;
@@ -327,11 +378,37 @@ h1{
 }
 
 .empty-row{
-  padding:13px 12px;
+  padding:12px 12px;
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   font-weight:950;
   font-size:15px;
   opacity:.62;
+}
+
+.bottom-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:24px;
+}
+
+.bottom-actions .action-btn{
+  min-height:70px;
+  font-size:clamp(20px,5.4vw,34px);
+}
+
+.action-apple{
+  background:
+    radial-gradient(circle at 22% 16%,rgba(255,255,255,.30),transparent 28%),
+    repeating-linear-gradient(-7deg,rgba(255,255,255,.08) 0 2px,transparent 2px 10px),
+    linear-gradient(145deg,#3db9ff 0%,#0c6ed5 58%,#083c91 100%);
+}
+
+.action-android{
+  background:
+    radial-gradient(circle at 22% 16%,rgba(255,255,255,.30),transparent 28%),
+    repeating-linear-gradient(-7deg,rgba(255,255,255,.08) 0 2px,transparent 2px 10px),
+    linear-gradient(145deg,#35d864 0%,#12873d 58%,#075324 100%);
 }
 
 @media(max-width:560px){
@@ -344,43 +421,51 @@ h1{
   }
 
   .identity{
-    grid-template-columns:104px 1fr;
-    gap:9px;
-    min-height:108px;
+    grid-template-columns:96px minmax(0,1fr);
+    gap:8px;
+    min-height:102px;
   }
 
   .avatar-wrap{
-    width:104px;
-    height:112px;
+    width:96px;
+    height:106px;
   }
 
   .avatar-fallback{
-    width:82px;
-    height:82px;
-    font-size:36px;
+    width:78px;
+    height:78px;
+    font-size:35px;
     border-width:4px;
+  }
+
+  h1{
+    font-size:clamp(30px,8vw,45px);
+    line-height:.86;
+    text-shadow:
+      0 2px 0 #f8d67d,
+      2px 4px 0 rgba(7,24,63,.09);
   }
 
   .day-card{border-width:4px}
   .day-head{
-    padding:9px 10px 8px;
+    padding:8px 10px 7px;
     border-bottom-width:3px;
   }
 
   .event-row{
     gap:8px;
-    padding:12px 10px;
+    padding:10px 9px;
   }
 
   .shift-dot{
-    width:30px;
-    height:30px;
-    font-size:24px;
+    width:29px;
+    height:29px;
+    font-size:23px;
   }
 
-  .shift-line{gap:6px}
-  .time{padding:6px 9px 7px}
-  .detail{margin-left:38px}
+  .shift-line{gap:5px}
+  .time{padding:5px 8px 6px}
+  .detail{margin-left:37px}
 }
 </style>
 </head>
@@ -397,13 +482,17 @@ h1{
       </div>
 
       <div class="identity-text">
-        <h1 id="title">Aperçu</h1>
-        <p class="sub" id="subtitle">À partir d’aujourd’hui</p>
+        <h1 id="title">Planning</h1>
+        <p class="sub" id="subtitle">Chargement...</p>
       </div>
     </div>
+
+    <div class="quick-actions" id="topActions"></div>
   </section>
 
   <section id="content" class="status">Chargement...</section>
+
+  <section class="bottom-actions" id="bottomActions"></section>
 </main>
 
 <script>
@@ -412,6 +501,8 @@ const PASSERELLE = "https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8
 const params = new URLSearchParams(window.location.search);
 const type = String(params.get("type") || "").toLowerCase();
 const agent = String(params.get("agent") || "").trim();
+const moisParam = String(params.get("mois") || "").trim();
+const printMode = String(params.get("print") || "") === "1";
 
 const titleEl = document.getElementById("title");
 const subtitleEl = document.getElementById("subtitle");
@@ -419,15 +510,8 @@ const contentEl = document.getElementById("content");
 const avatarWrap = document.getElementById("avatarWrap");
 const avatarImg = document.getElementById("avatarImg");
 const avatarFallback = document.getElementById("avatarFallback");
-
-function titrePage(){
-  if(type === "agent"){
-    return agent ? agent.replace(/_/g, " ") : "Agent";
-  }
-  if(type === "formations") return "Formations";
-  if(type === "stagiaires") return "Stagiaires";
-  return "Aperçu";
-}
+const topActions = document.getElementById("topActions");
+const bottomActions = document.getElementById("bottomActions");
 
 function apiUrl(mode, extra){
   const url = new URL(PASSERELLE);
@@ -454,8 +538,37 @@ async function fetchJson(url){
   return await res.json();
 }
 
+function webcalUrl(url){
+  return url.replace(/^https:\/\//i, "webcal://");
+}
+
+function androidUrl(url){
+  return "https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(url);
+}
+
+function icsAgentUrl(){
+  return apiUrl("ics", {agent: agent});
+}
+
+function afficherActionsAgent(){
+  if(type !== "agent" || !agent) return;
+
+  const printUrl = "mois.html?type=agent&agent=" + encodeURIComponent(agent);
+
+  topActions.innerHTML = `
+    <a class="action-btn" href="${printUrl}">🖨️ Imprimer mon planning</a>
+  `;
+
+  const ics = icsAgentUrl();
+
+  bottomActions.innerHTML = `
+    <a class="action-btn action-apple" href="${webcalUrl(ics)}">🍎 Apple</a>
+    <a class="action-btn action-android" href="${androidUrl(ics)}" target="_blank" rel="noopener">🤖 Android</a>
+  `;
+}
+
 function afficherAvatarDepuisSources(sources){
-  avatarWrap.classList.add("is-visible");
+  avatarWrap.style.display = "flex";
   avatarFallback.style.display = "flex";
   avatarImg.style.display = "none";
 
@@ -486,7 +599,7 @@ function afficherAvatarDepuisSources(sources){
 
 function afficherAvatarDepuisData(data){
   if(type !== "agent"){
-    avatarWrap.classList.remove("is-visible");
+    avatarWrap.style.display = "none";
     return;
   }
 
@@ -510,6 +623,31 @@ function toIsoLocal(d){
   return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
 }
 
+function monthRangeFromKey(key){
+  const m = String(key || "").match(/^(\d{2})\.(\d{4})$/);
+  if(!m) return null;
+
+  const month = Number(m[1]);
+  const year = Number(m[2]);
+
+  if(!month || !year) return null;
+
+  return {
+    start:new Date(year, month - 1, 1),
+    end:new Date(year, month, 0)
+  };
+}
+
+function formatMonthNameFromKey(key){
+  const range = monthRangeFromKey(key);
+  if(!range) return "";
+
+  return range.start.toLocaleDateString("fr-FR", {
+    month:"long",
+    year:"numeric"
+  });
+}
+
 function formatDateMain(d){
   return d.toLocaleDateString("fr-FR", {
     weekday:"long",
@@ -518,18 +656,19 @@ function formatDateMain(d){
   }).toUpperCase();
 }
 
+function getIsoWeekNumber(date){
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+
+  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+}
+
 function formatWeekLabel(d){
-  const lundi = new Date(d);
-  const day = lundi.getDay() || 7;
-  lundi.setDate(lundi.getDate() - day + 1);
-
-  const dimanche = new Date(lundi);
-  dimanche.setDate(lundi.getDate() + 6);
-
-  const f1 = lundi.toLocaleDateString("fr-FR", {day:"numeric", month:"long"});
-  const f2 = dimanche.toLocaleDateString("fr-FR", {day:"numeric", month:"long"});
-
-  return "Semaine du " + f1 + " au " + f2;
+  return "Semaine " + getIsoWeekNumber(d);
 }
 
 function weekKey(d){
@@ -561,78 +700,79 @@ function classifyAgendaEvent(event){
   );
 
   if(raw.includes("SYR") || raw.includes("SYN") || raw.includes("SYNDICAT")){
-    return {emoji:"🪧", label:"Syndicat", detail:"Activité syndicale", repos:false};
+    return {emoji:"🪧", label:"Syndicat", detail:"Activité syndicale", repos:false, kind:"kind-special"};
   }
 
   if(raw.includes("FORMATION")){
-    return {emoji:"🎓", label:"Formation", detail:"Formation", repos:false};
+    return {emoji:"🎓", label:"Formation", detail:"Formation", repos:false, kind:"kind-special"};
   }
 
   if(raw.includes("STAGIAIRE")){
-    return {emoji:"🧑‍🎓", label:"Stagiaire", detail:"Accueil / suivi stagiaire", repos:false};
+    return {emoji:"🧑‍🎓", label:"Stagiaire", detail:"Accueil / suivi stagiaire", repos:false, kind:"kind-special"};
   }
 
   if(raw.includes("NUIT") || /\bN\b/.test(raw)){
-    return {emoji:"⚫", label:"Nuit", repos:false};
+    return {emoji:"⚫", label:"Nuit", repos:false, kind:"kind-nuit"};
   }
 
   if(raw.includes("SOIR") || /\bS\b/.test(raw)){
-    return {emoji:"🟡", label:"Soir", repos:false};
+    return {emoji:"🟡", label:"Soir", repos:false, kind:"kind-soir"};
   }
 
   if(raw.includes("J4") || /\bJ4\b/.test(raw)){
-    return {emoji:"🟠", label:"J4", repos:false};
+    return {emoji:"🟠", label:"J4", repos:false, kind:"kind-j4"};
   }
 
   if(raw.includes("JOURNEE") || raw.includes("JOUR") || /\bJ\b/.test(raw)){
-    return {emoji:"🟢", label:"Journée", repos:false};
+    return {emoji:"🟢", label:"Journée", repos:false, kind:"kind-journee"};
   }
 
   if(raw.includes("MATIN") || /\bM\b/.test(raw)){
-    return {emoji:"🔵", label:"Matin", repos:false};
+    return {emoji:"🔵", label:"Matin", repos:false, kind:"kind-matin"};
   }
 
   if(raw.includes("CONGE") || raw.includes("CA")){
-    return {emoji:"🏖️", label:"CA", detail:"Congé annuel", repos:true};
+    return {emoji:"🏖️", label:"CA", detail:"Congé annuel", repos:true, kind:"kind-repos"};
   }
 
   if(raw.includes("RTT") || raw.includes("RTA") || raw.includes("RTTA")){
-    return {emoji:"🛌", label:"RTT", detail:"RTT", repos:true};
+    return {emoji:"🛌", label:"RTT", detail:"RTT", repos:true, kind:"kind-repos"};
   }
 
   if(raw.includes("RC") || raw.includes("RECUP")){
-    return {emoji:"🔁", label:"RC", detail:"Récupération", repos:true};
+    return {emoji:"🔁", label:"RC", detail:"Récupération", repos:true, kind:"kind-repos"};
   }
 
   if(raw.includes("RF")){
-    return {emoji:"🎌", label:"RF", detail:"Repos férié / récupération", repos:true};
+    return {emoji:"🎌", label:"RF", detail:"Repos férié / récupération", repos:true, kind:"kind-repos"};
   }
 
   if(raw.includes("RH") || raw.includes("REPOS HEBDO") || raw.includes("REPOS HEBDOMADAIRE")){
-    return {emoji:"🏝️", label:"RH", detail:"Repos hebdomadaire", repos:true};
+    return {emoji:"🏝️", label:"RH", detail:"Repos hebdomadaire", repos:true, kind:"kind-repos"};
   }
 
   if(raw.includes("AM") || raw.includes("MALADIE")){
-    return {emoji:"🏥", label:"Maladie", detail:"Absence maladie", repos:true};
+    return {emoji:"🏥", label:"Maladie", detail:"Absence maladie", repos:true, kind:"kind-maladie"};
   }
 
   if(raw.includes("AA")){
-    return {emoji:"📝", label:"AA", detail:"Absence autorisée", repos:true};
+    return {emoji:"📝", label:"AA", detail:"Absence autorisée", repos:true, kind:"kind-repos"};
   }
 
   if(raw.includes("ABS") || raw.includes("ABSENT")){
-    return {emoji:"🚫", label:"Absence", detail:"Absence", repos:true};
+    return {emoji:"🚫", label:"Absence", detail:"Absence", repos:true, kind:"kind-maladie"};
   }
 
   if(raw.includes("REPOS") || raw.includes("OFF")){
-    return {emoji:"🏝️", label:"Repos", detail:"Repos", repos:true};
+    return {emoji:"🏝️", label:"Repos", detail:"Repos", repos:true, kind:"kind-repos"};
   }
 
   return {
     emoji: event.pastille || "📌",
     label: String(event.titre || event.shift_code || "Événement"),
     detail: event.shift_code ? "Code : " + event.shift_code : "",
-    repos:false
+    repos:false,
+    kind:"kind-special"
   };
 }
 
@@ -648,27 +788,54 @@ function renderAgendaEvents(events){
   const today = new Date();
   today.setHours(0,0,0,0);
 
-  const dated = (events || [])
+  let dated = (events || [])
     .map(e => Object.assign({}, e, {dateObj: parseDateIso(e.date)}))
-    .filter(e => e.dateObj && e.dateObj >= today)
+    .filter(e => e.dateObj)
     .sort((a,b) => a.dateObj - b.dateObj);
 
-  if(dated.length === 0){
-    contentEl.className = "status";
-    contentEl.textContent = "Aucun élément à afficher à partir d’aujourd’hui.";
-    return;
+  const monthRange = monthRangeFromKey(moisParam);
+
+  let firstDate;
+  let lastDate;
+
+  if(monthRange && printMode){
+    firstDate = new Date(monthRange.start);
+    lastDate = new Date(monthRange.end);
+
+    dated = dated.filter(e => e.dateObj >= firstDate && e.dateObj <= lastDate);
+
+  }else if(monthRange){
+    firstDate = new Date(Math.max(today.getTime(), monthRange.start.getTime()));
+    lastDate = new Date(monthRange.end);
+
+    dated = dated.filter(e => e.dateObj >= firstDate && e.dateObj <= lastDate);
+
+  }else{
+    dated = dated.filter(e => e.dateObj >= today);
+
+    if(dated.length === 0){
+      contentEl.className = "status";
+      contentEl.textContent = "Aucun élément à afficher à partir d’aujourd’hui.";
+      return;
+    }
+
+    firstDate = new Date(today);
+    lastDate = new Date(dated[dated.length - 1].dateObj);
   }
 
-  const lastDate = new Date(dated[dated.length - 1].dateObj);
-  const firstDate = new Date(today);
+  if(!lastDate || firstDate > lastDate){
+    contentEl.className = "status";
+    contentEl.textContent = "Aucun élément à afficher pour cette période.";
+    return;
+  }
 
   const grouped = {};
   dated.forEach(e => {
     const key = e.date;
     if(!grouped[key]){
       grouped[key] = {
-        dateObj: e.dateObj,
-        events: []
+        dateObj:e.dateObj,
+        events:[]
       };
     }
     grouped[key].events.push(e);
@@ -728,7 +895,7 @@ function renderAgendaEvents(events){
         const shift = classifyAgendaEvent(e);
 
         const row = document.createElement("div");
-        row.className = "event-row";
+        row.className = "event-row " + shift.kind;
 
         const icon = document.createElement("div");
         icon.className = "shift-dot";
@@ -783,6 +950,7 @@ function renderAgendaEvents(events){
   }
 }
 
+/* ICS collectifs */
 function unfoldIcs(text){
   return String(text || "").replace(/\r?\n[ \t]/g, "");
 }
@@ -878,8 +1046,18 @@ function renderIcsEvents(events){
 }
 
 async function init(){
-  titleEl.textContent = titrePage();
-  subtitleEl.textContent = "À partir d’aujourd’hui";
+  if(type === "agent"){
+    titleEl.textContent = agent ? agent.replace(/_/g, " ") : "Planning";
+    subtitleEl.textContent = moisParam
+      ? "Mois de " + formatMonthNameFromKey(moisParam)
+      : "À partir d’aujourd’hui";
+
+    afficherActionsAgent();
+  }else{
+    titleEl.textContent = type === "formations" ? "Formations" : type === "stagiaires" ? "Stagiaires" : "Aperçu";
+    subtitleEl.textContent = "À partir d’aujourd’hui";
+    avatarWrap.style.display = "none";
+  }
 
   if(type === "agent" && agent){
     try{
@@ -908,14 +1086,10 @@ async function init(){
   let url = "";
 
   if(type === "formations"){
-    titleEl.textContent = "Formations";
     url = apiUrl("ics_collectif", {type:"formation"});
   }else if(type === "stagiaires"){
-    titleEl.textContent = "Stagiaires";
     url = apiUrl("ics_collectif", {type:"stagiaires"});
   }
-
-  avatarWrap.classList.remove("is-visible");
 
   if(!url){
     contentEl.textContent = "Aperçu impossible : lien manquant.";
