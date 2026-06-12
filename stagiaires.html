@@ -3,483 +3,686 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Espace stagiaires</title>
+<title>Stagiaires / Référents</title>
 
 <style>
-*{box-sizing:border-box}
+*,*::before,*::after{box-sizing:border-box}
+
+:root{
+  --ink:#07183f;
+  --paper:#fff7dd;
+  --cream:#fff9e8;
+  --gold:#d3a24b;
+  --navy:#07183f;
+  --weekend:#fff0dc;
+  --violet-soft:#f2eaff;
+  --blue-soft:#eaf3ff;
+  --green-soft:#eaffef;
+}
+
+html{scroll-behavior:smooth}
 
 body{
   margin:0;
-  font-family:Arial,sans-serif;
-  background:#f4efe4;
-  color:#171717;
+  min-height:100vh;
+  color:var(--ink);
+  font-family:Impact,"Arial Black",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 15% 0%,rgba(255,255,255,.95) 0 9%,transparent 31%),
+    radial-gradient(circle at 88% 4%,rgba(255,218,116,.46) 0 9%,transparent 32%),
+    repeating-linear-gradient(-6deg,rgba(7,24,63,.035) 0 1px,transparent 1px 13px),
+    linear-gradient(180deg,#fff9e8 0%,#f5e8bf 57%,#ead9a5 100%);
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.17;
+  background:
+    repeating-linear-gradient(8deg,rgba(7,24,63,.05) 0 1px,transparent 1px 12px),
+    repeating-linear-gradient(-9deg,rgba(178,116,26,.07) 0 1px,transparent 1px 17px);
+  mix-blend-mode:multiply;
 }
 
 .page{
-  max-width:760px;
+  width:min(860px,100%);
   margin:auto;
-  padding:14px;
+  padding:12px 10px 54px;
 }
 
-.hero{
-  width:100%;
-  display:block;
-  border:4px solid #171717;
-  border-radius:26px;
-  box-shadow:7px 7px 0 #171717;
-  margin-bottom:18px;
-  background:#fff;
+.back{
+  position:relative;
+  z-index:3;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:54px;
+  margin-bottom:14px;
+  padding:9px 10px;
+  color:#fff4ce;
+  text-decoration:none;
+  text-align:center;
+  text-transform:uppercase;
+  border:5px solid #061738;
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 16%,rgba(255,255,255,.22),transparent 28%),
+    repeating-linear-gradient(-7deg,rgba(255,255,255,.07) 0 2px,transparent 2px 10px),
+    linear-gradient(145deg,#777,#444,#222);
+  box-shadow:0 7px 0 rgba(7,24,63,.35);
+  font-size:clamp(20px,5vw,31px);
+  letter-spacing:.4px;
 }
 
-.intro{
-  background:#fffaf0;
-  border:4px solid #171717;
-  border-radius:24px;
-  padding:18px;
-  box-shadow:6px 6px 0 #171717;
-  margin-bottom:18px;
+.header{
+  position:relative;
+  z-index:2;
+  margin:10px 0 14px;
+  padding:14px 12px 16px;
+  background:
+    radial-gradient(circle at 12% 0%,rgba(255,255,255,.75),transparent 34%),
+    linear-gradient(180deg,rgba(255,255,255,.44),transparent 48%),
+    var(--paper);
+  border:5px solid var(--ink);
+  border-radius:30px 25px 33px 26px;
+  box-shadow:
+    0 10px 0 rgba(7,24,63,.18),
+    0 14px 0 rgba(0,0,0,.10),
+    inset 0 0 0 3px rgba(255,215,115,.38);
 }
 
 h1{
   margin:0 0 8px;
-  font-size:34px;
-  line-height:1;
   text-transform:uppercase;
+  font-size:clamp(31px,8vw,58px);
+  line-height:.9;
+  letter-spacing:.2px;
+  color:var(--ink);
+  text-shadow:
+    0 3px 0 #f8d67d,
+    3px 5px 0 rgba(7,24,63,.10);
 }
 
-.intro p{
+.sub{
   margin:0;
-  font-size:17px;
-  font-weight:800;
-  line-height:1.35;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-weight:950;
+  font-size:clamp(14px,3.6vw,19px);
+  line-height:1.2;
 }
 
-.status{
-  text-align:center;
-  font-weight:900;
-  color:#6b7280;
-  margin:16px 0;
+.quick-actions{
+  display:grid;
+  gap:10px;
+  margin:14px 0 0;
 }
 
-.summary{
-  background:#102f68;
-  color:white;
-  border:4px solid #171717;
-  border-radius:26px;
-  padding:18px;
-  box-shadow:7px 7px 0 #171717;
-  margin-bottom:22px;
-}
-
-.summary-title{
-  font-size:23px;
-  font-weight:900;
-  margin-bottom:8px;
-}
-
-.summary-big{
-  font-size:30px;
-  font-weight:900;
-  margin-bottom:8px;
-}
-
-.summary-line{
-  font-size:16px;
-  font-weight:800;
-  margin:6px 0;
-}
-
-.carousel-title{
-  font-size:22px;
-  font-weight:900;
-  margin:8px 0 12px;
-}
-
-.carousel{
-  display:flex;
-  gap:18px;
-  overflow-x:auto;
-  scroll-snap-type:x mandatory;
-  padding:4px 4px 18px;
-}
-
-.carousel::-webkit-scrollbar{display:none}
-
-.day-slide{
-  min-width:92%;
-  scroll-snap-align:start;
-  background:#fffaf0;
-  border:4px solid #171717;
-  border-radius:28px;
-  padding:15px;
-  box-shadow:7px 7px 0 #171717;
-}
-
-.day-title{
-  font-size:28px;
-  font-weight:900;
-  color:#102f68;
-  margin:0 0 5px;
-}
-
-.day-sub{
-  font-size:15px;
-  font-weight:900;
-  color:#667085;
-  margin-bottom:15px;
-}
-
-.pair-card{
-  position:relative;
-  background:#fffdf7;
-  border:4px solid #171717;
-  border-radius:24px;
-  padding:16px 14px 16px 24px;
-  margin-bottom:16px;
-  overflow:hidden;
-}
-
-.pair-card::before{
-  content:"";
-  position:absolute;
-  left:0;
-  top:0;
-  bottom:0;
-  width:12px;
-  background:linear-gradient(#f5a000 0 50%,#20c765 50% 100%);
-}
-
-.pair-title{
-  font-size:22px;
-  font-weight:900;
-  margin-bottom:13px;
-  border-bottom:3px dashed #171717;
-  padding-bottom:8px;
-}
-
-.zone{
-  background:#f7f7f2;
-  border:2px dashed #d8d0bf;
-  border-radius:18px;
-  padding:12px;
-  margin-bottom:11px;
-}
-
-.name{
-  font-size:23px;
-  font-weight:900;
-  margin-bottom:10px;
-  line-height:1.15;
-}
-
-.agent-head{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin-bottom:10px;
-}
-
-.avatar{
-  width:62px;
-  height:62px;
-  border-radius:50%;
-  object-fit:cover;
-  border:4px solid #171717;
-  background:#eee;
-  flex:0 0 auto;
-}
-
-.avatar-placeholder{
-  width:62px;
-  height:62px;
-  border-radius:50%;
-  border:4px solid #171717;
+.action-btn{
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:28px;
-  background:#f1d58a;
-  flex:0 0 auto;
-}
-
-.info{
-  margin-top:9px;
-}
-
-.info-label{
-  font-size:13px;
-  font-weight:900;
-  color:#667085;
-  text-transform:uppercase;
-  letter-spacing:.7px;
-  margin-bottom:3px;
-}
-
-.info-value{
-  font-size:20px;
-  font-weight:900;
-  color:#171717;
-  line-height:1.25;
-  word-break:break-word;
-}
-
-.badge{
-  display:inline-block;
-  margin-top:10px;
-  padding:8px 12px;
-  border-radius:999px;
-  border:3px solid #171717;
-  font-weight:900;
-  background:#e9ffef;
-}
-
-.badge.warn{
-  background:#fff1c7;
-}
-
-.empty{
-  min-width:100%;
-  text-align:center;
-  font-size:18px;
-  font-weight:900;
-  padding:22px;
-  border:3px dashed #171717;
-  border-radius:18px;
-  background:#fffdf7;
-}
-
-.back{
-  display:block;
-  width:100%;
-  text-align:center;
-  margin:26px auto 10px;
-  padding:16px 20px;
-  border:4px solid #171717;
+  min-height:58px;
+  padding:9px 12px;
+  border:4px solid var(--ink);
   border-radius:20px;
-  background:#102f68;
-  color:white;
-  font-size:21px;
-  font-weight:900;
+  color:#fff4ce;
   text-decoration:none;
-  box-shadow:6px 6px 0 #171717;
+  text-align:center;
+  text-transform:uppercase;
+  font-size:clamp(20px,5.2vw,34px);
+  line-height:.9;
+  background:
+    radial-gradient(circle at 22% 16%,rgba(255,255,255,.30),transparent 28%),
+    repeating-linear-gradient(-7deg,rgba(255,255,255,.08) 0 2px,transparent 2px 10px),
+    linear-gradient(145deg,#ffb43a 0%,#f07c00 58%,#b74d00 100%);
+  box-shadow:
+    0 7px 0 rgba(7,24,63,.28),
+    inset 0 0 0 3px rgba(255,221,132,.25);
+  text-shadow:0 3px 0 rgba(0,0,0,.38);
+}
+
+.action-btn:active{transform:translateY(3px)}
+
+.status{
+  margin-top:16px;
+  text-align:center;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-weight:950;
+  font-size:17px;
+  line-height:1.3;
+  padding:18px 10px;
+  border:4px solid var(--ink);
+  border-radius:24px;
+  background:white;
+}
+
+.week-label{
+  margin:22px 0 10px;
+  padding:7px 12px 8px;
+  border:4px dashed rgba(7,24,63,.32);
+  border-radius:22px;
+  background:rgba(255,255,255,.50);
+  color:rgba(7,24,63,.88);
+  text-align:center;
+  text-transform:uppercase;
+  font-size:clamp(22px,5.8vw,38px);
+  line-height:.88;
+}
+
+.day-card{
+  position:relative;
+  margin:12px 0;
+  overflow:hidden;
+  border:4px solid var(--navy);
+  border-radius:24px;
+  background:white;
+  box-shadow:
+    0 7px 0 rgba(7,24,63,.15),
+    0 10px 0 rgba(0,0,0,.07);
+}
+
+.day-card.is-weekend{
+  background:
+    radial-gradient(circle at 12% 0%,rgba(255,255,255,.85),transparent 36%),
+    linear-gradient(180deg,#fff9ed 0%,var(--weekend) 100%);
+}
+
+.day-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:9px 12px 8px;
+  border-bottom:3px solid var(--navy);
+  background:
+    repeating-linear-gradient(-7deg,rgba(7,24,63,.035) 0 2px,transparent 2px 10px),
+    linear-gradient(180deg,#fffdf5,#fff3c8);
+}
+
+.day-card.is-weekend .day-head{
+  background:
+    repeating-linear-gradient(-7deg,rgba(132,73,11,.055) 0 2px,transparent 2px 10px),
+    linear-gradient(180deg,#fff0dc,#f3d4a7);
+}
+
+.date-main{
+  margin:0;
+  font-family:Impact,"Arial Black",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-weight:900;
+  text-transform:uppercase;
+  font-size:clamp(25px,6.4vw,44px);
+  line-height:.88;
+  letter-spacing:.2px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.date-tag{
+  flex:0 0 auto;
+  padding:5px 9px 6px;
+  border:3px solid rgba(7,24,63,.22);
+  border-radius:14px;
+  background:rgba(255,255,255,.62);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-weight:950;
+  font-size:11px;
+  text-transform:uppercase;
+  opacity:.82;
+}
+
+.event-list{
+  display:grid;
+}
+
+.event-row{
+  display:flex;
+  align-items:flex-start;
+  gap:9px;
+  padding:11px 11px 8px;
+  border-top:2px solid rgba(7,24,63,.12);
+  min-width:0;
+  background:white;
+}
+
+.event-row:first-child{border-top:0}
+.event-row.kind-stagiaire{background:linear-gradient(90deg,var(--violet-soft),#fff)}
+.event-row.kind-referent{background:linear-gradient(90deg,var(--green-soft),#fff)}
+.event-row.kind-info{background:linear-gradient(90deg,var(--blue-soft),#fff)}
+
+.shift-dot{
+  flex:0 0 auto;
+  width:32px;
+  height:32px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:25px;
+  line-height:1;
+  border-radius:12px;
+  background:#fff9e8;
+  box-shadow:inset 0 0 0 3px rgba(7,24,63,.10);
+}
+
+.event-main{
+  min-width:0;
+  width:100%;
+}
+
+.shift-line{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  min-width:0;
+  width:100%;
+  white-space:nowrap;
+}
+
+.shift-title{
+  flex:0 1 auto;
+  min-width:0;
+  margin:0;
+  text-transform:uppercase;
+  font-size:clamp(24px,6.6vw,38px);
+  line-height:.9;
+  text-shadow:0 2px 0 rgba(211,162,75,.30);
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.shift-sep{
+  flex:0 0 auto;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:clamp(17px,4.4vw,26px);
+  font-weight:950;
+  opacity:.7;
+}
+
+.time{
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px 9px 7px;
+  border-radius:14px;
+  background:#07183f;
+  color:#fff4ce;
+  font-size:clamp(21px,5.6vw,34px);
+  line-height:.9;
+  box-shadow:0 4px 0 rgba(7,24,63,.16);
+}
+
+.detail{
+  margin:6px 0 0;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-weight:900;
+  font-size:13px;
+  line-height:1.25;
+  opacity:.82;
+  white-space:normal;
+}
+
+@media(max-width:560px){
+  .page{padding:10px 8px 42px}
+  .back{border-width:4px;min-height:52px}
+  .header{border-width:4px;padding:11px 9px 12px}
+  h1{
+    font-size:clamp(30px,8vw,45px);
+    line-height:.86;
+    text-shadow:
+      0 2px 0 #f8d67d,
+      2px 4px 0 rgba(7,24,63,.09);
+  }
+  .day-card{border-width:4px}
+  .day-head{padding:8px 10px 7px;border-bottom-width:3px}
+  .event-row{gap:8px;padding:10px 9px 8px}
+  .shift-dot{width:29px;height:29px;font-size:23px}
+  .shift-line{gap:5px}
+  .time{padding:5px 8px 6px}
 }
 </style>
 </head>
 
 <body>
-<div class="page">
+<main class="page">
+  <a class="back" href="index.html">← Retour accueil</a>
 
-  <img class="hero" src="Image/Autre page/Photo_stagiaire.png" alt="Espace stagiaires">
+  <section class="header">
+    <h1>Stagiaires</h1>
+    <p class="sub" id="subtitle">Aperçu dynamique des stagiaires et référents</p>
 
-  <section class="intro">
-    <h1>Espace stagiaires</h1>
-    <p>Les stagiaires prévus par date, avec leur référent affilié et les infos utiles du jour.</p>
+    <div class="quick-actions" id="topActions"></div>
   </section>
 
-  <div id="status" class="status">Chargement…</div>
-
-  <section id="summary" class="summary">
-    <div class="summary-title">🧭 Point stagiaires</div>
-    <div class="summary-big">Chargement…</div>
-  </section>
-
-  <div class="carousel-title">📅 Journées prévues</div>
-
-  <main id="results" class="carousel">
-    <div class="empty">Chargement des stagiaires…</div>
-  </main>
-
-  <a class="back" href="index.html">🏠 Retour accueil</a>
-
-</div>
+  <section id="content" class="status">Chargement...</section>
+</main>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbzZITQIw7jbrJHyPl7xfcFjv8H1zQrq7yF73ekVx3S23Efjo2fWRsZ-YIiWNOMYCs3r/exec";
+const PASSERELLE = "https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8HZ_g_ota7tajTKLY3jvLKEF9AvSPjIbVpqcSkSRcl5OdWV9/exec";
 
-function clean(v){
-  return v && String(v).trim() !== "" ? String(v).trim() : "Non renseigné";
+const subtitleEl = document.getElementById("subtitle");
+const contentEl = document.getElementById("content");
+const topActions = document.getElementById("topActions");
+
+function apiUrl(mode, extra){
+  const url = new URL(PASSERELLE);
+  url.searchParams.set("mode", mode);
+  url.searchParams.set("t", Date.now());
+  Object.keys(extra || {}).forEach(k => url.searchParams.set(k, extra[k]));
+  return url.toString();
 }
 
-function missing(v){
-  const x = String(v || "").trim();
-  return !x || x === "Non renseigné" || x === "Référent non renseigné";
+function webcalUrl(url){
+  return url.replace(/^https:\/\//i, "webcal://");
 }
 
-function todayFr(){
-  const d = new Date();
-  return String(d.getDate()).padStart(2,"0") + "/" +
-         String(d.getMonth()+1).padStart(2,"0") + "/" +
-         d.getFullYear();
+function androidUrl(url){
+  return "https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(url);
 }
 
-function parseFr(date){
-  const p = String(date).split("/");
-  if(p.length !== 3) return 0;
-  return new Date(p[2], p[1]-1, p[0]).getTime();
+function unfoldIcs(text){
+  return String(text || "").replace(/\r?\n[ \t]/g, "");
 }
 
-function groupByDate(data){
-  const groups = {};
+function getField(block, name){
+  const re = new RegExp("^" + name + "(?:;[^:]*)?:(.*)$", "mi");
+  const m = block.match(re);
+  return m ? m[1].trim() : "";
+}
 
-  data.forEach(item => {
-    const date = clean(item.date);
+function cleanText(v){
+  return String(v || "")
+    .replace(/\\n/g, "\n")
+    .replace(/\\,/g, ",")
+    .replace(/\\;/g, ";")
+    .trim();
+}
 
-    if(!groups[date]){
-      groups[date] = {date, pairs:[]};
+function parseIcsDate(value){
+  if(!value) return null;
+  value = String(value).trim();
+
+  if(/^\d{8}$/.test(value)){
+    return new Date(
+      Number(value.slice(0,4)),
+      Number(value.slice(4,6)) - 1,
+      Number(value.slice(6,8)),
+      0,0,0
+    );
+  }
+
+  const m = value.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z?)$/);
+  if(!m) return null;
+
+  if(m[7] === "Z"){
+    return new Date(Date.UTC(
+      Number(m[1]),
+      Number(m[2]) - 1,
+      Number(m[3]),
+      Number(m[4]),
+      Number(m[5]),
+      Number(m[6])
+    ));
+  }
+
+  return new Date(
+    Number(m[1]),
+    Number(m[2]) - 1,
+    Number(m[3]),
+    Number(m[4]),
+    Number(m[5]),
+    Number(m[6])
+  );
+}
+
+function toIsoLocal(d){
+  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+
+function formatDateMain(d){
+  return d.toLocaleDateString("fr-FR", {
+    weekday:"long",
+    day:"numeric",
+    month:"long"
+  }).toUpperCase();
+}
+
+function getIsoWeekNumber(date){
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+}
+
+function formatWeekLabel(d){
+  return "Semaine " + getIsoWeekNumber(d);
+}
+
+function weekKey(d){
+  const lundi = new Date(d);
+  const day = lundi.getDay() || 7;
+  lundi.setDate(lundi.getDate() - day + 1);
+  return toIsoLocal(lundi);
+}
+
+function isWeekend(d){
+  const day = d.getDay();
+  return day === 0 || day === 6;
+}
+
+function formatTimeRange(start,end){
+  const allDay =
+    start &&
+    start.getHours() === 0 &&
+    start.getMinutes() === 0 &&
+    (!end || (end.getHours() === 0 && end.getMinutes() === 0));
+
+  if(allDay) return "";
+
+  const f = new Intl.DateTimeFormat("fr-FR", {hour:"2-digit", minute:"2-digit"});
+  if(end && start.toDateString() === end.toDateString()){
+    return f.format(start) + "–" + f.format(end);
+  }
+  return f.format(start);
+}
+
+function parseEvents(ics){
+  const text = unfoldIcs(ics);
+  const blocks = text.match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g) || [];
+
+  return blocks.map(block => {
+    const start = parseIcsDate(getField(block, "DTSTART"));
+    const end = parseIcsDate(getField(block, "DTEND"));
+    const summary = cleanText(getField(block, "SUMMARY"));
+    const description = cleanText(getField(block, "DESCRIPTION"));
+
+    return {start, end, summary, description};
+  }).filter(e => e.start);
+}
+
+function detectRowType(summary, description){
+  const raw = (summary + " " + description)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase();
+
+  if(raw.includes("REFERENT")) return "referent";
+  if(raw.includes("STAGIAIRE")) return "stagiaire";
+  return "info";
+}
+
+function detectEmoji(type){
+  if(type === "referent") return "🤝";
+  if(type === "stagiaire") return "🧑‍🎓";
+  return "📌";
+}
+
+function extractTitle(summary){
+  return String(summary || "Élément")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function extractDetails(description){
+  return String(description || "")
+    .split(/\n+/)
+    .map(v => v.trim())
+    .filter(Boolean);
+}
+
+function renderAgendaEvents(events){
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  const futurs = (events || [])
+    .filter(e => e.start && e.start >= today)
+    .sort((a,b) => a.start - b.start);
+
+  if(futurs.length === 0){
+    contentEl.className = "status";
+    contentEl.textContent = "Aucun stagiaire à afficher à partir d’aujourd’hui.";
+    return;
+  }
+
+  const grouped = {};
+
+  futurs.forEach(e => {
+    const iso = toIsoLocal(e.start);
+    if(!grouped[iso]){
+      grouped[iso] = {
+        dateObj:new Date(e.start.getFullYear(), e.start.getMonth(), e.start.getDate()),
+        events:[]
+      };
     }
-
-    groups[date].pairs.push({
-      stagiaire_nom:item.stagiaire_nom,
-      stagiaire_horaire:item.stagiaire_horaire,
-      agent_nom:item.agent_nom,
-      agent_horaire:item.agent_horaire,
-      agent_ghe:item.agent_ghe,
-      agent_telephone:item.agent_telephone,
-      agent_avatar:item.agent_avatar
-    });
+    grouped[iso].events.push(e);
   });
 
-  return Object.values(groups).sort((a,b)=>parseFr(a.date)-parseFr(b.date));
+  contentEl.className = "";
+  contentEl.innerHTML = "";
+
+  let currentWeek = "";
+
+  Object.keys(grouped).sort().forEach(iso => {
+    const dayGroup = grouped[iso];
+    const wk = weekKey(dayGroup.dateObj);
+
+    if(wk !== currentWeek){
+      currentWeek = wk;
+      const week = document.createElement("div");
+      week.className = "week-label";
+      week.textContent = formatWeekLabel(dayGroup.dateObj);
+      contentEl.appendChild(week);
+    }
+
+    const dayCard = document.createElement("article");
+    dayCard.className = "day-card" + (isWeekend(dayGroup.dateObj) ? " is-weekend" : "");
+
+    const head = document.createElement("div");
+    head.className = "day-head";
+
+    const dateMain = document.createElement("p");
+    dateMain.className = "date-main";
+    dateMain.textContent = formatDateMain(dayGroup.dateObj);
+
+    const tag = document.createElement("div");
+    tag.className = "date-tag";
+    tag.textContent = isWeekend(dayGroup.dateObj) ? "week-end" : "semaine";
+
+    head.appendChild(dateMain);
+    head.appendChild(tag);
+    dayCard.appendChild(head);
+
+    const list = document.createElement("div");
+    list.className = "event-list";
+
+    dayGroup.events.forEach(e => {
+      const rowType = detectRowType(e.summary, e.description);
+      const emoji = detectEmoji(rowType);
+      const title = extractTitle(e.summary);
+      const details = extractDetails(e.description);
+      const horaire = formatTimeRange(e.start, e.end);
+
+      const row = document.createElement("div");
+      row.className = "event-row kind-" + rowType;
+
+      const icon = document.createElement("div");
+      icon.className = "shift-dot";
+      icon.textContent = emoji;
+
+      const main = document.createElement("div");
+      main.className = "event-main";
+
+      const line = document.createElement("div");
+      line.className = "shift-line";
+
+      const label = document.createElement("p");
+      label.className = "shift-title";
+      label.textContent = title;
+
+      line.appendChild(label);
+
+      if(horaire){
+        const sep = document.createElement("span");
+        sep.className = "shift-sep";
+        sep.textContent = "·";
+
+        const time = document.createElement("div");
+        time.className = "time";
+        time.textContent = horaire;
+
+        line.appendChild(sep);
+        line.appendChild(time);
+      }
+
+      main.appendChild(line);
+
+      details.forEach(txt => {
+        const detail = document.createElement("p");
+        detail.className = "detail";
+        detail.textContent = txt;
+        main.appendChild(detail);
+      });
+
+      row.appendChild(icon);
+      row.appendChild(main);
+      list.appendChild(row);
+    });
+
+    dayCard.appendChild(list);
+    contentEl.appendChild(dayCard);
+  });
 }
 
-function renderSummary(groups){
-  const box = document.getElementById("summary");
-  const today = todayFr();
-  const todayGroup = groups.find(g => g.date === today);
-  const nextGroup = groups.find(g => parseFr(g.date) >= parseFr(today));
+async function init(){
+  const icsUrl = apiUrl("ics_collectif", {type:"stagiaires"});
 
-  if(todayGroup){
-    const count = todayGroup.pairs.length;
-    const missingRefs = todayGroup.pairs.filter(p => missing(p.agent_nom)).length;
-    const missingGhe = todayGroup.pairs.filter(p => missing(p.agent_ghe)).length;
-    const missingPhones = todayGroup.pairs.filter(p => missing(p.agent_telephone)).length;
+  topActions.innerHTML = `
+    <a class="action-btn" href="${icsUrl}" target="_blank" rel="noopener">📥 Télécharger le fichier ICS</a>
+    <a class="action-btn" href="${webcalUrl(icsUrl)}">🍎 Ajouter sur Apple</a>
+    <a class="action-btn" href="${androidUrl(icsUrl)}" target="_blank" rel="noopener">🤖 Ajouter sur Android</a>
+  `;
 
-    box.innerHTML =
-      '<div class="summary-title">📍 Aujourd’hui</div>' +
-      '<div class="summary-big">' + count + ' stagiaire' + (count>1?'s':'') + '</div>' +
-      '<div class="summary-line">🟢 ' + (count - missingRefs) + ' référent' + (count - missingRefs>1?'s':'') + ' trouvé' + (count - missingRefs>1?'s':'') + '</div>' +
-      '<div class="summary-line">🏥 ' + missingGhe + ' GHE à vérifier</div>' +
-      '<div class="summary-line">☎️ ' + missingPhones + ' téléphone' + (missingPhones>1?'s':'') + ' à vérifier</div>' +
-      '<div class="summary-line">' + ((missingRefs || missingGhe || missingPhones) ? '⚠️ Vérification utile' : '✅ Tout est prêt') + '</div>';
-    return;
+  try{
+    const res = await fetch(icsUrl, {method:"GET", cache:"no-store"});
+    const text = await res.text();
+
+    if(!res.ok || !text.includes("BEGIN:VCALENDAR")){
+      throw new Error("ICS invalide");
+    }
+
+    renderAgendaEvents(parseEvents(text));
+
+  }catch(e){
+    console.error(e);
+    contentEl.className = "status";
+    contentEl.textContent = "Aperçu indisponible. Vérifie que la passerelle Apps Script est bien à jour.";
   }
-
-  if(nextGroup){
-    box.innerHTML =
-      '<div class="summary-title">📍 Aujourd’hui</div>' +
-      '<div class="summary-big">Aucun stagiaire aujourd’hui</div>' +
-      '<div class="summary-line">➡️ Prochaine présence : ' + nextGroup.date + '</div>' +
-      '<div class="summary-line">🎓 ' + nextGroup.pairs.length + ' stagiaire' + (nextGroup.pairs.length>1?'s':'') + ' prévu' + (nextGroup.pairs.length>1?'s':'') + '</div>';
-    return;
-  }
-
-  box.innerHTML =
-    '<div class="summary-title">📍 Aujourd’hui</div>' +
-    '<div class="summary-big">Aucun stagiaire prévu</div>' +
-    '<div class="summary-line">✅ Rien à préparer pour le moment</div>';
 }
 
-function render(data, updatedAt){
-  const results = document.getElementById("results");
-  const status = document.getElementById("status");
-
-  if(!data || data.length === 0){
-    status.textContent = "Aucune donnée trouvée.";
-    results.innerHTML = '<div class="empty">Aucun stagiaire prévu.</div>';
-    renderSummary([]);
-    return;
-  }
-
-  const groups = groupByDate(data);
-
-  status.textContent = updatedAt
-    ? "Dernière mise à jour : " + new Date(updatedAt).toLocaleString("fr-FR")
-    : "Données chargées.";
-
-  renderSummary(groups);
-
-  results.innerHTML = groups.map(group => {
-    const cards = group.pairs.map(pair => {
-      const refMissing = missing(pair.agent_nom);
-      const gheMissing = missing(pair.agent_ghe);
-      const phoneMissing = missing(pair.agent_telephone);
-
-      const avatarHtml = pair.agent_avatar
-        ? '<img class="avatar" src="' + clean(pair.agent_avatar) + '" alt="' + clean(pair.agent_nom) + '">'
-        : '<div class="avatar-placeholder">👤</div>';
-
-      return (
-        '<article class="pair-card">' +
-          '<div class="pair-title">Binôme du jour</div>' +
-
-          '<div class="zone">' +
-            '<div class="name">🎓 ' + clean(pair.stagiaire_nom) + '</div>' +
-            '<div class="info">' +
-              '<div class="info-label">Horaire stagiaire</div>' +
-              '<div class="info-value">🕒 ' + clean(pair.stagiaire_horaire) + '</div>' +
-            '</div>' +
-          '</div>' +
-
-          '<div class="zone">' +
-            '<div class="agent-head">' +
-              avatarHtml +
-              '<div class="name">🟢 ' + clean(pair.agent_nom) + '</div>' +
-            '</div>' +
-
-            '<div class="info">' +
-              '<div class="info-label">Horaire référent</div>' +
-              '<div class="info-value">🕒 ' + clean(pair.agent_horaire) + '</div>' +
-            '</div>' +
-
-            '<div class="info">' +
-              '<div class="info-label">GHE</div>' +
-              '<div class="info-value">🏥 ' + clean(pair.agent_ghe) + '</div>' +
-            '</div>' +
-
-            '<div class="info">' +
-              '<div class="info-label">Téléphone</div>' +
-              '<div class="info-value">☎️ ' + clean(pair.agent_telephone) + '</div>' +
-            '</div>' +
-
-            '<div class="badge ' + ((refMissing || gheMissing || phoneMissing) ? 'warn' : '') + '">' +
-              ((refMissing || gheMissing || phoneMissing) ? '⚠️ À vérifier' : '✅ Infos référent OK') +
-            '</div>' +
-          '</div>' +
-        '</article>'
-      );
-    }).join("");
-
-    return (
-      '<section class="day-slide">' +
-        '<h2 class="day-title">📅 ' + group.date + '</h2>' +
-        '<div class="day-sub">' + group.pairs.length + ' stagiaire' + (group.pairs.length>1?'s':'') + ' prévu' + (group.pairs.length>1?'s':'') + '</div>' +
-        cards +
-      '</section>'
-    );
-  }).join("");
-}
-
-function loadWithJsonp(){
-  const callbackName = "stagiairesCallback_" + Date.now();
-
-  window[callbackName] = function(payload){
-    render(payload.resultats || [], payload.updatedAt);
-    delete window[callbackName];
-  };
-
-  const script = document.createElement("script");
-  script.src = API_URL + "?callback=" + callbackName;
-
-  script.onerror = function(){
-    document.getElementById("status").textContent = "Erreur : API inaccessible.";
-    document.getElementById("results").innerHTML = '<div class="empty">Impossible de charger les données.</div>';
-  };
-
-  document.body.appendChild(script);
-}
-
-loadWithJsonp();
+init();
 </script>
-
 </body>
 </html>
