@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Stagiaires / Référents</title>
+<title>Stagiaires GHE</title>
 
 <style>
 *,*::before,*::after{box-sizing:border-box}
@@ -12,9 +12,9 @@
   --ink:#07183f;
   --paper:#fff7dd;
   --weekend:#fff0dc;
-  --violet-soft:#f2eaff;
-  --blue-soft:#eaf3ff;
-  --green-soft:#eaffef;
+  --stage-soft:#f2eaff;
+  --referent-soft:#eaf3ff;
+  --alert-soft:#fff0d7;
 }
 
 html{scroll-behavior:smooth}
@@ -196,9 +196,9 @@ h1{
 }
 
 .event-row:first-child{border-top:0}
-.event-row.kind-stagiaire{background:linear-gradient(90deg,var(--violet-soft),#fff)}
-.event-row.kind-referent{background:linear-gradient(90deg,var(--green-soft),#fff)}
-.event-row.kind-info{background:linear-gradient(90deg,var(--blue-soft),#fff)}
+.event-row.kind-stage{background:linear-gradient(90deg,var(--stage-soft),#fff)}
+.event-row.kind-referent{background:linear-gradient(90deg,var(--referent-soft),#fff)}
+.event-row.kind-alert{background:linear-gradient(90deg,var(--alert-soft),#fff)}
 
 .shift-dot{
   flex:0 0 auto;
@@ -336,7 +336,7 @@ h1{
 
   <section class="header">
     <h1>Stagiaires</h1>
-    <p class="sub">Aperçu dynamique des stagiaires et référents</p>
+    <p class="sub">Aperçu dynamique des stagiaires à venir</p>
   </section>
 
   <section id="content" class="status">Chargement...</section>
@@ -349,7 +349,8 @@ h1{
 
 <script>
 const CONFIG_PAGE = {
-  typeCollectif: "stagiaires",
+  typeCollectif: "stagiaire",
+  fallbackTypes: ["stagiaires", "stage", "stagiere"],
   emptyMessage: "Aucun stagiaire à afficher à partir d’aujourd’hui."
 };
 
@@ -360,16 +361,29 @@ const ICS_DIRECT = "https://calendar.google.com/calendar/ical/2ced33be0e6a5c88fa
 const contentEl = document.getElementById("content");
 const bottomActions = document.getElementById("bottomActions");
 
-function apiUrl(mode, extra){
+let fallbackIndex = -1;
+let lastEvents = [];
+
+function apiJsonpUrl(mode, extra){
   const url = new URL(PASSERELLE);
   url.searchParams.set("mode", mode);
+  url.searchParams.set("callback", "recevoirEventsCollectifGhe");
   url.searchParams.set("t", Date.now());
-  Object.keys(extra || {}).forEach(k => url.searchParams.set(k, extra[k]));
+
+  Object.keys(extra || {}).forEach(k => {
+    url.searchParams.set(k, extra[k]);
+  });
+
   return url.toString();
 }
 
-function webcalUrl(url){return url.replace(/^https:\/\//i, "webcal://");}
-function androidUrl(url){return "https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(url);}
+function webcalUrl(url){
+  return url.replace(/^https:\/\//i, "webcal://");
+}
+
+function androidUrl(url){
+  return "https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(url);
+}
 
 function dateFromKey(key){
   const p = String(key || "").split("-");
@@ -378,7 +392,9 @@ function dateFromKey(key){
 
 function todayKey(){
   const d = new Date();
-  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  return d.getFullYear() + "-" +
+    String(d.getMonth() + 1).padStart(2,"0") + "-" +
+    String(d.getDate()).padStart(2,"0");
 }
 
 function formatDateMain(d){
@@ -397,10 +413,14 @@ function getIsoWeekNumber(date){
   return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
 }
 
-function formatWeekLabel(d){return "Semaine " + getIsoWeekNumber(d);}
+function formatWeekLabel(d){
+  return "Semaine " + getIsoWeekNumber(d);
+}
 
 function toIsoLocal(d){
-  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  return d.getFullYear() + "-" +
+    String(d.getMonth() + 1).padStart(2,"0") + "-" +
+    String(d.getDate()).padStart(2,"0");
 }
 
 function weekKey(d){
@@ -421,15 +441,15 @@ function detectRowType(summary, description){
     .replace(/[\u0300-\u036f]/g, "")
     .toUpperCase();
 
-  if(raw.includes("REFERENT")) return "referent";
-  if(raw.includes("STAGIAIRE")) return "stagiaire";
-  return "info";
+  if(raw.includes("REFERENT") || raw.includes("RÉFÉRENT")) return "referent";
+  if(raw.includes("ALERTE") || raw.includes("VERIFIER") || raw.includes("VÉRIFIER")) return "alert";
+  return "stage";
 }
 
 function detectEmoji(type){
-  if(type === "referent") return "🤝";
-  if(type === "stagiaire") return "🧑‍🎓";
-  return "📌";
+  if(type === "referent") return "🧭";
+  if(type === "alert") return "⚠️";
+  return "👶";
 }
 
 function extractDetails(description, location){
@@ -573,29 +593,64 @@ function renderAgendaEvents(events){
   });
 }
 
-async function init(){
-  const eventsUrl = apiUrl("events_collectif", {type:CONFIG_PAGE.typeCollectif});
+function chargerType(type){
+  const script = document.createElement("script");
+  script.src = apiJsonpUrl("events_collectif_jsonp", {type:type});
 
+  script.onerror = function(){
+    contentEl.className = "status";
+    contentEl.textContent = "Aperçu indisponible. Impossible de joindre la passerelle Apps Script.";
+  };
+
+  document.body.appendChild(script);
+}
+
+function chargerFallbackSiBesoin(){
+  fallbackIndex++;
+
+  if(fallbackIndex >= CONFIG_PAGE.fallbackTypes.length){
+    renderAgendaEvents(lastEvents);
+    return;
+  }
+
+  chargerType(CONFIG_PAGE.fallbackTypes[fallbackIndex]);
+}
+
+window.recevoirEventsCollectifGhe = function(data){
+  try{
+    if(!data || data.ok === false || !Array.isArray(data.events)){
+      throw new Error(data && data.erreur ? data.erreur : "Réponse events invalide");
+    }
+
+    lastEvents = data.events;
+
+    if(lastEvents.length === 0 && fallbackIndex < CONFIG_PAGE.fallbackTypes.length - 1){
+      chargerFallbackSiBesoin();
+      return;
+    }
+
+    renderAgendaEvents(lastEvents);
+
+  }catch(err){
+    contentEl.className = "status";
+    contentEl.textContent = "Aperçu indisponible. " + String(err.message || err);
+  }
+};
+
+function init(){
   bottomActions.innerHTML = `
     <a class="action-btn action-apple" href="${webcalUrl(ICS_DIRECT)}">🍎 Apple</a>
     <a class="action-btn action-android" href="${androidUrl(ICS_DIRECT)}" target="_blank" rel="noopener">🤖 Android</a>
   `;
 
-  try{
-    const res = await fetch(eventsUrl, {method:"GET", cache:"no-store"});
-    const data = await res.json();
+  chargerType(CONFIG_PAGE.typeCollectif);
 
-    if(!res.ok || !data || data.ok === false || !Array.isArray(data.events)){
-      throw new Error(data && data.erreur ? data.erreur : "Réponse events invalide");
+  setTimeout(function(){
+    if(contentEl.textContent === "Chargement..."){
+      contentEl.className = "status";
+      contentEl.textContent = "Aperçu indisponible. La passerelle n’a pas répondu en JSONP.";
     }
-
-    renderAgendaEvents(data.events);
-
-  }catch(e){
-    console.error(e);
-    contentEl.className = "status";
-    contentEl.textContent = "Aperçu indisponible. Vérifie que la passerelle Apps Script est bien à jour.";
-  }
+  }, 9000);
 }
 
 init();
