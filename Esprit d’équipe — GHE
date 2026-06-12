@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Équipe du jour — GHE</title>
+  <title>Esprit d’équipe — planning collectif GHE</title>
 
   <style>
     :root {
@@ -17,7 +17,6 @@
       --orange: #f2994a;
       --yellow: #f2c94c;
       --black: #2f3640;
-      --red: #eb5757;
       --shadow: 0 12px 30px rgba(24, 32, 51, 0.08);
       --radius: 22px;
     }
@@ -140,8 +139,7 @@
       box-shadow: var(--shadow);
     }
 
-    .important h2,
-    .section h2 {
+    .important h2 {
       margin: 0 0 14px;
       font-size: 20px;
       letter-spacing: -0.3px;
@@ -326,11 +324,11 @@
   <main class="page">
     <section class="hero">
       <div class="hero-top">
-        <div class="badge">📅 Planning GHE</div>
+        <div class="badge">📅 Planning collectif GHE</div>
         <button class="refresh" onclick="chargerEquipe()">Actualiser</button>
       </div>
 
-      <h1>Équipe du jour</h1>
+      <h1>Esprit d’équipe</h1>
       <div class="date" id="dateLabel">Chargement…</div>
       <div class="sync" id="syncLabel"></div>
     </section>
@@ -338,11 +336,11 @@
     <section class="summary" id="summary"></section>
 
     <div id="content" class="loading">
-      Chargement de l’équipe du jour…
+      Chargement du planning collectif…
     </div>
 
     <div class="footer">
-      Page dynamique — données synchronisées depuis la base GHE.
+      Page dynamique — planning collectif synchronisé depuis la base GHE.
     </div>
   </main>
 
@@ -359,7 +357,7 @@
 
     function jsonp(url) {
       return new Promise((resolve, reject) => {
-        const callbackName = "callbackEquipeGhe_" + Date.now();
+        const callbackName = "callbackEspritEquipeGhe_" + Date.now();
 
         window[callbackName] = function(data) {
           resolve(data);
@@ -367,9 +365,20 @@
           delete window[callbackName];
         };
 
+        const params = new URLSearchParams(window.location.search);
+        const dateParam = params.get("date");
+
+        let finalUrl = url;
+        finalUrl += url.includes("?") ? "&" : "?";
+        finalUrl += "callback=" + callbackName;
+        finalUrl += "&t=" + Date.now();
+
+        if (dateParam) {
+          finalUrl += "&date=" + encodeURIComponent(dateParam);
+        }
+
         const script = document.createElement("script");
-        const separator = url.includes("?") ? "&" : "?";
-        script.src = url + separator + "callback=" + callbackName + "&t=" + Date.now();
+        script.src = finalUrl;
 
         script.onerror = function() {
           reject(new Error("Impossible de charger les données."));
@@ -384,7 +393,7 @@
     async function chargerEquipe() {
       const content = document.getElementById("content");
       content.className = "loading";
-      content.textContent = "Chargement de l’équipe du jour…";
+      content.textContent = "Chargement du planning collectif…";
 
       try {
         const data = await jsonp(DATA_URL);
@@ -414,11 +423,11 @@
 
       const cards = [
         { label: "Total", value: total },
-        { label: "Matin", value: counts.M ?? counts.matin ?? nombreAgents(data, "M") },
-        { label: "Jour", value: counts.J ?? counts.jour ?? nombreAgents(data, "J") },
-        { label: "J4", value: counts.J4 ?? counts.j4 ?? nombreAgents(data, "J4") },
-        { label: "Soir", value: counts.S ?? counts.soir ?? nombreAgents(data, "S") },
-        { label: "Nuit", value: counts.N ?? counts.nuit ?? nombreAgents(data, "N") }
+        { label: "Matin", value: counts.M ?? nombreAgents(data, "M") },
+        { label: "Jour", value: counts.J ?? nombreAgents(data, "J") },
+        { label: "J4", value: counts.J4 ?? nombreAgents(data, "J4") },
+        { label: "Soir", value: counts.S ?? nombreAgents(data, "S") },
+        { label: "Nuit", value: counts.N ?? nombreAgents(data, "N") }
       ];
 
       summary.innerHTML = cards.map(card => `
@@ -562,7 +571,6 @@
     function afficherErreur(message) {
       document.getElementById("dateLabel").textContent = "Erreur";
       document.getElementById("syncLabel").textContent = "";
-
       document.getElementById("summary").innerHTML = "";
 
       const content = document.getElementById("content");
