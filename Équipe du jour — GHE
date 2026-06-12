@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Équipe du jour — GHE</title>
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #182033;
+      --muted: #6d7587;
+      --border: #e2e7f0;
+      --blue: #2f80ed;
+      --green: #27ae60;
+      --orange: #f2994a;
+      --yellow: #f2c94c;
+      --black: #2f3640;
+      --red: #eb5757;
+      --shadow: 0 12px 30px rgba(24, 32, 51, 0.08);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(47,128,237,0.14), transparent 30%),
+        radial-gradient(circle at top right, rgba(39,174,96,0.10), transparent 28%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    .page {
+      width: min(980px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 24px 0 42px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #162033, #263653);
+      color: white;
+      border-radius: 28px;
+      padding: 26px 22px;
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.9);
+    }
+
+    h1 {
+      margin: 16px 0 6px;
+      font-size: clamp(30px, 7vw, 54px);
+      line-height: 0.95;
+      letter-spacing: -1.8px;
+    }
+
+    .date {
+      color: rgba(255,255,255,0.78);
+      font-size: 17px;
+      margin-top: 8px;
+    }
+
+    .sync {
+      color: rgba(255,255,255,0.58);
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .refresh {
+      border: 0;
+      background: white;
+      color: #162033;
+      font-weight: 800;
+      border-radius: 999px;
+      padding: 11px 15px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.16);
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      margin: 16px 0 18px;
+    }
+
+    .summary-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px 12px;
+      box-shadow: var(--shadow);
+      min-height: 82px;
+    }
+
+    .summary-card .num {
+      font-size: 30px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -1px;
+    }
+
+    .summary-card .label {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .important {
+      background: #fff8e8;
+      border: 1px solid #ffe1a3;
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .important h2,
+    .section h2 {
+      margin: 0 0 14px;
+      font-size: 20px;
+      letter-spacing: -0.3px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .mini-card {
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .mini-title {
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .mini-sub {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .shift-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .shift-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 22px;
+      font-weight: 950;
+      letter-spacing: -0.5px;
+    }
+
+    .dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .dot.matin { background: var(--blue); }
+    .dot.jour { background: var(--green); }
+    .dot.j4 { background: var(--orange); }
+    .dot.soir { background: var(--yellow); }
+    .dot.nuit { background: var(--black); }
+
+    .horaire {
+      color: var(--muted);
+      font-weight: 800;
+      background: #f2f5fa;
+      padding: 8px 11px;
+      border-radius: 999px;
+      font-size: 13px;
+    }
+
+    .agents {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .agent {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border: 1px solid var(--border);
+      background: #fbfcff;
+      border-radius: 14px;
+      padding: 11px 12px;
+      min-height: 46px;
+    }
+
+    .agent-name {
+      font-weight: 850;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .ghe {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+      background: #edf1f7;
+      border-radius: 999px;
+      padding: 5px 8px;
+    }
+
+    .empty {
+      color: var(--muted);
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      background: #fbfcff;
+    }
+
+    .alert {
+      background: #fff1f1;
+      border: 1px solid #ffd0d0;
+      color: #8d1d1d;
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .footer {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      margin-top: 22px;
+    }
+
+    .loading {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      color: var(--muted);
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 820px) {
+      .summary {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .grid,
+      .agents {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .page {
+        width: min(100% - 18px, 980px);
+        padding-top: 10px;
+      }
+
+      .hero {
+        border-radius: 22px;
+        padding: 22px 18px;
+      }
+
+      .summary {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .summary-card {
+        min-height: 74px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="hero-top">
+        <div class="badge">📅 Planning GHE</div>
+        <button class="refresh" onclick="chargerEquipe()">Actualiser</button>
+      </div>
+
+      <h1>Équipe du jour</h1>
+      <div class="date" id="dateLabel">Chargement…</div>
+      <div class="sync" id="syncLabel"></div>
+    </section>
+
+    <section class="summary" id="summary"></section>
+
+    <div id="content" class="loading">
+      Chargement de l’équipe du jour…
+    </div>
+
+    <div class="footer">
+      Page dynamique — données synchronisées depuis la base GHE.
+    </div>
+  </main>
+
+  <script>
+    const DATA_URL = "https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOlle3cafAKEAZQ8NAX-peSN6D-yxFO3gX26SnVNUVd5xbwV3CUISg/exec";
+
+    const SHIFT_ORDER = [
+      { key: "M", slug: "matin", label: "Matin", emoji: "🔵" },
+      { key: "J", slug: "jour", label: "Jour", emoji: "🟢" },
+      { key: "J4", slug: "j4", label: "J4", emoji: "🟠" },
+      { key: "S", slug: "soir", label: "Soir", emoji: "🟡" },
+      { key: "N", slug: "nuit", label: "Nuit", emoji: "⚫" }
+    ];
+
+    function jsonp(url) {
+      return new Promise((resolve, reject) => {
+        const callbackName = "callbackEquipeGhe_" + Date.now();
+
+        window[callbackName] = function(data) {
+          resolve(data);
+          script.remove();
+          delete window[callbackName];
+        };
+
+        const script = document.createElement("script");
+        const separator = url.includes("?") ? "&" : "?";
+        script.src = url + separator + "callback=" + callbackName + "&t=" + Date.now();
+
+        script.onerror = function() {
+          reject(new Error("Impossible de charger les données."));
+          script.remove();
+          delete window[callbackName];
+        };
+
+        document.body.appendChild(script);
+      });
+    }
+
+    async function chargerEquipe() {
+      const content = document.getElementById("content");
+      content.className = "loading";
+      content.textContent = "Chargement de l’équipe du jour…";
+
+      try {
+        const data = await jsonp(DATA_URL);
+        afficherEquipe(data);
+      } catch (error) {
+        afficherErreur(error.message || "Erreur de chargement.");
+      }
+    }
+
+    function afficherEquipe(data) {
+      if (!data || data.ok === false) {
+        afficherErreur(data && data.message ? data.message : "Données invalides.");
+        return;
+      }
+
+      document.getElementById("dateLabel").textContent = data.label || data.date || "Date non précisée";
+      document.getElementById("syncLabel").textContent = data.sync ? "Dernière sync : " + data.sync : "";
+
+      afficherResume(data);
+      afficherContenu(data);
+    }
+
+    function afficherResume(data) {
+      const summary = document.getElementById("summary");
+      const counts = data.counts || {};
+      const total = data.total ?? totalDepuisGroupes(data);
+
+      const cards = [
+        { label: "Total", value: total },
+        { label: "Matin", value: counts.M ?? counts.matin ?? nombreAgents(data, "M") },
+        { label: "Jour", value: counts.J ?? counts.jour ?? nombreAgents(data, "J") },
+        { label: "J4", value: counts.J4 ?? counts.j4 ?? nombreAgents(data, "J4") },
+        { label: "Soir", value: counts.S ?? counts.soir ?? nombreAgents(data, "S") },
+        { label: "Nuit", value: counts.N ?? counts.nuit ?? nombreAgents(data, "N") }
+      ];
+
+      summary.innerHTML = cards.map(card => `
+        <div class="summary-card">
+          <div class="num">${escapeHtml(card.value)}</div>
+          <div class="label">${escapeHtml(card.label)}</div>
+        </div>
+      `).join("");
+    }
+
+    function afficherContenu(data) {
+      const content = document.getElementById("content");
+      content.className = "";
+      content.innerHTML = "";
+
+      const fragments = [];
+
+      const formations = data.formations || [];
+      const stagiaires = data.stagiaires || [];
+
+      if (formations.length || stagiaires.length) {
+        fragments.push(`
+          <section class="important">
+            <h2>📌 À ne pas rater</h2>
+            <div class="grid">
+              ${formations.map(renderFormation).join("")}
+              ${stagiaires.map(renderStagiaire).join("")}
+            </div>
+          </section>
+        `);
+      }
+
+      SHIFT_ORDER.forEach(shift => {
+        const bloc = getShiftBloc(data, shift.key);
+        const agents = bloc.agents || [];
+        const horaire = bloc.horaire || "";
+
+        fragments.push(`
+          <section class="section">
+            <div class="shift-head">
+              <div class="shift-title">
+                <span class="dot ${shift.slug}"></span>
+                <span>${shift.emoji} ${escapeHtml(shift.label)}</span>
+              </div>
+              ${horaire ? `<div class="horaire">${escapeHtml(horaire)}</div>` : ""}
+            </div>
+
+            ${
+              agents.length
+                ? `<div class="agents">${agents.map(renderAgent).join("")}</div>`
+                : `<div class="empty">Aucun agent détecté</div>`
+            }
+          </section>
+        `);
+      });
+
+      const alertes = data.alertes || [];
+      if (alertes.length) {
+        fragments.push(`
+          <section class="alert">
+            <strong>⚠️ À vérifier</strong>
+            <ul>
+              ${alertes.map(a => `<li>${escapeHtml(a)}</li>`).join("")}
+            </ul>
+          </section>
+        `);
+      }
+
+      content.innerHTML = fragments.join("");
+    }
+
+    function renderFormation(formation) {
+      const agents = formation.agents || [];
+
+      return `
+        <div class="mini-card">
+          <div class="mini-title">🎓 Formation</div>
+          <div class="mini-sub">${escapeHtml(formation.horaire || "Horaire non précisé")}</div>
+          <strong>${escapeHtml(formation.titre || "")}</strong>
+          <div style="height:10px"></div>
+          ${agents.map(renderAgentSimple).join("")}
+        </div>
+      `;
+    }
+
+    function renderStagiaire(stagiaire) {
+      const refs = stagiaire.referents || [];
+
+      return `
+        <div class="mini-card">
+          <div class="mini-title">👶 Stagiaire · ${escapeHtml(stagiaire.shiftLabel || "")}</div>
+          <strong>${escapeHtml(stagiaire.nom || stagiaire.stagiaire || "")}</strong>
+          <div style="height:10px"></div>
+          ${
+            refs.length
+              ? refs.map(ref => `<div>- Référent : ${escapeHtml(ref.nom || ref.prenom || "")}${ref.ghe ? " · " + escapeHtml(ref.ghe) : ""}</div>`).join("")
+              : `<div>- Référent : à vérifier</div>`
+          }
+        </div>
+      `;
+    }
+
+    function renderAgent(agent) {
+      const nom = agent.nom || agent.prenom || agent.agent || "";
+      const ghe = agent.ghe || "";
+
+      return `
+        <div class="agent">
+          <div class="agent-name">${escapeHtml(nom)}</div>
+          ${ghe ? `<div class="ghe">${escapeHtml(ghe)}</div>` : ""}
+        </div>
+      `;
+    }
+
+    function renderAgentSimple(agent) {
+      const nom = agent.nom || agent.prenom || agent.agent || "";
+      const ghe = agent.ghe || "";
+
+      return `<div>- ${escapeHtml(nom)}${ghe ? " · " + escapeHtml(ghe) : ""}</div>`;
+    }
+
+    function getShiftBloc(data, key) {
+      const shifts = data.shifts || data.groupes || {};
+      const direct = shifts[key];
+
+      if (Array.isArray(direct)) {
+        return { agents: direct };
+      }
+
+      return direct || { agents: [] };
+    }
+
+    function nombreAgents(data, key) {
+      return (getShiftBloc(data, key).agents || []).length;
+    }
+
+    function totalDepuisGroupes(data) {
+      return SHIFT_ORDER.reduce((sum, shift) => sum + nombreAgents(data, shift.key), 0);
+    }
+
+    function afficherErreur(message) {
+      document.getElementById("dateLabel").textContent = "Erreur";
+      document.getElementById("syncLabel").textContent = "";
+
+      document.getElementById("summary").innerHTML = "";
+
+      const content = document.getElementById("content");
+      content.className = "alert";
+      content.innerHTML = `<strong>Problème :</strong><br>${escapeHtml(message)}`;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    chargerEquipe();
+  </script>
+</body>
+</html>
