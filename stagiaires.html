@@ -13,7 +13,6 @@
   --ink:#07183f;
   --paper:#fff7dd;
   --cream:#fff9e8;
-  --blue:#123c7c;
   --danger:#b42318;
   --warning:#b7791f;
   --ok:#166534;
@@ -92,6 +91,17 @@ h1{
   color:rgba(255,247,221,.9);
 }
 
+.period{
+  margin-top:10px;
+  display:inline-flex;
+  padding:8px 12px;
+  border-radius:999px;
+  background:#fff9e8;
+  color:#07183f;
+  font-weight:1000;
+  font-size:14px;
+}
+
 .stats{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -117,9 +127,8 @@ h1{
 
 .tools{
   display:grid;
-  grid-template-columns:1fr;
-  gap:9px;
-  margin:14px 0;
+  gap:10px;
+  margin:14px 0 18px;
 }
 
 .search{
@@ -133,6 +142,52 @@ h1{
   color:var(--ink);
   background:#fff9e8;
   outline:none;
+}
+
+.filters{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.filter-btn{
+  border:3px solid var(--ink);
+  border-radius:999px;
+  background:#fff9e8;
+  color:var(--ink);
+  padding:9px 12px;
+  font-weight:1000;
+  cursor:pointer;
+  box-shadow:0 4px 0 rgba(7,24,63,.16);
+}
+
+.filter-btn.active{
+  background:#07183f;
+  color:#fff7dd;
+}
+
+.result-separator{
+  margin:22px 4px 12px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.result-separator::before,
+.result-separator::after{
+  content:"";
+  height:4px;
+  flex:1;
+  background:#07183f;
+  border-radius:99px;
+  opacity:.25;
+}
+
+.result-separator span{
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(28px,6vw,46px);
+  text-transform:uppercase;
+  text-shadow:0 3px 0 #f8d67d;
 }
 
 .day-title{
@@ -153,16 +208,58 @@ h1{
   box-shadow:0 7px 0 rgba(7,24,63,.17);
 }
 
-.card.danger{
-  border-color:var(--danger);
+.card.danger{border-color:var(--danger)}
+.card.warning{border-color:var(--warning)}
+.card.ok{border-color:var(--ok)}
+
+.card-head{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:12px;
+  align-items:center;
+  margin-bottom:12px;
 }
 
-.card.warning{
-  border-color:var(--warning);
+.avatar-line{
+  display:flex;
+  align-items:center;
+  gap:8px;
 }
 
-.card.ok{
-  border-color:var(--ok);
+.avatar{
+  width:58px;
+  height:58px;
+  border:4px solid #07183f;
+  border-radius:50%;
+  background:#fff7dd;
+  overflow:hidden;
+  position:relative;
+  flex:0 0 auto;
+  box-shadow:0 4px 0 rgba(7,24,63,.18);
+}
+
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.avatar .initials{
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:22px;
+}
+
+.avatar.has-img .initials{display:none}
+
+.arrow{
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:28px;
 }
 
 .card-title{
@@ -170,7 +267,6 @@ h1{
   font-size:clamp(27px,6vw,44px);
   line-height:.95;
   text-transform:uppercase;
-  margin-bottom:10px;
 }
 
 .grid{
@@ -220,7 +316,7 @@ h1{
 }
 
 .agenda-box{
-  margin:22px 0 4px;
+  margin:28px 0 4px;
   padding:16px 12px;
   background:#fff9e8;
   border:5px solid var(--ink);
@@ -278,9 +374,7 @@ h1{
   box-shadow:0 6px 0 rgba(7,24,63,.16);
 }
 
-.error{
-  color:var(--danger);
-}
+.error{color:var(--danger)}
 
 @media(max-width:680px){
   .page{padding:10px 8px 28px}
@@ -288,6 +382,7 @@ h1{
   .stats{grid-template-columns:1fr}
   .grid{grid-template-columns:1fr}
   .card{border-width:3px;border-radius:21px}
+  .card-head{grid-template-columns:1fr}
   .agenda-box{border-width:4px}
 }
 </style>
@@ -302,15 +397,36 @@ h1{
   </div>
 
   <section class="hero">
-    <div class="badge">👶 Référents & stagiaires</div>
+    <div class="badge">Référents & stagiaires</div>
     <h1>Stagiaires</h1>
     <p class="subtitle">Vue détaillée du planning stagiaires GHE</p>
+    <div id="period" class="period">Chargement…</div>
   </section>
 
   <section class="stats">
     <div class="stat"><strong id="statTotal">0</strong>Total</div>
     <div class="stat"><strong id="statAlertes">0</strong>Alertes</div>
     <div class="stat"><strong id="statOk">0</strong>OK</div>
+  </section>
+
+  <section class="tools">
+    <input id="search" class="search" type="search" placeholder="Rechercher un stagiaire, référent, GHE…">
+
+    <div class="filters">
+      <button class="filter-btn active" data-filter="tous">Tous</button>
+      <button class="filter-btn" data-filter="alertes">Alertes</button>
+      <button class="filter-btn" data-filter="M">Matin</button>
+      <button class="filter-btn" data-filter="J">Journée</button>
+      <button class="filter-btn" data-filter="J4">J4</button>
+      <button class="filter-btn" data-filter="S">Soir</button>
+      <button class="filter-btn" data-filter="N">Nuit</button>
+    </div>
+  </section>
+
+  <div class="result-separator"><span>Résultats</span></div>
+
+  <section id="content">
+    <div class="loading">Chargement des stagiaires…</div>
   </section>
 
   <section class="agenda-box">
@@ -321,14 +437,6 @@ h1{
     </div>
   </section>
 
-  <section class="tools">
-    <input id="search" class="search" type="search" placeholder="Rechercher un stagiaire, référent, GHE…">
-  </section>
-
-  <section id="content">
-    <div class="loading">Chargement des stagiaires…</div>
-  </section>
-
 </main>
 
 <script>
@@ -337,12 +445,20 @@ const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOll
 const ICS_URL = "https://calendar.google.com/calendar/ical/2ced33be0e6a5c88fab9bae2ffdf3b56366970e4003b1718a7dabf4c0603eae6%40group.calendar.google.com/private-d3db5a97d6dbdd8ceeeaa375c8a460ef/basic.ics";
 
 let ITEMS = [];
+let CURRENT_FILTER = "tous";
 
 document.getElementById("btnIos").href = ICS_URL.replace(/^https:\/\//i, "webcal://");
 document.getElementById("btnAndroid").href = "https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(ICS_URL);
 
-document.getElementById("search").addEventListener("input", () => {
-  render(filterItems());
+document.getElementById("search").addEventListener("input", () => render(filterItems()));
+
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    CURRENT_FILTER = btn.dataset.filter;
+    render(filterItems());
+  });
 });
 
 loadJsonp("stagiaires");
@@ -361,8 +477,9 @@ function loadJsonp(type){
     }
 
     ITEMS = data.items || [];
+    document.getElementById("period").textContent = data.meta && data.meta.periodeLabel ? data.meta.periodeLabel : "";
     updateStats(ITEMS);
-    render(ITEMS);
+    render(filterItems());
   };
 
   script.onerror = function(){
@@ -382,9 +499,15 @@ function loadJsonp(type){
 
 function filterItems(){
   const q = norm(document.getElementById("search").value);
-  if (!q) return ITEMS;
 
   return ITEMS.filter(item => {
+    if (CURRENT_FILTER === "alertes" && item.niveau === "ok") return false;
+    if (["M","J","J4","S","N"].includes(CURRENT_FILTER)) {
+      if (!item.shift || item.shift.base !== CURRENT_FILTER) return false;
+    }
+
+    if (!q) return true;
+
     const txt = [
       item.titre,
       item.dateLabel,
@@ -416,7 +539,7 @@ function render(items){
   const content = document.getElementById("content");
 
   if (!items.length) {
-    content.innerHTML = `<div class="empty">Aucun stagiaire trouvé.</div>`;
+    content.innerHTML = `<div class="empty">Aucun stagiaire prévu à partir d’aujourd’hui.</div>`;
     return;
   }
 
@@ -443,17 +566,25 @@ function cardStagiaire(item){
 
   return `
     <article class="card ${esc(item.niveau || "ok")}">
-      <div class="card-title">${esc(item.titre || "")}</div>
+      <div class="card-head">
+        <div class="avatar-line">
+          ${avatarHtml(stagiaire.avatar || {initiales:stagiaire.initiales})}
+          <div class="arrow">→</div>
+          ${avatarHtml(referent.avatar || {initiales:referent.prenomCourt})}
+        </div>
+
+        <div class="card-title">${esc(item.titre || "")}</div>
+      </div>
 
       <div class="grid">
         <div class="info">
           <span>Stagiaire</span>
-          👶 ${esc(stagiaire.nomPrenom || "")}
+          ${esc(stagiaire.nomPrenom || "")}
         </div>
 
         <div class="info">
           <span>Référent</span>
-          👨‍✈️ ${esc(referent.nomComplet || "")}
+          ${esc(referent.nomComplet || "")}
         </div>
 
         <div class="info">
@@ -487,13 +618,28 @@ function cardStagiaire(item){
   `;
 }
 
+function avatarHtml(avatar){
+  avatar = avatar || {};
+  const initials = esc(avatar.initiales || "?");
+  const thumb = avatar.thumb || "";
+
+  if (!thumb) {
+    return `<div class="avatar"><div class="initials">${initials}</div></div>`;
+  }
+
+  return `
+    <div class="avatar has-img">
+      <img src="${esc(thumb)}" alt="" loading="lazy" onerror="this.parentElement.classList.remove('has-img');this.remove();">
+      <div class="initials">${initials}</div>
+    </div>
+  `;
+}
+
 function alertBlock(type, title, list){
   return `
     <div class="alert ${type}">
       <div>${esc(title)}</div>
-      <ul>
-        ${list.map(x => `<li>${esc(x)}</li>`).join("")}
-      </ul>
+      <ul>${list.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
     </div>
   `;
 }
@@ -508,9 +654,7 @@ function groupByDate(items){
 }
 
 function showError(message){
-  document.getElementById("content").innerHTML = `
-    <div class="error">Problème : ${esc(message)}</div>
-  `;
+  document.getElementById("content").innerHTML = `<div class="error">Problème : ${esc(message)}</div>`;
 }
 
 function esc(value){
