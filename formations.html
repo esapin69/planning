@@ -1,12 +1,13 @@
 <!doctype html>
-
 <html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Formations GHE</title>
+
 <style>
 *,*::before,*::after{box-sizing:border-box}
+
 :root{
   --ink:#07183f;
   --paper:#fff7dd;
@@ -16,7 +17,9 @@
   --identity-soft:#f2eaff;
   --caces-soft:#eaffef;
 }
+
 html{scroll-behavior:smooth}
+
 body{
   margin:0;
   min-height:100vh;
@@ -28,6 +31,7 @@ body{
     repeating-linear-gradient(-6deg,rgba(7,24,63,.035) 0 1px,transparent 1px 13px),
     linear-gradient(180deg,#fff9e8 0%,#f5e8bf 57%,#ead9a5 100%);
 }
+
 body::before{
   content:"";
   position:fixed;
@@ -39,11 +43,13 @@ body::before{
     repeating-linear-gradient(-9deg,rgba(178,116,26,.07) 0 1px,transparent 1px 17px);
   mix-blend-mode:multiply;
 }
+
 .page{
   width:min(860px,100%);
   margin:auto;
   padding:12px 10px 54px;
 }
+
 .back{
   position:relative;
   z-index:3;
@@ -66,6 +72,7 @@ body::before{
   box-shadow:0 7px 0 rgba(7,24,63,.35);
   font-size:clamp(20px,5vw,31px);
 }
+
 .header{
   margin:10px 0 14px;
   padding:14px 12px 16px;
@@ -80,6 +87,7 @@ body::before{
     0 14px 0 rgba(0,0,0,.10),
     inset 0 0 0 3px rgba(255,215,115,.38);
 }
+
 h1{
   margin:0 0 8px;
   text-transform:uppercase;
@@ -90,6 +98,7 @@ h1{
     0 3px 0 #f8d67d,
     3px 5px 0 rgba(7,24,63,.10);
 }
+
 .sub{
   margin:0;
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -97,6 +106,7 @@ h1{
   font-size:clamp(14px,3.6vw,19px);
   line-height:1.2;
 }
+
 .status{
   margin-top:16px;
   text-align:center;
@@ -109,6 +119,7 @@ h1{
   border-radius:24px;
   background:white;
 }
+
 .week-label{
   margin:22px 0 10px;
   padding:7px 12px 8px;
@@ -121,6 +132,7 @@ h1{
   font-size:clamp(22px,5.8vw,38px);
   line-height:.88;
 }
+
 .day-card{
   margin:12px 0;
   overflow:hidden;
@@ -131,11 +143,13 @@ h1{
     0 7px 0 rgba(7,24,63,.15),
     0 10px 0 rgba(0,0,0,.07);
 }
+
 .day-card.is-weekend{
   background:
     radial-gradient(circle at 12% 0%,rgba(255,255,255,.85),transparent 36%),
     linear-gradient(180deg,#fff9ed 0%,var(--weekend) 100%);
 }
+
 .day-head{
   display:flex;
   align-items:center;
@@ -147,6 +161,7 @@ h1{
     repeating-linear-gradient(-7deg,rgba(7,24,63,.035) 0 2px,transparent 2px 10px),
     linear-gradient(180deg,#fffdf5,#fff3c8);
 }
+
 .date-main{
   margin:0;
   text-transform:uppercase;
@@ -156,6 +171,7 @@ h1{
   overflow:hidden;
   text-overflow:ellipsis;
 }
+
 .date-tag{
   flex:0 0 auto;
   padding:5px 9px 6px;
@@ -168,9 +184,9 @@ h1{
   text-transform:uppercase;
   opacity:.82;
 }
-.event-list{
-  display:grid;
-}
+
+.event-list{display:grid}
+
 .event-row{
   display:flex;
   align-items:flex-start;
@@ -179,11 +195,13 @@ h1{
   border-top:2px solid rgba(7,24,63,.12);
   background:white;
 }
+
 .event-row:first-child{border-top:0}
 .event-row.kind-formation{background:linear-gradient(90deg,var(--formation-soft),#fff)}
 .event-row.kind-incendie{background:linear-gradient(90deg,var(--fire-soft),#fff)}
 .event-row.kind-caces{background:linear-gradient(90deg,var(--caces-soft),#fff)}
 .event-row.kind-identite{background:linear-gradient(90deg,var(--identity-soft),#fff)}
+
 .shift-dot{
   flex:0 0 auto;
   width:32px;
@@ -196,10 +214,12 @@ h1{
   background:#fff9e8;
   box-shadow:inset 0 0 0 3px rgba(7,24,63,.10);
 }
+
 .event-main{
   min-width:0;
   width:100%;
 }
+
 .shift-line{
   display:flex;
   align-items:center;
@@ -207,6 +227,7 @@ h1{
   width:100%;
   white-space:nowrap;
 }
+
 .shift-title{
   min-width:0;
   margin:0;
@@ -217,12 +238,14 @@ h1{
   overflow:hidden;
   text-overflow:ellipsis;
 }
+
 .shift-sep{
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   font-size:clamp(17px,4.4vw,26px);
   font-weight:950;
   opacity:.7;
 }
+
 .time{
   flex:0 0 auto;
   padding:6px 9px 7px;
@@ -233,6 +256,7 @@ h1{
   line-height:.9;
   box-shadow:0 4px 0 rgba(7,24,63,.16);
 }
+
 .detail{
   margin:6px 0 0;
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -242,25 +266,7 @@ h1{
   opacity:.82;
   white-space:normal;
 }
-.action-btn{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:58px;
-  padding:9px 12px;
-  border:4px solid var(--ink);
-  border-radius:20px;
-  color:#fff4ce;
-  text-decoration:none;
-  text-align:center;
-  text-transform:uppercase;
-  font-size:clamp(20px,5.2vw,34px);
-  line-height:.9;
-  box-shadow:
-    0 7px 0 rgba(7,24,63,.28),
-    inset 0 0 0 3px rgba(255,221,132,.25);
-  text-shadow:0 3px 0 rgba(0,0,0,.38);
-}
+
 .agenda-phone{
   margin-top:24px;
   padding:14px 10px 16px;
@@ -271,6 +277,7 @@ h1{
     0 8px 0 rgba(7,24,63,.22),
     inset 0 0 0 3px rgba(255,215,115,.35);
 }
+
 .agenda-phone h2{
   margin:0 0 14px;
   text-align:center;
@@ -282,21 +289,40 @@ h1{
     0 3px 0 #f8d67d,
     3px 5px 0 rgba(7,24,63,.10);
 }
+
 .bottom-actions{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:10px;
 }
-.bottom-actions .action-btn{
+
+.action-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
   min-height:70px;
+  padding:9px 12px;
+  border:4px solid var(--ink);
+  border-radius:20px;
+  color:#fff4ce;
+  text-decoration:none;
+  text-align:center;
+  text-transform:uppercase;
   font-size:clamp(20px,5.4vw,34px);
+  line-height:.9;
+  box-shadow:
+    0 7px 0 rgba(7,24,63,.28),
+    inset 0 0 0 3px rgba(255,221,132,.25);
+  text-shadow:0 3px 0 rgba(0,0,0,.38);
 }
+
 .action-apple{
   background:
     radial-gradient(circle at 22% 16%,rgba(255,255,255,.30),transparent 28%),
     repeating-linear-gradient(-7deg,rgba(255,255,255,.08) 0 2px,transparent 2px 10px),
     linear-gradient(145deg,#3db9ff 0%,#0c6ed5 58%,#083c91 100%);
 }
+
 .action-android{
   background:
     radial-gradient(circle at 22% 16%,rgba(255,255,255,.30),transparent 28%),
@@ -305,23 +331,37 @@ h1{
 }
 </style>
 </head>
+
 <body>
 <main class="page">
   <a class="back" href="index.html">← Retour accueil</a>
+
   <section class="header">
     <h1>Formations</h1>
     <p class="sub">Aperçu dynamique des formations à venir</p>
   </section>
+
   <section id="content" class="status">Chargement...</section>
+
   <section class="agenda-phone">
     <h2>Ajouter à mon agenda de mon téléphone</h2>
     <div class="bottom-actions" id="bottomActions"></div>
   </section>
 </main>
+
 <script>
+const CONFIG_PAGE = {
+  typeCollectif: "formation",
+  emptyMessage: "Aucune formation à afficher à partir d’aujourd’hui."
+};
+
 const PASSERELLE = "https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8HZ_g_ota7tajTKLY3jvLKEF9AvSPjIbVpqcSkSRcl5OdWV9/exec";
+
+const ICS_DIRECT = "https://calendar.google.com/calendar/ical/c5da5df12db0eba65a14410cada08fea4e5a8837ddd256b03e7426cb22cb751b%40group.calendar.google.com/private-4f5072a64d36548137a30abb665ed23f/basic.ics";
+
 const contentEl = document.getElementById("content");
 const bottomActions = document.getElementById("bottomActions");
+
 function apiUrl(mode, extra){
   const url = new URL(PASSERELLE);
   url.searchParams.set("mode", mode);
@@ -329,56 +369,20 @@ function apiUrl(mode, extra){
   Object.keys(extra || {}).forEach(k => url.searchParams.set(k, extra[k]));
   return url.toString();
 }
+
 function webcalUrl(url){return url.replace(/^https:\/\//i, "webcal://");}
 function androidUrl(url){return "https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(url);}
-function unfoldIcs(text){return String(text || "").replace(/\r?\n[ \t]/g, "");}
-function getField(block, name){
-  const re = new RegExp("^" + name + "(?:;[^:]*)?:(.*)$", "mi");
-  const m = block.match(re);
-  return m ? m[1].trim() : "";
+
+function dateFromKey(key){
+  const p = String(key || "").split("-");
+  return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
 }
-function cleanText(v){
-  return String(v || "")
-    .replace(/\\n/g, "\n")
-    .replace(/\\,/g, ",")
-    .replace(/\\;/g, ";")
-    .trim();
-}
-function parseIcsDate(value){
-  if(!value) return null;
-  value = String(value).trim();
-  if(/^\d{8}$/.test(value)){
-    return new Date(
-      Number(value.slice(0,4)),
-      Number(value.slice(4,6)) - 1,
-      Number(value.slice(6,8)),
-      0,0,0
-    );
-  }
-  const m = value.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z?)$/);
-  if(!m) return null;
-  if(m[7] === "Z"){
-    return new Date(Date.UTC(
-      Number(m[1]),
-      Number(m[2]) - 1,
-      Number(m[3]),
-      Number(m[4]),
-      Number(m[5]),
-      Number(m[6])
-    ));
-  }
-  return new Date(
-    Number(m[1]),
-    Number(m[2]) - 1,
-    Number(m[3]),
-    Number(m[4]),
-    Number(m[5]),
-    Number(m[6])
-  );
-}
-function toIsoLocal(d){
+
+function todayKey(){
+  const d = new Date();
   return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
 }
+
 function formatDateMain(d){
   return d.toLocaleDateString("fr-FR", {
     weekday:"long",
@@ -386,6 +390,7 @@ function formatDateMain(d){
     month:"long"
   }).toUpperCase();
 }
+
 function getIsoWeekNumber(date){
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
   const dayNum = d.getUTCDay() || 7;
@@ -393,96 +398,98 @@ function getIsoWeekNumber(date){
   const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
   return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
 }
+
 function formatWeekLabel(d){return "Semaine " + getIsoWeekNumber(d);}
+
+function toIsoLocal(d){
+  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+
 function weekKey(d){
   const lundi = new Date(d);
   const day = lundi.getDay() || 7;
   lundi.setDate(lundi.getDate() - day + 1);
   return toIsoLocal(lundi);
 }
+
 function isWeekend(d){
   const day = d.getDay();
   return day === 0 || day === 6;
 }
-function formatTimeRange(start,end){
-  const allDay =
-    start &&
-    start.getHours() === 0 &&
-    start.getMinutes() === 0 &&
-    (!end || (end.getHours() === 0 && end.getMinutes() === 0));
-  if(allDay) return "";
-  const f = new Intl.DateTimeFormat("fr-FR", {hour:"2-digit", minute:"2-digit"});
-  if(end && start.toDateString() === end.toDateString()){
-    return f.format(start) + "–" + f.format(end);
-  }
-  return f.format(start);
-}
-function parseEvents(ics){
-  const text = unfoldIcs(ics);
-  const blocks = text.match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g) || [];
-  return blocks.map(block => {
-    const start = parseIcsDate(getField(block, "DTSTART"));
-    const end = parseIcsDate(getField(block, "DTEND"));
-    const summary = cleanText(getField(block, "SUMMARY"));
-    const description = cleanText(getField(block, "DESCRIPTION"));
-    return {
-      start,
-      end,
-      summary,
-      description
-    };
-  }).filter(e => e.start);
-}
+
 function detectRowType(summary, description){
   const raw = (summary + " " + description)
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toUpperCase();
+
   if(raw.includes("INCENDIE") || raw.includes("RISQUE")) return "incendie";
   if(raw.includes("CACES") || raw.includes("MOBILIS")) return "caces";
   if(raw.includes("IDENTITE") || raw.includes("VIGILANCE")) return "identite";
   return "formation";
 }
+
 function detectEmoji(type){
   if(type === "incendie") return "🔥";
   if(type === "caces") return "🏗️";
   if(type === "identite") return "🪪";
   return "🎓";
 }
-function extractDetails(description){
-  return String(description || "")
+
+function extractDetails(description, location){
+  const lignes = String(description || "")
     .split(/\n+/)
     .map(v => v.trim())
     .filter(Boolean);
+
+  if(location) lignes.push("Lieu : " + location);
+  return lignes;
 }
+
+function formatTimeRange(e){
+  if(e.allDay) return "";
+  if(e.startTime && e.endTime && e.startTime !== e.endTime) return e.startTime + "–" + e.endTime;
+  return e.startTime || "";
+}
+
 function renderAgendaEvents(events){
-  const today = new Date();
-  today.setHours(0,0,0,0);
+  const today = todayKey();
+
   const futurs = (events || [])
-    .filter(e => e.start && e.start >= today)
-    .sort((a,b) => a.start - b.start);
+    .filter(e => e.dateKey && e.dateKey >= today)
+    .sort((a,b) => {
+      if(a.dateKey !== b.dateKey) return String(a.dateKey).localeCompare(String(b.dateKey));
+      return Number(a.startMs || 0) - Number(b.startMs || 0);
+    });
+
   if(futurs.length === 0){
     contentEl.className = "status";
-    contentEl.textContent = "Aucune formation à afficher à partir d’aujourd’hui.";
+    contentEl.textContent = CONFIG_PAGE.emptyMessage;
     return;
   }
+
   const grouped = {};
+
   futurs.forEach(e => {
-    const iso = toIsoLocal(e.start);
+    const iso = e.dateKey;
     if(!grouped[iso]){
       grouped[iso] = {
-        dateObj:new Date(e.start.getFullYear(), e.start.getMonth(), e.start.getDate()),
+        dateObj:dateFromKey(iso),
         events:[]
       };
     }
     grouped[iso].events.push(e);
   });
+
   contentEl.className = "";
   contentEl.innerHTML = "";
+
   let currentWeek = "";
+
   Object.keys(grouped).sort().forEach(iso => {
     const dayGroup = grouped[iso];
     const wk = weekKey(dayGroup.dateObj);
+
     if(wk !== currentWeek){
       currentWeek = wk;
       const week = document.createElement("div");
@@ -490,87 +497,111 @@ function renderAgendaEvents(events){
       week.textContent = formatWeekLabel(dayGroup.dateObj);
       contentEl.appendChild(week);
     }
+
     const dayCard = document.createElement("article");
     dayCard.className = "day-card" + (isWeekend(dayGroup.dateObj) ? " is-weekend" : "");
+
     const head = document.createElement("div");
     head.className = "day-head";
+
     const dateMain = document.createElement("p");
     dateMain.className = "date-main";
     dateMain.textContent = formatDateMain(dayGroup.dateObj);
+
     const tag = document.createElement("div");
     tag.className = "date-tag";
     tag.textContent = isWeekend(dayGroup.dateObj) ? "week-end" : "semaine";
+
     head.appendChild(dateMain);
     head.appendChild(tag);
     dayCard.appendChild(head);
+
     const list = document.createElement("div");
     list.className = "event-list";
+
     dayGroup.events.forEach(e => {
       const rowType = detectRowType(e.summary, e.description);
       const emoji = detectEmoji(rowType);
       const title = String(e.summary || "Formation").replace(/\s+/g, " ").trim();
-      const details = extractDetails(e.description);
-      const horaire = formatTimeRange(e.start, e.end);
+      const details = extractDetails(e.description, e.location);
+      const horaire = formatTimeRange(e);
+
       const row = document.createElement("div");
       row.className = "event-row kind-" + rowType;
+
       const icon = document.createElement("div");
       icon.className = "shift-dot";
       icon.textContent = emoji;
+
       const main = document.createElement("div");
       main.className = "event-main";
+
       const line = document.createElement("div");
       line.className = "shift-line";
+
       const label = document.createElement("p");
       label.className = "shift-title";
       label.textContent = title;
+
       line.appendChild(label);
+
       if(horaire){
         const sep = document.createElement("span");
         sep.className = "shift-sep";
         sep.textContent = "·";
+
         const time = document.createElement("div");
         time.className = "time";
         time.textContent = horaire;
+
         line.appendChild(sep);
         line.appendChild(time);
       }
+
       main.appendChild(line);
+
       details.forEach(txt => {
         const detail = document.createElement("p");
         detail.className = "detail";
         detail.textContent = txt;
         main.appendChild(detail);
       });
+
       row.appendChild(icon);
       row.appendChild(main);
       list.appendChild(row);
     });
+
     dayCard.appendChild(list);
     contentEl.appendChild(dayCard);
   });
 }
+
 async function init(){
-  const icsUrl = apiUrl("ics_collectif", {type:"formation"});
+  const eventsUrl = apiUrl("events_collectif", {type:CONFIG_PAGE.typeCollectif});
+
   bottomActions.innerHTML = `
-    <a class="action-btn action-apple" href="${webcalUrl(icsUrl)}">🍎 Apple</a>
-    <a class="action-btn action-android" href="${androidUrl(icsUrl)}" target="_blank" rel="noopener">🤖 Android</a>
+    <a class="action-btn action-apple" href="${webcalUrl(ICS_DIRECT)}">🍎 Apple</a>
+    <a class="action-btn action-android" href="${androidUrl(ICS_DIRECT)}" target="_blank" rel="noopener">🤖 Android</a>
   `;
+
   try{
-    const res = await fetch(icsUrl, {
-      method:"GET",
-      cache:"no-store"
-    });
-    const text = await res.text();
-    if(!res.ok || !text.includes("BEGIN:VCALENDAR")){
-      throw new Error("ICS invalide");
+    const res = await fetch(eventsUrl, {method:"GET", cache:"no-store"});
+    const data = await res.json();
+
+    if(!res.ok || !data || data.ok === false || !Array.isArray(data.events)){
+      throw new Error(data && data.erreur ? data.erreur : "Réponse events invalide");
     }
-    renderAgendaEvents(parseEvents(text));
+
+    renderAgendaEvents(data.events);
+
   }catch(e){
     console.error(e);
     contentEl.className = "status";
     contentEl.textContent = "Aperçu indisponible. Vérifie que la passerelle Apps Script est bien à jour.";
   }
 }
+
 init();
 </script>
 </body>
