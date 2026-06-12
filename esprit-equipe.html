@@ -8,260 +8,78 @@
 <style>
 *,*::before,*::after{box-sizing:border-box}
 
-:root{
-  --ink:#07183f;
-  --paper:#fff7dd;
-  --gold:#d3a24b;
-  --cream:#fff1c4;
-  --dark:#07183f;
-  --red:#b42318;
-  --red-bg:#fff1ed;
-}
-
-html,body{
+body{
   margin:0;
   min-height:100vh;
-}
-
-body{
-  color:var(--ink);
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-  background:
-    radial-gradient(circle at 15% 0%,rgba(255,255,255,.95) 0 9%,transparent 31%),
-    radial-gradient(circle at 88% 4%,rgba(255,218,116,.46) 0 9%,transparent 32%),
-    repeating-linear-gradient(-6deg,rgba(7,24,63,.035) 0 1px,transparent 1px 13px),
-    linear-gradient(180deg,#fff9e8 0%,#f5e8bf 57%,#ead9a5 100%);
-}
-
-.page{
-  width:min(980px,100%);
-  margin:auto;
-  padding:14px 12px 28px;
-}
-
-.hero{
-  background:
-    radial-gradient(circle at 18% 10%,rgba(255,255,255,.13),transparent 30%),
-    linear-gradient(135deg,#07183f 0%,#101f46 58%,#020817 100%);
-  color:#fff7dd;
-  border-radius:32px;
-  padding:22px 18px;
-  border:5px solid #07183f;
-  box-shadow:
-    0 12px 0 rgba(7,24,63,.20),
-    0 18px 0 rgba(0,0,0,.12);
-  margin-bottom:16px;
-}
-
-.badge{
-  display:inline-flex;
+  display:flex;
   align-items:center;
-  gap:7px;
-  padding:7px 13px;
-  margin-bottom:14px;
-  border-radius:999px;
-  background:rgba(255,255,255,.13);
-  border:2px solid rgba(255,255,255,.20);
-  font-weight:800;
-  font-size:14px;
+  justify-content:center;
+  padding:20px;
+  background:#fff7dd;
+  color:#07183f;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+}
+
+.box{
+  width:min(620px,100%);
+  text-align:center;
+  background:#fff9e8;
+  border:5px solid #07183f;
+  border-radius:28px;
+  padding:24px 18px;
+  box-shadow:0 10px 0 rgba(7,24,63,.18);
 }
 
 h1{
-  margin:0;
+  margin:0 0 10px;
   font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(42px,10vw,82px);
+  font-size:clamp(42px,10vw,74px);
   line-height:.9;
-  letter-spacing:.3px;
-  text-shadow:
-    0 4px 0 rgba(211,162,75,.35),
-    4px 7px 0 rgba(0,0,0,.20);
+  text-transform:uppercase;
+  text-shadow:0 4px 0 #f8d67d;
 }
 
-.subtitle{
-  margin:12px 0 0;
-  color:rgba(255,247,221,.86);
-  font-size:16px;
-  font-weight:800;
-}
-
-.viewer-card{
-  position:relative;
-  overflow:hidden;
-  background:var(--paper);
-  border:5px solid var(--ink);
-  border-radius:28px;
-  box-shadow:
-    0 10px 0 rgba(7,24,63,.17),
-    0 16px 0 rgba(0,0,0,.10),
-    inset 0 0 0 3px rgba(255,215,115,.35);
-}
-
-.viewer-top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  padding:10px;
-  border-bottom:4px dashed rgba(7,24,63,.22);
-}
-
-.status{
+p{
+  margin:0 0 18px;
   font-weight:900;
-  font-size:14px;
+  font-size:17px;
 }
 
-.actions{
-  display:flex;
-  gap:8px;
-}
-
-.action{
+a{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  min-height:38px;
-  padding:8px 12px;
-  border:3px solid var(--ink);
-  border-radius:14px;
-  background:#fff9e8;
-  color:var(--ink);
+  min-height:54px;
+  padding:12px 18px;
+  border:4px solid #07183f;
+  border-radius:18px;
+  background:#07183f;
+  color:#fff7dd;
   text-decoration:none;
   font-weight:1000;
-  font-size:13px;
-  box-shadow:0 4px 0 rgba(7,24,63,.16);
-}
-
-.frame-wrap{
-  height:calc(100vh - 245px);
-  min-height:560px;
-  background:#fff;
-}
-
-iframe{
-  display:block;
-  width:100%;
-  height:100%;
-  border:0;
-  background:white;
-}
-
-.fallback{
-  display:none;
-  margin-top:14px;
-  padding:14px;
-  border:3px solid rgba(180,35,24,.28);
-  border-radius:20px;
-  background:var(--red-bg);
-  color:var(--red);
-  font-weight:800;
-  line-height:1.35;
-}
-
-.fallback a{
-  color:var(--red);
-  font-weight:1000;
-}
-
-.footer{
-  text-align:right;
-  margin:14px 4px 0;
-  color:rgba(7,24,63,.55);
-  font-weight:800;
-  font-size:13px;
-}
-
-@media(max-width:620px){
-  .page{padding:10px 8px 22px}
-  .hero{
-    border-radius:26px;
-    padding:18px 15px;
-    border-width:4px;
-  }
-  .viewer-card{
-    border-width:4px;
-    border-radius:24px;
-  }
-  .viewer-top{
-    flex-direction:column;
-    align-items:stretch;
-  }
-  .actions{
-    width:100%;
-  }
-  .action{
-    flex:1;
-  }
-  .frame-wrap{
-    height:calc(100vh - 260px);
-    min-height:520px;
-  }
 }
 </style>
 </head>
 
 <body>
 
-<main class="page">
+<div class="box">
+  <h1>Esprit d’équipe</h1>
+  <p>Ouverture du planning collectif GHE…</p>
 
-  <section class="hero">
-    <div class="badge">🗓️ Planning collectif GHE</div>
-    <h1>Esprit d’équipe</h1>
-    <p class="subtitle">Vue dynamique du planning collectif synchronisé.</p>
-  </section>
-
-  <section class="viewer-card">
-    <div class="viewer-top">
-      <div class="status" id="statusText">Chargement du planning collectif…</div>
-
-      <div class="actions">
-        <a class="action" href="index.html">← Retour</a>
-        <a class="action" id="openDirect" href="#" target="_self">Ouvrir direct</a>
-      </div>
-    </div>
-
-    <div class="frame-wrap">
-      <iframe id="planningFrame" title="Esprit d’équipe — GHE"></iframe>
-    </div>
-  </section>
-
-  <div class="fallback" id="fallbackBox">
-    Problème d’affichage intégré.  
-    Clique sur <a id="fallbackLink" href="#" target="_self">ouvrir la page directement</a>.
-  </div>
-
-  <div class="footer">
-    Page GitHub — affichage du planning collectif GHE.
-  </div>
-
-</main>
+  <a id="directLink" href="https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOlle3cafAKEAZQ8NAX-peSN6D-yxFO3gX26SnVNUVd5xbwV3CUISg/exec">
+    Ouvrir maintenant
+  </a>
+</div>
 
 <script>
-const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOlle3cafAKEAZQ8NAX-peSN6D-yxFO3gX26SnVNUVd5xbwV3CUISg/exec";
+const URL_ESPRIT_EQUIPE = "https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOlle3cafAKEAZQ8NAX-peSN6D-yxFO3gX26SnVNUVd5xbwV3CUISg/exec";
 
-const frame = document.getElementById("planningFrame");
-const statusText = document.getElementById("statusText");
-const openDirect = document.getElementById("openDirect");
-const fallbackBox = document.getElementById("fallbackBox");
-const fallbackLink = document.getElementById("fallbackLink");
-
-openDirect.href = URL_APPS_SCRIPT;
-fallbackLink.href = URL_APPS_SCRIPT;
-
-let loaded = false;
-
-frame.addEventListener("load", function(){
-  loaded = true;
-  statusText.textContent = "Planning collectif chargé.";
-});
-
-frame.src = URL_APPS_SCRIPT + "?t=" + Date.now();
+document.getElementById("directLink").href = URL_ESPRIT_EQUIPE;
 
 setTimeout(function(){
-  if(!loaded){
-    statusText.textContent = "Chargement long ou affichage bloqué.";
-    fallbackBox.style.display = "block";
-  }
-}, 7000);
+  window.location.replace(URL_ESPRIT_EQUIPE);
+}, 300);
 </script>
 
 </body>
