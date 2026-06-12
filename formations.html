@@ -1,728 +1,691 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Espace formation</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Formations GHE</title>
 
-  <style>
-    *{box-sizing:border-box}
+<style>
+*,*::before,*::after{box-sizing:border-box}
 
-    :root{
-      --ink:#101426;
-      --muted:#626b7c;
-      --cream:#fff1bd;
-      --paper:#fffdf7;
-      --line:#151515;
-      --red:#d62828;
-      --redSoft:#ffe1e1;
-      --green:#168447;
-      --greenSoft:#dcfce7;
-      --orange:#f59e0b;
-      --blue:#2563eb;
-      --shadow:7px 7px 0 #151515;
-    }
+:root{
+  --ink:#07183f;
+  --paper:#fff7dd;
+  --cream:#fff9e8;
+  --gold:#d3a24b;
+  --navy:#07183f;
+  --weekend:#fff0dc;
+  --formation-soft:#eaf3ff;
+  --fire-soft:#fff0d7;
+  --identity-soft:#f2eaff;
+  --caces-soft:#eaffef;
+}
 
-    body{
-      margin:0;
-      color:var(--ink);
-      background:radial-gradient(circle at top,#fffef4 0%,#fff0ba 65%,#ffe39a 100%);
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    }
+html{scroll-behavior:smooth}
 
-    .page{
-      max-width:980px;
-      margin:auto;
-      padding:14px 14px 46px;
-    }
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--ink);
+  font-family:Impact,"Arial Black",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 15% 0%,rgba(255,255,255,.95) 0 9%,transparent 31%),
+    radial-gradient(circle at 88% 4%,rgba(255,218,116,.46) 0 9%,transparent 32%),
+    repeating-linear-gradient(-6deg,rgba(7,24,63,.035) 0 1px,transparent 1px 13px),
+    linear-gradient(180deg,#fff9e8 0%,#f5e8bf 57%,#ead9a5 100%);
+}
 
-    .hero{
-      background:var(--paper);
-      border:4px solid var(--line);
-      border-radius:30px;
-      overflow:hidden;
-      box-shadow:var(--shadow);
-      margin-bottom:18px;
-    }
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.17;
+  background:
+    repeating-linear-gradient(8deg,rgba(7,24,63,.05) 0 1px,transparent 1px 12px),
+    repeating-linear-gradient(-9deg,rgba(178,116,26,.07) 0 1px,transparent 1px 17px);
+  mix-blend-mode:multiply;
+}
 
-    .hero img{
-      width:100%;
-      display:block;
-    }
+.page{
+  width:min(860px,100%);
+  margin:auto;
+  padding:12px 10px 54px;
+}
 
-    .hero-body{
-      padding:18px;
-    }
+.back{
+  position:relative;
+  z-index:3;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:54px;
+  margin-bottom:14px;
+  padding:9px 10px;
+  color:#fff4ce;
+  text-decoration:none;
+  text-align:center;
+  text-transform:uppercase;
+  border:5px solid #061738;
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 16%,rgba(255,255,255,.22),transparent 28%),
+    repeating-linear-gradient(-7deg,rgba(255,255,255,.07) 0 2px,transparent 2px 10px),
+    linear-gradient(145deg,#777,#444,#222);
+  box-shadow:0 7px 0 rgba(7,24,63,.35);
+  font-size:clamp(20px,5vw,31px);
+  letter-spacing:.4px;
+}
 
-    h1{
-      margin:0 0 10px;
-      font-size:clamp(34px,7vw,62px);
-      line-height:.92;
-      text-transform:uppercase;
-      letter-spacing:-.045em;
-      font-weight:1000;
-    }
+.header{
+  position:relative;
+  z-index:2;
+  margin:10px 0 14px;
+  padding:14px 12px 16px;
+  background:
+    radial-gradient(circle at 12% 0%,rgba(255,255,255,.75),transparent 34%),
+    linear-gradient(180deg,rgba(255,255,255,.44),transparent 48%),
+    var(--paper);
+  border:5px solid var(--ink);
+  border-radius:30px 25px 33px 26px;
+  box-shadow:
+    0 10px 0 rgba(7,24,63,.18),
+    0 14px 0 rgba(0,0,0,.10),
+    inset 0 0 0 3px rgba(255,215,115,.38);
+}
 
-    .intro{
-      margin:0;
-      color:#414b5f;
-      font-size:16px;
-      line-height:1.45;
-      font-weight:700;
-    }
+h1{
+  margin:0 0 8px;
+  text-transform:uppercase;
+  font-size:clamp(31px,8vw,58px);
+  line-height:.9;
+  letter-spacing:.2px;
+  color:var(--ink);
+  text-shadow:
+    0 3px 0 #f8d67d,
+    3px 5px 0 rgba(7,24,63,.10);
+}
 
-    .today-card{
-      background:linear-gradient(180deg,#fffdf8,#fff5d5);
-      border:4px solid var(--line);
-      border-radius:30px;
-      box-shadow:var(--shadow);
-      padding:18px;
-      margin:18px 0 22px;
-      position:relative;
-      overflow:hidden;
-    }
+.sub{
+  margin:0;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-weight:950;
+  font-size:clamp(14px,3.6vw,19px);
+  line-height:1.2;
+}
 
-    .today-card::before{
-      content:"";
-      position:absolute;
-      right:-60px;
-      top:-70px;
-      width:190px;
-      height:190px;
-      background:rgba(255,183,3,.28);
-      border-radius:50%;
-      filter:blur(4px);
-    }
+.quick-actions{
+  display:grid;
+  gap:10px;
+  margin:14px 0 0;
+}
 
-    .today-top{
-      position:relative;
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:14px;
-    }
+.action-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:58px;
+  padding:9px 12px;
+  border:4px solid var(--ink);
+  border-radius:20px;
+  color:#fff4ce;
+  text-decoration:none;
+  text-align:center;
+  text-transform:uppercase;
+  font-size:clamp(20px,5.2vw,34px);
+  line-height:.9;
+  background:
+    radial-gradient(circle at 22% 16%,rgba(255,255,255,.30),transparent 28%),
+    repeating-linear-gradient(-7deg,rgba(255,255,255,.08) 0 2px,transparent 2px 10px),
+    linear-gradient(145deg,#ffb43a 0%,#f07c00 58%,#b74d00 100%);
+  box-shadow:
+    0 7px 0 rgba(7,24,63,.28),
+    inset 0 0 0 3px rgba(255,221,132,.25);
+  text-shadow:0 3px 0 rgba(0,0,0,.38);
+}
 
-    .today-title{
-      margin:0;
-      font-size:30px;
-      line-height:1;
-      font-weight:1000;
-      letter-spacing:-.035em;
-    }
+.action-btn:active{transform:translateY(3px)}
 
-    .today-status{
-      border:3px solid var(--line);
-      border-radius:999px;
-      background:white;
-      padding:8px 12px;
-      font-weight:1000;
-      white-space:nowrap;
-    }
+.status{
+  margin-top:16px;
+  text-align:center;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-weight:950;
+  font-size:17px;
+  line-height:1.3;
+  padding:18px 10px;
+  border:4px solid var(--ink);
+  border-radius:24px;
+  background:white;
+}
 
-    .today-status.alert{
-      border-color:var(--red);
-      background:var(--redSoft);
-      color:var(--red);
-    }
+.week-label{
+  margin:22px 0 10px;
+  padding:7px 12px 8px;
+  border:4px dashed rgba(7,24,63,.32);
+  border-radius:22px;
+  background:rgba(255,255,255,.50);
+  color:rgba(7,24,63,.88);
+  text-align:center;
+  text-transform:uppercase;
+  font-size:clamp(22px,5.8vw,38px);
+  line-height:.88;
+}
 
-    .today-status.ok{
-      border-color:var(--green);
-      background:var(--greenSoft);
-      color:var(--green);
-    }
+.day-card{
+  position:relative;
+  margin:12px 0;
+  overflow:hidden;
+  border:4px solid var(--navy);
+  border-radius:24px;
+  background:white;
+  box-shadow:
+    0 7px 0 rgba(7,24,63,.15),
+    0 10px 0 rgba(0,0,0,.07);
+}
 
-    .summary-grid{
-      position:relative;
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:10px;
-      margin-top:12px;
-    }
+.day-card.is-weekend{
+  background:
+    radial-gradient(circle at 12% 0%,rgba(255,255,255,.85),transparent 36%),
+    linear-gradient(180deg,#fff9ed 0%,var(--weekend) 100%);
+}
 
-    @media(max-width:520px){
-      .summary-grid{grid-template-columns:1fr}
-    }
+.day-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:9px 12px 8px;
+  border-bottom:3px solid var(--navy);
+  background:
+    repeating-linear-gradient(-7deg,rgba(7,24,63,.035) 0 2px,transparent 2px 10px),
+    linear-gradient(180deg,#fffdf5,#fff3c8);
+}
 
-    .summary-box{
-      background:#fffaf0;
-      border:2px solid #eadfbd;
-      border-radius:20px;
-      padding:12px;
-    }
+.day-card.is-weekend .day-head{
+  background:
+    repeating-linear-gradient(-7deg,rgba(132,73,11,.055) 0 2px,transparent 2px 10px),
+    linear-gradient(180deg,#fff0dc,#f3d4a7);
+}
 
-    .summary-label{
-      color:var(--muted);
-      text-transform:uppercase;
-      letter-spacing:.07em;
-      font-size:12px;
-      font-weight:1000;
-      margin-bottom:4px;
-    }
+.date-main{
+  margin:0;
+  font-family:Impact,"Arial Black",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-weight:900;
+  text-transform:uppercase;
+  font-size:clamp(25px,6.4vw,44px);
+  line-height:.88;
+  letter-spacing:.2px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
 
-    .summary-value{
-      font-size:19px;
-      font-weight:1000;
-      line-height:1.15;
-    }
+.date-tag{
+  flex:0 0 auto;
+  padding:5px 9px 6px;
+  border:3px solid rgba(7,24,63,.22);
+  border-radius:14px;
+  background:rgba(255,255,255,.62);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-weight:950;
+  font-size:11px;
+  text-transform:uppercase;
+  opacity:.82;
+}
 
-    .section-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-end;
-      gap:12px;
-      margin:20px 4px 12px;
-    }
+.event-list{
+  display:grid;
+}
 
-    .section-head h2{
-      margin:0;
-      font-size:28px;
-      font-weight:1000;
-      letter-spacing:-.03em;
-    }
+.event-row{
+  display:flex;
+  align-items:flex-start;
+  gap:9px;
+  padding:11px 11px 8px;
+  border-top:2px solid rgba(7,24,63,.12);
+  min-width:0;
+  background:white;
+}
 
-    #status{
-      color:var(--muted);
-      font-weight:900;
-      font-size:14px;
-      text-align:right;
-    }
+.event-row:first-child{border-top:0}
+.event-row.kind-formation{background:linear-gradient(90deg,var(--formation-soft),#fff)}
+.event-row.kind-incendie{background:linear-gradient(90deg,var(--fire-soft),#fff)}
+.event-row.kind-caces{background:linear-gradient(90deg,var(--caces-soft),#fff)}
+.event-row.kind-identite{background:linear-gradient(90deg,var(--identity-soft),#fff)}
 
-    .days-slider{
-      display:flex;
-      gap:18px;
-      overflow-x:auto;
-      scroll-snap-type:x mandatory;
-      -webkit-overflow-scrolling:touch;
-      padding:6px 2px 18px;
-      scrollbar-width:none;
-    }
+.shift-dot{
+  flex:0 0 auto;
+  width:32px;
+  height:32px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:25px;
+  line-height:1;
+  border-radius:12px;
+  background:#fff9e8;
+  box-shadow:inset 0 0 0 3px rgba(7,24,63,.10);
+}
 
-    .days-slider::-webkit-scrollbar{display:none}
+.event-main{
+  min-width:0;
+  width:100%;
+}
 
-    .day-slide{
-      flex:0 0 92%;
-      scroll-snap-align:start;
-      background:#fffefa;
-      border:4px solid var(--line);
-      border-radius:34px;
-      box-shadow:var(--shadow);
-      padding:16px;
-    }
+.shift-line{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  min-width:0;
+  width:100%;
+  white-space:nowrap;
+}
 
-    @media(min-width:820px){
-      .day-slide{flex:0 0 72%}
-    }
+.shift-title{
+  flex:0 1 auto;
+  min-width:0;
+  margin:0;
+  text-transform:uppercase;
+  font-size:clamp(24px,6.6vw,38px);
+  line-height:.9;
+  text-shadow:0 2px 0 rgba(211,162,75,.30);
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
 
-    .day-slide.today{
-      box-shadow:
-        7px 7px 0 #151515,
-        0 0 0 8px rgba(255,183,3,.18),
-        0 0 35px rgba(255,183,3,.36);
-      background:linear-gradient(180deg,#fffef8,#fff6d8);
-    }
+.shift-sep{
+  flex:0 0 auto;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:clamp(17px,4.4vw,26px);
+  font-weight:950;
+  opacity:.7;
+}
 
-    .day-header{
-      border-bottom:3px dashed rgba(0,0,0,.18);
-      padding-bottom:14px;
-      margin-bottom:14px;
-    }
+.time{
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px 9px 7px;
+  border-radius:14px;
+  background:#07183f;
+  color:#fff4ce;
+  font-size:clamp(21px,5.6vw,34px);
+  line-height:.9;
+  box-shadow:0 4px 0 rgba(7,24,63,.16);
+}
 
-    .day-line{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:10px;
-      flex-wrap:wrap;
-    }
+.detail{
+  margin:6px 0 0;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-weight:900;
+  font-size:13px;
+  line-height:1.25;
+  opacity:.82;
+  white-space:normal;
+}
 
-    .day-date{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      border:3px solid var(--line);
-      border-radius:999px;
-      background:white;
-      padding:9px 14px;
-      font-weight:1000;
-      font-size:17px;
-    }
-
-    .day-badges{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-
-    .badge{
-      border:3px solid var(--line);
-      background:white;
-      border-radius:999px;
-      padding:8px 11px;
-      font-size:14px;
-      font-weight:1000;
-    }
-
-    .badge.alert{
-      border-color:var(--red);
-      background:var(--redSoft);
-      color:var(--red);
-    }
-
-    .badge.ok{
-      border-color:var(--green);
-      background:var(--greenSoft);
-      color:var(--green);
-    }
-
-    .day-formation-title{
-      margin:14px 0 0;
-      font-size:clamp(28px,6vw,46px);
-      line-height:.96;
-      letter-spacing:-.045em;
-      font-weight:1000;
-    }
-
-    .agents-list{
-      display:grid;
-      gap:12px;
-    }
-
-    .agent-card{
-      background:var(--paper);
-      border:3px solid var(--line);
-      border-radius:26px;
-      padding:14px;
-      box-shadow:5px 5px 0 rgba(0,0,0,.16);
-    }
-
-    .agent-card.alert{
-      border-color:var(--red);
-      box-shadow:5px 5px 0 rgba(214,40,40,.16);
-    }
-
-    .agent-card.ok{
-      border-color:var(--green);
-    }
-
-    .agent-main{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      margin-bottom:12px;
-    }
-
-    .avatar{
-      width:48px;
-      height:48px;
-      border:3px solid var(--line);
-      border-radius:18px;
-      display:grid;
-      place-items:center;
-      background:#f1f5f9;
-      font-size:23px;
-      font-weight:1000;
-      flex:0 0 auto;
-    }
-
-    .agent-name{
-      font-size:24px;
-      font-weight:1000;
-      line-height:1.05;
-      letter-spacing:-.03em;
-    }
-
-    .agent-sub{
-      color:var(--muted);
-      font-size:13px;
-      font-weight:900;
-      margin-top:3px;
-      text-transform:uppercase;
-      letter-spacing:.05em;
-    }
-
-    .info-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:8px;
-    }
-
-    @media(max-width:540px){
-      .info-grid{grid-template-columns:1fr}
-    }
-
-    .info-row{
-      display:grid;
-      grid-template-columns:34px 1fr;
-      gap:9px;
-      align-items:center;
-      background:#fffaf0;
-      border:2px solid #eadfbd;
-      border-radius:18px;
-      padding:10px 11px;
-    }
-
-    .icon{
-      font-size:22px;
-      display:grid;
-      place-items:center;
-    }
-
-    .label{
-      color:var(--muted);
-      text-transform:uppercase;
-      letter-spacing:.07em;
-      font-size:11px;
-      font-weight:1000;
-      margin-bottom:2px;
-    }
-
-    .value{
-      font-size:17px;
-      line-height:1.15;
-      font-weight:1000;
-    }
-
-    .phone{
-      color:inherit;
-      text-decoration:none;
-    }
-
-    .alert-box,.ok-box{
-      margin-top:11px;
-      border-radius:20px;
-      padding:12px 13px;
-      font-size:16px;
-      line-height:1.25;
-      font-weight:1000;
-    }
-
-    .alert-box{
-      border:3px solid var(--red);
-      background:var(--redSoft);
-      color:#8f1d1d;
-    }
-
-    .ok-box{
-      border:3px solid var(--green);
-      background:var(--greenSoft);
-      color:#14532d;
-    }
-
-    .empty,.error{
-      background:white;
-      border:3px dashed #999;
-      border-radius:24px;
-      padding:24px;
-      color:var(--muted);
-      font-weight:900;
-      text-align:center;
-    }
-
-    .hint{
-      text-align:center;
-      color:#6b7280;
-      font-size:14px;
-      font-weight:950;
-      padding-bottom:28px;
-    }
-  </style>
+@media(max-width:560px){
+  .page{padding:10px 8px 42px}
+  .back{border-width:4px;min-height:52px}
+  .header{border-width:4px;padding:11px 9px 12px}
+  h1{
+    font-size:clamp(30px,8vw,45px);
+    line-height:.86;
+    text-shadow:
+      0 2px 0 #f8d67d,
+      2px 4px 0 rgba(7,24,63,.09);
+  }
+  .day-card{border-width:4px}
+  .day-head{padding:8px 10px 7px;border-bottom-width:3px}
+  .event-row{gap:8px;padding:10px 9px 8px}
+  .shift-dot{width:29px;height:29px;font-size:23px}
+  .shift-line{gap:5px}
+  .time{padding:5px 8px 6px}
+}
+</style>
 </head>
 
 <body>
-  <main class="page">
+<main class="page">
+  <a class="back" href="index.html">← Retour accueil</a>
 
-    <section class="hero">
-      <img src="./Image/Autre%20page/Photo_Formation.png" alt="Espace formation">
-      <div class="hero-body">
-        <h1>Espace formation</h1>
-        <p class="intro">
-          Merci de prévenir l’agent concerné dès qu’une formation apparaît, afin qu’il puisse s’organiser à l’avance.
-        </p>
-      </div>
-    </section>
+  <section class="header">
+    <h1>Formations</h1>
+    <p class="sub" id="subtitle">Aperçu dynamique des formations à venir</p>
 
-    <section id="todaySummary" class="today-card">
-      Chargement du résumé…
-    </section>
+    <div class="quick-actions" id="topActions"></div>
+  </section>
 
-    <div class="section-head">
-      <h2>Journées formation</h2>
-      <div id="status">Chargement…</div>
-    </div>
+  <section id="content" class="status">Chargement...</section>
+</main>
 
-    <section id="daysSlider" class="days-slider"></section>
+<script>
+const PASSERELLE = "https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8HZ_g_ota7tajTKLY3jvLKEF9AvSPjIbVpqcSkSRcl5OdWV9/exec";
 
-    <div class="hint">Swipe à gauche ou à droite pour changer de jour →</div>
+const contentEl = document.getElementById("content");
+const topActions = document.getElementById("topActions");
 
-  </main>
+function apiUrl(mode, extra){
+  const url = new URL(PASSERELLE);
+  url.searchParams.set("mode", mode);
+  url.searchParams.set("t", Date.now());
+  Object.keys(extra || {}).forEach(k => url.searchParams.set(k, extra[k]));
+  return url.toString();
+}
 
-  <script>
-    const slider = document.getElementById("daysSlider");
-    const status = document.getElementById("status");
-    const todaySummary = document.getElementById("todaySummary");
+function webcalUrl(url){
+  return url.replace(/^https:\/\//i, "webcal://");
+}
 
-    function escapeHtml(value){
-      return String(value ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+function androidUrl(url){
+  return "https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(url);
+}
+
+function unfoldIcs(text){
+  return String(text || "").replace(/\r?\n[ \t]/g, "");
+}
+
+function getField(block, name){
+  const re = new RegExp("^" + name + "(?:;[^:]*)?:(.*)$", "mi");
+  const m = block.match(re);
+  return m ? m[1].trim() : "";
+}
+
+function cleanText(v){
+  return String(v || "")
+    .replace(/\\n/g, "\n")
+    .replace(/\\,/g, ",")
+    .replace(/\\;/g, ";")
+    .trim();
+}
+
+function parseIcsDate(value){
+  if(!value) return null;
+  value = String(value).trim();
+
+  if(/^\d{8}$/.test(value)){
+    return new Date(
+      Number(value.slice(0,4)),
+      Number(value.slice(4,6)) - 1,
+      Number(value.slice(6,8)),
+      0,0,0
+    );
+  }
+
+  const m = value.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z?)$/);
+  if(!m) return null;
+
+  if(m[7] === "Z"){
+    return new Date(Date.UTC(
+      Number(m[1]),
+      Number(m[2]) - 1,
+      Number(m[3]),
+      Number(m[4]),
+      Number(m[5]),
+      Number(m[6])
+    ));
+  }
+
+  return new Date(
+    Number(m[1]),
+    Number(m[2]) - 1,
+    Number(m[3]),
+    Number(m[4]),
+    Number(m[5]),
+    Number(m[6])
+  );
+}
+
+function toIsoLocal(d){
+  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+
+function formatDateMain(d){
+  return d.toLocaleDateString("fr-FR", {
+    weekday:"long",
+    day:"numeric",
+    month:"long"
+  }).toUpperCase();
+}
+
+function getIsoWeekNumber(date){
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+}
+
+function formatWeekLabel(d){
+  return "Semaine " + getIsoWeekNumber(d);
+}
+
+function weekKey(d){
+  const lundi = new Date(d);
+  const day = lundi.getDay() || 7;
+  lundi.setDate(lundi.getDate() - day + 1);
+  return toIsoLocal(lundi);
+}
+
+function isWeekend(d){
+  const day = d.getDay();
+  return day === 0 || day === 6;
+}
+
+function formatTimeRange(start,end){
+  const allDay =
+    start &&
+    start.getHours() === 0 &&
+    start.getMinutes() === 0 &&
+    (!end || (end.getHours() === 0 && end.getMinutes() === 0));
+
+  if(allDay) return "";
+
+  const f = new Intl.DateTimeFormat("fr-FR", {hour:"2-digit", minute:"2-digit"});
+  if(end && start.toDateString() === end.toDateString()){
+    return f.format(start) + "–" + f.format(end);
+  }
+  return f.format(start);
+}
+
+function parseEvents(ics){
+  const text = unfoldIcs(ics);
+  const blocks = text.match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g) || [];
+
+  return blocks.map(block => {
+    const start = parseIcsDate(getField(block, "DTSTART"));
+    const end = parseIcsDate(getField(block, "DTEND"));
+    const summary = cleanText(getField(block, "SUMMARY"));
+    const description = cleanText(getField(block, "DESCRIPTION"));
+
+    return {start, end, summary, description};
+  }).filter(e => e.start);
+}
+
+function detectRowType(summary, description){
+  const raw = (summary + " " + description)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase();
+
+  if(raw.includes("INCENDIE") || raw.includes("RISQUE")) return "incendie";
+  if(raw.includes("CACES") || raw.includes("MOBILIS")) return "caces";
+  if(raw.includes("IDENTITE") || raw.includes("VIGILANCE")) return "identite";
+  return "formation";
+}
+
+function detectEmoji(type){
+  if(type === "incendie") return "🔥";
+  if(type === "caces") return "🏗️";
+  if(type === "identite") return "🪪";
+  return "🎓";
+}
+
+function extractTitle(summary){
+  return String(summary || "Formation")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function extractDetails(description){
+  return String(description || "")
+    .split(/\n+/)
+    .map(v => v.trim())
+    .filter(Boolean);
+}
+
+function renderAgendaEvents(events){
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  const futurs = (events || [])
+    .filter(e => e.start && e.start >= today)
+    .sort((a,b) => a.start - b.start);
+
+  if(futurs.length === 0){
+    contentEl.className = "status";
+    contentEl.textContent = "Aucune formation à afficher à partir d’aujourd’hui.";
+    return;
+  }
+
+  const grouped = {};
+
+  futurs.forEach(e => {
+    const iso = toIsoLocal(e.start);
+    if(!grouped[iso]){
+      grouped[iso] = {
+        dateObj:new Date(e.start.getFullYear(), e.start.getMonth(), e.start.getDate()),
+        events:[]
+      };
+    }
+    grouped[iso].events.push(e);
+  });
+
+  contentEl.className = "";
+  contentEl.innerHTML = "";
+
+  let currentWeek = "";
+
+  Object.keys(grouped).sort().forEach(iso => {
+    const dayGroup = grouped[iso];
+    const wk = weekKey(dayGroup.dateObj);
+
+    if(wk !== currentWeek){
+      currentWeek = wk;
+      const week = document.createElement("div");
+      week.className = "week-label";
+      week.textContent = formatWeekLabel(dayGroup.dateObj);
+      contentEl.appendChild(week);
     }
 
-    function parseDate(value){
-      if(!value) return null;
-      if(/^\d{4}-\d{2}-\d{2}/.test(value)){
-        return new Date(value + "T00:00:00");
+    const dayCard = document.createElement("article");
+    dayCard.className = "day-card" + (isWeekend(dayGroup.dateObj) ? " is-weekend" : "");
+
+    const head = document.createElement("div");
+    head.className = "day-head";
+
+    const dateMain = document.createElement("p");
+    dateMain.className = "date-main";
+    dateMain.textContent = formatDateMain(dayGroup.dateObj);
+
+    const tag = document.createElement("div");
+    tag.className = "date-tag";
+    tag.textContent = isWeekend(dayGroup.dateObj) ? "week-end" : "semaine";
+
+    head.appendChild(dateMain);
+    head.appendChild(tag);
+    dayCard.appendChild(head);
+
+    const list = document.createElement("div");
+    list.className = "event-list";
+
+    dayGroup.events.forEach(e => {
+      const rowType = detectRowType(e.summary, e.description);
+      const emoji = detectEmoji(rowType);
+      const title = extractTitle(e.summary);
+      const details = extractDetails(e.description);
+      const horaire = formatTimeRange(e.start, e.end);
+
+      const row = document.createElement("div");
+      row.className = "event-row kind-" + rowType;
+
+      const icon = document.createElement("div");
+      icon.className = "shift-dot";
+      icon.textContent = emoji;
+
+      const main = document.createElement("div");
+      main.className = "event-main";
+
+      const line = document.createElement("div");
+      line.className = "shift-line";
+
+      const label = document.createElement("p");
+      label.className = "shift-title";
+      label.textContent = title;
+
+      line.appendChild(label);
+
+      if(horaire){
+        const sep = document.createElement("span");
+        sep.className = "shift-sep";
+        sep.textContent = "·";
+
+        const time = document.createElement("div");
+        time.className = "time";
+        time.textContent = horaire;
+
+        line.appendChild(sep);
+        line.appendChild(time);
       }
-      const d = new Date(value);
-      return isNaN(d) ? null : d;
-    }
 
-    function isSameDay(a,b){
-      return a && b &&
-        a.getFullYear() === b.getFullYear() &&
-        a.getMonth() === b.getMonth() &&
-        a.getDate() === b.getDate();
-    }
+      main.appendChild(line);
 
-    function phoneHref(phone){
-      return "tel:" + String(phone || "").replace(/\s/g,"");
-    }
-
-    function unique(values){
-      return [...new Set(values.filter(Boolean))];
-    }
-
-    function groupByDate(items){
-      const groups = {};
-
-      items.forEach(item => {
-        const key = item.date || "date-inconnue";
-
-        if(!groups[key]){
-          groups[key] = {
-            date: key,
-            dateLabel: item.dateLabel || key,
-            items: []
-          };
-        }
-
-        groups[key].items.push(item);
+      details.forEach(txt => {
+        const detail = document.createElement("p");
+        detail.className = "detail";
+        detail.textContent = txt;
+        main.appendChild(detail);
       });
 
-      return Object.values(groups).sort((a,b) => {
-        const today = new Date();
-        const da = parseDate(a.date);
-        const db = parseDate(b.date);
+      row.appendChild(icon);
+      row.appendChild(main);
+      list.appendChild(row);
+    });
 
-        const aToday = isSameDay(da,today) ? 0 : 1;
-        const bToday = isSameDay(db,today) ? 0 : 1;
+    dayCard.appendChild(list);
+    contentEl.appendChild(dayCard);
+  });
+}
 
-        if(aToday !== bToday) return aToday - bToday;
-        return String(a.date).localeCompare(String(b.date));
-      });
+async function init(){
+  const icsUrl = apiUrl("ics_collectif", {type:"formation"});
+
+  topActions.innerHTML = `
+    <a class="action-btn" href="${icsUrl}" target="_blank" rel="noopener">📥 Télécharger le fichier ICS</a>
+    <a class="action-btn" href="${webcalUrl(icsUrl)}">🍎 Ajouter sur Apple</a>
+    <a class="action-btn" href="${androidUrl(icsUrl)}" target="_blank" rel="noopener">🤖 Ajouter sur Android</a>
+  `;
+
+  try{
+    const res = await fetch(icsUrl, {method:"GET", cache:"no-store"});
+    const text = await res.text();
+
+    if(!res.ok || !text.includes("BEGIN:VCALENDAR")){
+      throw new Error("ICS invalide");
     }
 
-    function buildTodaySummary(groups, allItems){
-      const today = new Date();
-      const todayGroup = groups.find(group => isSameDay(parseDate(group.date), today));
-      const nextGroup = groups.find(group => !isSameDay(parseDate(group.date), today));
+    renderAgendaEvents(parseEvents(text));
 
-      const totalAlerts = allItems.filter(item => item.alerte).length;
-      const totalAgents = unique(allItems.map(item => item.agent)).length;
-      const allGhe = unique(allItems.map(item => item.ghe).filter(v => v && v !== "Non renseigné"));
+  }catch(e){
+    console.error(e);
+    contentEl.className = "status";
+    contentEl.textContent = "Aperçu indisponible. Vérifie que la passerelle Apps Script est bien à jour.";
+  }
+}
 
-      if(!todayGroup){
-        return `
-          <div class="today-top">
-            <h2 class="today-title">🧭 Aujourd’hui</h2>
-            <div class="today-status ok">✅ Rien aujourd’hui</div>
-          </div>
-
-          <div class="summary-grid">
-            <div class="summary-box">
-              <div class="summary-label">Formation du jour</div>
-              <div class="summary-value">Aucune formation prévue aujourd’hui</div>
-            </div>
-
-            <div class="summary-box">
-              <div class="summary-label">Prochaine journée</div>
-              <div class="summary-value">${nextGroup ? escapeHtml(nextGroup.dateLabel) : "Aucune date trouvée"}</div>
-            </div>
-
-            <div class="summary-box">
-              <div class="summary-label">Agents à suivre</div>
-              <div class="summary-value">${totalAgents} agent(s)</div>
-            </div>
-
-            <div class="summary-box">
-              <div class="summary-label">Alertes restantes</div>
-              <div class="summary-value">${totalAlerts} alerte(s)</div>
-            </div>
-          </div>
-        `;
-      }
-
-      const alerts = todayGroup.items.filter(item => item.alerte).length;
-      const agents = unique(todayGroup.items.map(item => item.agent)).length;
-      const formations = unique(todayGroup.items.map(item => item.formation));
-      const ghe = unique(todayGroup.items.map(item => item.ghe).filter(v => v && v !== "Non renseigné"));
-
-      return `
-        <div class="today-top">
-          <h2 class="today-title">🧭 Aujourd’hui</h2>
-          <div class="today-status ${alerts ? "alert" : "ok"}">
-            ${alerts ? "⚠️ À vérifier" : "✅ OK"}
-          </div>
-        </div>
-
-        <div class="summary-grid">
-          <div class="summary-box">
-            <div class="summary-label">Formation</div>
-            <div class="summary-value">${escapeHtml(formations.join(" / ") || "Formation")}</div>
-          </div>
-
-          <div class="summary-box">
-            <div class="summary-label">Participants</div>
-            <div class="summary-value">${agents} agent(s) concerné(s)</div>
-          </div>
-
-          <div class="summary-box">
-            <div class="summary-label">GHE concernés</div>
-            <div class="summary-value">${escapeHtml(ghe.join(", ") || "Non renseigné")}</div>
-          </div>
-
-          <div class="summary-box">
-            <div class="summary-label">Action</div>
-            <div class="summary-value">${alerts ? alerts + " alerte(s) planning à contrôler" : "Prévenir les agents concernés"}</div>
-          </div>
-        </div>
-      `;
-    }
-
-    function daySlide(group){
-      const today = new Date();
-      const isToday = isSameDay(parseDate(group.date), today);
-      const alertCount = group.items.filter(item => item.alerte).length;
-      const formations = unique(group.items.map(item => item.formation));
-      const ghe = unique(group.items.map(item => item.ghe).filter(v => v && v !== "Non renseigné"));
-
-      return `
-        <article class="day-slide ${isToday ? "today" : ""}">
-          <div class="day-header">
-            <div class="day-line">
-              <div class="day-date">📅 ${escapeHtml(group.dateLabel)}</div>
-              <div class="day-badges">
-                <div class="badge">${group.items.length} agent(s)</div>
-                ${alertCount ? `<div class="badge alert">⚠️ ${alertCount}</div>` : `<div class="badge ok">✅ OK</div>`}
-              </div>
-            </div>
-
-            <h3 class="day-formation-title">${escapeHtml(formations.join(" / ") || "Formation")}</h3>
-          </div>
-
-          <div class="agents-list">
-            ${group.items.map(agentCard).join("")}
-          </div>
-        </article>
-      `;
-    }
-
-    function agentCard(item){
-      const hasAlert = !!item.alerte;
-      const tel = item.telephone && item.telephone !== "Non renseigné"
-        ? `<a class="phone" href="${phoneHref(item.telephone)}">${escapeHtml(item.telephone)}</a>`
-        : `Non renseigné`;
-
-      return `
-        <article class="agent-card ${hasAlert ? "alert" : "ok"}">
-          <div class="agent-main">
-            <div class="avatar">👤</div>
-            <div>
-              <div class="agent-name">${escapeHtml(item.agent || "Agent non renseigné")}</div>
-              <div class="agent-sub">${escapeHtml(item.ghe || "GHE non renseigné")}</div>
-            </div>
-          </div>
-
-          <div class="info-grid">
-            <div class="info-row">
-              <div class="icon">🕒</div>
-              <div>
-                <div class="label">Formation</div>
-                <div class="value">${escapeHtml(item.horaireFormation || "Non renseigné")}</div>
-              </div>
-            </div>
-
-            <div class="info-row">
-              <div class="icon">⏰</div>
-              <div>
-                <div class="label">Planning</div>
-                <div class="value">${escapeHtml(item.horaireAgent || "Non trouvé")}</div>
-              </div>
-            </div>
-
-            <div class="info-row">
-              <div class="icon">🏥</div>
-              <div>
-                <div class="label">GHE</div>
-                <div class="value">${escapeHtml(item.ghe || "Non renseigné")}</div>
-              </div>
-            </div>
-
-            <div class="info-row">
-              <div class="icon">📞</div>
-              <div>
-                <div class="label">Téléphone</div>
-                <div class="value">${tel}</div>
-              </div>
-            </div>
-          </div>
-
-          ${
-            hasAlert
-              ? `<div class="alert-box">⚠️ ${escapeHtml(item.messageAlerte || "À vérifier.")}</div>`
-              : `<div class="ok-box">✅ Horaire cohérent avec la formation.</div>`
-          }
-        </article>
-      `;
-    }
-
-    async function loadFormations(){
-      try{
-        status.textContent = "Chargement…";
-
-        const response = await fetch("/api/formations", { cache:"no-store" });
-        const data = await response.json();
-
-        if(!data.ok){
-          throw new Error(data.error || "Réponse invalide");
-        }
-
-        const items = data.items || [];
-        const groups = groupByDate(items);
-
-        todaySummary.innerHTML = buildTodaySummary(groups, items);
-        status.textContent = `${items.length} agent(s) • ${groups.length} jour(s)`;
-
-        if(!groups.length){
-          slider.innerHTML = `<div class="empty">Aucune formation à afficher.</div>`;
-          return;
-        }
-
-        slider.innerHTML = groups.map(daySlide).join("");
-
-      }catch(error){
-        console.error(error);
-        status.textContent = "Erreur";
-        todaySummary.innerHTML = `<div class="error">Impossible de charger le résumé.</div>`;
-        slider.innerHTML = `<div class="error">Impossible de charger les formations.</div>`;
-      }
-    }
-
-    loadFormations();
-  </script>
+init();
+</script>
 </body>
 </html>
