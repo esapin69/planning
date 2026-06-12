@@ -362,16 +362,26 @@ const ICS_DIRECT = "https://calendar.google.com/calendar/ical/c5da5df12db0eba65a
 const contentEl = document.getElementById("content");
 const bottomActions = document.getElementById("bottomActions");
 
-function apiUrl(mode, extra){
+function apiJsonpUrl(mode, extra){
   const url = new URL(PASSERELLE);
   url.searchParams.set("mode", mode);
+  url.searchParams.set("callback", "recevoirEventsCollectifGhe");
   url.searchParams.set("t", Date.now());
-  Object.keys(extra || {}).forEach(k => url.searchParams.set(k, extra[k]));
+
+  Object.keys(extra || {}).forEach(k => {
+    url.searchParams.set(k, extra[k]);
+  });
+
   return url.toString();
 }
 
-function webcalUrl(url){return url.replace(/^https:\/\//i, "webcal://");}
-function androidUrl(url){return "https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(url);}
+function webcalUrl(url){
+  return url.replace(/^https:\/\//i, "webcal://");
+}
+
+function androidUrl(url){
+  return "https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(url);
+}
 
 function dateFromKey(key){
   const p = String(key || "").split("-");
@@ -380,7 +390,9 @@ function dateFromKey(key){
 
 function todayKey(){
   const d = new Date();
-  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  return d.getFullYear() + "-" +
+    String(d.getMonth() + 1).padStart(2,"0") + "-" +
+    String(d.getDate()).padStart(2,"0");
 }
 
 function formatDateMain(d){
@@ -399,10 +411,14 @@ function getIsoWeekNumber(date){
   return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
 }
 
-function formatWeekLabel(d){return "Semaine " + getIsoWeekNumber(d);}
+function formatWeekLabel(d){
+  return "Semaine " + getIsoWeekNumber(d);
+}
 
 function toIsoLocal(d){
-  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  return d.getFullYear() + "-" +
+    String(d.getMonth() + 1).padStart(2,"0") + "-" +
+    String(d.getDate()).padStart(2,"0");
 }
 
 function weekKey(d){
@@ -577,29 +593,44 @@ function renderAgendaEvents(events){
   });
 }
 
-async function init(){
-  const eventsUrl = apiUrl("events_collectif", {type:CONFIG_PAGE.typeCollectif});
-
-  bottomActions.innerHTML = `
-    <a class="action-btn action-apple" href="${webcalUrl(ICS_DIRECT)}">🍎 Apple</a>
-    <a class="action-btn action-android" href="${androidUrl(ICS_DIRECT)}" target="_blank" rel="noopener">🤖 Android</a>
-  `;
-
+window.recevoirEventsCollectifGhe = function(data){
   try{
-    const res = await fetch(eventsUrl, {method:"GET", cache:"no-store"});
-    const data = await res.json();
-
-    if(!res.ok || !data || data.ok === false || !Array.isArray(data.events)){
+    if(!data || data.ok === false || !Array.isArray(data.events)){
       throw new Error(data && data.erreur ? data.erreur : "Réponse events invalide");
     }
 
     renderAgendaEvents(data.events);
 
-  }catch(e){
-    console.error(e);
+  }catch(err){
     contentEl.className = "status";
-    contentEl.textContent = "Aperçu indisponible. Vérifie que la passerelle Apps Script est bien à jour.";
+    contentEl.textContent = "Aperçu indisponible. " + String(err.message || err);
   }
+};
+
+function init(){
+  bottomActions.innerHTML = `
+    <a class="action-btn action-apple" href="${webcalUrl(ICS_DIRECT)}">🍎 Apple</a>
+    <a class="action-btn action-android" href="${androidUrl(ICS_DIRECT)}" target="_blank" rel="noopener">🤖 Android</a>
+  `;
+
+  const script = document.createElement("script");
+  script.src = apiJsonpUrl("events_collectif_jsonp", {
+    type: CONFIG_PAGE.typeCollectif
+  });
+
+  script.onerror = function(){
+    contentEl.className = "status";
+    contentEl.textContent = "Aperçu indisponible. Impossible de joindre la passerelle Apps Script.";
+  };
+
+  document.body.appendChild(script);
+
+  setTimeout(function(){
+    if(contentEl.textContent === "Chargement..."){
+      contentEl.className = "status";
+      contentEl.textContent = "Aperçu indisponible. La passerelle n’a pas répondu en JSONP.";
+    }
+  }, 9000);
 }
 
 init();
