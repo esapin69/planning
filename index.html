@@ -288,23 +288,6 @@ button.btn{width:100%}
   line-height:1.25;
 }
 
-.org-block{
-  position:relative;
-  z-index:3;
-  margin-top:16px;
-  padding-top:14px;
-  border-top:4px dashed rgba(7,24,63,.35);
-}
-
-.org-title{
-  margin:0 0 10px;
-  text-align:center;
-  text-transform:uppercase;
-  font-size:clamp(25px,6vw,42px);
-  line-height:.9;
-  text-shadow:0 3px 0 #f8d67d;
-}
-
 .search-agent{
   position:relative;
   z-index:3;
@@ -449,33 +432,17 @@ button.btn{width:100%}
   <div class="modal-panel">
     <h2 class="modal-title">Organisation</h2>
 
+    <p class="modal-text">
+      Accès au planning collectif : aperçu lisible et abonnement agenda.
+    </p>
+
     <button class="btn btn-purple btn-full" type="button" data-calendar-choice="agents">
-      <span><span class="icon">🤝</span>ESPRIT D’ÉQUIPE<span class="mini">Ajouter le planning collectif</span></span>
+      <span>
+        <span class="icon">🤝</span>
+        PLANNING COLLECTIF
+        <span class="mini">Voir ou ajouter le planning collectif GHE</span>
+      </span>
     </button>
-
-    <div class="org-block">
-      <h3 class="org-title">Formations</h3>
-      <div class="modal-grid two">
-        <a class="btn btn-teal" href="formations.html">
-          <span><span class="icon">👁️</span>APERÇU</span>
-        </a>
-        <button class="btn btn-orange" type="button" data-calendar-choice="formation">
-          <span><span class="icon">📲</span>AGENDA</span>
-        </button>
-      </div>
-    </div>
-
-    <div class="org-block">
-      <h3 class="org-title">Stagiaires</h3>
-      <div class="modal-grid two">
-        <a class="btn btn-teal" href="stagiaires.html">
-          <span><span class="icon">👁️</span>APERÇU</span>
-        </a>
-        <button class="btn btn-copy" type="button" data-calendar-choice="stagiaires">
-          <span><span class="icon">📲</span>AGENDA</span>
-        </button>
-      </div>
-    </div>
 
     <button class="btn btn-grey close-btn" type="button" data-close>
       <span>FERMER</span>
@@ -489,6 +456,15 @@ button.btn{width:100%}
     <p class="modal-text" id="deviceText">Choisis ton téléphone.</p>
 
     <div class="modal-grid two">
+
+      <a class="btn btn-teal btn-full" id="devicePreview" href="#" target="_blank" rel="noopener">
+        <span>
+          <span class="icon">👁️</span>
+          APERÇU
+          <span class="mini">Ouvrir la page Esprit d’équipe — GHE</span>
+        </span>
+      </a>
+
       <a class="btn btn-ios" id="deviceIos" href="#">
         <span><span class="icon">🍎</span>APPLE</span>
       </a>
@@ -507,21 +483,19 @@ button.btn{width:100%}
 <script>
 const PASSERELLE_AGENTS = "https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8HZ_g_ota7tajTKLY3jvLKEF9AvSPjIbVpqcSkSRcl5OdWV9/exec";
 
+/*
+  Architecture propre :
+  index.html ouvre cette page GitHub.
+  La page esprit-equipe.html utilisera ensuite le lien Apps Script pour afficher les données.
+*/
+const URL_APERCU_PLANNING_COLLECTIF = "esprit-equipe.html";
+
 const CALENDRIERS = {
   agents: {
-    titre: "Esprit d’équipe",
-    texte: "Ajouter le planning collectif dans l’agenda du téléphone.",
+    titre: "Esprit d’équipe — GHE",
+    texte: "Voir ou ajouter le planning collectif dans l’agenda du téléphone.",
+    apercu: URL_APERCU_PLANNING_COLLECTIF,
     url: "https://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics"
-  },
-  formation: {
-    titre: "Formation GHE",
-    texte: "Ajouter les formations dans l’agenda du téléphone.",
-    url: "https://calendar.google.com/calendar/ical/c5da5df12db0eba65a14410cada08fea4e5a8037ddd256b03e7426cb22cb751b%40group.calendar.google.com/private-4f5072a64d36548137a30abb665ed23f/basic.ics"
-  },
-  stagiaires: {
-    titre: "Stagiaires GHE",
-    texte: "Ajouter les stagiaires dans l’agenda du téléphone.",
-    url: "https://calendar.google.com/calendar/ical/2ced33be0e6a5c88fab9bae2ffdf3b56366970e4003b1718a7dabf4c0603eae6%40group.calendar.google.com/private-d3db5a97d6dbdd8ceeeaa375c8a460ef/basic.ics"
   }
 };
 
@@ -615,6 +589,8 @@ function ouvrirChoixSupport(cal){
 
   document.getElementById("deviceTitle").textContent = cal.titre;
   document.getElementById("deviceText").textContent = cal.texte;
+
+  document.getElementById("devicePreview").href = cal.apercu;
   document.getElementById("deviceIos").href = webcalUrl(cal.url);
   document.getElementById("deviceAndroid").href = androidUrl(cal.url);
 
