@@ -81,7 +81,7 @@ body{
   width:100%;
   height:100%;
   object-fit:cover;
-  display:block;
+  display:none;
 }
 
 .avatar-fallback{
@@ -214,7 +214,7 @@ h1{
 </main>
 
 <script>
-const PASSERELLE = "https://script.google.com/macros/s/AKfycbyW9kBVybPGv2XFW2fpiJcZ0AEFrgTCwd5_gkt1ykBpOvVyT5B24EgqQt4kVPwiIcDb/exec";
+const PASSERELLE = "https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8HZ_g_ota7tajTKLY3jvLKEF9AvSPjIbVpqcSkSRcl5OdWV9/exec";
 
 const params = new URLSearchParams(window.location.search);
 const type = String(params.get("type") || "").toLowerCase();
@@ -236,35 +236,30 @@ function titrePage(){
   return "Aperçu";
 }
 
-/****************************************************
- * JSONP — évite les blocages Safari / iPhone
- ****************************************************/
+function apiUrl(mode, extra){
+  const url = new URL(PASSERELLE);
+  url.searchParams.set("mode", mode);
+  url.searchParams.set("t", Date.now());
 
-function loadJsonp(url){
-  return new Promise(function(resolve,reject){
-    const callbackName = "jsonp_ghe_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
-
-    window[callbackName] = function(data){
-      delete window[callbackName];
-      script.remove();
-      resolve(data);
-    };
-
-    const script = document.createElement("script");
-    script.src = url + (url.includes("?") ? "&" : "?") + "callback=" + callbackName;
-    script.onerror = function(){
-      delete window[callbackName];
-      script.remove();
-      reject(new Error("Erreur JSONP"));
-    };
-
-    document.body.appendChild(script);
+  Object.keys(extra || {}).forEach(k => {
+    url.searchParams.set(k, extra[k]);
   });
+
+  return url.toString();
 }
 
-/****************************************************
- * AVATAR
- ****************************************************/
+async function fetchJson(url){
+  const res = await fetch(url, {
+    method:"GET",
+    cache:"no-store"
+  });
+
+  if(!res.ok){
+    throw new Error("HTTP " + res.status);
+  }
+
+  return await res.json();
+}
 
 function afficherAvatarDepuisSources(sources){
   avatarWrap.classList.add("is-visible");
@@ -296,32 +291,21 @@ function afficherAvatarDepuisSources(sources){
   tryNext();
 }
 
-async function loadAvatar(){
-  if(type !== "agent" || !agent){
+function afficherAvatarDepuisData(data){
+  if(type !== "agent"){
     avatarWrap.classList.remove("is-visible");
     return;
   }
 
-  avatarWrap.classList.add("is-visible");
+  const avatar = data && data.avatar ? data.avatar : {};
 
-  try{
-    const data = await loadJsonp(PASSERELLE + "?mode=avatar&agent=" + encodeURIComponent(agent));
+  const sources = [
+    avatar.avatar_image_url || data.avatar_image_url || "",
+    avatar.avatar_thumb_url || data.avatar_thumb_url || ""
+  ].filter(Boolean);
 
-    const sources = [
-      data.avatar_image_url || "",
-      data.avatar_thumb_url || ""
-    ].filter(Boolean);
-
-    afficherAvatarDepuisSources(sources);
-  }catch(e){
-    console.error(e);
-    afficherAvatarDepuisSources([]);
-  }
+  afficherAvatarDepuisSources(sources);
 }
-
-/****************************************************
- * AFFICHAGE AGENDA JSON AGENT
- ****************************************************/
 
 function parseDateIso(dateIso){
   const p = String(dateIso || "").split("-").map(Number);
@@ -354,7 +338,7 @@ function classifyAgendaEvent(event){
     (event.description || "")
   );
 
-  if(raw.includes("SYR") || raw.includes("SYNDICAT")){
+  if(raw.includes("SYR") || raw.includes("SYN") || raw.includes("SYNDICAT")){
     return {emoji:"🪧", label:"SYNDICAT", repos:false};
   }
 
@@ -418,9 +402,7 @@ function renderAgendaEvents(events){
   today.setHours(0,0,0,0);
 
   const futurs = (events || [])
-    .map(e => {
-      return Object.assign({}, e, {dateObj: parseDateIso(e.date)});
-    })
+    .map(e => Object.assign({}, e, {dateObj: parseDateIso(e.date)}))
     .filter(e => e.dateObj && e.dateObj >= today)
     .sort((a,b) => a.dateObj - b.dateObj);
 
@@ -469,7 +451,7 @@ function renderAgendaEvents(events){
     if(e.horaire && !shift.repos){
       const time = document.createElement("div");
       time.className = "time";
-      time.textContent = e.horaire.replace("-", " → ");
+      time.textContent = String(e.horaire).replace("-", " → ");
       card.appendChild(time);
     }
 
@@ -490,10 +472,6 @@ function renderAgendaEvents(events){
     contentEl.appendChild(card);
   });
 }
-
-/****************************************************
- * ANCIEN MODE ICS — gardé pour formations / stagiaires
- ****************************************************/
 
 function unfoldIcs(text){
   return String(text || "").replace(/\r?\n[ \t]/g, "");
@@ -556,14 +534,12 @@ function parseEvents(ics){
     const end = parseIcsDate(getField(block, "DTEND"));
     const summary = cleanText(getField(block, "SUMMARY"));
     const description = cleanText(getField(block, "DESCRIPTION"));
-    const location = cleanText(getField(block, "LOCATION"));
 
     return {
       start,
       end,
       summary,
-      description,
-      location
+      description
     };
   }).filter(e => e.start);
 }
@@ -571,7 +547,7 @@ function parseEvents(ics){
 function classifyShift(event){
   const raw = normalizeRaw(event.summary + " " + event.description);
 
-  if(raw.includes("SYR") || raw.includes("SYNDICAT")) return {emoji:"🪧", label:"SYNDICAT", repos:false};
+  if(raw.includes("SYR") || raw.includes("SYN") || raw.includes("SYNDICAT")) return {emoji:"🪧", label:"SYNDICAT", repos:false};
   if(raw.includes("FORMATION")) return {emoji:"🎓", label:"FORMATION", repos:false};
   if(raw.includes("STAGIAIRE")) return {emoji:"🧑‍🎓", label:"STAGIAIRE", repos:false};
 
@@ -587,18 +563,7 @@ function classifyShift(event){
   if(/\bRH\b|REPOS HEBDO|REPOS HEBDOMADAIRE/.test(raw)) return {emoji:"🏝️", label:"RH", detail:"Repos hebdo", repos:true};
   if(/REPOS|OFF|ABS/.test(raw)) return {emoji:"🏝️", label:"REPOS", detail:"Repos / absence", repos:true};
 
-  return {emoji:"📌", label: cleanShortLabel(event.summary), repos:false};
-}
-
-function cleanShortLabel(summary){
-  let s = String(summary || "ÉVÉNEMENT").toUpperCase();
-  s = s.replace(/AGENT\s*:\s*[^\\|]+/g, "");
-  s = s.replace(/HORAIRE\s*:\s*[0-9: -]+/g, "");
-  s = s.replace(/SHIFT\s*:\s*/g, "");
-  s = s.replace(/[\\|]/g, " ");
-  s = s.replace(/\s+/g, " ").trim();
-  if(!s) return "ÉVÉNEMENT";
-  return s;
+  return {emoji:"📌", label:"ÉVÉNEMENT", repos:false};
 }
 
 function renderIcsEvents(events){
@@ -632,6 +597,7 @@ function renderIcsEvents(events){
     }
 
     const shift = classifyShift(e);
+
     const card = document.createElement("article");
     card.className = "event";
 
@@ -665,29 +631,17 @@ function renderIcsEvents(events){
       card.appendChild(detail);
     }
 
-    if(type !== "agent" && e.description){
-      const desc = document.createElement("p");
-      desc.className = "detail";
-      desc.textContent = e.description;
-      card.appendChild(desc);
-    }
-
     contentEl.appendChild(card);
   });
 }
 
-/****************************************************
- * INIT
- ****************************************************/
-
 async function init(){
   titleEl.textContent = titrePage();
   subtitleEl.textContent = "À partir d’aujourd’hui";
-  await loadAvatar();
 
   if(type === "agent" && agent){
     try{
-      const data = await loadJsonp(PASSERELLE + "?mode=agenda&agent=" + encodeURIComponent(agent));
+      const data = await fetchJson(apiUrl("agenda", {agent: agent}));
 
       if(!data || data.ok === false){
         throw new Error(data && data.erreur ? data.erreur : "Agenda invalide");
@@ -697,6 +651,7 @@ async function init(){
         titleEl.textContent = data.nom;
       }
 
+      afficherAvatarDepuisData(data);
       renderAgendaEvents(data.events || []);
       return;
 
@@ -711,10 +666,14 @@ async function init(){
   let url = "";
 
   if(type === "formations"){
-    url = PASSERELLE + "?mode=ics_collectif&type=formation";
+    titleEl.textContent = "Formations";
+    url = apiUrl("ics_collectif", {type:"formation"});
   }else if(type === "stagiaires"){
-    url = PASSERELLE + "?mode=ics_collectif&type=stagiaires";
+    titleEl.textContent = "Stagiaires";
+    url = apiUrl("ics_collectif", {type:"stagiaires"});
   }
+
+  avatarWrap.classList.remove("is-visible");
 
   if(!url){
     contentEl.textContent = "Aperçu impossible : lien manquant.";
@@ -722,7 +681,11 @@ async function init(){
   }
 
   try{
-    const res = await fetch(url);
+    const res = await fetch(url, {
+      method:"GET",
+      cache:"no-store"
+    });
+
     const text = await res.text();
 
     if(!res.ok || !text.includes("BEGIN:VCALENDAR")){
@@ -730,6 +693,7 @@ async function init(){
     }
 
     renderIcsEvents(parseEvents(text));
+
   }catch(e){
     console.error(e);
     contentEl.textContent = "Aperçu indisponible. Vérifie que la passerelle Apps Script est bien à jour.";
