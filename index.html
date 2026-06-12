@@ -457,7 +457,7 @@ button.btn{width:100%}
 
     <div class="modal-grid two">
 
-      <a class="btn btn-teal btn-full" id="devicePreview" href="#" target="_blank" rel="noopener">
+      <a class="btn btn-teal btn-full" id="devicePreview" href="./esprit-equipe.html">
         <span>
           <span class="icon">👁️</span>
           APERÇU
@@ -483,12 +483,7 @@ button.btn{width:100%}
 <script>
 const PASSERELLE_AGENTS = "https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8HZ_g_ota7tajTKLY3jvLKEF9AvSPjIbVpqcSkSRcl5OdWV9/exec";
 
-/*
-  Architecture propre :
-  index.html ouvre cette page GitHub.
-  La page esprit-equipe.html utilisera ensuite le lien Apps Script pour afficher les données.
-*/
-const URL_APERCU_PLANNING_COLLECTIF = "esprit-equipe.html";
+const URL_APERCU_PLANNING_COLLECTIF = "./esprit-equipe.html";
 
 const CALENDRIERS = {
   agents: {
@@ -590,7 +585,11 @@ function ouvrirChoixSupport(cal){
   document.getElementById("deviceTitle").textContent = cal.titre;
   document.getElementById("deviceText").textContent = cal.texte;
 
-  document.getElementById("devicePreview").href = cal.apercu;
+  const preview = document.getElementById("devicePreview");
+  preview.href = "./esprit-equipe.html";
+  preview.removeAttribute("target");
+  preview.removeAttribute("rel");
+
   document.getElementById("deviceIos").href = webcalUrl(cal.url);
   document.getElementById("deviceAndroid").href = androidUrl(cal.url);
 
