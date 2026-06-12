@@ -8,78 +8,554 @@
 <style>
 *,*::before,*::after{box-sizing:border-box}
 
-body{
-  margin:0;
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  background:#fff7dd;
-  color:#07183f;
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+:root{
+  --ink:#07183f;
+  --paper:#fff7dd;
+  --cream:#fff9e8;
 }
 
-.box{
-  width:min(620px,100%);
-  text-align:center;
-  background:#fff9e8;
+html,body{
+  margin:0;
+  min-height:100vh;
+}
+
+body{
+  color:var(--ink);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:
+    radial-gradient(circle at 15% 0%,rgba(255,255,255,.95) 0 9%,transparent 31%),
+    radial-gradient(circle at 88% 4%,rgba(255,218,116,.46) 0 9%,transparent 32%),
+    repeating-linear-gradient(-6deg,rgba(7,24,63,.035) 0 1px,transparent 1px 13px),
+    linear-gradient(180deg,#fff9e8 0%,#f5e8bf 57%,#ead9a5 100%);
+}
+
+.page{
+  width:min(920px,100%);
+  margin:auto;
+  padding:14px 12px 34px;
+}
+
+.hero{
+  background:
+    radial-gradient(circle at 18% 10%,rgba(255,255,255,.13),transparent 30%),
+    linear-gradient(135deg,#07183f 0%,#101f46 58%,#020817 100%);
+  color:#fff7dd;
+  border-radius:30px;
+  padding:22px 18px;
   border:5px solid #07183f;
-  border-radius:28px;
-  padding:24px 18px;
-  box-shadow:0 10px 0 rgba(7,24,63,.18);
+  box-shadow:
+    0 10px 0 rgba(7,24,63,.20),
+    0 15px 0 rgba(0,0,0,.12);
+  margin-bottom:16px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:7px 13px;
+  margin-bottom:14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.13);
+  border:2px solid rgba(255,255,255,.20);
+  font-weight:900;
+  font-size:14px;
 }
 
 h1{
-  margin:0 0 10px;
+  margin:0;
   font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(42px,10vw,74px);
-  line-height:.9;
-  text-transform:uppercase;
-  text-shadow:0 4px 0 #f8d67d;
+  font-size:clamp(44px,11vw,86px);
+  line-height:.86;
+  letter-spacing:.3px;
+  text-shadow:
+    0 4px 0 rgba(211,162,75,.35),
+    4px 7px 0 rgba(0,0,0,.20);
 }
 
-p{
-  margin:0 0 18px;
+.subtitle{
+  margin:12px 0 0;
+  color:rgba(255,247,221,.88);
+  font-size:16px;
   font-weight:900;
-  font-size:17px;
 }
 
-a{
-  display:inline-flex;
+.top-actions{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  margin:0 0 16px;
+}
+
+.back-btn{
+  display:flex;
   align-items:center;
   justify-content:center;
-  min-height:54px;
-  padding:12px 18px;
+  min-height:48px;
   border:4px solid #07183f;
   border-radius:18px;
-  background:#07183f;
-  color:#fff7dd;
+  background:#fff9e8;
+  color:#07183f;
   text-decoration:none;
   font-weight:1000;
+  box-shadow:0 5px 0 rgba(7,24,63,.16);
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin:16px 0;
+}
+
+.stat{
+  background:#fff9e8;
+  border:4px solid var(--ink);
+  border-radius:20px;
+  padding:13px 12px;
+  font-weight:1000;
+  font-size:16px;
+  box-shadow:0 5px 0 rgba(7,24,63,.16);
+}
+
+.stat.full{
+  grid-column:1/-1;
+  font-size:20px;
+}
+
+.section-title{
+  margin:24px 4px 12px;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(28px,7vw,50px);
+  line-height:.9;
+  text-transform:uppercase;
+  text-shadow:0 3px 0 #f8d67d;
+}
+
+.card{
+  background:#fff9e8;
+  border:4px solid var(--ink);
+  border-radius:22px;
+  padding:15px 14px;
+  margin-bottom:12px;
+  box-shadow:
+    0 6px 0 rgba(7,24,63,.17),
+    inset 0 0 0 3px rgba(255,215,115,.30);
+}
+
+.card.important{border-left:10px solid #f07c00}
+.card.warning{border-left:10px solid #dc0917}
+.card.ok{border-left:10px solid #12873d}
+
+.shift-title{
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(24px,5.6vw,38px);
+  line-height:.9;
+  margin-bottom:11px;
+  text-transform:uppercase;
+}
+
+.agent{
+  padding:10px 0;
+  border-top:2px dashed rgba(7,24,63,.22);
+  font-size:17px;
+  font-weight:900;
+}
+
+.agent:first-of-type{border-top:0}
+
+.ghe{
+  color:rgba(7,24,63,.58);
+  font-weight:900;
+}
+
+.empty{
+  color:rgba(7,24,63,.55);
+  font-weight:900;
+  font-style:italic;
+}
+
+.agenda-box{
+  margin:28px 0 4px;
+  padding:18px 14px;
+  background:#fff9e8;
+  border:5px solid #07183f;
+  border-radius:26px;
+  box-shadow:
+    0 8px 0 rgba(7,24,63,.17),
+    inset 0 0 0 3px rgba(255,215,115,.30);
+}
+
+.agenda-title{
+  margin:0 0 14px;
+  text-align:center;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(28px,6.5vw,52px);
+  line-height:.9;
+  text-transform:uppercase;
+  text-shadow:0 3px 0 #f8d67d;
+}
+
+.agenda-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.agenda-btn{
+  min-height:78px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:4px;
+  text-decoration:none;
+  color:#fff4ce;
+  border:5px solid #061738;
+  border-radius:23px 19px 27px 20px;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(22px,5vw,36px);
+  text-transform:uppercase;
+  box-shadow:
+    0 8px 0 rgba(7,24,63,.35),
+    0 12px 0 rgba(0,0,0,.13),
+    inset 0 -10px 16px rgba(0,0,0,.22),
+    inset 0 7px 14px rgba(255,255,255,.16);
+  text-shadow:
+    0 3px 0 rgba(0,0,0,.48),
+    2px 5px 0 rgba(94,56,12,.34);
+}
+
+.agenda-btn:active{transform:translateY(4px)}
+
+.agenda-btn.ios{
+  background:
+    radial-gradient(circle at 22% 16%,rgba(255,255,255,.34),transparent 28%),
+    linear-gradient(145deg,#3db9ff 0%,#0c6ed5 56%,#083c91 100%);
+}
+
+.agenda-btn.android{
+  background:
+    radial-gradient(circle at 22% 16%,rgba(255,255,255,.34),transparent 28%),
+    linear-gradient(145deg,#35d864 0%,#12873d 56%,#075324 100%);
+}
+
+.note{
+  margin:13px 4px 0;
+  text-align:center;
+  color:rgba(7,24,63,.65);
+  font-weight:800;
+  font-size:13px;
+  line-height:1.35;
+}
+
+.error{
+  display:none;
+  background:#fff1ed;
+  color:#b42318;
+  border:4px solid rgba(180,35,24,.25);
+  border-radius:22px;
+  padding:16px;
+  font-weight:900;
+  line-height:1.35;
+}
+
+.loader{
+  background:#fff9e8;
+  border:4px solid #07183f;
+  border-radius:22px;
+  padding:18px;
+  font-weight:1000;
+  text-align:center;
+  box-shadow:0 5px 0 rgba(7,24,63,.16);
+}
+
+.footer{
+  margin:22px 4px 0;
+  color:rgba(7,24,63,.55);
+  font-weight:800;
+  font-size:13px;
+  line-height:1.45;
+  text-align:right;
+}
+
+@media(max-width:620px){
+  .page{padding:10px 8px 28px}
+
+  .hero{
+    border-radius:24px;
+    padding:18px 15px;
+    border-width:4px;
+  }
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+
+  .stat{
+    border-width:3px;
+    padding:12px 10px;
+  }
+
+  .card{
+    border-width:3px;
+    border-radius:20px;
+    padding:13px 12px;
+  }
+
+  .agenda-box{
+    border-width:4px;
+    border-radius:22px;
+    padding:15px 11px;
+  }
+
+  .agenda-buttons{
+    gap:8px;
+  }
+
+  .agenda-btn{
+    min-height:74px;
+    border-width:4px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<div class="box">
-  <h1>Esprit d’équipe</h1>
-  <p>Ouverture du planning collectif GHE…</p>
+<main class="page">
 
-  <a id="directLink" href="https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOlle3cafAKEAZQ8NAX-peSN6D-yxFO3gX26SnVNUVd5xbwV3CUISg/exec">
-    Ouvrir maintenant
-  </a>
-</div>
+  <section class="hero">
+    <div class="badge">🗓️ Planning collectif GHE</div>
+    <h1>Esprit d’équipe</h1>
+    <p class="subtitle" id="subtitle">Chargement du planning collectif…</p>
+  </section>
+
+  <div class="top-actions">
+    <a class="back-btn" href="./index.html">← Retour à l’accueil</a>
+  </div>
+
+  <div class="loader" id="loader">Chargement des données…</div>
+  <div class="error" id="errorBox">Impossible de charger les données.</div>
+
+  <div id="content" style="display:none;"></div>
+
+  <section class="agenda-box">
+    <h2 class="agenda-title">Ajouter le planning collectif à mon agenda</h2>
+
+    <div class="agenda-buttons">
+      <a
+        class="agenda-btn ios"
+        href="webcal://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics">
+        <span>🍎</span>
+        <span>iOS</span>
+      </a>
+
+      <a
+        class="agenda-btn android"
+        href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fical%2Fca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%2540group.calendar.google.com%2Fprivate-5a1892e376d3c9b3cc82c5f0ad61c333%2Fbasic.ics">
+        <span>🤖</span>
+        <span>Android</span>
+      </a>
+    </div>
+
+    <div class="note">
+      iOS ajoute le calendrier via abonnement. Android ouvre Google Agenda pour l’ajouter.
+    </div>
+  </section>
+
+  <div class="footer">
+    Page GitHub — données synchronisées depuis la base GHE.
+  </div>
+
+</main>
 
 <script>
-const URL_ESPRIT_EQUIPE = "https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOlle3cafAKEAZQ8NAX-peSN6D-yxFO3gX26SnVNUVd5xbwV3CUISg/exec";
+const API_ESPRIT_EQUIPE = "https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOlle3cafAKEAZQ8NAX-peSN6D-yxFO3gX26SnVNUVd5xbwV3CUISg/exec";
 
-document.getElementById("directLink").href = URL_ESPRIT_EQUIPE;
+const loader = document.getElementById("loader");
+const errorBox = document.getElementById("errorBox");
+const content = document.getElementById("content");
+const subtitle = document.getElementById("subtitle");
 
-setTimeout(function(){
-  window.location.replace(URL_ESPRIT_EQUIPE);
-}, 300);
+function esc(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function asArray(v){
+  return Array.isArray(v) ? v : [];
+}
+
+function count(g){
+  return asArray(g).length;
+}
+
+function agentLine(agent){
+  const prenom = agent.prenom || agent.agent || agent.nom || "";
+  const ghe = agent.ghe ? ` <span class="ghe">· ${esc(agent.ghe)}</span>` : "";
+  return `<div class="agent">${esc(prenom)}${ghe}</div>`;
+}
+
+function renderShift(emoji, titre, agents){
+  agents = asArray(agents);
+  let html = `
+    <div class="card">
+      <div class="shift-title">${emoji} ${esc(titre)}</div>
+  `;
+
+  if(!agents.length){
+    html += `<div class="empty">Aucun agent détecté</div>`;
+  }else{
+    html += agents.map(agentLine).join("");
+  }
+
+  html += `</div>`;
+  return html;
+}
+
+function renderImportant(jour){
+  const formations = asArray(jour.formations);
+  const stagiaires = asArray(jour.stagiaires);
+
+  if(!formations.length && !stagiaires.length){
+    return "";
+  }
+
+  let html = `<div class="section-title">📌 À ne pas rater</div>`;
+
+  formations.forEach(f => {
+    html += `
+      <div class="card important">
+        <div class="shift-title">🎓 Formation · ${esc(f.horaire || "")}</div>
+        <div class="agent">${esc(f.titre || f.formationIntitule || "")}</div>
+        ${asArray(f.agents).map(agentLine).join("")}
+      </div>
+    `;
+  });
+
+  stagiaires.forEach(s => {
+    html += `
+      <div class="card important">
+        <div class="shift-title">👶 Stagiaire · ${esc(String(s.shiftLabel || "").toUpperCase())}</div>
+        <div class="agent">${esc(s.stagiaire || "")}</div>
+        ${
+          asArray(s.referents).length
+            ? asArray(s.referents).map(r => `<div class="agent">Référent : ${esc(r.prenom || r.agent || "")}${r.ghe ? ` <span class="ghe">· ${esc(r.ghe)}</span>` : ""}</div>`).join("")
+            : `<div class="agent">Référent : à vérifier</div>`
+        }
+      </div>
+    `;
+  });
+
+  return html;
+}
+
+function renderControle(jour){
+  const alertes = [];
+
+  asArray(jour.gheManquants).forEach(a => alertes.push("GHE manquant : " + a));
+  asArray(jour.codesInconnus).forEach(a => alertes.push("Code shift à vérifier : " + a));
+  asArray(jour.alertesSource).forEach(a => alertes.push(a));
+
+  if(!alertes.length){
+    return `
+      <div class="section-title">Contrôle final</div>
+      <div class="card ok">
+        <div class="agent">✅ Rien de particulier détecté.</div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="section-title">Contrôle final</div>
+    <div class="card warning">
+      <div class="shift-title">⚠️ À vérifier</div>
+      ${alertes.map(a => `<div class="agent">${esc(a)}</div>`).join("")}
+    </div>
+  `;
+}
+
+function renderPage(data){
+  const jour = data.jour || data;
+
+  const groupes = jour.groupes || {};
+  const M = asArray(groupes.M);
+  const J = asArray(groupes.J);
+  const J4 = asArray(groupes.J4);
+  const S = asArray(groupes.S);
+  const N = asArray(groupes.N);
+
+  const total = count(M) + count(J) + count(J4) + count(S) + count(N);
+
+  subtitle.textContent = `${jour.label || jour.dateIso || "Planning du jour"} · sync ${jour.sync || ""}`;
+
+  content.innerHTML = `
+    <section class="stats">
+      <div class="stat full">👥 Total : ${total} agents</div>
+      <div class="stat">🟦 Matin : ${count(M)}</div>
+      <div class="stat">🟩 Jour : ${count(J)}</div>
+      <div class="stat">🟧 J4 : ${count(J4)}</div>
+      <div class="stat">🟨 Soir : ${count(S)}</div>
+      <div class="stat">⬛ Nuit : ${count(N)}</div>
+    </section>
+
+    ${renderImportant(jour)}
+
+    <div class="section-title">Planning</div>
+
+    ${renderShift("🟦", "MATIN", M)}
+    ${renderShift("🟩", "JOUR", J)}
+    ${renderShift("🟧", "J4", J4)}
+    ${renderShift("🟨", "SOIR", S)}
+    ${renderShift("⬛", "NUIT", N)}
+
+    ${renderControle(jour)}
+  `;
+
+  loader.style.display = "none";
+  errorBox.style.display = "none";
+  content.style.display = "block";
+}
+
+function showError(msg){
+  loader.style.display = "none";
+  errorBox.style.display = "block";
+  errorBox.textContent = msg || "Impossible de charger les données.";
+}
+
+window.recevoirEspritEquipeGhe = function(data){
+  try{
+    if(!data || data.ok === false){
+      showError(data && data.erreur ? data.erreur : "Données invalides.");
+      return;
+    }
+
+    renderPage(data);
+  }catch(err){
+    showError("Erreur d’affichage : " + String(err.message || err));
+  }
+};
+
+(function loadJsonp(){
+  const script = document.createElement("script");
+  script.src = API_ESPRIT_EQUIPE + "?mode=jsonp&callback=recevoirEspritEquipeGhe&t=" + Date.now();
+  script.onerror = function(){
+    showError("Impossible de charger les données depuis Apps Script.");
+  };
+  document.body.appendChild(script);
+
+  setTimeout(function(){
+    if(content.style.display !== "block"){
+      showError("Temps de chargement dépassé. Le script Apps Script doit renvoyer le mode JSONP.");
+    }
+  }, 9000);
+})();
 </script>
 
 </body>
