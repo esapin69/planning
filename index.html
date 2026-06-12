@@ -141,10 +141,6 @@ body::before{
   gap:12px;
 }
 
-.modal-grid.two{
-  grid-template-columns:1fr 1fr;
-}
-
 .btn{
   --main1:#277bd5;
   --main2:#0c4da8;
@@ -189,9 +185,7 @@ body::before{
   -webkit-appearance:none;
 }
 
-button.btn{
-  width:100%;
-}
+button.btn{width:100%}
 
 .btn::before{
   content:"";
@@ -216,29 +210,13 @@ button.btn{
   line-height:.85;
 }
 
-.btn .mini{
-  display:block;
-  margin-top:6px;
-  font-size:.48em;
-  line-height:1.05;
-  opacity:.95;
-}
+.btn:active{transform:translateY(4px)}
 
-.btn:active{
-  transform:translateY(4px);
-}
-
-.btn-full{grid-column:1/-1}
 .btn-day{--main1:#34b7ff;--main2:#086bd2;--main3:#063f98;--edge:#051940}
 .btn-night{--main1:#243a74;--main2:#071a45;--main3:#020812;--edge:#061129}
 .btn-chief{--main1:#b75aff;--main2:#7130b5;--main3:#3d145f;--edge:#15072a}
-.btn-ios{--main1:#3db9ff;--main2:#0c6ed5;--main3:#083c91}
-.btn-android{--main1:#35d864;--main2:#12873d;--main3:#075324}
 .btn-copy{--main1:#ffe165;--main2:#f2ae12;--main3:#ce7600;color:#fff7d8}
 .btn-orange{--main1:#ffb43a;--main2:#f07c00;--main3:#b74d00}
-.btn-red{--main1:#ff5157;--main2:#dc0917;--main3:#930711;--edge:#160715}
-.btn-teal{--main1:#24d4c5;--main2:#078f92;--main3:#055668;--edge:#052b40}
-.btn-purple{--main1:#a66cff;--main2:#6530af;--main3:#3d176e;--edge:#100722}
 .btn-grey{--main1:#999;--main2:#555;--main3:#222}
 
 .modal{
@@ -252,9 +230,7 @@ button.btn{
   background:rgba(2,9,25,.58);
 }
 
-.modal.is-open{
-  display:flex;
-}
+.modal.is-open{display:flex}
 
 .modal-panel{
   width:min(720px,100%);
@@ -338,9 +314,7 @@ button.btn{
   cursor:pointer;
 }
 
-.agent-btn:active{
-  transform:translateY(3px);
-}
+.agent-btn:active{transform:translateY(3px)}
 
 .close-btn{
   margin-top:14px;
@@ -355,9 +329,7 @@ button.btn{
   .scene-img{border-width:5px;border-radius:23px 20px 26px 20px}
   .modal{padding:14px 8px}
   .modal-panel{border-width:5px;padding:15px 10px 18px}
-  .modal-grid.two{grid-template-columns:1fr 1fr; gap:9px}
   .btn{min-height:76px;font-size:clamp(18px,5.2vw,30px)}
-  .btn .mini{font-size:.45em}
 }
 </style>
 </head>
@@ -387,9 +359,9 @@ button.btn{
   </section>
 
   <section class="hand-card" id="organisation">
-    <button class="image-button" type="button" data-open="modal-organisation" aria-label="Ouvrir organisation">
+    <a class="image-link" href="./esprit-equipe.html" aria-label="Ouvrir organisation">
       <img class="scene-img" src="Image/Bannière/03-organisation.png" alt="Organisation GHE">
-    </button>
+    </a>
     <div class="tap-hint">Organisation</div>
   </section>
 
@@ -444,72 +416,8 @@ button.btn{
   </div>
 </div>
 
-<div class="modal" id="modal-organisation" aria-hidden="true">
-  <div class="modal-panel">
-    <h2 class="modal-title">Organisation</h2>
-
-    <p class="modal-text">
-      Accès au planning collectif : aperçu lisible et abonnement agenda.
-    </p>
-
-    <button class="btn btn-purple btn-full" type="button" data-calendar-choice="agents">
-      <span>
-        <span class="icon">🤝</span>
-        PLANNING COLLECTIF
-        <span class="mini">Voir ou ajouter le planning collectif GHE</span>
-      </span>
-    </button>
-
-    <button class="btn btn-grey close-btn" type="button" data-close>
-      <span>FERMER</span>
-    </button>
-  </div>
-</div>
-
-<div class="modal" id="modal-device" aria-hidden="true">
-  <div class="modal-panel">
-    <h2 class="modal-title" id="deviceTitle">Ajouter</h2>
-
-    <p class="modal-text" id="deviceText">
-      Choisis ton téléphone.
-    </p>
-
-    <div class="modal-grid two">
-
-      <button class="btn btn-teal btn-full" id="devicePreview" type="button">
-        <span>
-          <span class="icon">👁️</span>
-          APERÇU
-          <span class="mini">Ouvrir la page Esprit d’équipe — GHE</span>
-        </span>
-      </button>
-
-      <a class="btn btn-ios" id="deviceIos" href="#">
-        <span><span class="icon">🍎</span>APPLE</span>
-      </a>
-
-      <a class="btn btn-android" id="deviceAndroid" href="#" target="_blank" rel="noopener">
-        <span><span class="icon">🤖</span>ANDROID</span>
-      </a>
-
-    </div>
-
-    <button class="btn btn-grey close-btn" type="button" data-close>
-      <span>FERMER</span>
-    </button>
-  </div>
-</div>
-
 <script>
 const PASSERELLE_AGENTS = "https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8HZ_g_ota7tajTKLY3jvLKEF9AvSPjIbVpqcSkSRcl5OdWV9/exec";
-
-const CALENDRIERS = {
-  agents: {
-    titre: "Esprit d’équipe — GHE",
-    texte: "Voir ou ajouter le planning collectif dans l’agenda du téléphone.",
-    url: "https://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics"
-  }
-};
 
 let agents = [];
 let agentsDejaCharges = false;
@@ -517,7 +425,6 @@ let chargementEnCours = false;
 
 const agentList = document.getElementById("agentList");
 const agentSearch = document.getElementById("agentSearch");
-const devicePreview = document.getElementById("devicePreview");
 
 function normaliserRecherche(v){
   return String(v || "")
@@ -561,7 +468,6 @@ function closeModals(){
 document.addEventListener("click", function(e){
   const openBtn = e.target.closest("[data-open]");
   const closeBtn = e.target.closest("[data-close]");
-  const calendarBtn = e.target.closest("[data-calendar-choice]");
   const agentBtn = e.target.closest("[data-agent-key]");
 
   if(closeBtn){
@@ -574,12 +480,6 @@ document.addEventListener("click", function(e){
     return;
   }
 
-  if(calendarBtn){
-    const key = calendarBtn.dataset.calendarChoice;
-    ouvrirChoixSupport(CALENDRIERS[key]);
-    return;
-  }
-
   if(agentBtn){
     choisirAgent(agentBtn.dataset.agentKey);
     return;
@@ -589,26 +489,6 @@ document.addEventListener("click", function(e){
     closeModals();
   }
 });
-
-function webcalUrl(url){
-  return url.replace(/^https:\/\//i, "webcal://");
-}
-
-function androidUrl(url){
-  return "https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(url);
-}
-
-function ouvrirChoixSupport(cal){
-  if(!cal) return;
-
-  document.getElementById("deviceTitle").textContent = cal.titre;
-  document.getElementById("deviceText").textContent = cal.texte;
-
-  document.getElementById("deviceIos").href = webcalUrl(cal.url);
-  document.getElementById("deviceAndroid").href = androidUrl(cal.url);
-
-  openModal("modal-device");
-}
 
 function choisirAgent(agentKey){
   if(!agentKey) return;
@@ -709,10 +589,6 @@ async function chargerAgents(){
 
 agentSearch.addEventListener("input", function(){
   renderAgents(agentSearch.value);
-});
-
-devicePreview.addEventListener("click", function(){
-  window.location.href = "./esprit-equipe.html";
 });
 
 chargerAgents();
