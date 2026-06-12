@@ -141,7 +141,9 @@ body::before{
   gap:12px;
 }
 
-.modal-grid.two{grid-template-columns:1fr 1fr}
+.modal-grid.two{
+  grid-template-columns:1fr 1fr;
+}
 
 .btn{
   --main1:#277bd5;
@@ -187,7 +189,9 @@ body::before{
   -webkit-appearance:none;
 }
 
-button.btn{width:100%}
+button.btn{
+  width:100%;
+}
 
 .btn::before{
   content:"";
@@ -220,7 +224,9 @@ button.btn{width:100%}
   opacity:.95;
 }
 
-.btn:active{transform:translateY(4px)}
+.btn:active{
+  transform:translateY(4px);
+}
 
 .btn-full{grid-column:1/-1}
 .btn-day{--main1:#34b7ff;--main2:#086bd2;--main3:#063f98;--edge:#051940}
@@ -246,7 +252,9 @@ button.btn{width:100%}
   background:rgba(2,9,25,.58);
 }
 
-.modal.is-open{display:flex}
+.modal.is-open{
+  display:flex;
+}
 
 .modal-panel{
   width:min(720px,100%);
@@ -330,7 +338,9 @@ button.btn{width:100%}
   cursor:pointer;
 }
 
-.agent-btn:active{transform:translateY(3px)}
+.agent-btn:active{
+  transform:translateY(3px);
+}
 
 .close-btn{
   margin-top:14px;
@@ -394,15 +404,19 @@ button.btn{width:100%}
       <a class="btn btn-day" href="mois.html?type=jour">
         <span><span class="icon">☀️</span>JOUR</span>
       </a>
+
       <a class="btn btn-night" href="mois.html?type=nuit">
         <span><span class="icon">🌙</span>NUIT</span>
       </a>
+
       <a class="btn btn-chief" href="mois.html?type=chef">
         <span><span class="icon">👥</span>CHEF</span>
       </a>
+
       <a class="btn btn-copy" href="stagiaires.html">
         <span><span class="icon">🎓</span>STAGIAIRES</span>
       </a>
+
       <a class="btn btn-orange" href="formations.html">
         <span><span class="icon">📋</span>FORMATIONS</span>
       </a>
@@ -417,7 +431,9 @@ button.btn{width:100%}
 <div class="modal" id="modal-personnel" aria-hidden="true">
   <div class="modal-panel">
     <h2 class="modal-title">Choisis ton nom</h2>
+
     <input class="search-agent" id="agentSearch" type="search" placeholder="Rechercher mon nom">
+
     <div class="agent-list" id="agentList">
       <div class="modal-text">Chargement des agents...</div>
     </div>
@@ -453,17 +469,20 @@ button.btn{width:100%}
 <div class="modal" id="modal-device" aria-hidden="true">
   <div class="modal-panel">
     <h2 class="modal-title" id="deviceTitle">Ajouter</h2>
-    <p class="modal-text" id="deviceText">Choisis ton téléphone.</p>
+
+    <p class="modal-text" id="deviceText">
+      Choisis ton téléphone.
+    </p>
 
     <div class="modal-grid two">
 
-      <a class="btn btn-teal btn-full" id="devicePreview" href="./esprit-equipe.html">
+      <button class="btn btn-teal btn-full" id="devicePreview" type="button">
         <span>
           <span class="icon">👁️</span>
           APERÇU
           <span class="mini">Ouvrir la page Esprit d’équipe — GHE</span>
         </span>
-      </a>
+      </button>
 
       <a class="btn btn-ios" id="deviceIos" href="#">
         <span><span class="icon">🍎</span>APPLE</span>
@@ -472,6 +491,7 @@ button.btn{width:100%}
       <a class="btn btn-android" id="deviceAndroid" href="#" target="_blank" rel="noopener">
         <span><span class="icon">🤖</span>ANDROID</span>
       </a>
+
     </div>
 
     <button class="btn btn-grey close-btn" type="button" data-close>
@@ -483,13 +503,10 @@ button.btn{width:100%}
 <script>
 const PASSERELLE_AGENTS = "https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8HZ_g_ota7tajTKLY3jvLKEF9AvSPjIbVpqcSkSRcl5OdWV9/exec";
 
-const URL_APERCU_PLANNING_COLLECTIF = "./esprit-equipe.html";
-
 const CALENDRIERS = {
   agents: {
     titre: "Esprit d’équipe — GHE",
     texte: "Voir ou ajouter le planning collectif dans l’agenda du téléphone.",
-    apercu: URL_APERCU_PLANNING_COLLECTIF,
     url: "https://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics"
   }
 };
@@ -500,6 +517,7 @@ let chargementEnCours = false;
 
 const agentList = document.getElementById("agentList");
 const agentSearch = document.getElementById("agentSearch");
+const devicePreview = document.getElementById("devicePreview");
 
 function normaliserRecherche(v){
   return String(v || "")
@@ -516,6 +534,7 @@ function openModal(id){
   });
 
   const modal = document.getElementById(id);
+
   if(modal){
     modal.classList.add("is-open");
     modal.setAttribute("aria-hidden","false");
@@ -584,11 +603,6 @@ function ouvrirChoixSupport(cal){
 
   document.getElementById("deviceTitle").textContent = cal.titre;
   document.getElementById("deviceText").textContent = cal.texte;
-
-  const preview = document.getElementById("devicePreview");
-  preview.href = "./esprit-equipe.html";
-  preview.removeAttribute("target");
-  preview.removeAttribute("rel");
 
   document.getElementById("deviceIos").href = webcalUrl(cal.url);
   document.getElementById("deviceAndroid").href = androidUrl(cal.url);
@@ -695,6 +709,10 @@ async function chargerAgents(){
 
 agentSearch.addEventListener("input", function(){
   renderAgents(agentSearch.value);
+});
+
+devicePreview.addEventListener("click", function(){
+  window.location.href = "./esprit-equipe.html";
 });
 
 chargerAgents();
