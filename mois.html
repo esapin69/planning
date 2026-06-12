@@ -1,13 +1,12 @@
 <!doctype html>
+
 <html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Choisis ton mois</title>
-
 <style>
 *{box-sizing:border-box}
-
 body{
   margin:0;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
@@ -15,7 +14,6 @@ body{
   color:#07183f;
   overflow-x:hidden;
 }
-
 /* BANNIÈRE */
 .hero{
   width:100%;
@@ -23,7 +21,6 @@ body{
   overflow:hidden;
   border-bottom:4px solid #07183f;
 }
-
 .hero img{
   display:block;
   width:100%;
@@ -31,19 +28,15 @@ body{
   object-fit:cover;
   object-position:center;
 }
-
-/* Si la bannière ne charge pas, on cache proprement */
 .hero.hidden{
   display:none;
 }
-
 /* PAGE */
 .page{
   max-width:900px;
   margin:auto;
   padding:20px 16px 42px;
 }
-
 .back{
   display:inline-block;
   margin-bottom:16px;
@@ -52,8 +45,7 @@ body{
   font-weight:900;
   font-size:22px;
 }
-
-/* TITRE PLUS PROPRE */
+/* TITRE */
 .title-box{
   margin:4px auto 22px;
   max-width:620px;
@@ -64,7 +56,6 @@ body{
   box-shadow:0 7px 0 #07183f;
   text-align:center;
 }
-
 h1{
   margin:0;
   font-size:clamp(30px, 8vw, 46px);
@@ -77,22 +68,18 @@ h1{
     2px 2px 0 #ffffff,
     4px 4px 0 rgba(7,24,63,.14);
 }
-
 .subtitle{
   margin:10px 0 0;
   font-size:clamp(20px, 5.4vw, 28px);
   font-weight:900;
   color:#243154;
 }
-
 /* CARTES MOIS */
 .months-list{
   display:flex;
   flex-direction:column;
   gap:28px;
 }
-
-/* Carte pleine largeur utile */
 .card{
   position:relative;
   width:100%;
@@ -104,13 +91,11 @@ h1{
     0 10px 0 #07183f,
     0 18px 30px rgba(7,24,63,.18);
 }
-
 .card img{
   display:block;
   width:100%;
   height:auto;
 }
-
 .card button{
   position:absolute;
   inset:0;
@@ -119,11 +104,9 @@ h1{
   cursor:pointer;
   z-index:3;
 }
-
 .card:active{
   transform:scale(.985);
 }
-
 .card.missing{
   min-height:210px;
   display:flex;
@@ -134,7 +117,6 @@ h1{
   font-weight:900;
   font-size:20px;
 }
-
 .empty{
   background:white;
   border:5px dashed #07183f;
@@ -146,74 +128,54 @@ h1{
 }
 </style>
 </head>
-
 <body>
-
 <header class="hero" id="hero">
   <img id="banner" alt="Bannière choix du mois">
 </header>
-
 <main class="page">
 
-  <a class="back" href="index.html">← Retour</a>
+← Retour
 
   <div class="title-box">
     <h1>Choisis ton mois</h1>
     <div class="subtitle" id="subtitle">Sélectionne le mois souhaité</div>
   </div>
-
   <div id="months" class="months-list"></div>
-
 </main>
-
 <script>
 const params = new URLSearchParams(window.location.search);
 const type = params.get("type") || "jour";
-
 const labels = {
   jour: "Planning équipe du jour",
   nuit: "Planning équipe de nuit",
+  chef: "Planning chefs d’équipe",
   stagiaires: "Planning stagiaires",
   pdf: "PDF à imprimer",
   ics: "Sur ton agenda",
   "collectif-ics": "Télécharger le fichier ICS"
 };
-
 document.getElementById("subtitle").textContent =
   labels[type] || "Sélectionne le mois souhaité";
-
-/* BANNIÈRE : local + fallback GitHub RAW */
+/* BANNIÈRE */
 const banner = document.getElementById("banner");
 const hero = document.getElementById("hero");
-
 const bannerPaths = [
-  "Image/Mois/Bannière page des Mois.PNG",
-  "Image/Mois/Banni%C3%A8re%20page%20des%20Mois.PNG",
-
-  "./Image/Mois/Bannière page des Mois.PNG",
-  "./Image/Mois/Banni%C3%A8re%20page%20des%20Mois.PNG",
-
-  "/Image/Mois/Bannière page des Mois.PNG",
-  "/Image/Mois/Banni%C3%A8re%20page%20des%20Mois.PNG",
-
-  "https://raw.githubusercontent.com/esapin69/planning/main/Image/Mois/Banni%C3%A8re%20page%20des%20Mois.PNG"
+  "Image/Mois/Banniere-mois.png",
+  "./Image/Mois/Banniere-mois.png",
+  "/Image/Mois/Banniere-mois.png",
+  "https://raw.githubusercontent.com/esapin69/planning/main/Image/Mois/Banniere-mois.png"
 ];
-
 let bannerIndex = 0;
-
 function tryBanner(){
   if(bannerIndex >= bannerPaths.length){
     hero.classList.add("hidden");
     return;
   }
-
   banner.src = bannerPaths[bannerIndex] + "?v=" + Date.now();
   bannerIndex++;
 }
-
 banner.onerror = tryBanner;
 tryBanner();
-
 /* IMAGES DES MOIS */
 const monthImages = [
   { number: 1, key: "01.2026", image: "Image/Mois/Janvier.jpeg" },
@@ -229,30 +191,23 @@ const monthImages = [
   { number: 11, key: "11.2026", image: "Image/Mois/Novembre.jpeg" },
   { number: 12, key: "12.2026", image: "Image/Mois/Decembre.jpeg" }
 ];
-
 const today = new Date();
 const currentMonth = today.getMonth() + 1;
-
 let visibleMonths = monthImages.filter(month => month.number === currentMonth);
-
 if(today.getDate() >= 20){
   const nextMonthNumber = currentMonth === 12 ? 1 : currentMonth + 1;
   visibleMonths.push(
     ...monthImages.filter(month => month.number === nextMonthNumber)
   );
 }
-
 /*
 Pour tester toutes les images :
 visibleMonths = monthImages;
 */
-
 const monthsDiv = document.getElementById("months");
-
 fetch("./liens-a-modifier.json?v=" + Date.now())
   .then(response => response.json())
   .then(links => {
-
     if(!visibleMonths.length){
       monthsDiv.innerHTML = `
         <div class="empty">
@@ -261,34 +216,27 @@ fetch("./liens-a-modifier.json?v=" + Date.now())
       `;
       return;
     }
-
     visibleMonths.forEach(month => {
       const card = document.createElement("div");
       card.className = "card";
-
       const img = document.createElement("img");
       img.src = month.image + "?v=" + Date.now();
       img.alt = "Planning " + month.key;
-
       img.onerror = () => {
         img.remove();
         card.classList.add("missing");
         card.textContent = "Image introuvable : " + month.image;
       };
-
       const button = document.createElement("button");
       button.setAttribute("aria-label", "Ouvrir " + month.key);
-
       button.onclick = () => {
         const url = links?.[type]?.[month.key];
-
         if(url){
           window.location.href = url;
         } else {
           alert("Lien pas encore disponible pour " + month.key);
         }
       };
-
       card.appendChild(img);
       card.appendChild(button);
       monthsDiv.appendChild(card);
@@ -302,6 +250,5 @@ fetch("./liens-a-modifier.json?v=" + Date.now())
     `;
   });
 </script>
-
 </body>
 </html>
