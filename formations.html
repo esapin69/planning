@@ -1,28 +1,22 @@
 <!doctype html>
+
 <html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Formations GHE</title>
-
 <style>
 *,*::before,*::after{box-sizing:border-box}
-
 :root{
   --ink:#07183f;
   --paper:#fff7dd;
-  --cream:#fff9e8;
-  --gold:#d3a24b;
-  --navy:#07183f;
   --weekend:#fff0dc;
   --formation-soft:#eaf3ff;
   --fire-soft:#fff0d7;
   --identity-soft:#f2eaff;
   --caces-soft:#eaffef;
 }
-
 html{scroll-behavior:smooth}
-
 body{
   margin:0;
   min-height:100vh;
@@ -34,7 +28,6 @@ body{
     repeating-linear-gradient(-6deg,rgba(7,24,63,.035) 0 1px,transparent 1px 13px),
     linear-gradient(180deg,#fff9e8 0%,#f5e8bf 57%,#ead9a5 100%);
 }
-
 body::before{
   content:"";
   position:fixed;
@@ -46,13 +39,11 @@ body::before{
     repeating-linear-gradient(-9deg,rgba(178,116,26,.07) 0 1px,transparent 1px 17px);
   mix-blend-mode:multiply;
 }
-
 .page{
   width:min(860px,100%);
   margin:auto;
   padding:12px 10px 54px;
 }
-
 .back{
   position:relative;
   z-index:3;
@@ -74,12 +65,8 @@ body::before{
     linear-gradient(145deg,#777,#444,#222);
   box-shadow:0 7px 0 rgba(7,24,63,.35);
   font-size:clamp(20px,5vw,31px);
-  letter-spacing:.4px;
 }
-
 .header{
-  position:relative;
-  z-index:2;
   margin:10px 0 14px;
   padding:14px 12px 16px;
   background:
@@ -93,19 +80,16 @@ body::before{
     0 14px 0 rgba(0,0,0,.10),
     inset 0 0 0 3px rgba(255,215,115,.38);
 }
-
 h1{
   margin:0 0 8px;
   text-transform:uppercase;
   font-size:clamp(31px,8vw,58px);
   line-height:.9;
-  letter-spacing:.2px;
   color:var(--ink);
   text-shadow:
     0 3px 0 #f8d67d,
     3px 5px 0 rgba(7,24,63,.10);
 }
-
 .sub{
   margin:0;
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -113,13 +97,151 @@ h1{
   font-size:clamp(14px,3.6vw,19px);
   line-height:1.2;
 }
-
-.quick-actions{
-  display:grid;
-  gap:10px;
-  margin:14px 0 0;
+.status{
+  margin-top:16px;
+  text-align:center;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-weight:950;
+  font-size:17px;
+  line-height:1.3;
+  padding:18px 10px;
+  border:4px solid var(--ink);
+  border-radius:24px;
+  background:white;
 }
-
+.week-label{
+  margin:22px 0 10px;
+  padding:7px 12px 8px;
+  border:4px dashed rgba(7,24,63,.32);
+  border-radius:22px;
+  background:rgba(255,255,255,.50);
+  color:rgba(7,24,63,.88);
+  text-align:center;
+  text-transform:uppercase;
+  font-size:clamp(22px,5.8vw,38px);
+  line-height:.88;
+}
+.day-card{
+  margin:12px 0;
+  overflow:hidden;
+  border:4px solid var(--ink);
+  border-radius:24px;
+  background:white;
+  box-shadow:
+    0 7px 0 rgba(7,24,63,.15),
+    0 10px 0 rgba(0,0,0,.07);
+}
+.day-card.is-weekend{
+  background:
+    radial-gradient(circle at 12% 0%,rgba(255,255,255,.85),transparent 36%),
+    linear-gradient(180deg,#fff9ed 0%,var(--weekend) 100%);
+}
+.day-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:9px 12px 8px;
+  border-bottom:3px solid var(--ink);
+  background:
+    repeating-linear-gradient(-7deg,rgba(7,24,63,.035) 0 2px,transparent 2px 10px),
+    linear-gradient(180deg,#fffdf5,#fff3c8);
+}
+.date-main{
+  margin:0;
+  text-transform:uppercase;
+  font-size:clamp(25px,6.4vw,44px);
+  line-height:.88;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.date-tag{
+  flex:0 0 auto;
+  padding:5px 9px 6px;
+  border:3px solid rgba(7,24,63,.22);
+  border-radius:14px;
+  background:rgba(255,255,255,.62);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-weight:950;
+  font-size:11px;
+  text-transform:uppercase;
+  opacity:.82;
+}
+.event-list{
+  display:grid;
+}
+.event-row{
+  display:flex;
+  align-items:flex-start;
+  gap:9px;
+  padding:11px 11px 8px;
+  border-top:2px solid rgba(7,24,63,.12);
+  background:white;
+}
+.event-row:first-child{border-top:0}
+.event-row.kind-formation{background:linear-gradient(90deg,var(--formation-soft),#fff)}
+.event-row.kind-incendie{background:linear-gradient(90deg,var(--fire-soft),#fff)}
+.event-row.kind-caces{background:linear-gradient(90deg,var(--caces-soft),#fff)}
+.event-row.kind-identite{background:linear-gradient(90deg,var(--identity-soft),#fff)}
+.shift-dot{
+  flex:0 0 auto;
+  width:32px;
+  height:32px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:25px;
+  border-radius:12px;
+  background:#fff9e8;
+  box-shadow:inset 0 0 0 3px rgba(7,24,63,.10);
+}
+.event-main{
+  min-width:0;
+  width:100%;
+}
+.shift-line{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  width:100%;
+  white-space:nowrap;
+}
+.shift-title{
+  min-width:0;
+  margin:0;
+  text-transform:uppercase;
+  font-size:clamp(24px,6.6vw,38px);
+  line-height:.9;
+  text-shadow:0 2px 0 rgba(211,162,75,.30);
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.shift-sep{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:clamp(17px,4.4vw,26px);
+  font-weight:950;
+  opacity:.7;
+}
+.time{
+  flex:0 0 auto;
+  padding:6px 9px 7px;
+  border-radius:14px;
+  background:#07183f;
+  color:#fff4ce;
+  font-size:clamp(21px,5.6vw,34px);
+  line-height:.9;
+  box-shadow:0 4px 0 rgba(7,24,63,.16);
+}
+.detail{
+  margin:6px 0 0;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-weight:900;
+  font-size:13px;
+  line-height:1.25;
+  opacity:.82;
+  white-space:normal;
+}
 .action-btn{
   display:flex;
   align-items:center;
@@ -134,239 +256,72 @@ h1{
   text-transform:uppercase;
   font-size:clamp(20px,5.2vw,34px);
   line-height:.9;
-  background:
-    radial-gradient(circle at 22% 16%,rgba(255,255,255,.30),transparent 28%),
-    repeating-linear-gradient(-7deg,rgba(255,255,255,.08) 0 2px,transparent 2px 10px),
-    linear-gradient(145deg,#ffb43a 0%,#f07c00 58%,#b74d00 100%);
   box-shadow:
     0 7px 0 rgba(7,24,63,.28),
     inset 0 0 0 3px rgba(255,221,132,.25);
   text-shadow:0 3px 0 rgba(0,0,0,.38);
 }
-
-.action-btn:active{transform:translateY(3px)}
-
-.status{
-  margin-top:16px;
-  text-align:center;
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  font-weight:950;
-  font-size:17px;
-  line-height:1.3;
-  padding:18px 10px;
-  border:4px solid var(--ink);
-  border-radius:24px;
-  background:white;
-}
-
-.week-label{
-  margin:22px 0 10px;
-  padding:7px 12px 8px;
-  border:4px dashed rgba(7,24,63,.32);
-  border-radius:22px;
-  background:rgba(255,255,255,.50);
-  color:rgba(7,24,63,.88);
-  text-align:center;
-  text-transform:uppercase;
-  font-size:clamp(22px,5.8vw,38px);
-  line-height:.88;
-}
-
-.day-card{
-  position:relative;
-  margin:12px 0;
-  overflow:hidden;
-  border:4px solid var(--navy);
-  border-radius:24px;
-  background:white;
+.agenda-phone{
+  margin-top:24px;
+  padding:14px 10px 16px;
+  border:5px solid var(--ink);
+  border-radius:28px;
+  background:#fff7dd;
   box-shadow:
-    0 7px 0 rgba(7,24,63,.15),
-    0 10px 0 rgba(0,0,0,.07);
+    0 8px 0 rgba(7,24,63,.22),
+    inset 0 0 0 3px rgba(255,215,115,.35);
 }
-
-.day-card.is-weekend{
-  background:
-    radial-gradient(circle at 12% 0%,rgba(255,255,255,.85),transparent 36%),
-    linear-gradient(180deg,#fff9ed 0%,var(--weekend) 100%);
-}
-
-.day-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  padding:9px 12px 8px;
-  border-bottom:3px solid var(--navy);
-  background:
-    repeating-linear-gradient(-7deg,rgba(7,24,63,.035) 0 2px,transparent 2px 10px),
-    linear-gradient(180deg,#fffdf5,#fff3c8);
-}
-
-.day-card.is-weekend .day-head{
-  background:
-    repeating-linear-gradient(-7deg,rgba(132,73,11,.055) 0 2px,transparent 2px 10px),
-    linear-gradient(180deg,#fff0dc,#f3d4a7);
-}
-
-.date-main{
-  margin:0;
-  font-family:Impact,"Arial Black",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  font-weight:900;
+.agenda-phone h2{
+  margin:0 0 14px;
+  text-align:center;
   text-transform:uppercase;
-  font-size:clamp(25px,6.4vw,44px);
-  line-height:.88;
-  letter-spacing:.2px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+  font-size:clamp(24px,6.4vw,42px);
+  line-height:.9;
+  color:var(--ink);
+  text-shadow:
+    0 3px 0 #f8d67d,
+    3px 5px 0 rgba(7,24,63,.10);
 }
-
-.date-tag{
-  flex:0 0 auto;
-  padding:5px 9px 6px;
-  border:3px solid rgba(7,24,63,.22);
-  border-radius:14px;
-  background:rgba(255,255,255,.62);
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  font-weight:950;
-  font-size:11px;
-  text-transform:uppercase;
-  opacity:.82;
-}
-
-.event-list{
+.bottom-actions{
   display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
 }
-
-.event-row{
-  display:flex;
-  align-items:flex-start;
-  gap:9px;
-  padding:11px 11px 8px;
-  border-top:2px solid rgba(7,24,63,.12);
-  min-width:0;
-  background:white;
+.bottom-actions .action-btn{
+  min-height:70px;
+  font-size:clamp(20px,5.4vw,34px);
 }
-
-.event-row:first-child{border-top:0}
-.event-row.kind-formation{background:linear-gradient(90deg,var(--formation-soft),#fff)}
-.event-row.kind-incendie{background:linear-gradient(90deg,var(--fire-soft),#fff)}
-.event-row.kind-caces{background:linear-gradient(90deg,var(--caces-soft),#fff)}
-.event-row.kind-identite{background:linear-gradient(90deg,var(--identity-soft),#fff)}
-
-.shift-dot{
-  flex:0 0 auto;
-  width:32px;
-  height:32px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:25px;
-  line-height:1;
-  border-radius:12px;
-  background:#fff9e8;
-  box-shadow:inset 0 0 0 3px rgba(7,24,63,.10);
+.action-apple{
+  background:
+    radial-gradient(circle at 22% 16%,rgba(255,255,255,.30),transparent 28%),
+    repeating-linear-gradient(-7deg,rgba(255,255,255,.08) 0 2px,transparent 2px 10px),
+    linear-gradient(145deg,#3db9ff 0%,#0c6ed5 58%,#083c91 100%);
 }
-
-.event-main{
-  min-width:0;
-  width:100%;
-}
-
-.shift-line{
-  display:flex;
-  align-items:center;
-  gap:7px;
-  min-width:0;
-  width:100%;
-  white-space:nowrap;
-}
-
-.shift-title{
-  flex:0 1 auto;
-  min-width:0;
-  margin:0;
-  text-transform:uppercase;
-  font-size:clamp(24px,6.6vw,38px);
-  line-height:.9;
-  text-shadow:0 2px 0 rgba(211,162,75,.30);
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.shift-sep{
-  flex:0 0 auto;
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  font-size:clamp(17px,4.4vw,26px);
-  font-weight:950;
-  opacity:.7;
-}
-
-.time{
-  flex:0 0 auto;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:6px 9px 7px;
-  border-radius:14px;
-  background:#07183f;
-  color:#fff4ce;
-  font-size:clamp(21px,5.6vw,34px);
-  line-height:.9;
-  box-shadow:0 4px 0 rgba(7,24,63,.16);
-}
-
-.detail{
-  margin:6px 0 0;
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  font-weight:900;
-  font-size:13px;
-  line-height:1.25;
-  opacity:.82;
-  white-space:normal;
-}
-
-@media(max-width:560px){
-  .page{padding:10px 8px 42px}
-  .back{border-width:4px;min-height:52px}
-  .header{border-width:4px;padding:11px 9px 12px}
-  h1{
-    font-size:clamp(30px,8vw,45px);
-    line-height:.86;
-    text-shadow:
-      0 2px 0 #f8d67d,
-      2px 4px 0 rgba(7,24,63,.09);
-  }
-  .day-card{border-width:4px}
-  .day-head{padding:8px 10px 7px;border-bottom-width:3px}
-  .event-row{gap:8px;padding:10px 9px 8px}
-  .shift-dot{width:29px;height:29px;font-size:23px}
-  .shift-line{gap:5px}
-  .time{padding:5px 8px 6px}
+.action-android{
+  background:
+    radial-gradient(circle at 22% 16%,rgba(255,255,255,.30),transparent 28%),
+    repeating-linear-gradient(-7deg,rgba(255,255,255,.08) 0 2px,transparent 2px 10px),
+    linear-gradient(145deg,#35d864 0%,#12873d 58%,#075324 100%);
 }
 </style>
 </head>
-
 <body>
 <main class="page">
   <a class="back" href="index.html">← Retour accueil</a>
-
   <section class="header">
     <h1>Formations</h1>
-    <p class="sub" id="subtitle">Aperçu dynamique des formations à venir</p>
-
-    <div class="quick-actions" id="topActions"></div>
+    <p class="sub">Aperçu dynamique des formations à venir</p>
   </section>
-
   <section id="content" class="status">Chargement...</section>
+  <section class="agenda-phone">
+    <h2>Ajouter à mon agenda de mon téléphone</h2>
+    <div class="bottom-actions" id="bottomActions"></div>
+  </section>
 </main>
-
 <script>
 const PASSERELLE = "https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8HZ_g_ota7tajTKLY3jvLKEF9AvSPjIbVpqcSkSRcl5OdWV9/exec";
-
 const contentEl = document.getElementById("content");
-const topActions = document.getElementById("topActions");
-
+const bottomActions = document.getElementById("bottomActions");
 function apiUrl(mode, extra){
   const url = new URL(PASSERELLE);
   url.searchParams.set("mode", mode);
@@ -374,25 +329,14 @@ function apiUrl(mode, extra){
   Object.keys(extra || {}).forEach(k => url.searchParams.set(k, extra[k]));
   return url.toString();
 }
-
-function webcalUrl(url){
-  return url.replace(/^https:\/\//i, "webcal://");
-}
-
-function androidUrl(url){
-  return "https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(url);
-}
-
-function unfoldIcs(text){
-  return String(text || "").replace(/\r?\n[ \t]/g, "");
-}
-
+function webcalUrl(url){return url.replace(/^https:\/\//i, "webcal://");}
+function androidUrl(url){return "https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(url);}
+function unfoldIcs(text){return String(text || "").replace(/\r?\n[ \t]/g, "");}
 function getField(block, name){
   const re = new RegExp("^" + name + "(?:;[^:]*)?:(.*)$", "mi");
   const m = block.match(re);
   return m ? m[1].trim() : "";
 }
-
 function cleanText(v){
   return String(v || "")
     .replace(/\\n/g, "\n")
@@ -400,11 +344,9 @@ function cleanText(v){
     .replace(/\\;/g, ";")
     .trim();
 }
-
 function parseIcsDate(value){
   if(!value) return null;
   value = String(value).trim();
-
   if(/^\d{8}$/.test(value)){
     return new Date(
       Number(value.slice(0,4)),
@@ -413,10 +355,8 @@ function parseIcsDate(value){
       0,0,0
     );
   }
-
   const m = value.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z?)$/);
   if(!m) return null;
-
   if(m[7] === "Z"){
     return new Date(Date.UTC(
       Number(m[1]),
@@ -427,7 +367,6 @@ function parseIcsDate(value){
       Number(m[6])
     ));
   }
-
   return new Date(
     Number(m[1]),
     Number(m[2]) - 1,
@@ -437,11 +376,9 @@ function parseIcsDate(value){
     Number(m[6])
   );
 }
-
 function toIsoLocal(d){
   return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
 }
-
 function formatDateMain(d){
   return d.toLocaleDateString("fr-FR", {
     weekday:"long",
@@ -449,7 +386,6 @@ function formatDateMain(d){
     month:"long"
   }).toUpperCase();
 }
-
 function getIsoWeekNumber(date){
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
   const dayNum = d.getUTCDay() || 7;
@@ -457,101 +393,80 @@ function getIsoWeekNumber(date){
   const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
   return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
 }
-
-function formatWeekLabel(d){
-  return "Semaine " + getIsoWeekNumber(d);
-}
-
+function formatWeekLabel(d){return "Semaine " + getIsoWeekNumber(d);}
 function weekKey(d){
   const lundi = new Date(d);
   const day = lundi.getDay() || 7;
   lundi.setDate(lundi.getDate() - day + 1);
   return toIsoLocal(lundi);
 }
-
 function isWeekend(d){
   const day = d.getDay();
   return day === 0 || day === 6;
 }
-
 function formatTimeRange(start,end){
   const allDay =
     start &&
     start.getHours() === 0 &&
     start.getMinutes() === 0 &&
     (!end || (end.getHours() === 0 && end.getMinutes() === 0));
-
   if(allDay) return "";
-
   const f = new Intl.DateTimeFormat("fr-FR", {hour:"2-digit", minute:"2-digit"});
   if(end && start.toDateString() === end.toDateString()){
     return f.format(start) + "–" + f.format(end);
   }
   return f.format(start);
 }
-
 function parseEvents(ics){
   const text = unfoldIcs(ics);
   const blocks = text.match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g) || [];
-
   return blocks.map(block => {
     const start = parseIcsDate(getField(block, "DTSTART"));
     const end = parseIcsDate(getField(block, "DTEND"));
     const summary = cleanText(getField(block, "SUMMARY"));
     const description = cleanText(getField(block, "DESCRIPTION"));
-
-    return {start, end, summary, description};
+    return {
+      start,
+      end,
+      summary,
+      description
+    };
   }).filter(e => e.start);
 }
-
 function detectRowType(summary, description){
   const raw = (summary + " " + description)
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toUpperCase();
-
   if(raw.includes("INCENDIE") || raw.includes("RISQUE")) return "incendie";
   if(raw.includes("CACES") || raw.includes("MOBILIS")) return "caces";
   if(raw.includes("IDENTITE") || raw.includes("VIGILANCE")) return "identite";
   return "formation";
 }
-
 function detectEmoji(type){
   if(type === "incendie") return "🔥";
   if(type === "caces") return "🏗️";
   if(type === "identite") return "🪪";
   return "🎓";
 }
-
-function extractTitle(summary){
-  return String(summary || "Formation")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
 function extractDetails(description){
   return String(description || "")
     .split(/\n+/)
     .map(v => v.trim())
     .filter(Boolean);
 }
-
 function renderAgendaEvents(events){
   const today = new Date();
   today.setHours(0,0,0,0);
-
   const futurs = (events || [])
     .filter(e => e.start && e.start >= today)
     .sort((a,b) => a.start - b.start);
-
   if(futurs.length === 0){
     contentEl.className = "status";
     contentEl.textContent = "Aucune formation à afficher à partir d’aujourd’hui.";
     return;
   }
-
   const grouped = {};
-
   futurs.forEach(e => {
     const iso = toIsoLocal(e.start);
     if(!grouped[iso]){
@@ -562,16 +477,12 @@ function renderAgendaEvents(events){
     }
     grouped[iso].events.push(e);
   });
-
   contentEl.className = "";
   contentEl.innerHTML = "";
-
   let currentWeek = "";
-
   Object.keys(grouped).sort().forEach(iso => {
     const dayGroup = grouped[iso];
     const wk = weekKey(dayGroup.dateObj);
-
     if(wk !== currentWeek){
       currentWeek = wk;
       const week = document.createElement("div");
@@ -579,112 +490,87 @@ function renderAgendaEvents(events){
       week.textContent = formatWeekLabel(dayGroup.dateObj);
       contentEl.appendChild(week);
     }
-
     const dayCard = document.createElement("article");
     dayCard.className = "day-card" + (isWeekend(dayGroup.dateObj) ? " is-weekend" : "");
-
     const head = document.createElement("div");
     head.className = "day-head";
-
     const dateMain = document.createElement("p");
     dateMain.className = "date-main";
     dateMain.textContent = formatDateMain(dayGroup.dateObj);
-
     const tag = document.createElement("div");
     tag.className = "date-tag";
     tag.textContent = isWeekend(dayGroup.dateObj) ? "week-end" : "semaine";
-
     head.appendChild(dateMain);
     head.appendChild(tag);
     dayCard.appendChild(head);
-
     const list = document.createElement("div");
     list.className = "event-list";
-
     dayGroup.events.forEach(e => {
       const rowType = detectRowType(e.summary, e.description);
       const emoji = detectEmoji(rowType);
-      const title = extractTitle(e.summary);
+      const title = String(e.summary || "Formation").replace(/\s+/g, " ").trim();
       const details = extractDetails(e.description);
       const horaire = formatTimeRange(e.start, e.end);
-
       const row = document.createElement("div");
       row.className = "event-row kind-" + rowType;
-
       const icon = document.createElement("div");
       icon.className = "shift-dot";
       icon.textContent = emoji;
-
       const main = document.createElement("div");
       main.className = "event-main";
-
       const line = document.createElement("div");
       line.className = "shift-line";
-
       const label = document.createElement("p");
       label.className = "shift-title";
       label.textContent = title;
-
       line.appendChild(label);
-
       if(horaire){
         const sep = document.createElement("span");
         sep.className = "shift-sep";
         sep.textContent = "·";
-
         const time = document.createElement("div");
         time.className = "time";
         time.textContent = horaire;
-
         line.appendChild(sep);
         line.appendChild(time);
       }
-
       main.appendChild(line);
-
       details.forEach(txt => {
         const detail = document.createElement("p");
         detail.className = "detail";
         detail.textContent = txt;
         main.appendChild(detail);
       });
-
       row.appendChild(icon);
       row.appendChild(main);
       list.appendChild(row);
     });
-
     dayCard.appendChild(list);
     contentEl.appendChild(dayCard);
   });
 }
-
 async function init(){
   const icsUrl = apiUrl("ics_collectif", {type:"formation"});
-
-  topActions.innerHTML = `
-    <a class="action-btn" href="${icsUrl}" target="_blank" rel="noopener">📥 Télécharger le fichier ICS</a>
-    <a class="action-btn" href="${webcalUrl(icsUrl)}">🍎 Ajouter sur Apple</a>
-    <a class="action-btn" href="${androidUrl(icsUrl)}" target="_blank" rel="noopener">🤖 Ajouter sur Android</a>
+  bottomActions.innerHTML = `
+    <a class="action-btn action-apple" href="${webcalUrl(icsUrl)}">🍎 Apple</a>
+    <a class="action-btn action-android" href="${androidUrl(icsUrl)}" target="_blank" rel="noopener">🤖 Android</a>
   `;
-
   try{
-    const res = await fetch(icsUrl, {method:"GET", cache:"no-store"});
+    const res = await fetch(icsUrl, {
+      method:"GET",
+      cache:"no-store"
+    });
     const text = await res.text();
-
     if(!res.ok || !text.includes("BEGIN:VCALENDAR")){
       throw new Error("ICS invalide");
     }
-
     renderAgendaEvents(parseEvents(text));
-
   }catch(e){
     console.error(e);
     contentEl.className = "status";
     contentEl.textContent = "Aperçu indisponible. Vérifie que la passerelle Apps Script est bien à jour.";
   }
 }
-
 init();
 </script>
 </body>
