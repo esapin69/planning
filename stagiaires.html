@@ -32,7 +32,6 @@
   --ok-line:#2f8f4e;
   --ok-bg:#edf9f1;
 
-  --muted:#6b7280;
   --shadow:0 6px 0 rgba(7,24,63,.14);
 
   --font:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
@@ -109,13 +108,6 @@ body{
   margin-bottom:10px;
 }
 
-.pilot-main{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-}
-
 .pilot-title{
   font-weight:950;
   font-size:20px;
@@ -123,38 +115,11 @@ body{
 }
 
 .pilot-sub{
-  margin-top:3px;
+  margin-top:4px;
   color:var(--ink-soft);
   font-size:14px;
   font-weight:850;
-}
-
-.pilot-badge{
-  flex:0 0 auto;
-  border-radius:999px;
-  padding:8px 10px;
-  font-weight:950;
-  font-size:14px;
-  border:2px solid transparent;
-  white-space:nowrap;
-}
-
-.pilot.ok .pilot-badge{
-  background:var(--ok-bg);
-  color:var(--ok);
-  border-color:#b7e0c5;
-}
-
-.pilot.warning .pilot-badge{
-  background:var(--warning-bg);
-  color:var(--warning);
-  border-color:#ecd27f;
-}
-
-.pilot.danger .pilot-badge{
-  background:var(--danger-bg);
-  color:var(--danger);
-  border-color:#efb1b1;
+  line-height:1.2;
 }
 
 .pilot-line{
@@ -187,6 +152,12 @@ body{
   background:var(--warning-bg);
   color:var(--warning);
   border-color:#ecd27f;
+}
+
+.mini-pill.ok{
+  background:var(--ok-bg);
+  color:var(--ok);
+  border-color:#b7e0c5;
 }
 
 /* OUTILS */
@@ -240,7 +211,7 @@ body{
   color:var(--cream);
 }
 
-/* TITRES */
+/* RÉSUMÉ STAGIAIRES */
 
 .section-label{
   margin:18px 4px 8px;
@@ -250,6 +221,59 @@ body{
   font-weight:950;
   letter-spacing:.6px;
 }
+
+.student-summary{
+  display:grid;
+  gap:8px;
+  margin-bottom:14px;
+}
+
+.student-row{
+  background:var(--card);
+  border:3px solid var(--line-soft);
+  border-radius:19px;
+  padding:10px 11px;
+  box-shadow:0 4px 0 rgba(7,24,63,.10);
+}
+
+.student-row.ok{
+  border-color:rgba(47,143,78,.28);
+}
+
+.student-row.warning{
+  background:#fff8df;
+  border-color:#e2c060;
+}
+
+.student-row.danger{
+  background:#fff4f1;
+  border-color:#e7a29d;
+}
+
+.student-name{
+  font-family:var(--display);
+  font-size:clamp(25px,6.5vw,40px);
+  line-height:.9;
+  letter-spacing:-.5px;
+  text-transform:uppercase;
+}
+
+.student-meta{
+  margin-top:5px;
+  color:var(--ink-soft);
+  font-size:14px;
+  line-height:1.2;
+  font-weight:850;
+}
+
+.student-issues{
+  margin-top:7px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
+/* TITRES DATE */
 
 .day-title{
   margin:24px 4px 10px;
@@ -275,58 +299,6 @@ body{
 .stagiaire-card.ok{border-color:var(--ok-line)}
 .stagiaire-card.warning{border-color:var(--warning-line)}
 .stagiaire-card.danger{border-color:var(--danger-line)}
-
-.card-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:10px;
-}
-
-.card-title{
-  font-family:var(--display);
-  font-size:clamp(27px,7vw,42px);
-  line-height:.92;
-  letter-spacing:-.6px;
-  text-transform:uppercase;
-}
-
-.card-meta{
-  margin-top:4px;
-  font-size:15px;
-  font-weight:900;
-  color:var(--ink-soft);
-}
-
-.status{
-  border-radius:999px;
-  padding:7px 10px;
-  border:2px solid transparent;
-  font-size:14px;
-  font-weight:950;
-  white-space:nowrap;
-}
-
-.status.ok{
-  background:var(--ok-bg);
-  color:var(--ok);
-  border-color:#b7e0c5;
-}
-
-.status.warning{
-  background:var(--warning-bg);
-  color:var(--warning);
-  border-color:#ecd27f;
-}
-
-.status.danger{
-  background:var(--danger-bg);
-  color:var(--danger);
-  border-color:#efb1b1;
-}
-
-/* PERSONNES */
 
 .people-box{
   display:grid;
@@ -397,6 +369,10 @@ body{
   display:none;
 }
 
+.person-info{
+  min-width:0;
+}
+
 .role{
   display:block;
   margin-bottom:2px;
@@ -427,25 +403,63 @@ body{
   color:#744000;
 }
 
+.person-chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:7px;
+}
+
+.person-chip{
+  min-height:28px;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:5px 8px;
+  border-radius:999px;
+  border:2px solid rgba(7,24,63,.16);
+  background:var(--card);
+  color:var(--ink);
+  font-size:13px;
+  line-height:1.05;
+  font-weight:900;
+}
+
+.person-chip a{
+  color:#064ee4;
+  font-weight:950;
+}
+
+.person-chip.warning{
+  background:var(--warning-bg);
+  color:var(--warning);
+  border-color:#ecd27f;
+}
+
+.person-chip.danger{
+  background:var(--danger-bg);
+  color:var(--danger);
+  border-color:#efb1b1;
+}
+
+.person-chip.ok{
+  background:var(--ok-bg);
+  color:var(--ok);
+  border-color:#b7e0c5;
+}
+
 .arrow-line{
   display:flex;
   justify-content:center;
   align-items:center;
-  height:26px;
+  height:25px;
   color:var(--ink);
-  font-size:26px;
+  font-size:25px;
   line-height:1;
   font-weight:950;
 }
 
-/* CHIPS */
-
-.summary-line{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  margin-bottom:9px;
-}
+/* CHIPS GÉNÉRALES */
 
 .chip{
   min-height:29px;
@@ -516,12 +530,12 @@ body{
 
 .source{
   margin-top:9px;
-  color:rgba(7,24,63,.50);
+  color:rgba(7,24,63,.45);
   font-size:12px;
   font-weight:850;
 }
 
-/* ETATS */
+/* ÉTATS */
 
 .empty,.error,.loading{
   background:var(--card);
@@ -637,7 +651,8 @@ body{
     font-size:20px;
   }
 
-  .chip{
+  .chip,
+  .person-chip{
     font-size:13px;
     padding:5px 7px;
   }
@@ -650,7 +665,6 @@ body{
 
   <div class="topbar">
     <a class="navbtn" href="index.html">← Accueil</a>
-    <a class="navbtn" href="formations.html">Formations</a>
   </div>
 
   <section class="hero">
@@ -662,16 +676,12 @@ body{
   </section>
 
   <section id="pilot" class="pilot ok">
-    <div class="pilot-main">
-      <div>
-        <div id="pilotTitle" class="pilot-title">Chargement du cockpit…</div>
-        <div id="pilotSub" class="pilot-sub">Analyse des stagiaires à venir</div>
-      </div>
-      <div id="pilotBadge" class="pilot-badge">…</div>
-    </div>
+    <div id="pilotTitle" class="pilot-title">Chargement du cockpit…</div>
+    <div id="pilotSub" class="pilot-sub">Analyse des présences stagiaires à venir</div>
 
     <div class="pilot-line">
-      <span id="pilotTotal" class="mini-pill">👶 0 stagiaire</span>
+      <span id="pilotStudents" class="mini-pill">👶 0 stagiaire</span>
+      <span id="pilotDates" class="mini-pill">📅 0 date prévue</span>
       <span id="pilotDanger" class="mini-pill danger">⛔ 0 bloquant</span>
       <span id="pilotWarning" class="mini-pill warning">⚠️ 0 à vérifier</span>
     </div>
@@ -684,16 +694,15 @@ body{
       <button class="filter-btn active" data-filter="tous">Tous</button>
       <button class="filter-btn" data-filter="traiter">À traiter</button>
       <button class="filter-btn" data-filter="bloquants">Bloquants</button>
-      <button class="filter-btn" data-filter="prets">Prêts</button>
-      <button class="filter-btn" data-filter="M">Matin</button>
-      <button class="filter-btn" data-filter="J">Journée</button>
-      <button class="filter-btn" data-filter="J4">J4</button>
-      <button class="filter-btn" data-filter="S">Soir</button>
-      <button class="filter-btn" data-filter="N">Nuit</button>
     </div>
   </section>
 
-  <div class="section-label">Planning stagiaires</div>
+  <div class="section-label">Stagiaires concernés</div>
+  <section id="studentSummary" class="student-summary">
+    <div class="loading">Analyse des stagiaires…</div>
+  </section>
+
+  <div class="section-label">Détail par date</div>
 
   <section id="content">
     <div class="loading">Chargement des stagiaires…</div>
@@ -750,6 +759,7 @@ function loadJsonp(type){
 
     ITEMS = data.items || [];
     updatePilot(ITEMS);
+    renderStudentSummary(ITEMS);
     render(filterItems());
   };
 
@@ -779,11 +789,6 @@ function filterItems(){
 
     if (CURRENT_FILTER === "traiter" && issueCount === 0) return false;
     if (CURRENT_FILTER === "bloquants" && level !== "danger") return false;
-    if (CURRENT_FILTER === "prets" && issueCount > 0) return false;
-
-    if (["M","J","J4","S","N"].includes(CURRENT_FILTER)) {
-      if (!item.shift || item.shift.base !== CURRENT_FILTER) return false;
-    }
 
     if (!q) return true;
 
@@ -810,49 +815,129 @@ function filterItems(){
   });
 }
 
-/* PILOTAGE */
+/* PILOTAGE GLOBAL */
 
 function updatePilot(items){
-  const total = items.length;
+  const students = studentSummaries(items);
+  const studentCount = students.length;
+  const dateCount = students.reduce((sum, s) => sum + s.dateCount, 0);
 
-  const totals = items.reduce((acc,item) => {
-    const c = countItemIssues(item);
-    acc.danger += c.danger;
-    acc.warning += c.warning;
-    acc.total += c.total;
-    return acc;
-  }, {danger:0, warning:0, total:0});
+  const totals = uniqueGlobalIssues(items);
 
   const pilot = document.getElementById("pilot");
   const title = document.getElementById("pilotTitle");
   const sub = document.getElementById("pilotSub");
-  const badge = document.getElementById("pilotBadge");
 
   pilot.classList.remove("ok","warning","danger");
 
   if (totals.danger > 0) {
     pilot.classList.add("danger");
     title.textContent = totals.total + " point" + plural(totals.total) + " à traiter";
-    sub.textContent = totals.danger + " bloquant" + plural(totals.danger) + " · " + totals.warning + " à vérifier";
-    badge.textContent = "⛔ Bloquant";
   } else if (totals.warning > 0) {
     pilot.classList.add("warning");
     title.textContent = totals.total + " point" + plural(totals.total) + " à vérifier";
-    sub.textContent = "Aucun blocage, mais des infos à compléter";
-    badge.textContent = "⚠️ À vérifier";
   } else {
     pilot.classList.add("ok");
     title.textContent = "Tout est prêt";
-    sub.textContent = "Aucun point bloquant ni information manquante";
-    badge.textContent = "✅ Prêt";
   }
 
-  document.getElementById("pilotTotal").textContent = "👶 " + total + " stagiaire" + plural(total);
+  sub.textContent =
+    studentCount + " stagiaire" + plural(studentCount) + " concerné" + plural(studentCount)
+    + " · "
+    + dateCount + " date" + plural(dateCount) + " prévue" + plural(dateCount);
+
+  document.getElementById("pilotStudents").textContent = "👶 " + studentCount + " stagiaire" + plural(studentCount);
+  document.getElementById("pilotDates").textContent = "📅 " + dateCount + " date" + plural(dateCount) + " prévue" + plural(dateCount);
   document.getElementById("pilotDanger").textContent = "⛔ " + totals.danger + " bloquant" + plural(totals.danger);
   document.getElementById("pilotWarning").textContent = "⚠️ " + totals.warning + " à vérifier";
 }
 
-/* RENDU */
+/* RÉSUMÉ PAR STAGIAIRE */
+
+function renderStudentSummary(items){
+  const box = document.getElementById("studentSummary");
+  const summaries = studentSummaries(items);
+
+  if (!summaries.length) {
+    box.innerHTML = `<div class="empty">Aucun stagiaire concerné pour le moment.</div>`;
+    return;
+  }
+
+  box.innerHTML = summaries.map(s => {
+    const level = s.danger > 0 ? "danger" : (s.warning > 0 ? "warning" : "ok");
+    const points = s.danger + s.warning;
+
+    return `
+      <article class="student-row ${esc(level)}">
+        <div class="student-name">${esc(s.name)}</div>
+
+        <div class="student-meta">
+          ${esc(s.dateCount + " date" + plural(s.dateCount) + " prévue" + plural(s.dateCount))}
+          ${s.referents.size ? " · " + esc(s.referents.size + " référent" + plural(s.referents.size)) : ""}
+        </div>
+
+        <div class="student-issues">
+          ${points ? `<span class="chip ${level === "danger" ? "danger" : "warning"}">${esc(points + " point" + plural(points) + " à traiter")}</span>` : `<span class="chip ok">✅ prêt</span>`}
+          ${s.danger ? `<span class="chip danger">⛔ ${esc(s.danger + " bloquant" + plural(s.danger))}</span>` : ""}
+          ${s.warning ? `<span class="chip warning">⚠️ ${esc(s.warning + " à vérifier")}</span>` : ""}
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+function studentSummaries(items){
+  const map = new Map();
+
+  items.forEach(item => {
+    const stagiaire = item.stagiaire || {};
+    const referent = item.referent || {};
+    const key = studentKey(stagiaire);
+    const name = stagiaire.nomPrenom || "Stagiaire non renseigné";
+    const dateKey = item.dateKey || item.dateLabel || item.titre || "date-non-renseignee";
+
+    if (!map.has(key)) {
+      map.set(key, {
+        key,
+        name,
+        dateSet:new Set(),
+        referents:new Set(),
+        dangerSet:new Set(),
+        warningSet:new Set()
+      });
+    }
+
+    const s = map.get(key);
+    s.dateSet.add(norm(dateKey));
+
+    if (referent.nomComplet) {
+      s.referents.add(norm(referent.nomComplet));
+    }
+
+    const issues = itemIssues(item);
+
+    issues.danger.forEach(msg => {
+      s.dangerSet.add(issueSignature(item, msg, "danger"));
+    });
+
+    issues.warning.forEach(msg => {
+      s.warningSet.add(issueSignature(item, msg, "warning"));
+    });
+  });
+
+  return Array.from(map.values())
+    .map(s => ({
+      key:s.key,
+      name:s.name,
+      dateCount:s.dateSet.size,
+      referents:s.referents,
+      danger:s.dangerSet.size,
+      warning:s.warningSet.size
+    }))
+    .sort((a,b) => a.name.localeCompare(b.name, "fr"));
+}
+
+/* RENDU PRINCIPAL */
 
 function render(items){
   const content = document.getElementById("content");
@@ -886,6 +971,7 @@ function cardStagiaire(item){
 
   const shiftText = formatShift(shift);
   const horaire = shift.horaire || "horaire non connu";
+
   const referentName = referent.nomComplet || "Référent non renseigné";
   const stagiaireName = stagiaire.nomPrenom || "Stagiaire non renseigné";
 
@@ -895,23 +981,32 @@ function cardStagiaire(item){
 
   const gheOk = hasUsefulValue(referent.ghe);
 
+  const stagiaireInfo = [
+    shiftDot(shift) + " " + shiftText,
+    horaire
+  ].filter(Boolean).join(" · ");
+
+  const referentInfoHtml = [
+    esc(formatGhe(referent.ghe)),
+    telOk ? `📞 <a href="tel:${esc(telHref)}">${esc(telRaw)}</a>` : "📞 non renseigné"
+  ].join(" · ");
+
   return `
     <article class="stagiaire-card ${esc(level)}">
-
-      <div class="card-head">
-        <div>
-          <div class="card-title">${esc(stagiaireName)}</div>
-          <div class="card-meta">Référent : ${esc(referentName)}</div>
-        </div>
-        <span class="status ${esc(level)}">${statusLabel(level)}</span>
-      </div>
 
       <div class="people-box">
         <div class="person">
           ${avatarHtml(stagiaire.avatar)}
-          <div>
+
+          <div class="person-info">
             <span class="role">Stagiaire</span>
             <span class="name">${esc(stagiaireName)}</span>
+
+            <div class="person-chips">
+              <span class="person-chip ${shiftKnown(shiftText) ? "" : "warning"}">
+                ${esc(stagiaireInfo)}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -919,20 +1014,18 @@ function cardStagiaire(item){
 
         <div class="person ${esc(level)}">
           ${avatarHtml(referent.avatar)}
-          <div>
+
+          <div class="person-info">
             <span class="role">Référent</span>
             <span class="name">${esc(referentName)}</span>
+
+            <div class="person-chips">
+              <span class="person-chip ${gheOk && telOk ? "" : "warning"}">
+                ${referentInfoHtml}
+              </span>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="summary-line">
-        <span class="chip ${shiftKnown(shiftText) ? "" : "warning"}">${shiftDot(shift)} Shift : ${esc(shiftText)}</span>
-        <span class="chip">🕒 ${esc(horaire)}</span>
-        <span class="chip ${gheOk ? "" : "warning"}">GHE : ${esc(formatGhe(referent.ghe))}</span>
-        <span class="chip ${telOk ? "" : "warning"}">
-          📞 ${telOk ? `<a href="tel:${esc(telHref)}">${esc(telRaw)}</a>` : "non renseigné"}
-        </span>
       </div>
 
       ${issueBlock(issues)}
@@ -963,13 +1056,36 @@ function avatarHtml(avatar){
 
 /* ALERTES */
 
+function uniqueGlobalIssues(items){
+  const dangerSet = new Set();
+  const warningSet = new Set();
+
+  items.forEach(item => {
+    const issues = itemIssues(item);
+
+    issues.danger.forEach(msg => {
+      dangerSet.add(issueSignature(item, msg, "danger"));
+    });
+
+    issues.warning.forEach(msg => {
+      warningSet.add(issueSignature(item, msg, "warning"));
+    });
+  });
+
+  return {
+    danger:dangerSet.size,
+    warning:warningSet.size,
+    total:dangerSet.size + warningSet.size
+  };
+}
+
 function countItemIssues(item){
   const issues = itemIssues(item);
 
   return {
-    danger: issues.danger.length,
-    warning: issues.warning.length,
-    total: issues.danger.length + issues.warning.length
+    danger:issues.danger.length,
+    warning:issues.warning.length,
+    total:issues.danger.length + issues.warning.length
   };
 }
 
@@ -1001,6 +1117,12 @@ function itemIssues(item){
     warning.push("Référent : " + missingPhrase(missing));
   }
 
+  const hasShiftAlert = (alertes.infos || []).concat(alertes.bloquantes || [])
+    .some(msg => {
+      const n = norm(msg);
+      return n.includes("code shift") || n.includes("shift non reconnu");
+    });
+
   (alertes.infos || []).forEach(msg => {
     const n = norm(msg);
 
@@ -1010,7 +1132,8 @@ function itemIssues(item){
   });
 
   const shiftText = formatShift(shift);
-  if (!shiftKnown(shiftText)) {
+
+  if (!shiftKnown(shiftText) && !hasShiftAlert) {
     pushUnique(warning, "Shift à vérifier.");
   }
 
@@ -1022,7 +1145,10 @@ function itemIssues(item){
     warning.push("Information à vérifier.");
   }
 
-  return {danger, warning};
+  return {
+    danger:dedupeList(danger),
+    warning:dedupeList(warning)
+  };
 }
 
 function issueBlock(issues){
@@ -1050,17 +1176,43 @@ function simplifyAlert(message, type){
   return s.trim();
 }
 
+function issueSignature(item, message, type){
+  const stagiaire = item.stagiaire || {};
+  const referent = item.referent || {};
+  const student = studentKey(stagiaire);
+  const ref = norm(referent.nomComplet || referent.ghe || "referent");
+  const msg = norm(message);
+
+  return [type, student, ref, msg].join("|");
+}
+
 function missingPhrase(parts){
   if (parts.length === 1) return parts[0] + " manquant.";
   if (parts.length === 2) return parts[0] + " et " + parts[1] + " manquants.";
 
-  const last = parts.pop();
-  return parts.join(", ") + " et " + last + " manquants.";
+  const copy = parts.slice();
+  const last = copy.pop();
+  return copy.join(", ") + " et " + last + " manquants.";
 }
 
 function pushUnique(list, message){
   const n = norm(message);
   if (!list.some(x => norm(x) === n)) list.push(message);
+}
+
+function dedupeList(list){
+  const seen = new Set();
+  const out = [];
+
+  list.forEach(x => {
+    const key = norm(x);
+    if (!seen.has(key)) {
+      seen.add(key);
+      out.push(x);
+    }
+  });
+
+  return out;
 }
 
 /* FORMATAGE */
@@ -1071,13 +1223,20 @@ function statusLabel(level){
   return "✅ Prêt";
 }
 
+function studentKey(stagiaire){
+  return norm(stagiaire && stagiaire.nomPrenom ? stagiaire.nomPrenom : "stagiaire-non-renseigne");
+}
+
 function formatGhe(value){
   const raw = String(value || "").trim();
 
-  if (!hasUsefulValue(raw)) return "non renseigné";
-  if (/^ghe\b/i.test(raw)) return raw.replace(/^ghe\s+ghe\s+/i, "GHE ");
+  if (!hasUsefulValue(raw)) return "GHE non renseigné";
 
-  return "GHE " + raw;
+  const cleaned = raw
+    .replace(/^(ghe\s*)+/i, "")
+    .trim();
+
+  return "GHE " + cleaned;
 }
 
 function formatShift(shift){
@@ -1147,6 +1306,7 @@ function groupByDate(items){
 
 function showError(message){
   document.getElementById("content").innerHTML = `<div class="error">Problème : ${esc(message)}</div>`;
+  document.getElementById("studentSummary").innerHTML = `<div class="error">Résumé indisponible.</div>`;
 }
 
 function plural(number){
