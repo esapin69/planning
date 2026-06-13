@@ -3,46 +3,38 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Planning GHE — Brancardiers</title>
+<title>Planning GHE — Accueil</title>
 
 <style>
 *,*::before,*::after{box-sizing:border-box}
 
 :root{
   --ink:#07183f;
-  --ink-soft:#263653;
-
   --paper:#fff7dd;
-  --card:#fffaf0;
-  --card-soft:#fff6dc;
-
-  --line:#132752;
-  --line-soft:rgba(7,24,63,.18);
-
+  --paper-2:#fff9e8;
   --gold:#d3a24b;
+  --gold-soft:#f2d787;
   --cream:#fff1c4;
-
-  --danger:#b42318;
-  --danger-bg:#fff1ed;
-
-  --ok:#166534;
-  --ok-bg:#edf9f1;
-
-  --shadow:0 7px 0 rgba(7,24,63,.16);
-
-  --font:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-  --display:Impact,"Arial Black",system-ui,sans-serif;
+  --navy:#061738;
+  --line:#0a1d4d;
+  --shadow-1:0 12px 0 rgba(7,24,63,.18);
+  --shadow-2:0 17px 0 rgba(0,0,0,.10);
+  --text-soft:#49536c;
+  --green:#1f8f45;
+  --green-bg:#edf9f1;
+  --orange:#b26a00;
+  --orange-bg:#fff4d8;
+  --red:#b42318;
+  --red-bg:#fff1ed;
 }
 
-html{
-  scroll-behavior:smooth;
-}
+html{scroll-behavior:smooth}
 
 body{
   margin:0;
   min-height:100vh;
   color:var(--ink);
-  font-family:var(--font);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
   background:
     radial-gradient(circle at 15% 0%,rgba(255,255,255,.95) 0 9%,transparent 31%),
     radial-gradient(circle at 88% 4%,rgba(255,218,116,.46) 0 9%,transparent 32%),
@@ -55,286 +47,189 @@ body::before{
   position:fixed;
   inset:0;
   pointer-events:none;
-  opacity:.22;
+  opacity:.24;
   background:
     repeating-linear-gradient(8deg,rgba(7,24,63,.06) 0 1px,transparent 1px 12px),
     repeating-linear-gradient(-9deg,rgba(178,116,26,.08) 0 1px,transparent 1px 17px);
   mix-blend-mode:multiply;
 }
 
-body.modal-open{
-  overflow:hidden;
-}
-
 .page{
-  position:relative;
-  z-index:1;
   width:min(760px,100%);
   margin:auto;
-  padding:calc(10px + env(safe-area-inset-top)) 10px calc(130px + env(safe-area-inset-bottom));
+  padding:10px 12px 48px;
 }
 
-/* =========================
-   HEADER
-   ========================= */
-
-.home-hero{
+.hand-card{
   position:relative;
-  padding:10px;
-  margin:10px 0 12px;
+  margin:16px 0 28px;
+  padding:14px 11px 18px;
   background:
     radial-gradient(circle at 12% 0%,rgba(255,255,255,.75),transparent 34%),
-    linear-gradient(180deg,rgba(255,255,255,.42),transparent 48%),
+    linear-gradient(180deg,rgba(255,255,255,.40),transparent 48%),
     var(--paper);
-  border:5px solid var(--ink);
-  border-radius:30px;
+  border:6px solid var(--ink);
+  border-radius:34px 28px 38px 29px;
   box-shadow:
-    0 11px 0 rgba(7,24,63,.18),
-    0 16px 0 rgba(0,0,0,.10),
-    inset 0 0 0 3px rgba(255,215,115,.35);
+    var(--shadow-1),
+    var(--shadow-2),
+    inset 0 0 0 3px rgba(255,215,115,.42);
 }
 
-.home-hero::before{
+.hand-card::before{
   content:"";
   position:absolute;
-  inset:7px;
-  border:2px solid rgba(255,218,123,.42);
-  border-radius:23px;
+  inset:8px;
+  border:3px solid rgba(255,218,123,.42);
+  border-radius:24px 22px 28px 23px;
   pointer-events:none;
 }
 
-.hero-img{
+.hand-card::after{
+  content:"";
+  position:absolute;
+  inset:-4px;
+  border:2px solid rgba(7,24,63,.32);
+  border-radius:40px 31px 42px 33px;
+  transform:rotate(-.25deg);
+  pointer-events:none;
+}
+
+.image-button,
+.image-link{
   position:relative;
-  z-index:2;
+  z-index:3;
   display:block;
   width:100%;
-  height:clamp(138px,34vw,245px);
-  object-fit:cover;
-  border:5px solid var(--ink);
-  border-radius:23px;
-  background:#fff;
-  box-shadow:
-    0 8px 0 rgba(7,24,63,.16),
-    0 12px 0 rgba(0,0,0,.09);
-}
-
-.home-title{
-  margin:13px 2px 0;
-  text-align:center;
-}
-
-.home-title h1{
+  padding:0;
   margin:0;
-  font-family:var(--display);
-  font-size:clamp(31px,8vw,58px);
-  line-height:.9;
-  letter-spacing:-.8px;
-  text-transform:uppercase;
-  text-shadow:0 3px 0 #f8d67d;
-}
-
-.home-title p{
-  margin:7px auto 0;
-  max-width:520px;
-  color:var(--ink-soft);
-  font-size:14px;
-  line-height:1.25;
-  font-weight:850;
-}
-
-/* =========================
-   SECTIONS
-   ========================= */
-
-.section-label{
-  margin:18px 4px 8px;
-  color:rgba(7,24,63,.62);
-  text-transform:uppercase;
-  font-size:13px;
-  font-weight:950;
-  letter-spacing:.6px;
-}
-
-.action-stack{
-  display:grid;
-  gap:10px;
-}
-
-.action-card{
-  position:relative;
-  width:100%;
-  min-height:112px;
-  display:grid;
-  grid-template-columns:118px minmax(0,1fr) auto;
-  gap:11px;
-  align-items:center;
-  padding:10px;
-  border:4px solid var(--line);
-  border-radius:24px;
-  background:var(--card);
-  color:var(--ink);
-  text-align:left;
-  text-decoration:none;
+  border:0;
+  background:transparent;
   cursor:pointer;
-  box-shadow:var(--shadow);
   -webkit-tap-highlight-color:transparent;
-  appearance:none;
-  -webkit-appearance:none;
-  font-family:var(--font);
+  text-decoration:none;
 }
 
-button.action-card{
-  border-color:var(--line);
-}
-
-.action-card:active{
-  transform:translateY(3px);
-  box-shadow:0 4px 0 rgba(7,24,63,.16);
-}
-
-.action-thumb{
-  width:108px;
-  height:82px;
-  border:3px solid var(--line);
-  border-radius:18px;
-  background:#eef3ff;
-  overflow:hidden;
-  box-shadow:0 4px 0 rgba(7,24,63,.12);
-}
-
-.action-thumb img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
+.scene-img{
   display:block;
+  width:100%;
+  height:auto;
+  border:6px solid var(--ink);
+  border-radius:27px 24px 31px 23px;
+  background:white;
+  box-shadow:
+    0 10px 0 rgba(7,24,63,.18),
+    0 14px 0 rgba(0,0,0,.10);
+  transition:transform .12s ease, filter .12s ease;
 }
 
-.action-kicker{
-  display:inline-flex;
-  align-items:center;
-  gap:5px;
-  margin-bottom:4px;
-  padding:4px 8px;
-  border-radius:999px;
-  border:2px solid rgba(7,24,63,.16);
-  background:var(--card-soft);
-  color:var(--ink-soft);
-  font-size:12px;
-  line-height:1;
-  font-weight:950;
-  text-transform:uppercase;
+.image-button:active .scene-img,
+.image-link:active .scene-img{
+  transform:translateY(4px) scale(.992);
+  filter:saturate(1.05) brightness(.98);
 }
 
-.action-title{
-  font-family:var(--display);
-  font-size:clamp(25px,6.3vw,42px);
-  line-height:.9;
-  letter-spacing:-.5px;
-  text-transform:uppercase;
-}
+.panel-btn,
+.modal-close{
+  --main1:#2b5ecb;
+  --main2:#123f9c;
+  --main3:#091f66;
 
-.action-text{
-  margin-top:5px;
-  color:var(--ink-soft);
-  font-size:13px;
-  line-height:1.18;
-  font-weight:850;
-}
-
-.action-arrow{
-  width:34px;
-  height:34px;
+  position:relative;
+  z-index:3;
   display:flex;
   align-items:center;
   justify-content:center;
-  border-radius:999px;
-  background:var(--ink);
-  color:var(--paper);
-  font-size:24px;
-  font-weight:950;
-  box-shadow:0 3px 0 rgba(7,24,63,.18);
-}
-
-.action-card.primary{
+  width:max-content;
+  max-width:100%;
+  min-height:68px;
+  margin:16px auto 10px;
+  padding:10px 26px 12px;
+  border:5px solid var(--navy);
+  border-radius:24px;
   background:
-    radial-gradient(circle at 10% 0%,rgba(255,255,255,.65),transparent 35%),
-    var(--card);
+    radial-gradient(circle at 20% 18%,rgba(255,255,255,.22),transparent 28%),
+    linear-gradient(180deg,#fffaf0 0%,#fff2cf 100%);
+  color:var(--ink);
+  text-align:center;
+  text-transform:uppercase;
+  text-decoration:none;
+  font-family:Impact,"Arial Black",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:clamp(24px,6vw,42px);
+  line-height:.92;
+  box-shadow:0 7px 0 rgba(7,24,63,.18);
+  cursor:pointer;
 }
 
-.action-card.change{
-  border-color:#b7791f;
+.panel-help{
+  position:relative;
+  z-index:3;
+  margin:0 auto;
+  max-width:640px;
+  text-align:center;
+  color:var(--ink);
+  font-size:clamp(16px,4.1vw,20px);
+  font-weight:900;
+  line-height:1.2;
 }
 
-.action-card.org{
-  border-color:#7c3aed;
+.section-note{
+  opacity:.78;
+  color:var(--text-soft);
 }
 
-.tool-grid{
+.quick-links{
+  position:relative;
+  z-index:3;
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin:14px 0 10px;
 }
 
-.tool-link{
-  min-height:74px;
+.quick-link{
   display:flex;
   align-items:center;
-  gap:9px;
-  padding:10px 11px;
-  border:4px solid var(--line);
-  border-radius:21px;
-  background:var(--card);
+  justify-content:center;
+  min-height:56px;
+  padding:8px 10px;
+  border:4px solid var(--navy);
+  border-radius:20px;
+  background:#fff9e8;
   color:var(--ink);
   text-decoration:none;
-  box-shadow:var(--shadow);
+  text-align:center;
+  font-family:Impact,"Arial Black",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:clamp(18px,4.4vw,27px);
+  line-height:.92;
+  box-shadow:0 6px 0 rgba(7,24,63,.16);
 }
 
-.tool-link:active{
+.quick-link:active{
   transform:translateY(3px);
-  box-shadow:0 4px 0 rgba(7,24,63,.16);
 }
 
-.tool-icon{
-  width:42px;
-  height:42px;
-  flex:0 0 auto;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:14px;
-  background:#eef3ff;
-  font-size:24px;
+.quick-link.esprit{
+  border-color:#7d3fe0;
 }
 
-.tool-title{
-  display:block;
-  font-weight:950;
-  font-size:17px;
-  line-height:1.05;
+.quick-link.stagiaires{
+  border-color:#123f9c;
 }
 
-.tool-sub{
-  display:block;
-  margin-top:2px;
-  color:rgba(7,24,63,.62);
-  font-size:12px;
-  line-height:1.1;
-  font-weight:850;
+.quick-link.formations{
+  border-color:#b26a00;
 }
-
-/* =========================
-   MODALE
-   ========================= */
 
 .modal{
   position:fixed;
   inset:0;
-  z-index:50;
+  z-index:60;
   display:none;
   align-items:flex-end;
   justify-content:center;
-  padding:14px 10px calc(14px + env(safe-area-inset-bottom));
-  background:rgba(2,9,25,.60);
+  padding:18px 10px;
+  background:rgba(2,9,25,.58);
 }
 
 .modal.is-open{
@@ -343,283 +238,247 @@ button.action-card{
 
 .modal-panel{
   width:min(720px,100%);
-  max-height:min(88dvh,760px);
+  max-height:88vh;
+  overflow:auto;
   position:relative;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-  padding:15px 12px 12px;
+  padding:18px 12px 20px;
   background:
     radial-gradient(circle at 12% 0%,rgba(255,255,255,.75),transparent 34%),
     linear-gradient(180deg,rgba(255,255,255,.45),transparent 48%),
     var(--paper);
-  border:5px solid var(--ink);
-  border-radius:30px 26px 33px 27px;
+  border:6px solid var(--ink);
+  border-radius:34px 28px 38px 29px;
   box-shadow:
-    0 12px 0 rgba(7,24,63,.20),
+    0 13px 0 rgba(7,24,63,.20),
     0 18px 0 rgba(0,0,0,.18),
-    inset 0 0 0 3px rgba(255,215,115,.38);
+    inset 0 0 0 3px rgba(255,215,115,.42);
 }
 
 .modal-title{
-  margin:0 0 12px;
+  position:relative;
+  z-index:3;
+  margin:0 0 6px;
   text-align:center;
-  font-family:var(--display);
   text-transform:uppercase;
-  font-size:clamp(33px,8vw,58px);
+  font-family:Impact,"Arial Black",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:clamp(34px,8vw,58px);
   line-height:.9;
-  letter-spacing:-.8px;
+  color:var(--ink);
   text-shadow:
     0 4px 0 #f8d67d,
     4px 7px 0 rgba(7,24,63,.13);
 }
 
-.modal-text{
+.modal-subtitle{
   position:relative;
   z-index:3;
-  margin:0 0 12px;
+  margin:0 0 16px;
   text-align:center;
-  font-family:var(--font);
-  font-weight:850;
-  font-size:15px;
-  line-height:1.25;
+  color:var(--ink);
+  font-weight:900;
+  font-size:18px;
+  line-height:1.2;
 }
 
-.modal-body{
-  min-height:0;
-  overflow:auto;
-  padding:0 1px 8px;
-}
-
-.modal-actions{
+.modal-grid{
+  position:relative;
+  z-index:3;
   display:grid;
-  gap:9px;
+  gap:14px;
 }
 
-.modal-link{
-  min-height:68px;
-  display:flex;
+.option-link,
+.option-button{
+  display:grid;
+  grid-template-columns:84px 1fr 44px;
+  gap:12px;
   align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  padding:10px 12px;
-  border:4px solid var(--ink);
-  border-radius:20px;
+  min-height:92px;
+  padding:14px 14px;
+  border:5px solid var(--navy);
+  border-radius:26px;
   background:#fff9e8;
   color:var(--ink);
   text-decoration:none;
-  box-shadow:0 5px 0 rgba(7,24,63,.16);
+  box-shadow:0 8px 0 rgba(7,24,63,.16);
 }
 
-.modal-link:active{
-  transform:translateY(3px);
-}
-
-.modal-link-main{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  min-width:0;
-}
-
-.modal-icon{
-  width:42px;
-  height:42px;
-  flex:0 0 auto;
+.option-icon{
   display:flex;
   align-items:center;
   justify-content:center;
-  border-radius:14px;
+  width:54px;
+  height:54px;
+  margin:auto;
+  border-radius:18px;
   background:#eef3ff;
-  font-size:24px;
+  font-size:30px;
 }
 
-.modal-link-title{
+.option-text strong{
   display:block;
-  font-family:var(--display);
-  font-size:clamp(22px,5.6vw,35px);
-  line-height:.9;
+  font-family:Impact,"Arial Black",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:clamp(24px,6vw,38px);
+  line-height:.92;
   text-transform:uppercase;
-  letter-spacing:-.4px;
 }
 
-.modal-link-sub{
+.option-text small{
   display:block;
-  margin-top:3px;
-  color:rgba(7,24,63,.62);
-  font-size:12px;
-  line-height:1.1;
-  font-weight:850;
+  margin-top:5px;
+  color:var(--text-soft);
+  font-weight:900;
+  font-size:clamp(14px,3.7vw,18px);
+  line-height:1.15;
 }
 
-.modal-link-arrow{
-  font-size:25px;
-  font-weight:950;
+.option-arrow{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:44px;
+  height:44px;
+  margin-left:auto;
+  border-radius:999px;
+  background:var(--navy);
+  color:#fff7dd;
+  font-size:28px;
+  font-weight:900;
+  line-height:1;
 }
 
 .search-agent{
   position:relative;
   z-index:3;
   width:100%;
-  min-height:52px;
-  margin:0 0 10px;
-  padding:10px 13px;
-  border:4px solid var(--ink);
-  border-radius:19px;
+  margin:2px 0 12px;
+  padding:17px 14px;
+  border:5px solid var(--ink);
+  border-radius:22px;
   background:#fff9e8;
   color:var(--ink);
-  font-family:var(--font);
-  font-size:17px;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:19px;
   font-weight:900;
   outline:none;
-  box-shadow:0 4px 0 rgba(7,24,63,.12);
-}
-
-.search-agent::placeholder{
-  color:rgba(7,24,63,.38);
 }
 
 .agent-list{
   position:relative;
   z-index:3;
   display:grid;
-  gap:8px;
-  min-height:0;
-  max-height:48dvh;
+  gap:10px;
+  max-height:52vh;
   overflow:auto;
-  padding:1px 1px 8px;
+  padding:2px 2px 8px;
 }
 
 .agent-btn{
-  min-height:50px;
-  padding:9px 10px;
-  border:3px solid var(--ink);
-  border-radius:17px;
+  min-height:62px;
+  padding:10px 12px;
+  border:4px solid var(--ink);
+  border-radius:19px;
   background:#fff9e8;
   color:var(--ink);
-  font-family:var(--display);
-  font-size:clamp(20px,5vw,31px);
+  font-family:Impact,"Arial Black",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:clamp(22px,5.3vw,34px);
   line-height:.92;
-  letter-spacing:-.3px;
   text-transform:uppercase;
   text-align:center;
-  box-shadow:0 4px 0 rgba(7,24,63,.16);
+  box-shadow:0 5px 0 rgba(7,24,63,.18);
   cursor:pointer;
 }
 
-.agent-btn:active{
+.agent-btn:active,
+.option-link:active,
+.option-button:active,
+.modal-close:active{
   transform:translateY(3px);
 }
 
-.modal-footer{
-  flex:0 0 auto;
-  padding-top:10px;
-  background:linear-gradient(180deg,rgba(255,247,221,0),var(--paper) 22%);
+.modal-message{
+  position:relative;
+  z-index:3;
+  padding:8px 4px;
+  text-align:center;
+  color:var(--ink);
+  font-weight:900;
+  font-size:18px;
+  line-height:1.25;
 }
 
-.close-btn{
+.modal-close{
   width:100%;
-  min-height:54px;
-  border:4px solid var(--ink);
-  border-radius:18px;
-  background:#2f3034;
+  margin:16px 0 0;
+  background:
+    radial-gradient(circle at 20% 18%,rgba(255,255,255,.12),transparent 28%),
+    linear-gradient(180deg,#42444c 0%,#22252e 100%);
   color:#fff7dd;
-  font-family:var(--display);
-  font-size:clamp(22px,5.2vw,33px);
-  line-height:.9;
-  text-transform:uppercase;
-  cursor:pointer;
-  box-shadow:0 5px 0 rgba(7,24,63,.22);
+  box-shadow:0 8px 0 rgba(7,24,63,.25);
 }
 
-.close-btn:active{
-  transform:translateY(3px);
+@media(max-width:640px){
+  .quick-links{
+    grid-template-columns:1fr;
+  }
 }
-
-/* =========================
-   RESPONSIVE
-   ========================= */
 
 @media(max-width:520px){
   .page{
-    padding-left:8px;
-    padding-right:8px;
+    padding:8px 10px 42px;
   }
 
-  .home-hero{
+  .hand-card{
+    margin:14px 0 25px;
+    padding:12px 9px 16px;
     border-width:5px;
-    border-radius:28px;
-    margin-top:8px;
+    border-radius:30px 25px 33px 26px;
   }
 
-  .hero-img{
-    height:142px;
+  .hand-card::before{
+    inset:7px;
+    border-width:2px;
+  }
+
+  .scene-img{
     border-width:5px;
-    border-radius:22px;
+    border-radius:23px 20px 26px 20px;
   }
 
-  .home-title h1{
-    font-size:34px;
-  }
-
-  .action-card{
-    grid-template-columns:88px minmax(0,1fr) 30px;
-    min-height:98px;
-    padding:8px;
-    gap:9px;
-    border-radius:22px;
-  }
-
-  .action-thumb{
-    width:80px;
-    height:66px;
-    border-radius:16px;
-  }
-
-  .action-title{
-    font-size:27px;
-  }
-
-  .action-text{
-    font-size:12px;
-  }
-
-  .action-arrow{
-    width:30px;
-    height:30px;
-    font-size:22px;
-  }
-
-  .tool-grid{
-    grid-template-columns:1fr;
+  .panel-btn,
+  .modal-close{
+    min-height:62px;
+    border-width:4px;
+    padding:8px 18px 10px;
+    font-size:clamp(20px,5.7vw,34px);
   }
 
   .modal{
-    padding-left:8px;
-    padding-right:8px;
+    padding:14px 8px;
   }
 
   .modal-panel{
-    border-radius:28px 24px 31px 25px;
-  }
-}
-
-@media(max-width:370px){
-  .action-card{
-    grid-template-columns:78px minmax(0,1fr) 28px;
+    border-width:5px;
+    padding:15px 10px 18px;
   }
 
-  .action-thumb{
-    width:72px;
-    height:60px;
+  .option-link,
+  .option-button{
+    grid-template-columns:70px 1fr 38px;
+    min-height:84px;
+    padding:12px 12px;
+    border-width:4px;
   }
 
-  .action-title{
-    font-size:24px;
+  .option-icon{
+    width:48px;
+    height:48px;
+    font-size:26px;
   }
 
-  .modal-link-title{
-    font-size:22px;
+  .search-agent{
+    border-width:4px;
+    font-size:18px;
   }
 }
 </style>
@@ -628,181 +487,152 @@ button.action-card{
 <body>
 <main class="page">
 
-  <section class="home-hero">
-    <img
-      class="hero-img"
-      src="Image/Bannière/01-accueil-planning-acces.png"
-      alt="Planning et accès rapides GHE"
-    >
+  <section class="hand-card" id="planning-officiel">
+    <button class="image-button" type="button" data-open="modal-officiel" aria-label="Ouvrir le planning officiel">
+      <img class="scene-img" src="Image/Bannière/01-accueil-planning-acces.png" alt="Planning officiel GHE">
+    </button>
 
-    <div class="home-title">
-      <h1>Planning GHE</h1>
-      <p>Accès rapide aux plannings, demandes et outils d’équipe.</p>
+    <button class="panel-btn" type="button" data-open="modal-officiel">Planning officiel</button>
+
+    <p class="panel-help">
+      Jour, nuit et chefs : ouvre la bonne vue officielle pour l’équipe concernée.
+    </p>
+  </section>
+
+  <section class="hand-card" id="mon-planning-personnel">
+    <button class="image-button" type="button" data-open="modal-personnel" aria-label="Ouvrir mon planning personnel">
+      <img class="scene-img" src="Image/Bannière/02-mon-planning-personnel.png" alt="Mon planning personnel">
+    </button>
+
+    <button class="panel-btn" type="button" data-open="modal-personnel">Mon planning personnel</button>
+
+    <p class="panel-help">
+      Choisis ton nom puis ouvre directement ton aperçu personnel.
+    </p>
+  </section>
+
+  <section class="hand-card" id="demander-changement">
+    <a class="image-link" href="https://docs.google.com/forms/d/e/1FAIpQLSeSD74DbSRNuiu1gF2waVTPdSg38jwRCwk3mp6XwpX-sRyh_g/viewform" target="_blank" rel="noopener" aria-label="Demander un changement">
+      <img class="scene-img" src="Image/Bannière/04-demander-changement.png" alt="Demander un changement de planning">
+    </a>
+
+    <a class="panel-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSeSD74DbSRNuiu1gF2waVTPdSg38jwRCwk3mp6XwpX-sRyh_g/viewform" target="_blank" rel="noopener">
+      Demander un changement
+    </a>
+
+    <p class="panel-help">
+      Faire une demande propre, claire, sans message perdu dans la discussion.
+    </p>
+  </section>
+
+  <section class="hand-card" id="organisation">
+    <button class="image-button" type="button" data-open="modal-organisation" aria-label="Ouvrir l’organisation">
+      <img class="scene-img" src="Image/Bannière/03-organisation.png" alt="Organisation GHE">
+    </button>
+
+    <button class="panel-btn" type="button" data-open="modal-organisation">Organisation</button>
+
+    <div class="quick-links">
+      <a class="quick-link esprit" href="./esprit-equipe.html">Esprit d’équipe</a>
+      <a class="quick-link stagiaires" href="stagiaires.html">Stagiaires</a>
+      <a class="quick-link formations" href="formations.html">Formations</a>
     </div>
-  </section>
 
-  <div class="section-label">Accès principaux</div>
-
-  <section class="action-stack">
-
-    <button class="action-card primary" type="button" data-open="modal-officiel" aria-label="Ouvrir le planning officiel">
-      <div class="action-thumb">
-        <img src="Image/Bannière/01-accueil-planning-acces.png" alt="">
-      </div>
-      <div>
-        <div class="action-kicker">📅 Collectif</div>
-        <div class="action-title">Planning officiel</div>
-        <div class="action-text">Jour, nuit, chefs, stagiaires et formations.</div>
-      </div>
-      <div class="action-arrow">→</div>
-    </button>
-
-    <button class="action-card primary" type="button" data-open="modal-personnel" aria-label="Ouvrir mon planning personnel">
-      <div class="action-thumb">
-        <img src="Image/Bannière/02-mon-planning-personnel.png" alt="">
-      </div>
-      <div>
-        <div class="action-kicker">👤 Personnel</div>
-        <div class="action-title">Mon planning</div>
-        <div class="action-text">Choisir son nom et accéder à son aperçu.</div>
-      </div>
-      <div class="action-arrow">→</div>
-    </button>
-
-    <a class="action-card change" href="https://docs.google.com/forms/d/e/1FAIpQLSeSD74DbSRNuiu1gF2waVTPdSg38jwRCwk3mp6XwpX-sRyh_g/viewform" target="_blank" rel="noopener" aria-label="Demander un changement">
-      <div class="action-thumb">
-        <img src="Image/Bannière/04-demander-changement.png" alt="">
-      </div>
-      <div>
-        <div class="action-kicker">🔁 Demande</div>
-        <div class="action-title">Changement</div>
-        <div class="action-text">Faire une demande propre sans message perdu.</div>
-      </div>
-      <div class="action-arrow">→</div>
-    </a>
-
-    <a class="action-card org" href="./esprit-equipe.html" aria-label="Ouvrir organisation">
-      <div class="action-thumb">
-        <img src="Image/Bannière/03-organisation.png" alt="">
-      </div>
-      <div>
-        <div class="action-kicker">👑 Équipe</div>
-        <div class="action-title">Organisation</div>
-        <div class="action-text">Vue collective et suivi de l’équipe.</div>
-      </div>
-      <div class="action-arrow">→</div>
-    </a>
-
-  </section>
-
-  <div class="section-label">Outils GHE</div>
-
-  <section class="tool-grid">
-    <a class="tool-link" href="formations.html">
-      <span class="tool-icon">🎓</span>
-      <span>
-        <span class="tool-title">Formations</span>
-        <span class="tool-sub">Suivi convocations</span>
-      </span>
-    </a>
-
-    <a class="tool-link" href="stagiaires.html">
-      <span class="tool-icon">👶</span>
-      <span>
-        <span class="tool-title">Stagiaires</span>
-        <span class="tool-sub">Référents et planning</span>
-      </span>
-    </a>
+    <p class="panel-help">
+      Vue collective, suivi des stagiaires et convocations formations : les accès utiles à l’organisation.
+    </p>
   </section>
 
 </main>
 
 <div class="modal" id="modal-officiel" aria-hidden="true">
-  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalOfficielTitle">
-    <h2 class="modal-title" id="modalOfficielTitle">Planning officiel</h2>
+  <div class="modal-panel">
+    <h2 class="modal-title">Planning officiel</h2>
+    <p class="modal-subtitle">Choisis la vue à ouvrir.</p>
 
-    <div class="modal-body">
-      <p class="modal-text">Choisis la vue à ouvrir.</p>
+    <div class="modal-grid">
+      <a class="option-link" href="mois.html?type=jour">
+        <span class="option-icon">☀️</span>
+        <span class="option-text">
+          <strong>Jour</strong>
+          <small>Pour l’équipe qui travaille en journée.</small>
+        </span>
+        <span class="option-arrow">→</span>
+      </a>
 
-      <div class="modal-actions">
-        <a class="modal-link" href="mois.html?type=jour">
-          <span class="modal-link-main">
-            <span class="modal-icon">☀️</span>
-            <span>
-              <span class="modal-link-title">Jour</span>
-              <span class="modal-link-sub">Planning jour officiel</span>
-            </span>
-          </span>
-          <span class="modal-link-arrow">→</span>
-        </a>
+      <a class="option-link" href="mois.html?type=nuit">
+        <span class="option-icon">🌙</span>
+        <span class="option-text">
+          <strong>Nuit</strong>
+          <small>Pour l’équipe qui travaille de nuit.</small>
+        </span>
+        <span class="option-arrow">→</span>
+      </a>
 
-        <a class="modal-link" href="mois.html?type=nuit">
-          <span class="modal-link-main">
-            <span class="modal-icon">🌙</span>
-            <span>
-              <span class="modal-link-title">Nuit</span>
-              <span class="modal-link-sub">Planning nuit officiel</span>
-            </span>
-          </span>
-          <span class="modal-link-arrow">→</span>
-        </a>
-
-        <a class="modal-link" href="mois.html?type=chef">
-          <span class="modal-link-main">
-            <span class="modal-icon">👥</span>
-            <span>
-              <span class="modal-link-title">Chef</span>
-              <span class="modal-link-sub">Planning équipe chefs</span>
-            </span>
-          </span>
-          <span class="modal-link-arrow">→</span>
-        </a>
-
-        <a class="modal-link" href="stagiaires.html">
-          <span class="modal-link-main">
-            <span class="modal-icon">👶</span>
-            <span>
-              <span class="modal-link-title">Stagiaires</span>
-              <span class="modal-link-sub">Planning stagiaires et référents</span>
-            </span>
-          </span>
-          <span class="modal-link-arrow">→</span>
-        </a>
-
-        <a class="modal-link" href="formations.html">
-          <span class="modal-link-main">
-            <span class="modal-icon">🎓</span>
-            <span>
-              <span class="modal-link-title">Formations</span>
-              <span class="modal-link-sub">Suivi formations et convocations</span>
-            </span>
-          </span>
-          <span class="modal-link-arrow">→</span>
-        </a>
-      </div>
+      <a class="option-link" href="mois.html?type=chef">
+        <span class="option-icon">👥</span>
+        <span class="option-text">
+          <strong>Chefs</strong>
+          <small>Pour l’équipe de coordination et les chefs.</small>
+        </span>
+        <span class="option-arrow">→</span>
+      </a>
     </div>
 
-    <div class="modal-footer">
-      <button class="close-btn" type="button" data-close>Fermer</button>
-    </div>
+    <button class="modal-close" type="button" data-close>Fermer</button>
   </div>
 </div>
 
 <div class="modal" id="modal-personnel" aria-hidden="true">
-  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalPersonnelTitle">
-    <h2 class="modal-title" id="modalPersonnelTitle">Choisis ton nom</h2>
+  <div class="modal-panel">
+    <h2 class="modal-title">Choisis ton nom</h2>
+    <p class="modal-subtitle">Recherche ton nom puis ouvre ton aperçu personnel.</p>
 
-    <div class="modal-body">
-      <input class="search-agent" id="agentSearch" type="search" placeholder="Rechercher mon nom">
+    <input class="search-agent" id="agentSearch" type="search" placeholder="Rechercher mon nom">
 
-      <div class="agent-list" id="agentList">
-        <div class="modal-text">Chargement des agents...</div>
-      </div>
+    <div class="agent-list" id="agentList">
+      <div class="modal-message">Chargement des agents...</div>
     </div>
 
-    <div class="modal-footer">
-      <button class="close-btn" type="button" data-close>Fermer</button>
+    <button class="modal-close" type="button" data-close>Fermer</button>
+  </div>
+</div>
+
+<div class="modal" id="modal-organisation" aria-hidden="true">
+  <div class="modal-panel">
+    <h2 class="modal-title">Organisation</h2>
+    <p class="modal-subtitle">Choisis l’accès qui t’aide à comprendre ou piloter l’équipe.</p>
+
+    <div class="modal-grid">
+      <a class="option-link" href="./esprit-equipe.html">
+        <span class="option-icon">👑</span>
+        <span class="option-text">
+          <strong>Esprit d’équipe</strong>
+          <small>Vue collective pour suivre l’organisation de l’équipe.</small>
+        </span>
+        <span class="option-arrow">→</span>
+      </a>
+
+      <a class="option-link" href="stagiaires.html">
+        <span class="option-icon">👶</span>
+        <span class="option-text">
+          <strong>Stagiaires</strong>
+          <small>Pour voir les stagiaires prévus et leurs référents.</small>
+        </span>
+        <span class="option-arrow">→</span>
+      </a>
+
+      <a class="option-link" href="formations.html">
+        <span class="option-icon">🎓</span>
+        <span class="option-text">
+          <strong>Formations</strong>
+          <small>Pour suivre les convocations et les agents concernés.</small>
+        </span>
+        <span class="option-arrow">→</span>
+      </a>
     </div>
+
+    <button class="modal-close" type="button" data-close>Fermer</button>
   </div>
 </div>
 
@@ -832,20 +662,19 @@ function openModal(id){
 
   const modal = document.getElementById(id);
 
-  if(!modal) return;
+  if(modal){
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden","false");
 
-  modal.classList.add("is-open");
-  modal.setAttribute("aria-hidden","false");
-  document.body.classList.add("modal-open");
+    if(id === "modal-personnel"){
+      if(!agentsDejaCharges && !chargementEnCours){
+        chargerAgents();
+      }
 
-  if(id === "modal-personnel"){
-    if(!agentsDejaCharges && !chargementEnCours){
-      chargerAgents();
+      setTimeout(function(){
+        agentSearch.focus();
+      }, 100);
     }
-
-    setTimeout(function(){
-      agentSearch.focus();
-    }, 120);
   }
 }
 
@@ -854,8 +683,6 @@ function closeModals(){
     m.classList.remove("is-open");
     m.setAttribute("aria-hidden","true");
   });
-
-  document.body.classList.remove("modal-open");
 }
 
 document.addEventListener("click", function(e){
@@ -919,9 +746,9 @@ function renderAgents(filtre){
 
   if(visibles.length === 0){
     if(agents.length === 0){
-      agentList.innerHTML = '<div class="modal-text">Aucun agent reçu depuis la passerelle.</div>';
+      agentList.innerHTML = '<div class="modal-message">Aucun agent reçu depuis la passerelle.</div>';
     }else{
-      agentList.innerHTML = '<div class="modal-text">Aucun agent trouvé.</div>';
+      agentList.innerHTML = '<div class="modal-message">Aucun agent trouvé.</div>';
     }
     return;
   }
@@ -931,9 +758,6 @@ function renderAgents(filtre){
     btn.type = "button";
     btn.className = "agent-btn";
     btn.dataset.agentKey = agent.agent;
-    btn.dataset.agentName = agent.nom;
-    btn.dataset.avatarImageUrl = agent.avatar_image_url || "";
-    btn.dataset.avatarThumbUrl = agent.avatar_thumb_url || "";
     btn.textContent = agent.nom;
     agentList.appendChild(btn);
   });
@@ -941,7 +765,7 @@ function renderAgents(filtre){
 
 async function chargerAgents(){
   chargementEnCours = true;
-  agentList.innerHTML = '<div class="modal-text">Chargement des agents...</div>';
+  agentList.innerHTML = '<div class="modal-message">Chargement des agents...</div>';
 
   try{
     const url = PASSERELLE_AGENTS + "?mode=list&t=" + Date.now();
@@ -976,7 +800,7 @@ async function chargerAgents(){
   }catch(err){
     console.error(err);
     agentList.innerHTML =
-      '<div class="modal-text">' +
+      '<div class="modal-message">' +
       'Impossible de charger les agents.<br>' +
       'Erreur : ' + String(err.message || err) +
       '</div>';
