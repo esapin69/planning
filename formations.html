@@ -1,909 +1,854 @@
-/*******************************************************
- * WEB_STAGIAIRES_FORMATIONS.gs
- *
- * Sert au site Internet :
- * - stagiaires.html
- * - formations.html
- *
- * Source :
- * - Photocopie intelligente
- * - DETAIL_STAGIAIRES
- * - DETAIL_FORMATIONS
- * - INDEX_AGENTS
- * - AVATARS_INDEX
- *
- * Règles :
- * - JSON ou JSONP selon présence de callback
- * - Affiche uniquement à partir d’aujourd’hui
- * - Dates en français
- * - Avatars agents depuis INDEX_AGENTS
- * - Avatar stagiaire depuis AVATARS_INDEX / Stagiaire
- *******************************************************/
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-function WEB_STAGIAIRES_FORMATIONS_REPONDRE(e) {
-  return WEB_STAGIAIRES_FORMATIONS.repondre(e);
+<title>GHE — Formations</title>
+
+<style>
+*,*::before,*::after{box-sizing:border-box}
+
+:root{
+  --ink:#07183f;
+  --cream:#fff7dd;
+  --card:#fffaf0;
+  --line:#132752;
+  --muted:#69738a;
+  --danger:#b42318;
+  --danger-bg:#fff1ed;
+  --warning:#8a4b00;
+  --warning-bg:#fff7db;
+  --ok:#166534;
+  --ok-bg:#edf9f1;
+  --shadow:0 8px 0 rgba(7,24,63,.14);
 }
 
-const WEB_STAGIAIRES_FORMATIONS = {
-  CFG: {
-    timezone: "Europe/Paris",
-    anneeParDefaut: 2026,
-    sourceIntelligenteId: "11U2QvzJW0JTN5SSlW9YdwmxXqyUnNhtLzSiUXRH2zqI",
-
-    feuilles: {
-      agents: "INDEX_AGENTS",
-      stagiaires: "DETAIL_STAGIAIRES",
-      formations: "DETAIL_FORMATIONS",
-      avatars: "AVATARS_INDEX"
-    },
-
-    shifts: {
-      M: { pastille: "🔵", label: "MATIN", debut: "06:50", fin: "14:10" },
-      J: { pastille: "🟢", label: "JOURNÉE", debut: "08:30", fin: "15:50" },
-      J4: { pastille: "🟠", label: "J4", debut: "", fin: "" },
-      S: { pastille: "🟡", label: "SOIR", debut: "13:30", fin: "20:30" },
-      N: { pastille: "⚫", label: "NUIT", debut: "20:30", fin: "06:50" },
-      INCONNU: { pastille: "⚪", label: "INCONNU", debut: "", fin: "" }
-    }
-  },
-
-  _callbackJsonp: "",
-
-  repondre(e) {
-    try {
-      const params = e && e.parameter ? e.parameter : {};
-      this._callbackJsonp = this.safeCallback_(params.callback);
-
-      const type = String(params.type || "").toLowerCase();
-
-      const ss = SpreadsheetApp.openById(this.CFG.sourceIntelligenteId);
-      const agents = this.lireIndexAgents_(ss);
-      const avatars = this.lireAvatarsIndex_(ss);
-
-      if (type === "stagiaires" || type === "stagiaire") {
-        const items = this.filtrerDatesAVenir_(
-          this.construireStagiairesSite_(ss, agents, avatars)
-        );
-
-        return this.json_({
-          ok: true,
-          type: "stagiaires",
-          items,
-          meta: this.metaItems_(items),
-          updatedAt: new Date().toISOString()
-        });
-      }
-
-      if (type === "formations" || type === "formation") {
-        const items = this.filtrerDatesAVenir_(
-          this.construireFormationsSite_(ss, agents)
-        );
-
-        return this.json_({
-          ok: true,
-          type: "formations",
-          items,
-          meta: this.metaItems_(items),
-          updatedAt: new Date().toISOString()
-        });
-      }
-
-      return this.json_({
-        ok: false,
-        erreur: "Type inconnu. Utilise type=stagiaires ou type=formations."
-      });
-
-    } catch (err) {
-      return this.json_({
-        ok: false,
-        erreur: String(err && err.message ? err.message : err)
-      });
-    }
-  },
-
-  /*******************************************************
-   * STAGIAIRES POUR SITE
-   *******************************************************/
-
-  construireStagiairesSite_(ss, agents, avatars) {
-    const rows = this.lireFeuilleObjets_(ss, this.CFG.feuilles.stagiaires);
-    const items = [];
-
-    rows.forEach(row => {
-      const nomRef = this.val(row, "NOM");
-      const prenomRef = this.val(row, "PRÉNOM");
-      const refComplet = this.val(row, "AGENT RÉFÉRENT") || (nomRef + " " + prenomRef).trim();
-      const stagiaire = this.val(row, "STAGIAIRE");
-      const dateJour = this.val(row, "DATE / JOUR");
-      const valeurSource = this.val(row, "VALEUR SOURCE");
-      const rattachement = this.val(row, "RATTACHEMENT");
-      const ongletSource = this.val(row, "ONGLET SOURCE");
-
-      if (!stagiaire || !dateJour || !refComplet) return;
-
-      const date = this.parseDateJour_(dateJour);
-      if (!date) return;
-
-      const agent = this.trouverAgent_(agents, nomRef, prenomRef, refComplet);
-      const controle = this.controlerAgentPourDate_(agent, date);
-
-      const shiftCode = controle.shiftBase || "INCONNU";
-      const shiftCfg = this.CFG.shifts[shiftCode] || this.CFG.shifts.INCONNU;
-
-      const bloquantes = [];
-      const infos = [];
-
-      if (!agent) bloquantes.push("Agent référent introuvable dans INDEX_AGENTS.");
-      if (!controle.shiftBrut) bloquantes.push("Aucun shift trouvé pour le référent ce jour-là.");
-      if (controle.nonTravaille) bloquantes.push("Référent prévu sur un code non travaillé : " + controle.shiftBrut + ".");
-
-      if (controle.warning) infos.push(controle.warning);
-      if (agent && !agent.telephone) infos.push("Téléphone référent manquant.");
-      if (agent && !agent.ghe) infos.push("GHE référent manquant.");
-
-      const niveau = bloquantes.length ? "danger" : (infos.length ? "warning" : "ok");
-      const prefix = bloquantes.length ? "⛔️ " : (infos.length ? "⚠️ " : "");
-
-      const titre =
-        prefix +
-        shiftCfg.pastille + " " + shiftCfg.label +
-        " | " + this.prenomJoli_(stagiaire) +
-        " → " + this.prenomJoli_(prenomRef || refComplet);
-
-      items.push({
-        titre,
-        niveau,
-
-        dateKey: this.dateKey_(date),
-        dateLabel: this.dateLabel_(date),
-        semaineLabel: this.semaineLabel_(date),
-
-        shift: {
-          code: controle.shiftBrut || "",
-          base: shiftCode,
-          pastille: shiftCfg.pastille,
-          label: shiftCfg.label,
-          horaire: this.horaireShiftTexte_(shiftCfg)
-        },
-
-        stagiaire: {
-          nomPrenom: stagiaire,
-          prenomCourt: this.prenomJoli_(stagiaire),
-          initiales: this.initiales_(stagiaire),
-          avatar: this.avatarDepuisIndex_(avatars, "Stagiaire", stagiaire)
-        },
-
-        referent: {
-          nomComplet: refComplet,
-          nom: nomRef,
-          prenom: prenomRef,
-          prenomCourt: this.prenomJoli_(prenomRef || refComplet),
-          ghe: agent ? agent.ghe : "",
-          telephone: agent ? agent.telephone : "",
-          sources: agent ? agent.sources : "",
-          alertes: agent ? agent.alertes : "",
-          avatar: this.avatarDepuisAgent_(agent, refComplet)
-        },
-
-        alertes: {
-          bloquantes,
-          infos
-        },
-
-        controles: {
-          agentTrouve: !!agent,
-          travailleJour: !controle.nonTravaille,
-          shiftTrouve: !!controle.shiftBrut,
-          rattachement
-        },
-
-        source: {
-          fichier: "Photocopie intelligente",
-          onglet: "DETAIL_STAGIAIRES",
-          ongletSource,
-          dateJour,
-          valeurSource
-        }
-      });
-    });
-
-    return items.sort((a, b) => {
-      if (a.dateKey !== b.dateKey) return a.dateKey.localeCompare(b.dateKey);
-      return a.titre.localeCompare(b.titre, "fr");
-    });
-  },
-
-  /*******************************************************
-   * FORMATIONS POUR SITE
-   *******************************************************/
-
-  construireFormationsSite_(ss, agents) {
-    const rows = this.lireFeuilleObjets_(ss, this.CFG.feuilles.formations);
-    const groupes = {};
-
-    rows.forEach(row => {
-      const intitule = this.val(row, "FORMATION INTITULÉ");
-      const dateTxt = this.val(row, "DATE");
-      const horaire = this.val(row, "HORAIRE");
-
-      if (!intitule || !dateTxt) return;
-
-      const date = this.parseDate_(dateTxt);
-      if (!date) return;
-
-      const key = [
-        this.normaliser_(intitule),
-        this.dateKey_(date),
-        this.normaliser_(horaire)
-      ].join("|");
-
-      if (!groupes[key]) {
-        groupes[key] = {
-          intitule,
-          date,
-          horaire,
-          agents: []
-        };
-      }
-
-      const nomFinal = this.val(row, "NOM FINAL");
-      const prenomFinal = this.val(row, "PRÉNOM FINAL");
-      const nomCompletFinal = this.val(row, "NOM / PRÉNOM FINAL");
-      const agent = this.trouverAgent_(agents, nomFinal, prenomFinal, nomCompletFinal);
-
-      groupes[key].agents.push({
-        nomCompletFinal,
-        nomFinal,
-        prenomFinal,
-        nomSource: this.val(row, "NOM SOURCE"),
-        prenomSource: this.val(row, "PRÉNOM SOURCE"),
-        matricule: this.val(row, "MATRICULE"),
-        ghe: this.val(row, "GHE"),
-        telephone: this.val(row, "TÉLÉPHONE"),
-        signe: this.val(row, "SIGNÉ"),
-        score: this.val(row, "SCORE"),
-        rattachement: this.val(row, "RATTACHEMENT"),
-        ongletSource: this.val(row, "ONGLET SOURCE"),
-        agent
-      });
-    });
-
-    const items = [];
-
-    Object.keys(groupes).forEach(key => {
-      const g = groupes[key];
-      const type = this.typeFormation_(g.intitule);
-      const horaireParse = this.parseHoraire_(g.horaire);
-      const horaireAffiche = horaireParse ? (horaireParse.debut + "–" + horaireParse.fin) : "Journée";
-
-      const bloquantes = [];
-      const infos = [];
-
-      const agentsAffiches = g.agents.map(a => {
-        const controle = this.controlerAgentPourDate_(a.agent, g.date, horaireParse);
-
-        if (!a.agent) {
-          bloquantes.push((a.nomCompletFinal || a.nomSource || "Agent") + " introuvable dans INDEX_AGENTS.");
-        } else {
-          if (controle.nonTravaille) {
-            bloquantes.push(a.agent.nomComplet + " prévu sur un code non travaillé : " + controle.shiftBrut + ".");
-          }
-
-          if (!controle.shiftBrut) {
-            infos.push(a.agent.nomComplet + " : shift du jour non trouvé.");
-          }
-
-          if (controle.incompatibleHoraire) {
-            bloquantes.push(a.agent.nomComplet + " : horaire formation incompatible avec le shift détecté.");
-          }
-
-          if (!a.telephone && !a.agent.telephone) infos.push(a.agent.nomComplet + " : téléphone manquant.");
-          if (!a.ghe && !a.agent.ghe) infos.push(a.agent.nomComplet + " : GHE manquant.");
-        }
-
-        const nomAffiche = a.nomCompletFinal || (a.agent ? a.agent.nomComplet : "");
-
-        return {
-          nomComplet: nomAffiche,
-          nom: a.nomFinal,
-          prenom: a.prenomFinal,
-          nomSource: a.nomSource,
-          prenomSource: a.prenomSource,
-          matricule: a.matricule,
-          ghe: a.ghe || (a.agent ? a.agent.ghe : ""),
-          telephone: a.telephone || (a.agent ? a.agent.telephone : ""),
-          signe: a.signe,
-          score: a.score,
-          rattachement: a.rattachement,
-          ongletSource: a.ongletSource,
-          agentTrouve: !!a.agent,
-          avatar: this.avatarDepuisAgent_(a.agent, nomAffiche),
-          shift: {
-            code: controle.shiftBrut || "",
-            label: controle.shiftLabel || "",
-            horaire: controle.shiftHoraire || ""
-          }
-        };
-      });
-
-      const niveau = bloquantes.length ? "danger" : (infos.length ? "warning" : "ok");
-      const prefix = bloquantes.length ? "⛔️ " : (infos.length ? "⚠️ " : "");
-
-      const titre =
-        prefix +
-        type.icone + " " + type.label +
-        " | " + horaireAffiche +
-        " | 👥 " + agentsAffiches.length + " agents";
-
-      items.push({
-        titre,
-        niveau,
-
-        dateKey: this.dateKey_(g.date),
-        dateLabel: this.dateLabel_(g.date),
-        semaineLabel: this.semaineLabel_(g.date),
-
-        formation: {
-          intitule: g.intitule,
-          typeIcone: type.icone,
-          typeLabel: type.label,
-          horaireSource: g.horaire,
-          horaireAffiche
-        },
-
-        agents: agentsAffiches,
-
-        alertes: {
-          bloquantes,
-          infos
-        },
-
-        controles: {
-          nombreAgents: agentsAffiches.length,
-          agentsTrouves: agentsAffiches.filter(a => a.agentTrouve).length,
-          agentsIntrouvables: agentsAffiches.filter(a => !a.agentTrouve).length,
-          nbBloquantes: bloquantes.length,
-          nbInfos: infos.length
-        },
-
-        source: {
-          fichier: "Photocopie intelligente",
-          onglet: "DETAIL_FORMATIONS"
-        }
-      });
-    });
-
-    return items.sort((a, b) => {
-      if (a.dateKey !== b.dateKey) return a.dateKey.localeCompare(b.dateKey);
-      return a.titre.localeCompare(b.titre, "fr");
-    });
-  },
-
-  /*******************************************************
-   * FILTRE DATES À VENIR
-   *******************************************************/
-
-  filtrerDatesAVenir_(items) {
-    const todayKey = this.dateKey_(new Date());
-
-    return (items || []).filter(item => {
-      return item.dateKey && item.dateKey >= todayKey;
-    });
-  },
-
-  metaItems_(items) {
-    items = items || [];
-
-    if (!items.length) {
-      return {
-        total: 0,
-        periodeDebut: "",
-        periodeFin: "",
-        periodeLabel: "Aucune date à venir"
-      };
-    }
-
-    const debut = items[0];
-    const fin = items[items.length - 1];
-
-    return {
-      total: items.length,
-      periodeDebut: debut.dateKey || "",
-      periodeFin: fin.dateKey || "",
-      periodeLabel: "Affichage du " + debut.dateLabel + " au " + fin.dateLabel
-    };
-  },
-
-  /*******************************************************
-   * LECTURE AVATARS
-   *******************************************************/
-
-  lireAvatarsIndex_(ss) {
-    const sheet = ss.getSheetByName(this.CFG.feuilles.avatars);
-    if (!sheet) return {};
-
-    const values = sheet.getDataRange().getDisplayValues();
-    if (!values.length) return {};
-
-    const headers = values[0].map(h => this.normaliserHeader_(h));
-    const rows = [];
-
-    for (let r = 1; r < values.length; r++) {
-      const obj = {};
-
-      headers.forEach((h, i) => {
-        if (h) obj[h] = String(values[r][i] || "").trim();
-      });
-
-      if (Object.values(obj).some(v => v)) rows.push(obj);
-    }
-
-    const map = {};
-
-    rows.forEach(row => {
-      const nomBase = row[this.normaliserHeader_("NOM_BASE")] || row[this.normaliserHeader_("NOM_FICHIER")] || "";
-      const id = row[this.normaliserHeader_("ID")] || "";
-      const url = row[this.normaliserHeader_("URL")] || "";
-      const imageUrl = row[this.normaliserHeader_("IMAGE_URL")] || "";
-
-      if (!nomBase) return;
-
-      map[this.normaliser_(nomBase)] = {
-        nom: nomBase,
-        id,
-        url,
-        imageUrl,
-        thumb: id ? "https://drive.google.com/thumbnail?id=" + encodeURIComponent(id) + "&sz=w240" : "",
-        initiales: this.initiales_(nomBase)
-      };
-    });
-
-    return map;
-  },
-
-  avatarDepuisIndex_(avatars, nomAvatar, nomFallback) {
-    const av = avatars[this.normaliser_(nomAvatar)] || null;
-
-    if (!av) {
-      return {
-        nom: "",
-        id: "",
-        url: "",
-        imageUrl: "",
-        thumb: "",
-        initiales: this.initiales_(nomFallback)
-      };
-    }
-
-    return {
-      nom: av.nom || "",
-      id: av.id || "",
-      url: av.url || "",
-      imageUrl: av.imageUrl || "",
-      thumb: av.thumb || "",
-      initiales: this.initiales_(nomFallback || av.nom || "")
-    };
-  },
-
-  /*******************************************************
-   * LECTURE BASE AGENTS
-   *******************************************************/
-
-  lireIndexAgents_(ss) {
-    const rows = this.lireFeuilleObjets_(ss, this.CFG.feuilles.agents);
-    const map = {};
-
-    rows.forEach(row => {
-      const nom = this.val(row, "NOM");
-      const prenom = this.val(row, "PRÉNOM");
-      const nomComplet = this.val(row, "NOM / PRÉNOM") || (nom + " " + prenom).trim();
-
-      if (!nomComplet) return;
-
-      const avatarId = this.val(row, "AVATAR_ID");
-      const avatarUrl = this.val(row, "AVATAR_URL");
-
-      const agent = {
-        id: this.val(row, "ID_AGENT"),
-        nom,
-        prenom,
-        nomComplet,
-        ghe: this.val(row, "GHE"),
-        telephone: this.val(row, "TÉLÉPHONE"),
-        planningJour: this.val(row, "PLANNING JOUR"),
-        planningNuit: this.val(row, "PLANNING NUIT"),
-        planningChefs: this.val(row, "PLANNING CHEFS"),
-        sources: this.val(row, "SOURCES"),
-        alertes: this.val(row, "ALERTES"),
-
-        avatarNom: this.val(row, "AVATAR_NOM"),
-        avatarId,
-        avatarUrl,
-        avatarStatut: this.val(row, "AVATAR_STATUT"),
-        avatarThumb: avatarId
-          ? "https://drive.google.com/thumbnail?id=" + encodeURIComponent(avatarId) + "&sz=w240"
-          : ""
-      };
-
-      map[this.normaliser_(nomComplet)] = agent;
-      map[this.normaliser_(nom + " " + prenom)] = agent;
-      map[this.normaliser_(prenom + " " + nom)] = agent;
-    });
-
-    return map;
-  },
-
-  lireFeuilleObjets_(ss, sheetName) {
-    const sheet = ss.getSheetByName(sheetName);
-    if (!sheet) throw new Error("Feuille introuvable : " + sheetName);
-
-    const values = sheet.getDataRange().getDisplayValues();
-    if (!values.length) return [];
-
-    const headers = values[0].map(h => this.normaliserHeader_(h));
-    const rows = [];
-
-    for (let r = 1; r < values.length; r++) {
-      const obj = {};
-
-      headers.forEach((h, i) => {
-        if (h) obj[h] = String(values[r][i] || "").trim();
-      });
-
-      if (Object.values(obj).some(v => v)) rows.push(obj);
-    }
-
-    return rows;
-  },
-
-  val(row, header) {
-    return row[this.normaliserHeader_(header)] || "";
-  },
-
-  /*******************************************************
-   * AVATARS
-   *******************************************************/
-
-  avatarDepuisAgent_(agent, nomFallback) {
-    const initiales = this.initiales_(agent ? agent.nomComplet : nomFallback);
-
-    if (!agent) {
-      return {
-        nom: "",
-        id: "",
-        url: "",
-        thumb: "",
-        statut: "",
-        initiales
-      };
-    }
-
-    return {
-      nom: agent.avatarNom || "",
-      id: agent.avatarId || "",
-      url: agent.avatarUrl || "",
-      thumb: agent.avatarThumb || "",
-      statut: agent.avatarStatut || "",
-      initiales
-    };
-  },
-
-  initiales_(nomComplet) {
-    const parts = String(nomComplet || "")
-      .trim()
-      .split(/\s+/)
-      .filter(Boolean);
-
-    if (!parts.length) return "?";
-    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-
-    return (parts[0][0] + parts[1][0]).toUpperCase();
-  },
-
-  /*******************************************************
-   * CONTRÔLES
-   *******************************************************/
-
-  trouverAgent_(agents, nom, prenom, nomComplet) {
-    const essais = [
-      nomComplet,
-      (nom + " " + prenom).trim(),
-      (prenom + " " + nom).trim()
-    ].filter(Boolean);
-
-    for (let i = 0; i < essais.length; i++) {
-      const key = this.normaliser_(essais[i]);
-      if (agents[key]) return agents[key];
-    }
-
-    return null;
-  },
-
-  controlerAgentPourDate_(agent, date, horaireFormation) {
-    if (!agent) {
-      return {
-        shiftBrut: "",
-        shiftBase: "",
-        shiftLabel: "",
-        shiftHoraire: "",
-        nonTravaille: false,
-        incompatibleHoraire: false,
-        warning: ""
-      };
-    }
-
-    const shiftBrut = this.trouverShiftAgentDate_(agent, date);
-    const shiftBase = this.shiftBase_(shiftBrut);
-    const shiftCfg = this.CFG.shifts[shiftBase] || this.CFG.shifts.INCONNU;
-
-    const nonTravaille = this.estCodeNonTravaille_(shiftBrut);
-    const shiftHoraire = this.horaireShiftTexte_(shiftCfg);
-
-    let incompatibleHoraire = false;
-    let warning = "";
-
-    if (horaireFormation && shiftCfg.debut && shiftCfg.fin && !nonTravaille) {
-      incompatibleHoraire = !this.horaireInclusDansShift_(horaireFormation, shiftCfg);
-    }
-
-    if (shiftBrut && !shiftBase) warning = "Code shift non reconnu : " + shiftBrut;
-
-    return {
-      shiftBrut,
-      shiftBase,
-      shiftLabel: shiftCfg.pastille + " " + shiftCfg.label,
-      shiftHoraire,
-      nonTravaille,
-      incompatibleHoraire,
-      warning
-    };
-  },
-
-  trouverShiftAgentDate_(agent, date) {
-    const dd = Utilities.formatDate(date, this.CFG.timezone, "dd");
-    const mois = this.moisNomLong_(date);
-
-    const textes = [
-      agent.planningJour || "",
-      agent.planningNuit || "",
-      agent.planningChefs || ""
-    ].join(" | ");
-
-    const re = new RegExp("[LMDJVS]\\s*" + dd + "\\s*\\n?\\s*" + mois + "\\s*:\\s*([^|]+)", "i");
-    const m = textes.match(re);
-
-    return m ? String(m[1] || "").trim() : "";
-  },
-
-  shiftBase_(code) {
-    const n = this.normaliser_(code);
-
-    if (!n) return "";
-    if (n.includes("J4")) return "J4";
-    if (n === "M" || n.startsWith("M0")) return "M";
-    if (n === "J" || n === "J*" || n.startsWith("J0")) return "J";
-    if (n === "S" || n.startsWith("S0")) return "S";
-    if (n === "N" || n.startsWith("N0")) return "N";
-
-    return "";
-  },
-
-  estCodeNonTravaille_(code) {
-    const n = this.normaliser_(code);
-    if (!n) return false;
-
-    return ["RH", "RTT", "CA", "RC", "RF", "ABS", "AM"].some(c => n.includes(c));
-  },
-
-  horaireShiftTexte_(shiftCfg) {
-    if (!shiftCfg || !shiftCfg.debut) return "non connu";
-    return shiftCfg.debut + "–" + shiftCfg.fin;
-  },
-
-  horaireInclusDansShift_(horaire, shiftCfg) {
-    const debutFormation = this.minutes_(horaire.debut);
-    const finFormation = this.minutes_(horaire.fin);
-    const debutShift = this.minutes_(shiftCfg.debut);
-    const finShift = this.minutes_(shiftCfg.fin);
-
-    if (debutShift <= finShift) {
-      return debutFormation >= debutShift && finFormation <= finShift;
-    }
-
-    return debutFormation >= debutShift || finFormation <= finShift;
-  },
-
-  /*******************************************************
-   * DATES / HORAIRES
-   *******************************************************/
-
-  parseDate_(txt) {
-    txt = String(txt || "").trim();
-    if (!txt) return null;
-
-    let m = txt.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-    if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
-
-    m = txt.match(/^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2,4})$/);
-    if (m) {
-      let y = Number(m[3]);
-      if (y < 100) y += 2000;
-      return new Date(y, Number(m[2]) - 1, Number(m[1]));
-    }
-
-    return null;
-  },
-
-  parseDateJour_(txt) {
-    txt = String(txt || "").trim();
-    if (!txt) return null;
-
-    const m = txt.match(/(\d{1,2})\s+([A-Za-zÀ-ÿ]+)/);
-    if (!m) return null;
-
-    const jour = Number(m[1]);
-    const mois = this.moisIndex_(m[2]);
-
-    if (mois < 0) return null;
-
-    return new Date(this.CFG.anneeParDefaut, mois, jour);
-  },
-
-  parseHoraire_(txt) {
-    txt = String(txt || "").trim();
-    if (!txt) return null;
-
-    const m = txt.match(/(\d{1,2})[h:](\d{2})\s*[-–]\s*(\d{1,2})[h:](\d{2})/i);
-    if (!m) return null;
-
-    return {
-      debut: String(m[1]).padStart(2, "0") + ":" + m[2],
-      fin: String(m[3]).padStart(2, "0") + ":" + m[4]
-    };
-  },
-
-  minutes_(hhmm) {
-    const p = String(hhmm || "00:00").split(":");
-    return Number(p[0] || 0) * 60 + Number(p[1] || 0);
-  },
-
-  dateKey_(date) {
-    return Utilities.formatDate(date, this.CFG.timezone, "yyyy-MM-dd");
-  },
-
-  dateLabel_(date) {
-    const jours = [
-      "dimanche",
-      "lundi",
-      "mardi",
-      "mercredi",
-      "jeudi",
-      "vendredi",
-      "samedi"
-    ];
-
-    const jourSemaine = jours[date.getDay()];
-    const jour = date.getDate();
-    const mois = this.moisNomLong_(date).toLowerCase();
-    const annee = date.getFullYear();
-
-    return jourSemaine + " " + jour + " " + mois + " " + annee;
-  },
-
-  semaineLabel_(date) {
-    return "Semaine " + Utilities.formatDate(date, this.CFG.timezone, "w");
-  },
-
-  moisNomLong_(date) {
-    const mois = [
-      "Janvier",
-      "Février",
-      "Mars",
-      "Avril",
-      "Mai",
-      "Juin",
-      "Juillet",
-      "Août",
-      "Septembre",
-      "Octobre",
-      "Novembre",
-      "Décembre"
-    ];
-
-    return mois[date.getMonth()];
-  },
-
-  moisIndex_(txt) {
-    const n = this.normaliser_(txt);
-    const mois = [
-      "JANVIER",
-      "FEVRIER",
-      "MARS",
-      "AVRIL",
-      "MAI",
-      "JUIN",
-      "JUILLET",
-      "AOUT",
-      "SEPTEMBRE",
-      "OCTOBRE",
-      "NOVEMBRE",
-      "DECEMBRE"
-    ];
-
-    return mois.indexOf(n);
-  },
-
-  /*******************************************************
-   * FORMATIONS
-   *******************************************************/
-
-  typeFormation_(intitule) {
-    const n = this.normaliser_(intitule);
-
-    if (n.includes("INCENDIE") || n.includes("RISQUE")) {
-      return { icone: "🔥", label: "INCENDIE" };
-    }
-
-    if (n.includes("CACES") || n.includes("MOBILIS")) {
-      return { icone: "🏗️", label: "CACES" };
-    }
-
-    if (n.includes("IDENTITE") || n.includes("VIGILANCE")) {
-      return { icone: "🪪", label: "IDENTITÉ / VIGILANCE" };
-    }
-
-    return { icone: "📚", label: "FORMATION" };
-  },
-
-  /*******************************************************
-   * SORTIE JSON / JSONP
-   *******************************************************/
-
-  json_(obj) {
-    const txt = JSON.stringify(obj);
-
-    if (this._callbackJsonp) {
-      return ContentService
-        .createTextOutput(this._callbackJsonp + "(" + txt + ");")
-        .setMimeType(ContentService.MimeType.JAVASCRIPT);
-    }
-
-    return ContentService
-      .createTextOutput(txt)
-      .setMimeType(ContentService.MimeType.JSON);
-  },
-
-  safeCallback_(callback) {
-    const cb = String(callback || "").trim();
-    if (!cb) return "";
-    return cb.replace(/[^a-zA-Z0-9_$\.]/g, "");
-  },
-
-  /*******************************************************
-   * OUTILS
-   *******************************************************/
-
-  prenomJoli_(v) {
-    v = String(v || "").trim();
-    if (!v) return "";
-
-    const premier = v.split(/\s+/)[0];
-    return premier.charAt(0).toUpperCase() + premier.slice(1).toLowerCase();
-  },
-
-  normaliserHeader_(v) {
-    return String(v || "")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toUpperCase()
-      .trim();
-  },
-
-  normaliser_(v) {
-    return String(v || "")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toUpperCase()
-      .trim();
+html,body{
+  margin:0;
+  min-height:100vh;
+}
+
+body{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:#fff7dd;
+  color:var(--ink);
+}
+
+.page{
+  width:min(1080px,100%);
+  margin:auto;
+  padding:12px 10px 34px;
+}
+
+.topbar{
+  display:flex;
+  gap:8px;
+  margin-bottom:12px;
+  flex-wrap:wrap;
+}
+
+.navbtn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:44px;
+  padding:9px 14px;
+  border:3px solid var(--line);
+  border-radius:16px;
+  background:#fffaf0;
+  color:var(--ink);
+  text-decoration:none;
+  font-weight:1000;
+  box-shadow:0 4px 0 rgba(7,24,63,.16);
+}
+
+.hero{
+  border:4px solid var(--line);
+  border-radius:26px;
+  overflow:hidden;
+  background:#07183f;
+  box-shadow:var(--shadow);
+  margin-bottom:14px;
+}
+
+.hero img{
+  display:block;
+  width:100%;
+  height:auto;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin:14px 0;
+}
+
+.stat{
+  background:#fffaf0;
+  border:4px solid var(--line);
+  border-radius:20px;
+  padding:13px 14px;
+  box-shadow:var(--shadow);
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.stat-icon{
+  width:52px;
+  height:52px;
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:26px;
+  background:#eef3ff;
+}
+
+.stat-number{
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:38px;
+  line-height:.9;
+}
+
+.stat-label{
+  font-weight:1000;
+  font-size:15px;
+}
+
+.tools{
+  display:grid;
+  gap:10px;
+  margin:14px 0 18px;
+}
+
+.search{
+  width:100%;
+  min-height:54px;
+  border:4px solid var(--line);
+  border-radius:18px;
+  padding:10px 14px;
+  font-size:17px;
+  font-weight:900;
+  color:var(--ink);
+  background:#fffaf0;
+  outline:none;
+  box-shadow:var(--shadow);
+}
+
+.filters{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.filter-btn{
+  border:3px solid var(--line);
+  border-radius:999px;
+  background:#fffaf0;
+  color:var(--ink);
+  padding:9px 13px;
+  font-weight:1000;
+  cursor:pointer;
+  box-shadow:0 4px 0 rgba(7,24,63,.14);
+}
+
+.filter-btn.active{
+  background:#07183f;
+  color:#fff7dd;
+}
+
+.result-separator{
+  margin:24px 4px 12px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.result-separator::before,
+.result-separator::after{
+  content:"";
+  height:4px;
+  flex:1;
+  background:#07183f;
+  border-radius:99px;
+  opacity:.22;
+}
+
+.result-separator span{
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(30px,6vw,52px);
+  text-transform:uppercase;
+  text-shadow:0 3px 0 #f8d67d;
+}
+
+.day-title{
+  margin:28px 4px 12px;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(34px,7vw,58px);
+  line-height:.9;
+  text-transform:uppercase;
+  text-shadow:0 3px 0 #f8d67d;
+}
+
+.formation-card{
+  background:#fffaf0;
+  border:4px solid var(--line);
+  border-radius:24px;
+  padding:14px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow);
+}
+
+.formation-card.danger{border-color:var(--danger)}
+.formation-card.warning{border-color:#b7791f}
+.formation-card.ok{border-color:var(--ok)}
+
+.formation-head{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+  align-items:start;
+  margin-bottom:12px;
+}
+
+.formation-title{
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(27px,5.4vw,44px);
+  line-height:.95;
+  text-transform:uppercase;
+}
+
+.status{
+  border-radius:999px;
+  padding:8px 12px;
+  font-weight:1000;
+  white-space:nowrap;
+  border:2px solid transparent;
+}
+
+.status.ok{
+  background:var(--ok-bg);
+  color:var(--ok);
+  border-color:#b7e0c5;
+}
+
+.status.warning{
+  background:var(--warning-bg);
+  color:var(--warning);
+  border-color:#ecd27f;
+}
+
+.status.danger{
+  background:var(--danger-bg);
+  color:var(--danger);
+  border-color:#efb1b1;
+}
+
+.formation-info{
+  display:grid;
+  grid-template-columns:1.3fr .7fr .7fr;
+  gap:9px;
+  margin-bottom:12px;
+}
+
+.info{
+  background:#fff7dd;
+  border:2px solid rgba(7,24,63,.20);
+  border-radius:16px;
+  padding:10px;
+}
+
+.info-label{
+  display:block;
+  opacity:.62;
+  font-size:12px;
+  text-transform:uppercase;
+  font-weight:1000;
+  margin-bottom:4px;
+}
+
+.info-value{
+  font-weight:1000;
+  font-size:16px;
+  line-height:1.2;
+}
+
+.alert{
+  margin:10px 0;
+  padding:10px 12px;
+  border-radius:16px;
+  font-weight:900;
+}
+
+.alert.danger{
+  background:var(--danger-bg);
+  color:var(--danger);
+}
+
+.alert.warning{
+  background:var(--warning-bg);
+  color:var(--warning);
+}
+
+.alert ul{
+  margin:6px 0 0;
+  padding-left:20px;
+}
+
+.agent-list{
+  display:grid;
+  gap:9px;
+  margin-top:12px;
+}
+
+.agent-card{
+  display:grid;
+  grid-template-columns:74px 1fr;
+  gap:12px;
+  align-items:center;
+  background:#fff7dd;
+  border:2px solid rgba(7,24,63,.18);
+  border-radius:18px;
+  padding:10px 12px;
+}
+
+.avatar{
+  width:70px;
+  height:70px;
+  border:0;
+  background:transparent;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:visible;
+}
+
+.avatar img{
+  max-width:70px;
+  max-height:70px;
+  width:auto;
+  height:auto;
+  object-fit:contain;
+  display:block;
+}
+
+.avatar .initials{
+  width:56px;
+  height:56px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:3px solid var(--line);
+  border-radius:14px;
+  background:#fffaf0;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:20px;
+}
+
+.avatar.has-img .initials{
+  display:none;
+}
+
+.agent-content{
+  min-width:0;
+}
+
+.agent-name{
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(23px,4.5vw,36px);
+  line-height:.95;
+  text-transform:uppercase;
+  margin-bottom:8px;
+  word-break:break-word;
+}
+
+.agent-chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+}
+
+.chip{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  min-height:30px;
+  padding:5px 9px;
+  border-radius:999px;
+  background:#fffaf0;
+  border:2px solid rgba(7,24,63,.16);
+  color:var(--ink);
+  font-size:14px;
+  font-weight:900;
+}
+
+.chip a{
+  color:#064ee4;
+  font-weight:1000;
+}
+
+.source{
+  margin-top:12px;
+  font-size:13px;
+  opacity:.68;
+  font-weight:900;
+}
+
+.empty,.error,.loading{
+  background:#fffaf0;
+  border:4px solid var(--line);
+  border-radius:22px;
+  padding:16px;
+  font-weight:1000;
+  box-shadow:var(--shadow);
+}
+
+.error{
+  color:var(--danger);
+}
+
+.agenda-box{
+  margin:28px 0 4px;
+  padding:16px 12px;
+  background:#fffaf0;
+  border:5px solid var(--line);
+  border-radius:26px;
+  box-shadow:var(--shadow);
+}
+
+.agenda-title{
+  margin:0 0 12px;
+  text-align:center;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(27px,6.3vw,48px);
+  line-height:.9;
+  text-transform:uppercase;
+  text-shadow:0 3px 0 #f8d67d;
+}
+
+.agenda-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+}
+
+.agenda-btn{
+  min-height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:3px;
+  text-decoration:none;
+  color:#fff4ce;
+  border:5px solid #061738;
+  border-radius:22px;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(22px,5vw,36px);
+  text-transform:uppercase;
+  box-shadow:0 8px 0 rgba(7,24,63,.35);
+}
+
+.agenda-btn.ios{
+  background:linear-gradient(145deg,#3db9ff 0%,#0c6ed5 56%,#083c91 100%);
+}
+
+.agenda-btn.android{
+  background:linear-gradient(145deg,#35d864 0%,#12873d 56%,#075324 100%);
+}
+
+@media(max-width:820px){
+  .stats{
+    grid-template-columns:1fr 1fr;
   }
-};
+
+  .formation-head{
+    grid-template-columns:1fr;
+  }
+
+  .formation-info{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:620px){
+  .page{
+    padding:10px 8px 28px;
+  }
+
+  .hero{
+    border-radius:22px;
+    border-width:3px;
+  }
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .stat{
+    border-width:3px;
+  }
+
+  .formation-card{
+    border-width:3px;
+    border-radius:21px;
+  }
+
+  .agent-card{
+    grid-template-columns:64px 1fr;
+    padding:9px;
+  }
+
+  .avatar,
+  .avatar img{
+    max-width:60px;
+    max-height:60px;
+    width:60px;
+    height:60px;
+  }
+
+  .agent-name{
+    font-size:26px;
+  }
+
+  .agenda-box{
+    border-width:4px;
+  }
+}
+</style>
+</head>
+
+<body>
+<main class="page">
+
+  <div class="topbar">
+    <a class="navbtn" href="index.html">← Accueil</a>
+    <a class="navbtn" href="stagiaires.html">Stagiaires</a>
+  </div>
+
+  <section class="hero">
+    <img
+      src="Image/Bannière/Page Formation.PNG"
+      alt="Formations GHE"
+      onerror="this.onerror=null;this.src='Image/Banni%C3%A8re/Page%20Formation.PNG';"
+    >
+  </section>
+
+  <section class="stats">
+    <div class="stat">
+      <div class="stat-icon">📚</div>
+      <div>
+        <div class="stat-number" id="statTotal">0</div>
+        <div class="stat-label">Formations</div>
+      </div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-icon">👥</div>
+      <div>
+        <div class="stat-number" id="statAgents">0</div>
+        <div class="stat-label">Agents</div>
+      </div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-icon">⚠️</div>
+      <div>
+        <div class="stat-number" id="statAlertes">0</div>
+        <div class="stat-label">Alertes</div>
+      </div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-icon">✅</div>
+      <div>
+        <div class="stat-number" id="statOk">0</div>
+        <div class="stat-label">OK</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tools">
+    <input id="search" class="search" type="search" placeholder="Rechercher formation, agent, GHE, téléphone…">
+
+    <div class="filters">
+      <button class="filter-btn active" data-filter="tous">Tous</button>
+      <button class="filter-btn" data-filter="alertes">Alertes</button>
+      <button class="filter-btn" data-filter="ok">OK</button>
+    </div>
+  </section>
+
+  <div class="result-separator"><span>Résultats</span></div>
+
+  <section id="content">
+    <div class="loading">Chargement des formations…</div>
+  </section>
+
+  <section class="agenda-box">
+    <h2 class="agenda-title">Ajouter l’agenda formations</h2>
+    <div class="agenda-buttons">
+      <a id="btnIos" class="agenda-btn ios" href="#"><span>🍎</span><span>iOS</span></a>
+      <a id="btnAndroid" class="agenda-btn android" href="#"><span>🤖</span><span>Android</span></a>
+    </div>
+  </section>
+
+</main>
+
+<script>
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOlle3cafAKEAZQ8NAX-peSN6D-yxFO3gX26SnVNUVd5xbwV3CUISg/exec";
+
+const ICS_URL = "https://calendar.google.com/calendar/ical/c5da5df12db0eba65a14410cada08fea4e5a8037ddd256b03e7426cb22cb751b%40group.calendar.google.com/private-4f5072a64d36548137a30abb665ed23f/basic.ics";
+
+let ITEMS = [];
+let CURRENT_FILTER = "tous";
+
+document.getElementById("btnIos").href = ICS_URL.replace(/^https:\/\//i, "webcal://");
+document.getElementById("btnAndroid").href = "https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(ICS_URL);
+
+document.getElementById("search").addEventListener("input", () => {
+  render(filterItems());
+});
+
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    CURRENT_FILTER = btn.dataset.filter;
+    render(filterItems());
+  });
+});
+
+loadJsonp("formations");
+
+function loadJsonp(type){
+  const callbackName = "recevoirGhe_" + type + "_" + Date.now();
+  const script = document.createElement("script");
+
+  window[callbackName] = function(data){
+    delete window[callbackName];
+    script.remove();
+
+    if (!data || !data.ok) {
+      showError(data && data.erreur ? data.erreur : "Données invalides.");
+      return;
+    }
+
+    ITEMS = data.items || [];
+    updateStats(ITEMS);
+    render(filterItems());
+  };
+
+  script.onerror = function(){
+    delete window[callbackName];
+    script.remove();
+    showError("Impossible de charger les données.");
+  };
+
+  script.src = WEB_APP_URL
+    + "?mode=site_stagiaires_formations"
+    + "&type=" + encodeURIComponent(type)
+    + "&callback=" + encodeURIComponent(callbackName)
+    + "&v=" + Date.now();
+
+  document.body.appendChild(script);
+}
+
+function filterItems(){
+  const q = norm(document.getElementById("search").value);
+
+  return ITEMS.filter(item => {
+    if (CURRENT_FILTER === "alertes" && item.niveau === "ok") return false;
+    if (CURRENT_FILTER === "ok" && item.niveau !== "ok") return false;
+
+    if (!q) return true;
+
+    const agents = item.agents || [];
+    const txt = [
+      item.titre,
+      item.dateLabel,
+      item.formation && item.formation.intitule,
+      item.formation && item.formation.typeLabel,
+      agents.map(a => [
+        a.nomComplet,
+        a.nom,
+        a.prenom,
+        a.ghe,
+        a.telephone,
+        a.shift && a.shift.code
+      ].join(" ")).join(" "),
+      item.alertes && item.alertes.bloquantes && item.alertes.bloquantes.join(" "),
+      item.alertes && item.alertes.infos && item.alertes.infos.join(" ")
+    ].join(" ");
+
+    return norm(txt).includes(q);
+  });
+}
+
+function updateStats(items){
+  const total = items.length;
+  const agents = items.reduce((s,x) => s + ((x.agents || []).length), 0);
+  const alertes = items.filter(x => x.niveau === "danger" || x.niveau === "warning").length;
+  const ok = items.filter(x => x.niveau === "ok").length;
+
+  document.getElementById("statTotal").textContent = total;
+  document.getElementById("statAgents").textContent = agents;
+  document.getElementById("statAlertes").textContent = alertes;
+  document.getElementById("statOk").textContent = ok;
+}
+
+function render(items){
+  const content = document.getElementById("content");
+
+  if (!items.length) {
+    content.innerHTML = `<div class="empty">Aucune formation à venir pour le moment.</div>`;
+    return;
+  }
+
+  const groups = groupByDate(items);
+
+  content.innerHTML = Object.keys(groups).map(dateKey => {
+    const list = groups[dateKey];
+    const label = list[0].dateLabel || dateKey;
+
+    return `
+      <div class="day-title">${esc(label)}</div>
+      ${list.map(cardFormation).join("")}
+    `;
+  }).join("");
+}
+
+function cardFormation(item){
+  const formation = item.formation || {};
+  const agents = item.agents || [];
+  const bloquantes = (item.alertes && item.alertes.bloquantes) || [];
+  const infos = (item.alertes && item.alertes.infos) || [];
+  const controles = item.controles || {};
+
+  return `
+    <article class="formation-card ${esc(item.niveau || "ok")}">
+
+      <div class="formation-head">
+        <div class="formation-title">${esc(item.titre || "")}</div>
+        <div class="status ${esc(item.niveau || "ok")}">${statusLabel(item.niveau)}</div>
+      </div>
+
+      <div class="formation-info">
+        <div class="info">
+          <span class="info-label">Formation</span>
+          <div class="info-value">${esc(formation.intitule || "")}</div>
+        </div>
+
+        <div class="info">
+          <span class="info-label">Horaire</span>
+          <div class="info-value">${esc(formation.horaireAffiche || "")}</div>
+        </div>
+
+        <div class="info">
+          <span class="info-label">Agents</span>
+          <div class="info-value">👥 ${esc(controles.nombreAgents || agents.length)}</div>
+        </div>
+      </div>
+
+      ${bloquantes.length ? alertBlock("danger", "⛔️ Alertes bloquantes", bloquantes) : ""}
+      ${infos.length ? alertBlock("warning", "⚠️ À vérifier", infos) : ""}
+
+      <div class="agent-list">
+        ${agents.map(agentCard).join("")}
+      </div>
+
+      <div class="source">
+        Source : DETAIL_FORMATIONS
+      </div>
+    </article>
+  `;
+}
+
+function agentCard(a){
+  const shift = a.shift || {};
+  const tel = a.telephone || "";
+  const avatar = a.avatar || {};
+
+  return `
+    <div class="agent-card">
+      ${avatarHtml(avatar)}
+
+      <div class="agent-content">
+        <div class="agent-name">${a.agentTrouve ? "✅ " : "⛔️ "}${esc(a.nomComplet || "")}</div>
+
+        <div class="agent-chips">
+          <span class="chip">GHE ${esc(a.ghe || "non renseigné")}</span>
+          <span class="chip">📞 ${tel ? `<a href="tel:${esc(tel)}">${esc(tel)}</a>` : "non renseigné"}</span>
+          <span class="chip">${esc((shift.label || "") + (shift.code ? " · " + shift.code : "")) || "Shift non connu"}</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function avatarHtml(avatar){
+  avatar = avatar || {};
+  const initials = esc(avatar.initiales || "?");
+  const thumb = avatar.thumb || "";
+
+  if (!thumb) {
+    return `<div class="avatar"><div class="initials">${initials}</div></div>`;
+  }
+
+  return `
+    <div class="avatar has-img">
+      <img src="${esc(thumb)}" alt="" loading="lazy" onerror="this.parentElement.classList.remove('has-img');this.remove();">
+      <div class="initials">${initials}</div>
+    </div>
+  `;
+}
+
+function statusLabel(niveau){
+  if (niveau === "danger") return "⛔ Bloquant";
+  if (niveau === "warning") return "⚠️ À vérifier";
+  return "✅ OK";
+}
+
+function alertBlock(type, title, list){
+  return `
+    <div class="alert ${type}">
+      <div><strong>${esc(title)}</strong></div>
+      <ul>${list.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+    </div>
+  `;
+}
+
+function groupByDate(items){
+  return items.reduce((acc,item) => {
+    const key = item.dateKey || "sans-date";
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(item);
+    return acc;
+  }, {});
+}
+
+function showError(message){
+  document.getElementById("content").innerHTML = `<div class="error">Problème : ${esc(message)}</div>`;
+}
+
+function esc(value){
+  return String(value || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function norm(value){
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .toLowerCase()
+    .trim();
+}
+</script>
+</body>
+</html>
