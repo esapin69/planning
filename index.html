@@ -90,7 +90,6 @@ body.modal-open{
 .block-action:active .scene-img,
 .block-link:active .scene-img,
 .main-btn:active,
-.org-mini-link:active,
 .option-link:active,
 .modal-close:active,
 .agent-btn:active{
@@ -120,59 +119,6 @@ body.modal-open{
   line-height:.92;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
-}
-
-/* ORGANISATION : SOUS-ACCÈS */
-
-.org-subaccess{
-  position:relative;
-  z-index:3;
-  margin:14px auto 0;
-  max-width:650px;
-  padding:10px;
-  border:3px solid rgba(7,24,63,.18);
-  border-radius:22px;
-  background:rgba(255,249,232,.72);
-}
-
-.org-links{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:8px;
-}
-
-.org-mini-link{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  min-height:52px;
-  padding:8px 11px;
-  border:3px solid var(--navy);
-  border-radius:17px;
-  background:#fff9e8;
-  color:var(--ink);
-  text-decoration:none;
-}
-
-.org-icon{
-  font-size:25px;
-  line-height:1;
-}
-
-.org-mini-text{
-  font-size:20px;
-  line-height:1;
-  font-weight:950;
-}
-
-.org-mini-link.esprit{
-  border-color:#7d3fe0;
-}
-
-.org-mini-link.stagiaires,
-.org-mini-link.formations{
-  border-color:rgba(7,24,63,.72);
 }
 
 /* MODALES */
@@ -364,12 +310,6 @@ body.modal-open{
 
 /* RESPONSIVE */
 
-@media(min-width:620px){
-  .org-links{
-    grid-template-columns:1.05fr 1fr 1fr;
-  }
-}
-
 @media(max-width:520px){
   .page{
     padding:8px 10px calc(48px + env(safe-area-inset-bottom));
@@ -478,25 +418,6 @@ body.modal-open{
     <button class="main-btn" type="button" data-open="modal-organisation">
       Organisation
     </button>
-
-    <div class="org-subaccess">
-      <div class="org-links">
-        <a class="org-mini-link esprit" href="./esprit-equipe.html">
-          <span class="org-icon">👑</span>
-          <span class="org-mini-text">Esprit d’équipe</span>
-        </a>
-
-        <a class="org-mini-link stagiaires" href="stagiaires.html">
-          <span class="org-icon">👶</span>
-          <span class="org-mini-text">Stagiaires</span>
-        </a>
-
-        <a class="org-mini-link formations" href="formations.html">
-          <span class="org-icon">🎓</span>
-          <span class="org-mini-text">Formations</span>
-        </a>
-      </div>
-    </div>
   </section>
 
 </main>
