@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>GHE — Formations</title>
+<title>GHE — Stagiaires</title>
 
 <style>
 *,*::before,*::after{box-sizing:border-box}
@@ -219,7 +219,7 @@ body{
   display:flex;
   gap:7px;
   overflow-x:auto;
-  padding-bottom:2px;
+  padding-bottom:4px;
 }
 
 .filter-btn{
@@ -261,9 +261,9 @@ body{
   text-shadow:0 3px 0 #f8d67d;
 }
 
-/* FORMATION */
+/* CARTE STAGIAIRE */
 
-.formation-card{
+.stagiaire-card{
   background:var(--card);
   border:4px solid var(--line);
   border-radius:24px;
@@ -272,32 +272,30 @@ body{
   box-shadow:var(--shadow);
 }
 
-.formation-card.ok{border-color:var(--ok-line)}
-.formation-card.warning{border-color:var(--warning-line)}
-.formation-card.danger{border-color:var(--danger-line)}
+.stagiaire-card.ok{border-color:var(--ok-line)}
+.stagiaire-card.warning{border-color:var(--warning-line)}
+.stagiaire-card.danger{border-color:var(--danger-line)}
 
-.formation-head{
-  display:grid;
-  grid-template-columns:1fr auto;
+.card-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
   gap:10px;
-  align-items:start;
   margin-bottom:10px;
 }
 
-.formation-title{
+.card-title{
   font-family:var(--display);
-  font-size:clamp(30px,8vw,46px);
+  font-size:clamp(27px,7vw,42px);
   line-height:.92;
-  letter-spacing:-.8px;
+  letter-spacing:-.6px;
   text-transform:uppercase;
 }
 
-.formation-meta{
-  margin-top:5px;
-  font-family:var(--font);
-  font-size:16px;
-  line-height:1.15;
-  font-weight:950;
+.card-meta{
+  margin-top:4px;
+  font-size:15px;
+  font-weight:900;
   color:var(--ink-soft);
 }
 
@@ -328,111 +326,44 @@ body{
   border-color:#efb1b1;
 }
 
-.formation-detail{
-  margin:8px 0 10px;
-  padding:10px 11px;
-  border:2px solid rgba(7,24,63,.16);
-  border-radius:16px;
-  background:var(--card-soft);
-}
+/* PERSONNES */
 
-.detail-label{
-  display:block;
-  margin-bottom:3px;
-  color:rgba(7,24,63,.58);
-  font-size:12px;
-  font-weight:950;
-  letter-spacing:.5px;
-  text-transform:uppercase;
-}
-
-.detail-value{
-  font-size:17px;
-  line-height:1.2;
-  font-weight:900;
-}
-
-/* ALERTES GENERALES */
-
-.alert{
-  margin:9px 0;
-  padding:9px 11px;
-  border-radius:16px;
-  border:2px solid transparent;
-  font-size:15px;
-  font-weight:850;
-  line-height:1.25;
-}
-
-.alert.danger{
-  background:var(--danger-bg);
-  color:var(--danger);
-  border-color:#efb1b1;
-}
-
-.alert.warning{
-  background:var(--warning-bg);
-  color:var(--warning);
-  border-color:#ecd27f;
-}
-
-.alert-title{
-  font-weight:950;
-  margin-bottom:5px;
-}
-
-.alert ul{
-  margin:0;
-  padding-left:20px;
-}
-
-.alert li{
-  margin:3px 0;
-}
-
-.alert-name{
-  font-weight:950;
-  text-decoration:underline;
-  text-underline-offset:3px;
-}
-
-/* AGENTS */
-
-.agent-list{
+.people-box{
   display:grid;
-  gap:9px;
-  margin-top:10px;
+  gap:8px;
+  margin-bottom:10px;
 }
 
-.agent-card{
+.person{
   display:grid;
-  grid-template-columns:82px minmax(0,1fr);
+  grid-template-columns:68px minmax(0,1fr);
   gap:10px;
-  align-items:start;
-  padding:9px;
-  border-radius:20px;
-  border:3px solid var(--line-soft);
+  align-items:center;
+  min-width:0;
   background:var(--card-soft);
+  border:2px solid rgba(7,24,63,.16);
+  border-radius:18px;
+  padding:8px;
 }
 
-.agent-card.ok{
-  border-color:rgba(47,143,78,.28);
-}
-
-.agent-card.warning{
-  background:#fff8df;
-  border-color:#e2c060;
-}
-
-.agent-card.danger{
+.person.danger{
   background:#fff4f1;
   border-color:#e7a29d;
 }
 
+.person.warning{
+  background:#fff8df;
+  border-color:#e2c060;
+}
+
+.person.ok{
+  border-color:rgba(47,143,78,.22);
+}
+
 .avatar{
-  width:76px;
-  height:76px;
-  border-radius:18px;
+  width:62px;
+  height:62px;
+  border-radius:16px;
   background:#eef3ff;
   overflow:hidden;
   display:flex;
@@ -450,87 +381,70 @@ body{
 }
 
 .avatar .initials{
-  width:58px;
-  height:58px;
-  border-radius:15px;
+  width:50px;
+  height:50px;
+  border-radius:14px;
   border:3px solid var(--line);
   background:var(--card);
   display:flex;
   align-items:center;
   justify-content:center;
   font-family:var(--display);
-  font-size:21px;
+  font-size:19px;
 }
 
 .avatar.has-img .initials{
   display:none;
 }
 
-.agent-content{
-  min-width:0;
+.role{
+  display:block;
+  margin-bottom:2px;
+  color:rgba(7,24,63,.58);
+  font-size:12px;
+  font-weight:950;
+  letter-spacing:.5px;
+  text-transform:uppercase;
 }
 
-.agent-name-row{
-  display:flex;
-  gap:7px;
-  align-items:flex-start;
-  margin-bottom:7px;
-}
-
-.agent-status{
-  width:27px;
-  height:27px;
-  flex:0 0 27px;
-  border-radius:9px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  font-size:17px;
-  line-height:1;
-  border:2px solid transparent;
-}
-
-.agent-status.ok{
-  background:var(--ok-bg);
-  color:var(--ok);
-  border-color:#b7e0c5;
-}
-
-.agent-status.warning{
-  background:var(--warning-bg);
-  color:var(--warning);
-  border-color:#ecd27f;
-}
-
-.agent-status.danger{
-  background:var(--danger-bg);
-  color:var(--danger);
-  border-color:#efb1b1;
-}
-
-.agent-name{
-  font-size:clamp(21px,5.6vw,31px);
+.name{
+  display:block;
+  font-size:clamp(22px,5.8vw,33px);
   line-height:1;
   font-weight:950;
-  letter-spacing:-.6px;
+  letter-spacing:-.7px;
   text-transform:uppercase;
   word-break:normal;
   overflow-wrap:normal;
   hyphens:none;
 }
 
-.agent-card.warning .agent-name{
-  color:#744000;
-}
-
-.agent-card.danger .agent-name{
+.person.danger .name{
   color:var(--danger);
 }
 
-.agent-chips{
+.person.warning .name{
+  color:#744000;
+}
+
+.arrow-line{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:26px;
+  color:var(--ink);
+  font-size:26px;
+  line-height:1;
+  font-weight:950;
+}
+
+/* CHIPS */
+
+.summary-line{
   display:flex;
   flex-wrap:wrap;
   gap:6px;
+  margin-bottom:9px;
 }
 
 .chip{
@@ -571,31 +485,33 @@ body{
   border-color:#b7e0c5;
 }
 
-.agent-alerts{
-  margin-top:7px;
+/* ALERTES */
+
+.alerts{
   display:grid;
-  gap:5px;
+  gap:6px;
+  margin-top:8px;
 }
 
-.agent-alert{
-  padding:7px 9px;
-  border-radius:13px;
+.alert{
+  padding:8px 10px;
+  border-radius:15px;
   border:2px solid transparent;
   font-size:14px;
-  line-height:1.2;
+  line-height:1.22;
   font-weight:850;
 }
 
-.agent-alert.warning{
-  background:var(--warning-bg);
-  color:var(--warning);
-  border-color:#ecd27f;
-}
-
-.agent-alert.danger{
+.alert.danger{
   background:var(--danger-bg);
   color:var(--danger);
   border-color:#efb1b1;
+}
+
+.alert.warning{
+  background:var(--warning-bg);
+  color:var(--warning);
+  border-color:#ecd27f;
 }
 
 .source{
@@ -682,36 +598,42 @@ body{
     padding-right:14px;
   }
 
-  .pilot{
+  .pilot,
+  .stagiaire-card{
     padding:14px;
   }
 
-  .formation-card{
-    padding:15px;
+  .people-box{
+    grid-template-columns:1fr 38px 1fr;
+    align-items:center;
   }
 
-  .agent-card{
-    grid-template-columns:92px minmax(0,1fr);
+  .arrow-line{
+    height:auto;
+  }
+
+  .person{
+    grid-template-columns:76px minmax(0,1fr);
   }
 
   .avatar{
-    width:84px;
-    height:84px;
+    width:70px;
+    height:70px;
   }
 }
 
 @media(max-width:370px){
-  .agent-card{
-    grid-template-columns:72px minmax(0,1fr);
+  .person{
+    grid-template-columns:60px minmax(0,1fr);
   }
 
   .avatar{
-    width:66px;
-    height:66px;
-    border-radius:16px;
+    width:54px;
+    height:54px;
+    border-radius:14px;
   }
 
-  .agent-name{
+  .name{
     font-size:20px;
   }
 
@@ -728,14 +650,14 @@ body{
 
   <div class="topbar">
     <a class="navbtn" href="index.html">← Accueil</a>
-    <a class="navbtn" href="stagiaires.html">Stagiaires</a>
+    <a class="navbtn" href="formations.html">Formations</a>
   </div>
 
   <section class="hero">
     <img
-      src="Image/Bannière/Page Formation.PNG"
-      alt="Formations GHE"
-      onerror="this.onerror=null;this.src='Image/Banni%C3%A8re/Page%20Formation.PNG';"
+      src="Image/Bannière/Page stagiaire.PNG"
+      alt="Stagiaires GHE"
+      onerror="this.onerror=null;this.src='Image/Banni%C3%A8re/Page%20stagiaire.PNG';"
     >
   </section>
 
@@ -743,38 +665,42 @@ body{
     <div class="pilot-main">
       <div>
         <div id="pilotTitle" class="pilot-title">Chargement du cockpit…</div>
-        <div id="pilotSub" class="pilot-sub">Analyse des formations à venir</div>
+        <div id="pilotSub" class="pilot-sub">Analyse des stagiaires à venir</div>
       </div>
       <div id="pilotBadge" class="pilot-badge">…</div>
     </div>
 
     <div class="pilot-line">
-      <span id="pilotFormations" class="mini-pill">📚 0 formation</span>
-      <span id="pilotAgents" class="mini-pill">👥 0 agent</span>
+      <span id="pilotTotal" class="mini-pill">👶 0 stagiaire</span>
       <span id="pilotDanger" class="mini-pill danger">⛔ 0 bloquant</span>
       <span id="pilotWarning" class="mini-pill warning">⚠️ 0 à vérifier</span>
     </div>
   </section>
 
   <section class="tools">
-    <input id="search" class="search" type="search" placeholder="Rechercher formation, agent, GHE, téléphone…">
+    <input id="search" class="search" type="search" placeholder="Rechercher stagiaire, référent, GHE, téléphone…">
 
     <div class="filters">
       <button class="filter-btn active" data-filter="tous">Tous</button>
       <button class="filter-btn" data-filter="traiter">À traiter</button>
       <button class="filter-btn" data-filter="bloquants">Bloquants</button>
       <button class="filter-btn" data-filter="prets">Prêts</button>
+      <button class="filter-btn" data-filter="M">Matin</button>
+      <button class="filter-btn" data-filter="J">Journée</button>
+      <button class="filter-btn" data-filter="J4">J4</button>
+      <button class="filter-btn" data-filter="S">Soir</button>
+      <button class="filter-btn" data-filter="N">Nuit</button>
     </div>
   </section>
 
-  <div class="section-label">Formations à venir</div>
+  <div class="section-label">Planning stagiaires</div>
 
   <section id="content">
-    <div class="loading">Chargement des formations…</div>
+    <div class="loading">Chargement des stagiaires…</div>
   </section>
 
   <section class="agenda-box">
-    <h2 class="agenda-title">Ajouter l’agenda formations</h2>
+    <h2 class="agenda-title">Ajouter l’agenda stagiaires</h2>
     <div class="agenda-buttons">
       <a id="btnIos" class="agenda-btn ios" href="#"><span>🍎</span><span>iOS</span></a>
       <a id="btnAndroid" class="agenda-btn android" href="#"><span>🤖</span><span>Android</span></a>
@@ -786,7 +712,7 @@ body{
 <script>
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOlle3cafAKEAZQ8NAX-peSN6D-yxFO3gX26SnVNUVd5xbwV3CUISg/exec";
 
-const ICS_URL = "https://calendar.google.com/calendar/ical/c5da5df12db0eba65a14410cada08fea4e5a8037ddd256b03e7426cb22cb751b%40group.calendar.google.com/private-4f5072a64d36548137a30abb665ed23f/basic.ics";
+const ICS_URL = "https://calendar.google.com/calendar/ical/2ced33be0e6a5c88fab9bae2ffdf3b56366970e4003b1718a7dabf4c0603eae6%40group.calendar.google.com/private-d3db5a97d6dbdd8ceeeaa375c8a460ef/basic.ics";
 
 let ITEMS = [];
 let CURRENT_FILTER = "tous";
@@ -807,7 +733,7 @@ document.querySelectorAll(".filter-btn").forEach(btn => {
   });
 });
 
-loadJsonp("formations");
+loadJsonp("stagiaires");
 
 function loadJsonp(type){
   const callbackName = "recevoirGhe_" + type + "_" + Date.now();
@@ -842,7 +768,7 @@ function loadJsonp(type){
   document.body.appendChild(script);
 }
 
-/* FILTRAGE */
+/* FILTRES */
 
 function filterItems(){
   const q = norm(document.getElementById("search").value);
@@ -855,26 +781,29 @@ function filterItems(){
     if (CURRENT_FILTER === "bloquants" && level !== "danger") return false;
     if (CURRENT_FILTER === "prets" && issueCount > 0) return false;
 
+    if (["M","J","J4","S","N"].includes(CURRENT_FILTER)) {
+      if (!item.shift || item.shift.base !== CURRENT_FILTER) return false;
+    }
+
     if (!q) return true;
 
-    const agents = item.agents || [];
+    const stagiaire = item.stagiaire || {};
+    const referent = item.referent || {};
+    const shift = item.shift || {};
+    const alertes = item.alertes || {};
+
     const txt = [
       item.titre,
       item.dateLabel,
-      item.formation && item.formation.intitule,
-      item.formation && item.formation.typeLabel,
-      item.formation && item.formation.horaireAffiche,
-      agents.map(a => [
-        a.nomComplet,
-        a.nom,
-        a.prenom,
-        a.ghe,
-        a.telephone,
-        a.shift && a.shift.code,
-        a.shift && a.shift.label
-      ].join(" ")).join(" "),
-      item.alertes && item.alertes.bloquantes && item.alertes.bloquantes.join(" "),
-      item.alertes && item.alertes.infos && item.alertes.infos.join(" ")
+      shift.label,
+      shift.code,
+      shift.horaire,
+      stagiaire.nomPrenom,
+      referent.nomComplet,
+      referent.ghe,
+      referent.telephone,
+      (alertes.bloquantes || []).join(" "),
+      (alertes.infos || []).join(" ")
     ].join(" ");
 
     return norm(txt).includes(q);
@@ -884,8 +813,7 @@ function filterItems(){
 /* PILOTAGE */
 
 function updatePilot(items){
-  const totalFormations = items.length;
-  const totalAgents = items.reduce((s,item) => s + ((item.agents || []).length), 0);
+  const total = items.length;
 
   const totals = items.reduce((acc,item) => {
     const c = countItemIssues(item);
@@ -919,8 +847,7 @@ function updatePilot(items){
     badge.textContent = "✅ Prêt";
   }
 
-  document.getElementById("pilotFormations").textContent = "📚 " + totalFormations + " formation" + plural(totalFormations);
-  document.getElementById("pilotAgents").textContent = "👥 " + totalAgents + " agent" + plural(totalAgents);
+  document.getElementById("pilotTotal").textContent = "👶 " + total + " stagiaire" + plural(total);
   document.getElementById("pilotDanger").textContent = "⛔ " + totals.danger + " bloquant" + plural(totals.danger);
   document.getElementById("pilotWarning").textContent = "⚠️ " + totals.warning + " à vérifier";
 }
@@ -931,7 +858,7 @@ function render(items){
   const content = document.getElementById("content");
 
   if (!items.length) {
-    content.innerHTML = `<div class="empty">Aucune formation à afficher avec ce filtre.</div>`;
+    content.innerHTML = `<div class="empty">Aucun stagiaire à afficher avec ce filtre.</div>`;
     return;
   }
 
@@ -943,94 +870,77 @@ function render(items){
 
     return `
       <div class="day-title">${esc(label)}</div>
-      ${list.map(cardFormation).join("")}
+      ${list.map(cardStagiaire).join("")}
     `;
   }).join("");
 }
 
-function cardFormation(item){
-  const formation = item.formation || {};
-  const agents = item.agents || [];
+function cardStagiaire(item){
+  const stagiaire = item.stagiaire || {};
+  const referent = item.referent || {};
+  const shift = item.shift || {};
+  const source = item.source || {};
+
   const level = itemLevel(item);
-  const general = formationGeneralAlerts(item);
+  const issues = itemIssues(item);
 
-  const title = compactFormationTitle(item);
-  const horaire = formation.horaireAffiche || extractHoraire(item.titre) || "";
-  const countAgents = agents.length;
-  const detail = cleanFormationDetail(formation.intitule, title);
+  const shiftText = formatShift(shift);
+  const horaire = shift.horaire || "horaire non connu";
+  const referentName = referent.nomComplet || "Référent non renseigné";
+  const stagiaireName = stagiaire.nomPrenom || "Stagiaire non renseigné";
 
-  return `
-    <article class="formation-card ${esc(level)}">
-
-      <div class="formation-head">
-        <div>
-          <div class="formation-title">${esc(title)}</div>
-          <div class="formation-meta">
-            ${esc([horaire, countAgents + " agent" + plural(countAgents)].filter(Boolean).join(" · "))}
-          </div>
-        </div>
-        <div class="status ${esc(level)}">${statusLabel(level)}</div>
-      </div>
-
-      ${detail ? `
-        <div class="formation-detail">
-          <span class="detail-label">Formation</span>
-          <div class="detail-value">${esc(detail)}</div>
-        </div>
-      ` : ""}
-
-      ${general.danger.length ? alertBlock("danger", "⛔ Alertes générales", general.danger, agents) : ""}
-      ${general.warning.length ? alertBlock("warning", "⚠️ Points à vérifier", general.warning, agents) : ""}
-
-      <div class="agent-list">
-        ${agents.map(a => agentCard(a, item)).join("")}
-      </div>
-
-      <div class="source">Source : DETAIL_FORMATIONS</div>
-    </article>
-  `;
-}
-
-function agentCard(a, item){
-  const issues = agentIssues(a, item);
-  const level = issues.level;
-  const avatar = a.avatar || {};
-  const shift = a.shift || {};
-
-  const gheText = formatGhe(a.ghe);
-  const telRaw = String(a.telephone || "").trim();
+  const telRaw = String(referent.telephone || "").trim();
   const telOk = hasUsefulValue(telRaw);
   const telHref = telRaw.replace(/[^\d+]/g, "");
 
-  const shiftText = formatShift(shift);
-  const shiftKnown = shiftIsKnown(shiftText);
-  const shiftDanger = issues.danger.some(x => norm(x).includes("code non travaille"));
+  const gheOk = hasUsefulValue(referent.ghe);
 
   return `
-    <div class="agent-card ${esc(level)}">
-      ${avatarHtml(avatar)}
+    <article class="stagiaire-card ${esc(level)}">
 
-      <div class="agent-content">
-        <div class="agent-name-row">
-          <span class="agent-status ${esc(level)}">${agentStatusIcon(level)}</span>
-          <div class="agent-name">${esc(agentDisplayName(a))}</div>
+      <div class="card-head">
+        <div>
+          <div class="card-title">${esc(stagiaireName)}</div>
+          <div class="card-meta">Référent : ${esc(referentName)}</div>
         </div>
-
-        <div class="agent-chips">
-          <span class="chip ${hasUsefulValue(a.ghe) ? "" : "warning"}">${esc(gheText)}</span>
-
-          <span class="chip ${telOk ? "" : "warning"}">
-            📞 ${telOk ? `<a href="tel:${esc(telHref)}">${esc(telRaw)}</a>` : "non renseigné"}
-          </span>
-
-          <span class="chip ${shiftDanger ? "danger" : (shiftKnown ? "" : "warning")}">
-            ${shiftDot(shift)} ${esc(shiftText)}
-          </span>
-        </div>
-
-        ${agentAlertBlock(issues)}
+        <span class="status ${esc(level)}">${statusLabel(level)}</span>
       </div>
-    </div>
+
+      <div class="people-box">
+        <div class="person">
+          ${avatarHtml(stagiaire.avatar)}
+          <div>
+            <span class="role">Stagiaire</span>
+            <span class="name">${esc(stagiaireName)}</span>
+          </div>
+        </div>
+
+        <div class="arrow-line">→</div>
+
+        <div class="person ${esc(level)}">
+          ${avatarHtml(referent.avatar)}
+          <div>
+            <span class="role">Référent</span>
+            <span class="name">${esc(referentName)}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-line">
+        <span class="chip ${shiftKnown(shiftText) ? "" : "warning"}">${shiftDot(shift)} Shift : ${esc(shiftText)}</span>
+        <span class="chip">🕒 ${esc(horaire)}</span>
+        <span class="chip ${gheOk ? "" : "warning"}">GHE : ${esc(formatGhe(referent.ghe))}</span>
+        <span class="chip ${telOk ? "" : "warning"}">
+          📞 ${telOk ? `<a href="tel:${esc(telHref)}">${esc(telRaw)}</a>` : "non renseigné"}
+        </span>
+      </div>
+
+      ${issueBlock(issues)}
+
+      <div class="source">
+        Source : ${esc(source.onglet || "DETAIL_STAGIAIRES")}${source.ongletSource ? " · " + esc(source.ongletSource) : ""}
+      </div>
+    </article>
   `;
 }
 
@@ -1054,159 +964,90 @@ function avatarHtml(avatar){
 /* ALERTES */
 
 function countItemIssues(item){
-  const agents = item.agents || [];
-  const general = formationGeneralAlerts(item);
-
-  let danger = general.danger.length;
-  let warning = general.warning.length;
-
-  agents.forEach(a => {
-    const issues = agentIssues(a, item);
-    danger += issues.danger.length;
-    warning += issues.warning.length;
-  });
+  const issues = itemIssues(item);
 
   return {
-    danger,
-    warning,
-    total: danger + warning
+    danger: issues.danger.length,
+    warning: issues.warning.length,
+    total: issues.danger.length + issues.warning.length
   };
 }
 
 function itemLevel(item){
   const c = countItemIssues(item);
 
-  if (c.danger > 0) return "danger";
-  if (c.warning > 0) return "warning";
+  if (c.danger > 0 || item.niveau === "danger") return "danger";
+  if (c.warning > 0 || item.niveau === "warning") return "warning";
   return "ok";
 }
 
-function formationGeneralAlerts(item){
-  const agents = item.agents || [];
-  const bloquantes = (item.alertes && item.alertes.bloquantes) || [];
-  const infos = (item.alertes && item.alertes.infos) || [];
+function itemIssues(item){
+  const referent = item.referent || {};
+  const shift = item.shift || {};
+  const alertes = item.alertes || {};
 
-  return {
-    danger: bloquantes.filter(msg => !agents.some(a => messageMentionsAgent(msg, a))),
-    warning: infos.filter(msg => !agents.some(a => messageMentionsAgent(msg, a)))
-  };
-}
-
-function agentIssues(a, item){
-  const bloquantes = ((item.alertes && item.alertes.bloquantes) || [])
-    .filter(msg => messageMentionsAgent(msg, a))
-    .map(msg => simplifyAgentAlert(msg, a, "danger"));
-
-  const infosOriginal = ((item.alertes && item.alertes.infos) || [])
-    .filter(msg => messageMentionsAgent(msg, a));
-
+  const danger = [];
   const warning = [];
 
+  (alertes.bloquantes || []).forEach(msg => {
+    pushUnique(danger, simplifyAlert(msg, "danger"));
+  });
+
   const missing = [];
-  if (!hasUsefulValue(a.ghe)) missing.push("GHE");
-  if (!hasUsefulValue(a.telephone)) missing.push("téléphone");
+  if (!hasUsefulValue(referent.ghe)) missing.push("GHE");
+  if (!hasUsefulValue(referent.telephone)) missing.push("téléphone");
 
   if (missing.length) {
-    warning.push(missingPhrase(missing));
+    warning.push("Référent : " + missingPhrase(missing));
   }
 
-  infosOriginal.forEach(msg => {
+  (alertes.infos || []).forEach(msg => {
     const n = norm(msg);
 
     if (missing.length && (n.includes("ghe") || n.includes("telephone"))) return;
 
-    pushUnique(warning, simplifyAgentAlert(msg, a, "warning"));
+    pushUnique(warning, simplifyAlert(msg, "warning"));
   });
 
-  if (a.agentTrouve === false) {
-    pushUnique(bloquantes, "Agent introuvable dans la source agents.");
+  const shiftText = formatShift(shift);
+  if (!shiftKnown(shiftText)) {
+    pushUnique(warning, "Shift à vérifier.");
   }
 
-  const level = bloquantes.length ? "danger" : (warning.length ? "warning" : "ok");
+  if (item.niveau === "danger" && !danger.length) {
+    danger.push("Point bloquant à vérifier.");
+  }
 
-  return {
-    level,
-    danger: bloquantes,
-    warning
-  };
+  if (item.niveau === "warning" && !warning.length) {
+    warning.push("Information à vérifier.");
+  }
+
+  return {danger, warning};
 }
 
-function agentAlertBlock(issues){
+function issueBlock(issues){
   const danger = issues.danger || [];
   const warning = issues.warning || [];
 
   if (!danger.length && !warning.length) return "";
 
   return `
-    <div class="agent-alerts">
-      ${danger.map(x => `<div class="agent-alert danger">⛔ ${esc(x)}</div>`).join("")}
-      ${warning.map(x => `<div class="agent-alert warning">⚠️ ${esc(x)}</div>`).join("")}
+    <div class="alerts">
+      ${danger.map(x => `<div class="alert danger">⛔ ${esc(x)}</div>`).join("")}
+      ${warning.map(x => `<div class="alert warning">⚠️ ${esc(x)}</div>`).join("")}
     </div>
   `;
 }
 
-function alertBlock(type, title, list, agents){
-  return `
-    <div class="alert ${esc(type)}">
-      <div class="alert-title">${esc(title)}</div>
-      <ul>${list.map(x => `<li>${formatAlertHTML(x, agents)}</li>`).join("")}</ul>
-    </div>
-  `;
-}
-
-function formatAlertHTML(text, agents){
-  let html = esc(text);
-
-  const names = (agents || [])
-    .map(a => a && a.nomComplet)
-    .filter(Boolean)
-    .sort((a,b) => b.length - a.length);
-
-  names.forEach(name => {
-    const safeName = esc(name);
-    html = html.replace(new RegExp(escapeRegExp(safeName), "gi"), `<strong class="alert-name">$&</strong>`);
-  });
-
-  return html;
-}
-
-function simplifyAgentAlert(message, a, type){
+function simplifyAlert(message, type){
   let s = String(message || "").trim();
 
-  const names = [
-    a.nomComplet,
-    a.nom && a.prenom ? a.nom + " " + a.prenom : "",
-    a.nom && a.prenom ? a.prenom + " " + a.nom : ""
-  ].filter(Boolean);
-
-  names.forEach(name => {
-    s = s.replace(new RegExp("^\\s*" + escapeRegExp(name) + "\\s*:\\s*", "i"), "");
-  });
-
-  s = s.replace(/prévu sur un code non travaillé\s*:\s*/i, "Code non travaillé : ");
-  s = s.replace(/téléphone manquant\.?/i, "Téléphone manquant.");
-  s = s.replace(/GHE manquant\.?/i, "GHE manquant.");
+  s = s.replace(/Référent prévu sur un code non travaillé\s*:\s*/i, "Code non travaillé : ");
+  s = s.replace(/Code shift non reconnu\s*:\s*/i, "Code shift non reconnu : ");
+  s = s.replace(/Téléphone référent manquant\.?/i, "Téléphone référent manquant.");
+  s = s.replace(/GHE référent manquant\.?/i, "GHE référent manquant.");
 
   return s.trim();
-}
-
-function messageMentionsAgent(message, a){
-  const msg = norm(message);
-  if (!msg || !a) return false;
-
-  const candidates = [];
-
-  if (a.nomComplet) candidates.push(norm(a.nomComplet));
-
-  if (a.nom && a.prenom) {
-    candidates.push(norm(a.nom + " " + a.prenom));
-    candidates.push(norm(a.prenom + " " + a.nom));
-  }
-
-  if (a.nom && norm(a.nom).length >= 4) candidates.push(norm(a.nom));
-  if (a.prenom && norm(a.prenom).length >= 4) candidates.push(norm(a.prenom));
-
-  return candidates.filter(Boolean).some(candidate => msg.includes(candidate));
 }
 
 function missingPhrase(parts){
@@ -1224,53 +1065,18 @@ function pushUnique(list, message){
 
 /* FORMATAGE */
 
-function compactFormationTitle(item){
-  const formation = item.formation || {};
-  const raw = String(item.titre || formation.typeLabel || formation.intitule || "Formation").trim();
-
-  const first = raw.split("|")[0].trim();
-  return first || "Formation";
-}
-
-function cleanFormationDetail(intitule, title){
-  const value = String(intitule || "").trim();
-  if (!value) return "";
-
-  const a = norm(value);
-  const b = norm(title).replace(/[^\w\s]/g,"").trim();
-
-  if (a === b) return "";
-  if (a.includes(b) && b.length > 4) return value;
-
-  return value;
-}
-
-function extractHoraire(text){
-  const match = String(text || "").match(/\b\d{1,2}[:h]\d{2}\s*[–-]\s*\d{1,2}[:h]\d{2}\b/i);
-  return match ? match[0].replace(/h/g,":") : "";
-}
-
 function statusLabel(level){
   if (level === "danger") return "⛔ Bloquant";
   if (level === "warning") return "⚠️ À vérifier";
   return "✅ Prêt";
 }
 
-function agentStatusIcon(level){
-  if (level === "danger") return "⛔";
-  if (level === "warning") return "⚠️";
-  return "✅";
-}
-
-function agentDisplayName(a){
-  return String(a.nomComplet || [a.nom, a.prenom].filter(Boolean).join(" ") || "Agent sans nom").trim();
-}
-
 function formatGhe(value){
   const raw = String(value || "").trim();
 
-  if (!hasUsefulValue(raw)) return "GHE non renseigné";
+  if (!hasUsefulValue(raw)) return "non renseigné";
   if (/^ghe\b/i.test(raw)) return raw.replace(/^ghe\s+ghe\s+/i, "GHE ");
+
   return "GHE " + raw;
 }
 
@@ -1284,7 +1090,7 @@ function formatShift(shift){
   if (label) return label;
   if (code) return code;
 
-  return "Shift non connu";
+  return "inconnu";
 }
 
 function cleanShiftText(value){
@@ -1294,7 +1100,7 @@ function cleanShiftText(value){
     .trim();
 }
 
-function shiftIsKnown(text){
+function shiftKnown(text){
   const n = norm(text);
   return !!n && !n.includes("non connu") && !n.includes("inconnu") && !n.includes("non renseigne");
 }
@@ -1302,13 +1108,15 @@ function shiftIsKnown(text){
 function shiftDot(shift){
   const text = norm([
     shift && shift.label,
-    shift && shift.code
+    shift && shift.code,
+    shift && shift.base
   ].join(" "));
 
-  if (text.includes("matin") || text === "m") return "🔵";
-  if (text.includes("journee") || text === "j") return "🟢";
-  if (text.includes("soir") || text === "s") return "🟡";
+  if (text.includes("matin") || text === "m" || text.includes(" m ")) return "🔵";
+  if (text.includes("journee") || text === "j" || text.includes(" j ")) return "🟢";
+  if (text.includes("soir") || text === "s" || text.includes(" s ")) return "🟡";
   if (text.includes("j4")) return "🟠";
+  if (text.includes("nuit") || text === "n" || text.includes(" n ")) return "⚫";
 
   return "⚪";
 }
@@ -1360,10 +1168,6 @@ function norm(value){
     .replace(/[\u0300-\u036f]/g,"")
     .toLowerCase()
     .trim();
-}
-
-function escapeRegExp(value){
-  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 </script>
 </body>
