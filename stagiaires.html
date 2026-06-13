@@ -55,8 +55,6 @@ body{
   padding:calc(10px + env(safe-area-inset-top)) 8px calc(130px + env(safe-area-inset-bottom));
 }
 
-/* NAV */
-
 .topbar{
   display:flex;
   gap:10px;
@@ -79,8 +77,6 @@ body{
   box-shadow:0 4px 0 rgba(7,24,63,.14);
 }
 
-/* HERO */
-
 .hero{
   border:4px solid var(--line);
   border-radius:24px;
@@ -96,8 +92,6 @@ body{
   height:clamp(118px,28vw,220px);
   object-fit:cover;
 }
-
-/* PILOTAGE */
 
 .pilot{
   background:var(--card);
@@ -160,8 +154,6 @@ body{
   border-color:#b7e0c5;
 }
 
-/* OUTILS */
-
 .tools{
   display:grid;
   gap:8px;
@@ -211,8 +203,6 @@ body{
   color:var(--cream);
 }
 
-/* RÉSUMÉ STAGIAIRES */
-
 .section-label{
   margin:18px 4px 8px;
   color:rgba(7,24,63,.62);
@@ -222,12 +212,14 @@ body{
   letter-spacing:.6px;
 }
 
+.formation-summary,
 .student-summary{
   display:grid;
   gap:8px;
   margin-bottom:14px;
 }
 
+.formation-row,
 .student-row{
   background:var(--card);
   border:3px solid var(--line-soft);
@@ -236,20 +228,24 @@ body{
   box-shadow:0 4px 0 rgba(7,24,63,.10);
 }
 
+.formation-row.ok,
 .student-row.ok{
   border-color:rgba(47,143,78,.28);
 }
 
+.formation-row.warning,
 .student-row.warning{
   background:#fff8df;
   border-color:#e2c060;
 }
 
+.formation-row.danger,
 .student-row.danger{
   background:#fff4f1;
   border-color:#e7a29d;
 }
 
+.formation-row-title,
 .student-name{
   font-family:var(--display);
   font-size:clamp(25px,6.5vw,40px);
@@ -258,6 +254,7 @@ body{
   text-transform:uppercase;
 }
 
+.formation-row-meta,
 .student-meta{
   margin-top:5px;
   color:var(--ink-soft);
@@ -266,14 +263,13 @@ body{
   font-weight:850;
 }
 
+.formation-row-issues,
 .student-issues{
   margin-top:7px;
   display:flex;
   flex-wrap:wrap;
   gap:6px;
 }
-
-/* TITRES DATE */
 
 .day-title{
   margin:24px 4px 10px;
@@ -285,8 +281,7 @@ body{
   text-shadow:0 3px 0 #f8d67d;
 }
 
-/* CARTE STAGIAIRE */
-
+.session-card,
 .stagiaire-card{
   background:var(--card);
   border:4px solid var(--line);
@@ -296,16 +291,51 @@ body{
   box-shadow:var(--shadow);
 }
 
+.session-card.ok,
 .stagiaire-card.ok{border-color:var(--ok-line)}
+.session-card.warning,
 .stagiaire-card.warning{border-color:var(--warning-line)}
+.session-card.danger,
 .stagiaire-card.danger{border-color:var(--danger-line)}
 
-.people-box{
-  display:grid;
-  gap:8px;
+.session-head{
   margin-bottom:10px;
 }
 
+.session-title{
+  font-family:var(--display);
+  font-size:clamp(30px,8vw,46px);
+  line-height:.92;
+  letter-spacing:-.8px;
+  text-transform:uppercase;
+}
+
+.session-meta{
+  margin-top:6px;
+  color:var(--ink-soft);
+  font-size:15px;
+  line-height:1.18;
+  font-weight:900;
+}
+
+.session-detail{
+  margin:8px 0 10px;
+  padding:9px 10px;
+  border:2px solid rgba(7,24,63,.16);
+  border-radius:16px;
+  background:var(--card-soft);
+  font-size:15px;
+  line-height:1.22;
+  font-weight:850;
+}
+
+.agent-list{
+  display:grid;
+  gap:8px;
+  margin-top:10px;
+}
+
+.agent-card,
 .person{
   display:grid;
   grid-template-columns:68px minmax(0,1fr);
@@ -318,18 +348,27 @@ body{
   padding:8px;
 }
 
+.agent-card.danger,
 .person.danger{
   background:#fff4f1;
   border-color:#e7a29d;
 }
 
+.agent-card.warning,
 .person.warning{
   background:#fff8df;
   border-color:#e2c060;
 }
 
+.agent-card.ok,
 .person.ok{
   border-color:rgba(47,143,78,.22);
+}
+
+.people-box{
+  display:grid;
+  gap:8px;
+  margin-bottom:10px;
 }
 
 .avatar{
@@ -369,6 +408,7 @@ body{
   display:none;
 }
 
+.agent-info,
 .person-info{
   min-width:0;
 }
@@ -383,6 +423,7 @@ body{
   text-transform:uppercase;
 }
 
+.agent-name,
 .name{
   display:block;
   font-size:clamp(22px,5.8vw,33px);
@@ -395,14 +436,17 @@ body{
   hyphens:none;
 }
 
+.agent-card.danger .agent-name,
 .person.danger .name{
   color:var(--danger);
 }
 
+.agent-card.warning .agent-name,
 .person.warning .name{
   color:#744000;
 }
 
+.agent-chips,
 .person-chips{
   display:flex;
   flex-wrap:wrap;
@@ -410,7 +454,9 @@ body{
   margin-top:7px;
 }
 
-.person-chip{
+.agent-chip,
+.person-chip,
+.chip{
   min-height:28px;
   display:inline-flex;
   align-items:center;
@@ -425,81 +471,41 @@ body{
   font-weight:900;
 }
 
-.person-chip a{
-  color:#064ee4;
-  font-weight:950;
-}
-
-.person-chip.warning{
-  background:var(--warning-bg);
-  color:var(--warning);
-  border-color:#ecd27f;
-}
-
-.person-chip.danger{
-  background:var(--danger-bg);
-  color:var(--danger);
-  border-color:#efb1b1;
-}
-
-.person-chip.ok{
-  background:var(--ok-bg);
-  color:var(--ok);
-  border-color:#b7e0c5;
-}
-
-.arrow-line{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:25px;
-  color:var(--ink);
-  font-size:25px;
-  line-height:1;
-  font-weight:950;
-}
-
-/* CHIPS GÉNÉRALES */
-
 .chip{
   min-height:29px;
-  display:inline-flex;
-  align-items:center;
-  gap:5px;
-  padding:5px 8px;
-  border-radius:999px;
-  border:2px solid rgba(7,24,63,.16);
-  background:var(--card);
-  color:var(--ink);
   font-size:14px;
-  line-height:1.05;
-  font-weight:900;
 }
 
+.agent-chip a,
+.person-chip a,
 .chip a{
   color:#064ee4;
   font-weight:950;
 }
 
+.agent-chip.warning,
+.person-chip.warning,
 .chip.warning{
   background:var(--warning-bg);
   color:var(--warning);
   border-color:#ecd27f;
 }
 
+.agent-chip.danger,
+.person-chip.danger,
 .chip.danger{
   background:var(--danger-bg);
   color:var(--danger);
   border-color:#efb1b1;
 }
 
+.agent-chip.ok,
+.person-chip.ok,
 .chip.ok{
   background:var(--ok-bg);
   color:var(--ok);
   border-color:#b7e0c5;
 }
-
-/* ALERTES */
 
 .alerts{
   display:grid;
@@ -535,8 +541,6 @@ body{
   font-weight:850;
 }
 
-/* ÉTATS */
-
 .empty,.error,.loading{
   background:var(--card);
   border:4px solid var(--line);
@@ -549,8 +553,6 @@ body{
 .error{
   color:var(--danger);
 }
-
-/* AGENDA */
 
 .agenda-box{
   margin:26px 0 4px;
@@ -604,7 +606,16 @@ body{
   background:linear-gradient(145deg,#35d864 0%,#12873d 56%,#075324 100%);
 }
 
-/* DESKTOP */
+.arrow-line{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:25px;
+  color:var(--ink);
+  font-size:25px;
+  line-height:1;
+  font-weight:950;
+}
 
 @media(min-width:720px){
   .page{
@@ -613,6 +624,7 @@ body{
   }
 
   .pilot,
+  .session-card,
   .stagiaire-card{
     padding:14px;
   }
@@ -626,6 +638,7 @@ body{
     height:auto;
   }
 
+  .agent-card,
   .person{
     grid-template-columns:76px minmax(0,1fr);
   }
@@ -637,6 +650,7 @@ body{
 }
 
 @media(max-width:370px){
+  .agent-card,
   .person{
     grid-template-columns:60px minmax(0,1fr);
   }
@@ -647,11 +661,13 @@ body{
     border-radius:14px;
   }
 
+  .agent-name,
   .name{
     font-size:20px;
   }
 
   .chip,
+  .agent-chip,
   .person-chip{
     font-size:13px;
     padding:5px 7px;
@@ -719,6 +735,7 @@ body{
 </main>
 
 <script>
+
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOlle3cafAKEAZQ8NAX-peSN6D-yxFO3gX26SnVNUVd5xbwV3CUISg/exec";
 
 const ICS_URL = "https://calendar.google.com/calendar/ical/2ced33be0e6a5c88fab9bae2ffdf3b56366970e4003b1718a7dabf4c0603eae6%40group.calendar.google.com/private-d3db5a97d6dbdd8ceeeaa375c8a460ef/basic.ics";
@@ -778,8 +795,6 @@ function loadJsonp(type){
   document.body.appendChild(script);
 }
 
-/* FILTRES */
-
 function filterItems(){
   const q = norm(document.getElementById("search").value);
 
@@ -815,8 +830,6 @@ function filterItems(){
   });
 }
 
-/* PILOTAGE GLOBAL */
-
 function updatePilot(items){
   const students = studentSummaries(items);
   const studentCount = students.length;
@@ -851,8 +864,6 @@ function updatePilot(items){
   document.getElementById("pilotDanger").textContent = "⛔ " + totals.danger + " bloquant" + plural(totals.danger);
   document.getElementById("pilotWarning").textContent = "⚠️ " + totals.warning + " à vérifier";
 }
-
-/* RÉSUMÉ PAR STAGIAIRE */
 
 function renderStudentSummary(items){
   const box = document.getElementById("studentSummary");
@@ -936,8 +947,6 @@ function studentSummaries(items){
     }))
     .sort((a,b) => a.name.localeCompare(b.name, "fr"));
 }
-
-/* RENDU PRINCIPAL */
 
 function render(items){
   const content = document.getElementById("content");
@@ -1037,25 +1046,6 @@ function cardStagiaire(item){
   `;
 }
 
-function avatarHtml(avatar){
-  avatar = avatar || {};
-  const initials = esc(avatar.initiales || "?");
-  const thumb = avatar.thumb || "";
-
-  if (!thumb) {
-    return `<div class="avatar"><div class="initials">${initials}</div></div>`;
-  }
-
-  return `
-    <div class="avatar has-img">
-      <img src="${esc(thumb)}" alt="" loading="lazy" onerror="this.parentElement.classList.remove('has-img');this.remove();">
-      <div class="initials">${initials}</div>
-    </div>
-  `;
-}
-
-/* ALERTES */
-
 function uniqueGlobalIssues(items){
   const dangerSet = new Set();
   const warningSet = new Set();
@@ -1097,83 +1087,14 @@ function itemLevel(item){
   return "ok";
 }
 
-function itemIssues(item){
-  const referent = item.referent || {};
-  const shift = item.shift || {};
-  const alertes = item.alertes || {};
-
-  const danger = [];
-  const warning = [];
-
-  (alertes.bloquantes || []).forEach(msg => {
-    pushUnique(danger, simplifyAlert(msg, "danger"));
-  });
-
-  const missing = [];
-  if (!hasUsefulValue(referent.ghe)) missing.push("GHE");
-  if (!hasUsefulValue(referent.telephone)) missing.push("téléphone");
-
-  if (missing.length) {
-    warning.push("Référent : " + missingPhrase(missing));
-  }
-
-  const hasShiftAlert = (alertes.infos || []).concat(alertes.bloquantes || [])
-    .some(msg => {
-      const n = norm(msg);
-      return n.includes("code shift") || n.includes("shift non reconnu");
-    });
-
-  (alertes.infos || []).forEach(msg => {
-    const n = norm(msg);
-
-    if (missing.length && (n.includes("ghe") || n.includes("telephone"))) return;
-
-    pushUnique(warning, simplifyAlert(msg, "warning"));
-  });
-
-  const shiftText = formatShift(shift);
-
-  if (!shiftKnown(shiftText) && !hasShiftAlert) {
-    pushUnique(warning, "Shift à vérifier.");
-  }
-
-  if (item.niveau === "danger" && !danger.length) {
-    danger.push("Point bloquant à vérifier.");
-  }
-
-  if (item.niveau === "warning" && !warning.length) {
-    warning.push("Information à vérifier.");
-  }
-
-  return {
-    danger:dedupeList(danger),
-    warning:dedupeList(warning)
-  };
+function statusLabel(level){
+  if (level === "danger") return "⛔ Bloquant";
+  if (level === "warning") return "⚠️ À vérifier";
+  return "✅ Prêt";
 }
 
-function issueBlock(issues){
-  const danger = issues.danger || [];
-  const warning = issues.warning || [];
-
-  if (!danger.length && !warning.length) return "";
-
-  return `
-    <div class="alerts">
-      ${danger.map(x => `<div class="alert danger">⛔ ${esc(x)}</div>`).join("")}
-      ${warning.map(x => `<div class="alert warning">⚠️ ${esc(x)}</div>`).join("")}
-    </div>
-  `;
-}
-
-function simplifyAlert(message, type){
-  let s = String(message || "").trim();
-
-  s = s.replace(/Référent prévu sur un code non travaillé\s*:\s*/i, "Code non travaillé : ");
-  s = s.replace(/Code shift non reconnu\s*:\s*/i, "Code shift non reconnu : ");
-  s = s.replace(/Téléphone référent manquant\.?/i, "Téléphone référent manquant.");
-  s = s.replace(/GHE référent manquant\.?/i, "GHE référent manquant.");
-
-  return s.trim();
+function studentKey(stagiaire){
+  return norm(stagiaire && stagiaire.nomPrenom ? stagiaire.nomPrenom : "stagiaire-non-renseigne");
 }
 
 function issueSignature(item, message, type){
@@ -1186,13 +1107,48 @@ function issueSignature(item, message, type){
   return [type, student, ref, msg].join("|");
 }
 
-function missingPhrase(parts){
-  if (parts.length === 1) return parts[0] + " manquant.";
-  if (parts.length === 2) return parts[0] + " et " + parts[1] + " manquants.";
+function showError(message){
+  document.getElementById("content").innerHTML = `<div class="error">Problème : ${esc(message)}</div>`;
+  document.getElementById("studentSummary").innerHTML = `<div class="error">Résumé indisponible.</div>`;
+}
 
-  const copy = parts.slice();
-  const last = copy.pop();
-  return copy.join(", ") + " et " + last + " manquants.";
+
+function plural(number){
+  return Number(number) > 1 ? "s" : "";
+}
+
+function esc(value){
+  return String(value || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function norm(value){
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .toLowerCase()
+    .trim();
+}
+
+function escapeRegExp(value){
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function hasUsefulValue(value){
+  const n = norm(value);
+
+  if (!n) return false;
+  if (n === "non renseigne") return false;
+  if (n === "non renseignee") return false;
+  if (n.includes("non renseigne")) return false;
+  if (n === "nr") return false;
+  if (n === "-") return false;
+
+  return true;
 }
 
 function pushUnique(list, message){
@@ -1215,16 +1171,39 @@ function dedupeList(list){
   return out;
 }
 
-/* FORMATAGE */
+function missingPhrase(parts){
+  if (parts.length === 1) return parts[0] + " manquant.";
+  if (parts.length === 2) return parts[0] + " et " + parts[1] + " manquants.";
 
-function statusLabel(level){
-  if (level === "danger") return "⛔ Bloquant";
-  if (level === "warning") return "⚠️ À vérifier";
-  return "✅ Prêt";
+  const copy = parts.slice();
+  const last = copy.pop();
+  return copy.join(", ") + " et " + last + " manquants.";
 }
 
-function studentKey(stagiaire){
-  return norm(stagiaire && stagiaire.nomPrenom ? stagiaire.nomPrenom : "stagiaire-non-renseigne");
+function groupByDate(items){
+  return items.reduce((acc,item) => {
+    const key = item.dateKey || "sans-date";
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(item);
+    return acc;
+  }, {});
+}
+
+function avatarHtml(avatar){
+  avatar = avatar || {};
+  const initials = esc(avatar.initiales || "?");
+  const thumb = avatar.thumb || "";
+
+  if (!thumb) {
+    return `<div class="avatar"><div class="initials">${initials}</div></div>`;
+  }
+
+  return `
+    <div class="avatar has-img">
+      <img src="${esc(thumb)}" alt="" loading="lazy" onerror="this.parentElement.classList.remove('has-img');this.remove();">
+      <div class="initials">${initials}</div>
+    </div>
+  `;
 }
 
 function formatGhe(value){
@@ -1239,96 +1218,269 @@ function formatGhe(value){
   return "GHE " + cleaned;
 }
 
-function formatShift(shift){
-  shift = shift || {};
+function issueBlock(issues){
+  const danger = issues.danger || [];
+  const warning = issues.warning || [];
 
-  const label = cleanShiftText(shift.label);
-  const code = cleanShiftText(shift.code);
+  if (!danger.length && !warning.length) return "";
 
-  if (label && code) return label + " · " + code;
-  if (label) return label;
-  if (code) return code;
+  return `
+    <div class="alerts">
+      ${danger.map(x => `<div class="alert danger">⛔ ${esc(x)}</div>`).join("")}
+      ${warning.map(x => `<div class="alert warning">⚠️ ${esc(x)}</div>`).join("")}
+    </div>
+  `;
+}
 
-  return "inconnu";
+
+
+
+
+/* =========================================================
+   PATCH INTÉGRÉ — SHIFTS INTELLIGENTS STAGIAIRES
+   But :
+   - RH / CA / RTT / RTa / RC / RF / SYR / ABS / AM / MA / AA / AR / FO
+     sont reconnus, mais restent BLOQUANTS en rouge.
+   - M / S / J / J4 / N / M0130 / M0131 sont reconnus comme shifts travaillés.
+   ========================================================= */
+
+function GHE_shiftCodeFromText(value){
+  const raw = String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase();
+
+  const compact = raw.replace(/[^A-Z0-9]/g, "");
+  const spaced = raw.replace(/[^A-Z0-9]+/g, " ").trim();
+  const tokens = spaced ? spaced.split(/\s+/) : [];
+
+  if (compact.includes("M0130")) return "M0130";
+  if (compact.includes("M0131")) return "M0131";
+
+  if (tokens.includes("RTTA") || tokens.includes("RTA") || compact.includes("RTTA") || compact.includes("RTA")) return "RTTA";
+  if (tokens.includes("RTT") || compact.includes("RTT")) return "RTT";
+
+  if (tokens.includes("J4") || compact.includes("J4")) return "J4";
+
+  if (tokens.includes("RH")) return "RH";
+  if (tokens.includes("CA")) return "CA";
+  if (tokens.includes("RC")) return "RC";
+  if (tokens.includes("RF")) return "RF";
+  if (tokens.includes("SYR") || tokens.includes("SYN") || raw.includes("SYNDICAT")) return "SYR";
+  if (tokens.includes("ABS") || raw.includes("ABSENCE")) return "ABS";
+
+  if (tokens.includes("AM")) return "AM";
+  if (tokens.includes("MA")) return "MA";
+  if (tokens.includes("AA")) return "AA";
+  if (tokens.includes("AR")) return "AR";
+  if (tokens.includes("FO")) return "FO";
+
+  if (raw.includes("MATIN") || tokens.includes("M")) return "M";
+  if (raw.includes("SOIR") || tokens.includes("S")) return "S";
+  if (raw.includes("NUIT") || tokens.includes("N")) return "N";
+  if (raw.includes("JOURNEE") || raw.includes("JOURNÉE") || tokens.includes("J")) return "J";
+
+  return "";
+}
+
+function GHE_shiftMetaFromCode(code){
+  const c = String(code || "").toUpperCase();
+
+  const map = {
+    M:     {code:"M",     icon:"🔵", label:"Matin", worked:true,  blocking:false, family:"matin"},
+    M0130: {code:"M0130", icon:"🌅", label:"Matin référence M0130", worked:true, blocking:false, family:"matin"},
+    M0131: {code:"M0131", icon:"🌅", label:"Matin référence M0131", worked:true, blocking:false, family:"matin"},
+    S:     {code:"S",     icon:"🟡", label:"Soir", worked:true,   blocking:false, family:"soir"},
+    J:     {code:"J",     icon:"🟢", label:"Journée", worked:true, blocking:false, family:"journee"},
+    J4:    {code:"J4",    icon:"🟠", label:"Journée J4", worked:true, blocking:false, family:"journee"},
+    N:     {code:"N",     icon:"🌙", label:"Nuit", worked:true,   blocking:false, family:"nuit"},
+
+    RH:    {code:"RH",    icon:"🛋️", label:"Repos hebdomadaire", worked:false, blocking:true, family:"repos"},
+    CA:    {code:"CA",    icon:"🏝️", label:"Congé payé", worked:false, blocking:true, family:"conge"},
+    RC:    {code:"RC",    icon:"🔁", label:"Repos compensateur", worked:false, blocking:true, family:"recuperation"},
+    RF:    {code:"RF",    icon:"🎌", label:"Repos férié / récupération", worked:false, blocking:true, family:"recuperation"},
+    RTT:   {code:"RTT",   icon:"🧘", label:"RTT", worked:false, blocking:true, family:"recuperation"},
+    RTTA:  {code:"RTTA",  icon:"🧘", label:"Récupération temps de travail", worked:false, blocking:true, family:"recuperation"},
+    SYR:   {code:"SYR",   icon:"🗣️", label:"Syndicat", worked:false, blocking:true, family:"syndicat"},
+
+    ABS:   {code:"ABS",   icon:"⚠️", label:"Absence", worked:false, blocking:true, family:"absence"},
+    AM:    {code:"AM",    icon:"⚪", label:"Statut spécial AM à vérifier", worked:false, blocking:true, family:"special"},
+    MA:    {code:"MA",    icon:"⚪", label:"Statut spécial MA à vérifier", worked:false, blocking:true, family:"special"},
+    AA:    {code:"AA",    icon:"⚪", label:"Statut spécial AA à vérifier", worked:false, blocking:true, family:"special"},
+    AR:    {code:"AR",    icon:"⚪", label:"Statut spécial AR à vérifier", worked:false, blocking:true, family:"special"},
+    FO:    {code:"FO",    icon:"⚪", label:"Statut spécial FO à vérifier", worked:false, blocking:true, family:"special"}
+  };
+
+  return map[c] || {code:c, icon:"⚪", label:c || "Shift inconnu", worked:false, blocking:false, family:"unknown", known:false};
+}
+
+function GHE_shiftMetaFromAny(value){
+  if (typeof value === "object" && value) {
+    const code = GHE_shiftCodeFromText([
+      value.code,
+      value.label,
+      value.base,
+      value.horaire
+    ].join(" "));
+
+    const meta = GHE_shiftMetaFromCode(code);
+    meta.known = !!code;
+    return meta;
+  }
+
+  const code = GHE_shiftCodeFromText(value);
+  const meta = GHE_shiftMetaFromCode(code);
+  meta.known = !!code;
+  return meta;
+}
+
+function GHE_smartShiftMessage(message){
+  const meta = GHE_shiftMetaFromAny(message);
+
+  if (meta.known && meta.blocking) {
+    return "Indisponible : " + meta.code + " — " + meta.label;
+  }
+
+  if (meta.known && meta.worked) {
+    return "Shift reconnu : " + meta.code + " — " + meta.label + ". Vérifier la compatibilité avec le créneau prévu.";
+  }
+
+  return String(message || "").trim();
+}
+
+function GHE_messageIsShiftProblem(message){
+  const n = norm(message);
+  return (
+    n.includes("code shift") ||
+    n.includes("shift non reconnu") ||
+    n.includes("code non travaille") ||
+    n.includes("non travaille")
+  );
+}
+
+function GHE_messageIsBlockingShift(message){
+  const meta = GHE_shiftMetaFromAny(message);
+  return meta.known && meta.blocking;
 }
 
 function cleanShiftText(value){
   return String(value || "")
-    .replace(/[🔵🟢🟡🟠⚪️⚪✅⛔⚠️]/g,"")
+    .replace(/[🔵🟢🟡🟠🌙🌅🛋️🏝️🔁🎌🧘🗣️⚪✅⛔⚠️]/g,"")
     .replace(/\s+/g," ")
     .trim();
 }
 
+function formatShift(shift){
+  shift = shift || {};
+
+  const meta = GHE_shiftMetaFromAny(shift);
+  const rawLabel = cleanShiftText(shift.label);
+  const rawCode = cleanShiftText(shift.code);
+
+  if (meta.known) {
+    return meta.label + " · " + meta.code;
+  }
+
+  if (rawLabel && rawCode) return rawLabel + " · " + rawCode;
+  if (rawLabel) return rawLabel;
+  if (rawCode) return rawCode;
+
+  return "inconnu";
+}
+
 function shiftKnown(text){
+  const meta = GHE_shiftMetaFromAny(text);
+  if (meta.known) return true;
+
   const n = norm(text);
   return !!n && !n.includes("non connu") && !n.includes("inconnu") && !n.includes("non renseigne");
 }
 
 function shiftDot(shift){
-  const text = norm([
-    shift && shift.label,
-    shift && shift.code,
-    shift && shift.base
-  ].join(" "));
-
-  if (text.includes("matin") || text === "m" || text.includes(" m ")) return "🔵";
-  if (text.includes("journee") || text === "j" || text.includes(" j ")) return "🟢";
-  if (text.includes("soir") || text === "s" || text.includes(" s ")) return "🟡";
-  if (text.includes("j4")) return "🟠";
-  if (text.includes("nuit") || text === "n" || text.includes(" n ")) return "⚫";
-
+  const meta = GHE_shiftMetaFromAny(shift);
+  if (meta.known) return meta.icon;
   return "⚪";
 }
 
-function hasUsefulValue(value){
-  const n = norm(value);
+function simplifyAlert(message, type){
+  let s = String(message || "").trim();
 
-  if (!n) return false;
-  if (n === "non renseigne") return false;
-  if (n === "non renseignee") return false;
-  if (n.includes("non renseigne")) return false;
-  if (n === "nr") return false;
-  if (n === "-") return false;
+  if (GHE_messageIsShiftProblem(s)) {
+    return GHE_smartShiftMessage(s);
+  }
 
-  return true;
+  s = s.replace(/Référent prévu sur un code non travaillé\s*:\s*/i, "Code non travaillé : ");
+  s = s.replace(/Code shift non reconnu\s*:\s*/i, "Code shift non reconnu : ");
+  s = s.replace(/Téléphone référent manquant\.?/i, "Téléphone référent manquant.");
+  s = s.replace(/GHE référent manquant\.?/i, "GHE référent manquant.");
+
+  return s.trim();
 }
 
-/* OUTILS */
+function itemIssues(item){
+  const referent = item.referent || {};
+  const shift = item.shift || {};
+  const alertes = item.alertes || {};
 
-function groupByDate(items){
-  return items.reduce((acc,item) => {
-    const key = item.dateKey || "sans-date";
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(item);
-    return acc;
-  }, {});
+  const danger = [];
+  const warning = [];
+
+  const shiftText = formatShift(shift);
+  const meta = GHE_shiftMetaFromAny(shift);
+
+  if (meta.known && meta.blocking) {
+    pushUnique(danger, "Indisponible : " + meta.code + " — " + meta.label);
+  }
+
+  (alertes.bloquantes || []).forEach(msg => {
+    pushUnique(danger, simplifyAlert(msg, "danger"));
+  });
+
+  const missing = [];
+  if (!hasUsefulValue(referent.ghe)) missing.push("GHE");
+  if (!hasUsefulValue(referent.telephone)) missing.push("téléphone");
+
+  if (missing.length) {
+    warning.push("Référent : " + missingPhrase(missing));
+  }
+
+  const hasShiftAlert = (alertes.infos || []).concat(alertes.bloquantes || [])
+    .some(msg => {
+      const n = norm(msg);
+      return n.includes("code shift") || n.includes("shift non reconnu") || n.includes("code non travaille");
+    });
+
+  (alertes.infos || []).forEach(msg => {
+    const n = norm(msg);
+
+    if (missing.length && (n.includes("ghe") || n.includes("telephone"))) return;
+
+    if (GHE_messageIsBlockingShift(msg)) {
+      pushUnique(danger, simplifyAlert(msg, "danger"));
+      return;
+    }
+
+    pushUnique(warning, simplifyAlert(msg, "warning"));
+  });
+
+  if (!shiftKnown(shiftText) && !hasShiftAlert) {
+    pushUnique(warning, "Shift à vérifier.");
+  }
+
+  if (item.niveau === "danger" && !danger.length) {
+    danger.push("Point bloquant à vérifier.");
+  }
+
+  if (item.niveau === "warning" && !warning.length) {
+    warning.push("Information à vérifier.");
+  }
+
+  return {
+    danger:dedupeList(danger),
+    warning:dedupeList(warning)
+  };
 }
 
-function showError(message){
-  document.getElementById("content").innerHTML = `<div class="error">Problème : ${esc(message)}</div>`;
-  document.getElementById("studentSummary").innerHTML = `<div class="error">Résumé indisponible.</div>`;
-}
-
-function plural(number){
-  return Number(number) > 1 ? "s" : "";
-}
-
-function esc(value){
-  return String(value || "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-}
-
-function norm(value){
-  return String(value || "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")
-    .toLowerCase()
-    .trim();
-}
 </script>
 </body>
 </html>
