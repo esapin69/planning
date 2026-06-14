@@ -3,17 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#065f46">
-<title>Validation de changement planning</title>
+<meta name="theme-color" content="#7f1d1d">
+<title>Refus de changement planning</title>
 <style>
 :root {
-  --bg:#f4f7f5;
+  --bg:#f8f4f4;
   --card:#ffffff;
   --ink:#111827;
   --muted:#6b7280;
   --line:#e5e7eb;
-  --green:#16a34a;
-  --greenDark:#065f46;
+  --red:#991b1b;
+  --red2:#dc2626;
   --blue:#2563eb;
   --soft:#f9fafb;
   --shadow:0 18px 45px rgba(15,23,42,.12);
@@ -21,80 +21,115 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg)}
-body{background:radial-gradient(circle at top left,rgba(22,163,74,.14),transparent 34%),linear-gradient(180deg,#fff,#f4f7f5 45%,#ecfdf5)}
+body{background:radial-gradient(circle at top left,rgba(220,38,38,.11),transparent 34%),linear-gradient(180deg,#fff,#f8f4f4 45%,#fef2f2)}
 .app{width:min(100%,920px);margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) 14px calc(22px + env(safe-area-inset-bottom))}
-.hero{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:18px;box-shadow:var(--shadow)}
-.badge{display:inline-flex;align-items:center;gap:8px;background:#dcfce7;color:#166534;border:1px solid #bbf7d0;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:950;margin-bottom:12px}
-h1{font-size:clamp(31px,8vw,48px);line-height:.96;letter-spacing:-.06em;margin:0 0 10px;color:#052e16}
+.hero,.card{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:18px;box-shadow:var(--shadow)}
+.badge{display:inline-flex;align-items:center;gap:8px;background:#fee2e2;color:#991b1b;border:1px solid #fecaca;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:950;margin-bottom:12px}
+h1{font-size:clamp(31px,8vw,48px);line-height:.96;letter-spacing:-.06em;margin:0 0 10px;color:#450a0a}
 h2{font-size:22px;letter-spacing:-.035em;margin:0 0 9px}
 p{color:var(--muted);line-height:1.48;margin:0 0 12px}
 .grid{display:grid;gap:12px;margin-top:12px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:0 10px 26px rgba(15,23,42,.06)}
-.okbox{background:#ecfdf5;border-color:#bbf7d0}
-.warn{background:#fff7ed;border-color:#fed7aa;color:#7c2d12}
-.line{height:1px;background:linear-gradient(90deg,transparent,#d1d5db,transparent);margin:16px 0}
+.card{border-radius:var(--radius);padding:16px;box-shadow:0 10px 26px rgba(15,23,42,.06)}
+label{display:block;font-weight:950;margin:13px 0 7px}
+select,textarea{width:100%;border:1px solid #d1d5db;border-radius:16px;padding:13px 12px;font-size:16px;font-family:inherit;background:#fff;color:#111827}
+textarea{min-height:106px;resize:vertical}
+select:focus,textarea:focus{outline:none;border-color:#111827;box-shadow:0 0 0 3px rgba(17,24,39,.10)}
+.help{font-size:13px;color:var(--muted);line-height:1.4}
+.reasonExtra{display:none}
+.reasonExtra.show{display:block}
 .person{display:flex;align-items:center;gap:12px;padding:11px;border:1px solid #eef2f7;background:#f9fafb;border-radius:18px;margin:8px 0}
-.avatar{width:52px;height:52px;object-fit:contain;border-radius:10px;background:#eef2f7;border:1px solid #d1d5db;flex:0 0 auto}
+.avatar{width:48px;height:48px;object-fit:contain;border-radius:10px;background:#eef2f7;border:1px solid #d1d5db;flex:0 0 auto}
 .name{font-weight:950;line-height:1.12}
 .role{display:block;color:#6b7280;font-size:13px;margin-top:3px}
 .list{display:grid;gap:8px;margin-top:8px}
 .item{background:#f9fafb;border:1px solid #eef2f7;border-radius:16px;padding:12px;line-height:1.5}
-.btn{appearance:none;border:0;border-radius:17px;min-height:52px;padding:14px 16px;font-size:16px;font-weight:950;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;width:100%;cursor:pointer}
-.green{background:linear-gradient(180deg,var(--green),var(--greenDark));color:#fff;box-shadow:0 12px 28px rgba(22,163,74,.25)}
+.copyCard{border:1px solid #d1d5db;background:#fff;border-radius:17px;padding:12px;display:flex;gap:10px;align-items:flex-start}
+.copyCard input{width:21px;height:21px;margin-top:2px;flex:0 0 auto}
+.btn{appearance:none;border:0;border-radius:17px;min-height:54px;padding:14px 16px;font-size:16px;font-weight:950;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;width:100%;cursor:pointer}
+.red{background:linear-gradient(180deg,var(--red2),var(--red));color:#fff;box-shadow:0 12px 28px rgba(220,38,38,.24)}
 .grey{background:#f3f4f6;color:#111827;border:1px solid #d1d5db}
 .small{font-size:13px;color:var(--muted);line-height:1.42}
 .mailPreview{border:1px solid #d1d5db;background:#fff;border-radius:20px;overflow:hidden;margin-top:10px}
 .mailHead{background:#f9fafb;border-bottom:1px solid #e5e7eb;padding:12px 14px;font-weight:950}
-.mailBody{padding:14px}
+.mailBody{padding:14px;line-height:1.6}
+.ok{display:none;background:#ecfdf5;border:1px solid #bbf7d0;color:#065f46;border-radius:20px;padding:16px}
+.err{display:none;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;border-radius:16px;padding:12px;margin-top:10px}
 .actions{display:grid;gap:10px;margin-top:12px}
 #techFrame{display:none;width:0;height:0;border:0}
-@media(min-width:720px){.app{padding:28px}.hero{padding:24px}.actions{grid-template-columns:1fr 1fr}}
+@media(min-width:720px){.app{padding:28px}.hero,.card{padding:24px}.actions{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 <main class="app">
   <section class="hero">
     <div class="badge">Décision responsable</div>
-    <h1>Validation de changement planning</h1>
-    <p id="intro">Validation en cours. Le planning va être mis à jour et les mails de confirmation seront envoyés.</p>
-    <div id="statusBox" class="card okbox">
-      <h2 id="statusTitle">Traitement en cours…</h2>
-      <p id="statusText">Merci de patienter quelques secondes. Ne ferme pas cette page tout de suite.</p>
-    </div>
+    <h1>Refus de changement planning</h1>
+    <p>Avant d’envoyer le refus, indique une raison claire. Aucun changement ne sera apporté au planning.</p>
   </section>
 
-  <section class="grid">
+  <section class="grid" id="formZone">
     <div class="card">
-      <h2>Résumé de l’action</h2>
-      <div class="list" id="summaryList"></div>
+      <h2>Raison du refus</h2>
+      <label for="raison">Motif principal</label>
+      <select id="raison" onchange="toggleExtra();updatePreview()">
+        <option value="">Sélectionner une raison</option>
+        <option>Planning déjà équilibré</option>
+        <option>Effectif insuffisant</option>
+        <option>Changement trop tardif</option>
+        <option>Incompatibilité avec l’organisation du service</option>
+        <option>Demande incomplète</option>
+        <option>Autre raison à préciser</option>
+      </select>
+
+      <div id="extraWrap" class="reasonExtra">
+        <label for="extraReason">Précisez la raison du refus</label>
+        <textarea id="extraReason" placeholder="Exemple : contrainte de service, organisation déjà validée…" oninput="updatePreview()"></textarea>
+      </div>
+
+      <label for="message">Message complémentaire optionnel</label>
+      <textarea id="message" placeholder="Vous pouvez ajouter une précision si nécessaire." oninput="updatePreview()"></textarea>
+      <div id="err" class="err"></div>
     </div>
 
     <div class="card">
-      <h2>Mails envoyés</h2>
-      <p class="small">Le mail final est envoyé au demandeur, avec le ou les accepteurs et les responsables choisis en copie.</p>
+      <h2>Personnes informées du refus</h2>
+      <p class="small">Le demandeur recevra le mail. Les accepteurs et les responsables choisis dans la demande seront en copie.</p>
       <div id="recipients" class="list"></div>
     </div>
 
     <div class="card">
-      <h2>Aperçu du mail envoyé</h2>
+      <h2>Aperçu du mail de refus</h2>
       <div class="mailPreview">
-        <div class="mailHead">Demande de changement planning validée</div>
+        <div class="mailHead">Demande de changement planning refusée</div>
         <div class="mailBody" id="mailPreview"></div>
       </div>
     </div>
 
-    <div class="card warn">
-      <b>Information technique</b>
-      <p class="small" style="margin-top:6px;color:#7c2d12">Cette page est l’habillage GitHub. L’action réelle est exécutée par le script de validation.</p>
-    </div>
-
     <div class="actions">
-      <a class="btn green" id="openResult" target="_blank" rel="noopener">Ouvrir le résultat technique</a>
-      <button class="btn grey" onclick="window.close()">Fermer</button>
+      <button class="btn grey" onclick="history.back()">Annuler</button>
+      <button class="btn red" onclick="sendRefus()">Envoyer le refus par mail</button>
+    </div>
+  </section>
+
+  <section class="grid" id="doneZone" style="display:none">
+    <div class="ok" id="doneBox">
+      <h2 style="margin-top:0;color:#065f46">Refus envoyé</h2>
+      <p style="color:#065f46">Aucune modification n’a été apportée au planning. Le mail de refus a été envoyé aux personnes concernées.</p>
+    </div>
+    <div class="card">
+      <h2>Récapitulatif</h2>
+      <div id="doneSummary" class="list"></div>
+    </div>
+    <div class="card">
+      <h2>Mail envoyé</h2>
+      <div class="mailPreview">
+        <div class="mailHead">Demande de changement planning refusée</div>
+        <div class="mailBody" id="doneMail"></div>
+      </div>
     </div>
   </section>
 </main>
-<iframe id="techFrame" title="validation technique"></iframe>
+<iframe id="techFrame" title="refus technique"></iframe>
 
 <script>
 const BACKEND_URL = "https://script.google.com/macros/s/AKfycbx99VoulRgSXfGS58f8UfvhUsi7GhUhG1gIme-35_HZWkCDxfdrN5KWLCG08hN9q5LA/exec";
@@ -103,9 +138,7 @@ const $ = id => document.getElementById(id);
 function esc(v) {
   return String(v == null ? "" : v).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 }
-function q(name) {
-  return new URLSearchParams(location.search).get(name) || "";
-}
+function q(name) { return new URLSearchParams(location.search).get(name) || ""; }
 function tryJsonParam(name) {
   const raw = q(name);
   if (!raw) return [];
@@ -117,68 +150,70 @@ function personHtml(p, fallbackRole) {
   const avatar = p.avatar || p.avatar_image_url || "";
   return `<div class="person">${avatar ? `<img class="avatar" src="${esc(avatar)}" onerror="this.style.display='none'" alt="">` : ""}<div><div class="name">${esc(nom)}</div>${role ? `<span class="role">${esc(role)}</span>` : ""}</div></div>`;
 }
-function buildActionUrl() {
-  const id = q("id");
-  const token = q("token");
-  const url = new URL(BACKEND_URL);
-  url.searchParams.set("action", "cadreDecision");
-  url.searchParams.set("decision", "valider");
-  url.searchParams.set("id", id);
-  url.searchParams.set("token", token);
-  return url.toString();
+function getReason() {
+  const r = $("raison").value;
+  if (r === "Autre raison à préciser") return $("extraReason").value.trim();
+  return r;
 }
-function render() {
-  const id = q("id");
-  const token = q("token");
-  const ref = q("ref") || id || "Demande";
-  const demandeur = {nom:q("demandeur") || "Demandeur", avatar:q("demandeurAvatar"), role:"Demandeur"};
+function toggleExtra() {
+  $("extraWrap").classList.toggle("show", $("raison").value === "Autre raison à préciser");
+}
+function renderRecipients() {
+  const demandeur = {nom:q("demandeur") || "Demandeur", avatar:q("demandeurAvatar"), role:"Destinataire principal"};
   const accepteurs = tryJsonParam("accepteurs");
   const copies = tryJsonParam("copies");
-  const items = tryJsonParam("items");
-
-  $("summaryList").innerHTML = `
-    <div class="item"><b>Statut :</b> validation demandée</div>
-    <div class="item"><b>Référence :</b> ${esc(ref)}</div>
-    <div class="item"><b>Horodatage :</b> ${new Date().toLocaleString("fr-FR")}</div>
-    ${items.length ? items.map(i => `<div class="item"><b>${esc(i.date || i.jour || "Jour concerné")}</b><br>${esc(i.resume || i.label || "")}</div>`).join("") : `<div class="item">Le détail complet est traité par le moteur de validation.</div>`}
-  `;
-
-  const rec = [];
-  rec.push(personHtml(demandeur, "Demandeur"));
-  accepteurs.forEach(a => rec.push(personHtml(a, "Accepteur")));
-  copies.forEach(c => rec.push(personHtml(c, "Responsable en copie")));
-  $("recipients").innerHTML = rec.join("") || `<div class="item">Les destinataires seront repris depuis la demande enregistrée.</div>`;
-
+  const list = [personHtml(demandeur, "Destinataire principal")]
+    .concat(accepteurs.map(a => personHtml(a, "Accepteur en copie")))
+    .concat(copies.map(c => personHtml(c, "Responsable en copie")));
+  $("recipients").innerHTML = list.join("") || `<div class="item">Les destinataires seront repris depuis la demande enregistrée.</div>`;
+}
+function updatePreview() {
+  const raison = getReason() || "[raison du refus]";
+  const msg = $("message").value.trim();
   $("mailPreview").innerHTML = `
     <p>Bonjour,</p>
-    <p>La demande de changement planning a été validée.</p>
-    <div class="line"></div>
-    ${personHtml(demandeur, "Demandeur")}
-    <p>Les nouveaux horaires validés sont désormais pris en compte.</p>
-    <div class="line"></div>
-    ${accepteurs.length ? accepteurs.map(a => personHtml(a, "Accepteur")).join("") : `<p class="small">Le ou les accepteurs seront affichés depuis les données de la demande.</p>`}
-    <p>Merci à chacun d’avoir permis de traiter la demande proprement.</p>
+    <p>Je suis désolé, mais votre demande de changement planning n’a pas pu être acceptée.</p>
+    <p>La demande a été refusée pour la raison suivante : <b>${esc(raison)}</b>.</p>
+    ${msg ? `<p>Message complémentaire :<br>${esc(msg)}</p>` : ""}
+    <p>Aucune modification ne sera donc apportée au planning pour cette demande.</p>
+    <p>Merci pour votre compréhension.</p>
   `;
-
-  const actionUrl = buildActionUrl();
-  $("openResult").href = actionUrl;
-
-  if (!id || !token) {
-    $("statusTitle").textContent = "Lien incomplet";
-    $("statusText").textContent = "La validation ne peut pas être envoyée : identifiant ou jeton manquant.";
-    $("statusBox").classList.remove("okbox");
-    $("statusBox").classList.add("warn");
-    return;
-  }
-
-  $("techFrame").src = actionUrl;
-  setTimeout(() => {
-    $("statusTitle").textContent = "Demande validée";
-    $("statusText").textContent = "Si le lien est valide, le planning a été mis à jour et les mails de confirmation ont été envoyés.";
-    $("intro").textContent = "La décision a été enregistrée. Voici le récapitulatif présenté après validation.";
-  }, 1800);
 }
-render();
+function buildRefusUrl() {
+  const url = new URL(BACKEND_URL);
+  url.searchParams.set("action", "cadreDecision");
+  url.searchParams.set("decision", "confirmerRefus");
+  url.searchParams.set("id", q("id"));
+  url.searchParams.set("token", q("token"));
+  url.searchParams.set("raison", getReason());
+  url.searchParams.set("message", $("message").value.trim());
+  return url.toString();
+}
+function showErr(text) {
+  $("err").style.display = "block";
+  $("err").textContent = text;
+}
+function sendRefus() {
+  $("err").style.display = "none";
+  if (!q("id") || !q("token")) return showErr("Lien incomplet : identifiant ou jeton manquant.");
+  if (!$("raison").value) return showErr("Sélectionne une raison du refus.");
+  if ($("raison").value === "Autre raison à préciser" && !$("extraReason").value.trim()) return showErr("Précise la raison du refus.");
+  const actionUrl = buildRefusUrl();
+  $("techFrame").src = actionUrl;
+  $("formZone").style.display = "none";
+  $("doneZone").style.display = "grid";
+  $("doneBox").style.display = "block";
+  $("doneSummary").innerHTML = `
+    <div class="item"><b>Statut :</b> refus envoyé</div>
+    <div class="item"><b>Raison :</b> ${esc(getReason())}</div>
+    <div class="item"><b>Horodatage :</b> ${new Date().toLocaleString("fr-FR")}</div>
+  `;
+  $("doneMail").innerHTML = $("mailPreview").innerHTML;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+renderRecipients();
+toggleExtra();
+updatePreview();
 </script>
 </body>
 </html>
