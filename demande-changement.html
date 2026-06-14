@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <title>Demande de changement planning</title>
+
+  <style>
+    :root {
+      --bg:#f6f7fb;
+      --ink:#111827;
+      --muted:#6b7280;
+      --card:#ffffff;
+      --line:#e5e7eb;
+      --blue:#2563eb;
+      --blueDark:#1d4ed8;
+      --green:#16a34a;
+      --shadow:0 14px 40px rgba(15,23,42,.12);
+      --radius:22px;
+    }
+
+    * {
+      box-sizing:border-box;
+    }
+
+    html {
+      min-height:100%;
+      background:var(--bg);
+    }
+
+    body {
+      margin:0;
+      min-height:100%;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(37,99,235,.10), transparent 34%),
+        linear-gradient(180deg,#ffffff 0%,#f6f7fb 42%,#eef2f7 100%);
+    }
+
+    .page {
+      width:min(100%, 1080px);
+      margin:0 auto;
+      padding:calc(14px + env(safe-area-inset-top)) 12px calc(18px + env(safe-area-inset-bottom));
+    }
+
+    .hero {
+      background:var(--card);
+      border:1px solid rgba(229,231,235,.95);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+      margin-bottom:12px;
+    }
+
+    .eyebrow {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 10px;
+      border-radius:999px;
+      background:#eff6ff;
+      color:#1d4ed8;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.02em;
+      margin-bottom:10px;
+    }
+
+    h1 {
+      margin:0;
+      font-size:clamp(26px, 7vw, 42px);
+      line-height:.98;
+      letter-spacing:-.055em;
+    }
+
+    .intro {
+      margin:10px 0 0;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.45;
+      max-width:720px;
+    }
+
+    .actions {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .btn {
+      appearance:none;
+      border:0;
+      width:100%;
+      min-height:52px;
+      border-radius:17px;
+      padding:14px 16px;
+      font-size:16px;
+      font-weight:950;
+      text-decoration:none;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      cursor:pointer;
+    }
+
+    .btn.primary {
+      color:#fff;
+      background:linear-gradient(180deg,var(--blue),var(--blueDark));
+      box-shadow:0 10px 25px rgba(37,99,235,.26);
+    }
+
+    .btn.secondary {
+      color:#111827;
+      background:#f3f4f6;
+      border:1px solid #e5e7eb;
+    }
+
+    .frameCard {
+      background:var(--card);
+      border:1px solid rgba(229,231,235,.95);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .frameTop {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 14px;
+      border-bottom:1px solid var(--line);
+      background:#ffffff;
+    }
+
+    .frameTitle {
+      min-width:0;
+    }
+
+    .frameTitle strong {
+      display:block;
+      font-size:14px;
+      line-height:1.15;
+    }
+
+    .frameTitle span {
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+      margin-top:2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:70vw;
+    }
+
+    .status {
+      flex:0 0 auto;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-size:12px;
+      font-weight:900;
+      color:#166534;
+      background:#dcfce7;
+      border:1px solid #bbf7d0;
+      padding:7px 9px;
+      border-radius:999px;
+    }
+
+    .iframeWrap {
+      position:relative;
+      background:#f9fafb;
+      height:calc(100dvh - 210px);
+      min-height:560px;
+      max-height:920px;
+    }
+
+    iframe {
+      width:100%;
+      height:100%;
+      border:0;
+      display:block;
+      background:#ffffff;
+    }
+
+    .fallback {
+      display:none;
+      padding:14px;
+      border-top:1px solid var(--line);
+      background:#fff7ed;
+      color:#7c2d12;
+      font-size:14px;
+      line-height:1.45;
+    }
+
+    .fallback strong {
+      display:block;
+      margin-bottom:4px;
+    }
+
+    .fallback .btn {
+      margin-top:10px;
+      background:#ea580c;
+      color:#fff;
+      box-shadow:none;
+    }
+
+    .note {
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+      margin:10px 4px 0;
+      text-align:center;
+    }
+
+    @media (min-width:760px) {
+      .page {
+        padding:24px;
+      }
+
+      .hero {
+        padding:22px;
+      }
+
+      .actions {
+        grid-template-columns:220px 170px;
+        justify-content:start;
+      }
+
+      .iframeWrap {
+        height:calc(100dvh - 250px);
+        min-height:620px;
+      }
+    }
+
+    @media (max-width:420px) {
+      .hero {
+        padding:14px;
+      }
+
+      .frameTop {
+        padding:10px 12px;
+      }
+
+      .status {
+        display:none;
+      }
+
+      .iframeWrap {
+        height:calc(100dvh - 235px);
+        min-height:520px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="eyebrow">Planning agents</div>
+      <h1>Demande de changement planning</h1>
+      <p class="intro">
+        Remplis la demande depuis cette page. Le formulaire s’ouvre dans un espace sécurisé et reste relié au moteur de validation.
+      </p>
+
+      <div class="actions">
+        <a class="btn primary" href="https://script.google.com/macros/s/AKfycbx99VoulRgSXfGS58f8UfvhUsi7GhUhG1gIme-35_HZWkCDxfdrN5KWLCG08hN9q5LA/exec" target="_blank" rel="noopener">
+          Ouvrir en plein écran
+        </a>
+        <button class="btn secondary" type="button" onclick="reloadFrame()">
+          Recharger
+        </button>
+      </div>
+    </section>
+
+    <section class="frameCard">
+      <div class="frameTop">
+        <div class="frameTitle">
+          <strong>Formulaire de demande</strong>
+          <span>Version intégrée à la page Planning</span>
+        </div>
+        <div class="status" id="loadStatus">Chargement…</div>
+      </div>
+
+      <div class="iframeWrap">
+        <iframe
+          id="appFrame"
+          src="https://script.google.com/macros/s/AKfycbx99VoulRgSXfGS58f8UfvhUsi7GhUhG1gIme-35_HZWkCDxfdrN5KWLCG08hN9q5LA/exec"
+          title="Formulaire de demande de changement planning"
+          loading="eager"
+          referrerpolicy="no-referrer-when-downgrade"
+          onload="frameLoaded()">
+        </iframe>
+      </div>
+
+      <div class="fallback" id="fallback">
+        <strong>Le formulaire ne s’affiche pas correctement dans cette page.</strong>
+        Google peut parfois bloquer l’intégration. Dans ce cas, ouvre le formulaire en plein écran.
+        <a class="btn" href="https://script.google.com/macros/s/AKfycbx99VoulRgSXfGS58f8UfvhUsi7GhUhG1gIme-35_HZWkCDxfdrN5KWLCG08hN9q5LA/exec" target="_blank" rel="noopener">
+          Ouvrir le formulaire
+        </a>
+      </div>
+    </section>
+
+    <p class="note">
+      Cette page sert d’habillage mobile. Le traitement de la demande reste fait par le formulaire sécurisé.
+    </p>
+  </main>
+
+  <script>
+    const APP_URL = "https://script.google.com/macros/s/AKfycbx99VoulRgSXfGS58f8UfvhUsi7GhUhG1gIme-35_HZWkCDxfdrN5KWLCG08hN9q5LA/exec";
+    let loaded = false;
+
+    function frameLoaded() {
+      loaded = true;
+      const status = document.getElementById("loadStatus");
+      status.textContent = "Formulaire chargé";
+    }
+
+    function reloadFrame() {
+      loaded = false;
+      const status = document.getElementById("loadStatus");
+      const fallback = document.getElementById("fallback");
+      const frame = document.getElementById("appFrame");
+
+      status.textContent = "Rechargement…";
+      fallback.style.display = "none";
+      frame.src = APP_URL + (APP_URL.includes("?") ? "&" : "?") + "t=" + Date.now();
+    }
+
+    window.setTimeout(() => {
+      if (!loaded) {
+        document.getElementById("loadStatus").textContent = "Ouverture conseillée";
+        document.getElementById("fallback").style.display = "block";
+      }
+    }, 4500);
+  </script>
+</body>
+</html>
