@@ -21,7 +21,15 @@
   --radius:24px;
 }
 *{box-sizing:border-box}
-html{visibility:hidden}
+
+/*
+  CORRECTION IMPORTANT :
+  Avant : html{visibility:hidden}
+  Problème : ça peut donner une page blanche tant que les scripts / Google Apps Script répondent.
+  Maintenant : la page s’affiche tout de suite, puis les agents chargent.
+*/
+html{visibility:visible}
+
 html,body{
   margin:0;
   min-height:100%;
@@ -292,10 +300,11 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
 }
 .siteModalTitle{font-weight:950;color:var(--navy);font-size:22px;margin-bottom:8px}
 .siteModalText{font-size:17px;color:var(--ink);font-weight:750;line-height:1.35;text-align:left;margin-bottom:14px}
-</style>
+  </style>
 </head>
+
 <body>
-<!-- VISUEL_SITE_V6_SHIFTS_SOURCE_DATES_FUTURES -->
+<!-- VISUEL_SITE_V6_SHIFTS_SOURCE_DATES_FUTURES_CORRIGE_AFFICHAGE_RAPIDE -->
   <div class="app">
     <header class="top">
       <div class="brand">
@@ -309,8 +318,10 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
       <p>Recherche ton nom puis ouvre ton aperçu personnel.</p>
       <div class="card searchWrap">
         <input id="agentSearch" placeholder="Rechercher mon nom" autocomplete="off">
-        <div id="agentList" class="agentList"></div>
-        <div id="startMsg" class="msg"></div>
+        <div id="agentList" class="agentList">
+          <p>Chargement des agents…</p>
+        </div>
+        <div id="startMsg" class="msg show warn">Chargement des agents…</div>
       </div>
     </section>
 
@@ -428,6 +439,7 @@ const SHIFT_FALLBACK = {
   "AR": {code:"AR", icone:"❓", libelle:"À vérifier", debut:"", fin:"", affichage:"❓ À vérifier", categorie:"A_VERIFIER"},
   "FO": {code:"FO", icone:"❓", libelle:"À vérifier", debut:"", fin:"", affichage:"❓ À vérifier", categorie:"A_VERIFIER"}
 };
+
 function cleanShiftKey(code){
   let raw=String(code||'').trim();
   if(!raw) return '';
@@ -447,13 +459,38 @@ let CAL = null;
 let state = { agent:null, currentMonth:"", basket:[], candidates:{}, noAgent:false, responsableId:"", ccIds:[] };
 
 const $ = id => document.getElementById(id);
-function isReadyUrl(){ return API_URL && API_URL.indexOf("COLLE_ICI") < 0 && /^https:\/\//.test(API_URL); }
-function showPage(id, step){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); $(id).classList.add('active'); $('stepPill').textContent='Étape '+step; window.scrollTo({top:0,behavior:'smooth'}); }
-function msg(id,type,text){ const el=$(id); el.className='msg show '+type; el.textContent=text; }
-function clearMsg(id){ const el=$(id); el.className='msg'; el.textContent=''; }
-function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function isReadyUrl(){
+  return API_URL && API_URL.indexOf("COLLE_ICI") < 0 && /^https:\/\//.test(API_URL);
+}
+
+function showPage(id, step){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  $(id).classList.add('active');
+  $('stepPill').textContent='Étape '+step;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function msg(id,type,text){
+  const el=$(id);
+  if(!el) return;
+  el.className='msg show '+type;
+  el.textContent=text;
+}
+
+function clearMsg(id){
+  const el=$(id);
+  if(!el) return;
+  el.className='msg';
+  el.textContent='';
+}
+
+function esc(v){
+  return String(v==null?'':v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
 function attr(v){ return esc(v).replace(/`/g,'&#96;'); }
 function avatar(url, cls=''){ return `<img class="avatar ${cls}" src="${attr(url||'')}" alt="" onerror="this.style.visibility='hidden'">`; }
+
 function shiftText(code){
   const raw=String(code||'').trim();
   if(!raw) return 'Non précisé';
@@ -465,10 +502,12 @@ function shiftText(code){
   const hours=(v.debut && v.fin) ? ' · '+v.debut+' à '+v.fin : '';
   return icon+label+hours;
 }
+
 function shiftInfo(code){
   const raw=String(code||'').trim();
   const key=cleanShiftKey(raw);
   const v=shiftSource(raw);
+
   if(v && typeof v==='object'){
     return {
       code:v.code || raw,
@@ -478,6 +517,7 @@ function shiftInfo(code){
       categorie:v.categorie || ''
     };
   }
+
   const text=typeof v==='string' ? v : raw;
   const iconMatch=String(text||'').match(/^\S+/);
   const maybeIcon=iconMatch ? iconMatch[0] : '';
@@ -486,29 +526,40 @@ function shiftInfo(code){
   let hours=(withoutIcon.match(/\d{1,2}:\d{2}\s*(?:à|-|—)\s*\d{1,2}:\d{2}/)||[''])[0].replace(/\s*(?:-|—)\s*/,' à ');
   let label=withoutIcon.replace(/\s*[—·-]\s*\d{1,2}:\d{2}\s*(?:à|-|—)\s*\d{1,2}:\d{2}.*/,'').trim();
   label=label.replace(new RegExp('^'+key+'\\s*[—-]\\s*','i'),'').trim();
+
   return {code:raw, icon:hasEmoji?maybeIcon:'', label:label||raw||'Non précisé', hours:hours||'', categorie:''};
 }
+
 function shiftInline(code, cls=''){
   const s=shiftInfo(code);
   const h=s.hours ? ' · '+s.hours : '';
   const icon=s.icon ? `<span class="shiftIcon">${esc(s.icon)}</span>` : '';
   return `<span class="shiftLine ${cls}">${icon}<span>${esc(s.label+h)}</span></span>`;
 }
+
 function shiftPlain(code){
   const s=shiftInfo(code);
   return `${s.icon ? s.icon+' ' : ''}${s.label}${s.hours?' · '+s.hours:''}`;
 }
+
 function goalText(code){
   const s=shiftInfo(code);
   return `${s.icon ? s.icon+' ' : ''}${s.label}`;
 }
+
 function siteAlert(text,title='Information'){
   $('siteModalTitle').textContent=title;
   $('siteModalText').textContent=text;
   $('siteModal').classList.add('show');
 }
 function closeSiteModal(){ $('siteModal').classList.remove('show'); }
-function knownMail(id){ const c=DATA && DATA.contacts ? DATA.contacts[String(id)] : null; if(!c) return ''; return typeof c==='string' ? c : (c.email || ''); }
+
+function knownMail(id){
+  const c=DATA && DATA.contacts ? DATA.contacts[String(id)] : null;
+  if(!c) return '';
+  return typeof c==='string' ? c : (c.email || '');
+}
+
 function mailAgentConnecte(){
   try{
     const agent = JSON.parse(localStorage.getItem("ghe_agent_connecte") || "{}");
@@ -517,24 +568,61 @@ function mailAgentConnecte(){
     return "";
   }
 }
-function maskMail(mail){ const s=String(mail||''); const at=s.indexOf('@'); return at<2 ? s : s.slice(0,1)+'***'+s.slice(at); }
-function labelLong(label, mois, jour){ const s=String(label||''); const m=s.match(/^([A-Z])\s*(\d{1,2})/i); if(m) return (WEEK[m[1].toUpperCase()]||m[1])+' '+Number(m[2])+' '+(mois||''); return (jour?jour+' ':'')+(mois||s); }
-function makeItemId(s){ return 'item_'+String(s.mois).replace(/\W/g,'')+'_'+s.jour+'_'+Date.now()+'_'+Math.floor(Math.random()*9999); }
+
+function maskMail(mail){
+  const s=String(mail||'');
+  const at=s.indexOf('@');
+  return at<2 ? s : s.slice(0,1)+'***'+s.slice(at);
+}
+
+function labelLong(label, mois, jour){
+  const s=String(label||'');
+  const m=s.match(/^([A-Z])\s*(\d{1,2})/i);
+  if(m) return (WEEK[m[1].toUpperCase()]||m[1])+' '+Number(m[2])+' '+(mois||'');
+  return (jour?jour+' ':'')+(mois||s);
+}
+
+function makeItemId(s){
+  return 'item_'+String(s.mois).replace(/\W/g,'')+'_'+s.jour+'_'+Date.now()+'_'+Math.floor(Math.random()*9999);
+}
 
 function api(action, params={}){
   return new Promise((resolve,reject)=>{
     if(!isReadyUrl()) return reject(new Error('URL du script pont manquante dans le fichier GitHub.'));
+
     const cb='dc_cb_'+Date.now()+'_'+Math.floor(Math.random()*1000000);
     const url = new URL(API_URL);
     url.searchParams.set('api', action);
     url.searchParams.set('callback', cb);
     Object.keys(params).forEach(k=>url.searchParams.set(k, params[k]));
+
     const s=document.createElement('script');
     let done=false;
-    const timer=setTimeout(()=>{ if(!done){ cleanup(); reject(new Error('Le script pont ne répond pas.')); } }, 25000);
-    function cleanup(){ done=true; clearTimeout(timer); delete window[cb]; if(s.parentNode) s.parentNode.removeChild(s); }
-    window[cb]=res=>{ cleanup(); resolve(res); };
-    s.onerror=()=>{ cleanup(); reject(new Error('Impossible de joindre le script pont.')); };
+
+    const timer=setTimeout(()=>{
+      if(!done){
+        cleanup();
+        reject(new Error('Le script pont ne répond pas. Réessaie dans quelques secondes.'));
+      }
+    }, 25000);
+
+    function cleanup(){
+      done=true;
+      clearTimeout(timer);
+      delete window[cb];
+      if(s.parentNode) s.parentNode.removeChild(s);
+    }
+
+    window[cb]=res=>{
+      cleanup();
+      resolve(res);
+    };
+
+    s.onerror=()=>{
+      cleanup();
+      reject(new Error('Impossible de joindre le script pont.'));
+    };
+
     s.src=url.toString();
     document.body.appendChild(s);
   });
@@ -546,22 +634,56 @@ async function init(){
     $('agentList').innerHTML='';
     return;
   }
+
   msg('startMsg','warn','Chargement des agents…');
+  $('agentList').innerHTML='<p>Chargement des agents…</p>';
+
   try{
     const res=await api('init');
-    if(!res || !res.ok) throw new Error(res && res.error ? res.error : 'Chargement impossible.');
+
+    if(!res || !res.ok) {
+      throw new Error(res && res.error ? res.error : 'Chargement impossible.');
+    }
+
     DATA=res;
     state.responsableId=(DATA.responsables && DATA.responsables[0]) ? DATA.responsables[0].id : '';
+
     clearMsg('startMsg');
     renderAgents();
-  }catch(e){ msg('startMsg','err',e.message||String(e)); }
+
+  }catch(e){
+    $('agentList').innerHTML='';
+    msg('startMsg','err',e.message||String(e));
+  }
 }
 
 function renderAgents(){
-  const q=($('agentSearch').value||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
-  const list=(DATA.agents||[]).filter(a=>String(a.nom_affiche||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').includes(q)).slice(0,90);
-  $('agentList').innerHTML=list.map(a=>`<button class="agentBtn" onclick="selectAgent('${attr(a.id_agent)}')"><span class="name">${esc(a.nom_affiche)}</span></button>`).join('') || '<p>Aucun agent trouvé.</p>';
+  /*
+    CORRECTION IMPORTANT :
+    Si l’utilisateur tape dans la recherche avant la réponse de Google Apps Script,
+    l’ancien code pouvait planter parce que DATA était encore null.
+  */
+  if(!DATA || !Array.isArray(DATA.agents)){
+    $('agentList').innerHTML='<p>Chargement des agents…</p>';
+    return;
+  }
+
+  const q=($('agentSearch').value||'')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g,'');
+
+  const list=(DATA.agents||[])
+    .filter(a=>String(a.nom_affiche||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').includes(q))
+    .slice(0,90);
+
+  $('agentList').innerHTML=list.map(a=>`
+    <button class="agentBtn" onclick="selectAgent('${attr(a.id_agent)}')">
+      <span class="name">${esc(a.nom_affiche)}</span>
+    </button>
+  `).join('') || '<p>Aucun agent trouvé.</p>';
 }
+
 $('agentSearch').addEventListener('input', renderAgents);
 
 function todayIso(){
@@ -572,21 +694,33 @@ function todayIso(){
   const j=String(d.getDate()).padStart(2,'0');
   return `${y}-${m}-${j}`;
 }
+
 function monthNum(mois){
   const map={JANVIER:1,FEVRIER:2,FÉVRIER:2,MARS:3,AVRIL:4,MAI:5,JUIN:6,JUILLET:7,AOUT:8,AOÛT:8,SEPTEMBRE:9,OCTOBRE:10,NOVEMBRE:11,DECEMBRE:12,DÉCEMBRE:12};
   const k=String(mois||'').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   return map[k]||0;
 }
+
 function dateIsoFromShift(s){
   if(s && s.date_iso) return String(s.date_iso).slice(0,10);
   const y=(CAL && CAL.year) || new Date().getFullYear();
   const m=monthNum(s && s.mois);
   const j=Number(s && s.jour);
+
   if(!m||!j) return '';
+
   return `${y}-${String(m).padStart(2,'0')}-${String(j).padStart(2,'0')}`;
 }
-function isFutureShift(s){ const iso=dateIsoFromShift(s); return !iso || iso>=todayIso(); }
-function futureShifts(){ return (CAL.agent && CAL.agent.shifts ? CAL.agent.shifts : []).filter(isFutureShift); }
+
+function isFutureShift(s){
+  const iso=dateIsoFromShift(s);
+  return !iso || iso>=todayIso();
+}
+
+function futureShifts(){
+  return (CAL.agent && CAL.agent.shifts ? CAL.agent.shifts : []).filter(isFutureShift);
+}
+
 function firstFutureMonth(res){
   const shifts=(res.agent && res.agent.shifts ? res.agent.shifts : []).filter(isFutureShift);
   const months=res.mois || [];
@@ -596,29 +730,53 @@ function firstFutureMonth(res){
 async function selectAgent(id){
   const a=(DATA.agents||[]).find(x=>String(x.id_agent)===String(id));
   if(!a) return;
+
   state.agent=a;
   msg('startMsg','warn','Chargement du planning…');
+
   try{
     const res=await api('calendar', {agentId:id});
-    if(!res || !res.ok) throw new Error(res && res.error ? res.error : 'Planning introuvable.');
+
+    if(!res || !res.ok) {
+      throw new Error(res && res.error ? res.error : 'Planning introuvable.');
+    }
+
     CAL=res;
     state.currentMonth=firstFutureMonth(res);
     $('demandeurEmail').value=knownMail(id) || mailAgentConnecte() || '';
+
     renderDaysPage();
     showPage('pDays',2);
-  }catch(e){ msg('startMsg','err',e.message||String(e)); }
+
+  }catch(e){
+    msg('startMsg','err',e.message||String(e));
+  }
 }
 
 function renderDaysPage(){
   const a=state.agent;
-  $('whoBox').innerHTML=`<div class="person">${avatar(a.avatar_image_url,'big')}<div><div class="name">${esc(a.nom_affiche)}</div><div class="subline">Choisis les jours à modifier</div></div></div>`;
+
+  $('whoBox').innerHTML=`
+    <div class="person">
+      ${avatar(a.avatar_image_url,'big')}
+      <div>
+        <div class="name">${esc(a.nom_affiche)}</div>
+        <div class="subline">Choisis les jours à modifier</div>
+      </div>
+    </div>
+  `;
 
   const allFuture=futureShifts();
   const sourceMonths=CAL.mois || [];
   const months=sourceMonths.filter(m=>allFuture.some(s=>s.mois===m));
+
   if(!months.includes(state.currentMonth)) state.currentMonth=months[0] || '';
 
-  $('monthChips').innerHTML=months.map(m=>`<button class="chip ${m===state.currentMonth?'active':''}" onclick="state.currentMonth='${attr(m)}';renderDaysPage()">${esc(m)}</button>`).join('');
+  $('monthChips').innerHTML=months.map(m=>`
+    <button class="chip ${m===state.currentMonth?'active':''}" onclick="state.currentMonth='${attr(m)}';renderDaysPage()">
+      ${esc(m)}
+    </button>
+  `).join('');
 
   const shifts=allFuture
     .filter(s=>s.mois===state.currentMonth)
@@ -630,7 +788,16 @@ function renderDaysPage(){
 
   $('dayList').innerHTML=shifts.map(s=>{
     const selected=state.basket.some(it=>it.mois_demandeur===s.mois && Number(it.jour_demandeur)===Number(s.jour));
-    return `<button class="dayBtn ${selected?'selected':''}" onclick='toggleDay(${JSON.stringify(s).replace(/'/g,"&#39;")})'><span><span class="dayTitle">${esc(labelLong(s.label,s.mois,s.jour))}</span><br>${shiftInline(s.code)}</span><span>${selected?'✓':'+'}</span></button>`;
+
+    return `
+      <button class="dayBtn ${selected?'selected':''}" onclick='toggleDay(${JSON.stringify(s).replace(/'/g,"&#39;")})'>
+        <span>
+          <span class="dayTitle">${esc(labelLong(s.label,s.mois,s.jour))}</span><br>
+          ${shiftInline(s.code)}
+        </span>
+        <span>${selected?'✓':'+'}</span>
+      </button>
+    `;
   }).join('') || '<p>Aucun jour futur disponible pour cet agent.</p>';
 
   updateBasketCount();
@@ -638,102 +805,343 @@ function renderDaysPage(){
 
 function toggleDay(s){
   const i=state.basket.findIndex(it=>it.mois_demandeur===s.mois && Number(it.jour_demandeur)===Number(s.jour));
-  if(i>=0) state.basket.splice(i,1); else state.basket.push({
-    item_id:makeItemId(s), demandeur_id:state.agent.id_agent, demandeur_nom:state.agent.nom_affiche,
-    mois_demandeur:s.mois, jour_demandeur:s.jour, label_demandeur:s.label, shift_demandeur:s.code, demandeur_avatar:state.agent.avatar_image_url||'',
-    objectif:'', objectif_label:'', accepteur_id:'', accepteur_nom:'', accepteur_email:'', accepteur_avatar:'', mois_accepteur:'', jour_accepteur:'', label_accepteur:'', shift_accepteur:''
-  });
+
+  if(i>=0) {
+    state.basket.splice(i,1);
+  } else {
+    state.basket.push({
+      item_id:makeItemId(s),
+      demandeur_id:state.agent.id_agent,
+      demandeur_nom:state.agent.nom_affiche,
+      mois_demandeur:s.mois,
+      jour_demandeur:s.jour,
+      label_demandeur:s.label,
+      shift_demandeur:s.code,
+      demandeur_avatar:state.agent.avatar_image_url||'',
+      objectif:'',
+      objectif_label:'',
+      accepteur_id:'',
+      accepteur_nom:'',
+      accepteur_email:'',
+      accepteur_avatar:'',
+      mois_accepteur:'',
+      jour_accepteur:'',
+      label_accepteur:'',
+      shift_accepteur:''
+    });
+  }
+
   renderDaysPage();
 }
-function updateBasketCount(){ const n=state.basket.length; $('basketCount').textContent=n+' jour'+(n>1?'s':'')+' sélectionné'+(n>1?'s':''); $('goExchangeBtn').disabled=!n; }
-function goExchange(){ if(!state.basket.length) return; renderExchange(); showPage('pExchange',3); }
 
-function toggleNoAgent(){ state.noAgent=$('noAgent').checked; renderExchange(); }
+function updateBasketCount(){
+  const n=state.basket.length;
+  $('basketCount').textContent=n+' jour'+(n>1?'s':'')+' sélectionné'+(n>1?'s':'');
+  $('goExchangeBtn').disabled=!n;
+}
+
+function goExchange(){
+  if(!state.basket.length) return;
+  renderExchange();
+  showPage('pExchange',3);
+}
+
+function toggleNoAgent(){
+  state.noAgent=$('noAgent').checked;
+  renderExchange();
+}
+
 function renderExchange(){
   $('noAgent').checked=state.noAgent;
-  $('exchangeList').innerHTML=state.basket.map((it,idx)=>`<div class="exchangeCard ${(state.noAgent||it.accepteur_id)&&it.objectif?'done':''}" id="card_${attr(it.item_id)}">
-    <div class="dayTitle">${esc(labelLong(it.label_demandeur,it.mois_demandeur,it.jour_demandeur))}</div>
-    <div class="small">Ton horaire actuel :</div><div>${shiftInline(it.shift_demandeur,'light')}</div>
-    <div class="goalGrid">${GOALS.map(g=>`<button class="goal ${it.objectif===g.code?'active':''}" onclick="chooseGoal('${attr(it.item_id)}','${g.code}')">${esc(goalText(g.code))}</button>`).join('')}</div>
-    ${renderChosen(it)}
-    <div id="cand_${attr(it.item_id)}" class="candidateList">${renderCandidates(it)}</div>
-  </div>`).join('');
+
+  $('exchangeList').innerHTML=state.basket.map((it,idx)=>`
+    <div class="exchangeCard ${(state.noAgent||it.accepteur_id)&&it.objectif?'done':''}" id="card_${attr(it.item_id)}">
+      <div class="dayTitle">${esc(labelLong(it.label_demandeur,it.mois_demandeur,it.jour_demandeur))}</div>
+      <div class="small">Ton horaire actuel :</div>
+      <div>${shiftInline(it.shift_demandeur,'light')}</div>
+
+      <div class="goalGrid">
+        ${GOALS.map(g=>`
+          <button class="goal ${it.objectif===g.code?'active':''}" onclick="chooseGoal('${attr(it.item_id)}','${g.code}')">
+            ${esc(goalText(g.code))}
+          </button>
+        `).join('')}
+      </div>
+
+      ${renderChosen(it)}
+
+      <div id="cand_${attr(it.item_id)}" class="candidateList">
+        ${renderCandidates(it)}
+      </div>
+    </div>
+  `).join('');
 }
+
 function renderChosen(it){
-  if(state.noAgent) return it.objectif ? `<div class="chosen"><b>Souhait :</b> ${esc(it.objectif==='REPOS'?'Repos':shiftText(it.objectif))}</div>` : '';
-  if(!it.accepteur_id) return it.objectif ? '<div class="small">Choisis un collègue dans la liste.</div>' : '';
-  return `<div class="chosen">${avatar(it.accepteur_avatar)}<div><div class="name">${esc(it.accepteur_nom)}</div><div>${shiftInline(it.shift_accepteur,'light')}</div></div><button class="btn grey" style="width:auto;min-height:42px;padding:9px 12px" onclick="clearAcceptor('${attr(it.item_id)}')">Changer</button></div>`;
+  if(state.noAgent) {
+    return it.objectif ? `<div class="chosen"><b>Souhait :</b> ${esc(it.objectif==='REPOS'?'Repos':shiftText(it.objectif))}</div>` : '';
+  }
+
+  if(!it.accepteur_id) {
+    return it.objectif ? '<div class="small">Choisis un collègue dans la liste.</div>' : '';
+  }
+
+  return `
+    <div class="chosen">
+      ${avatar(it.accepteur_avatar)}
+      <div>
+        <div class="name">${esc(it.accepteur_nom)}</div>
+        <div>${shiftInline(it.shift_accepteur,'light')}</div>
+      </div>
+      <button class="btn grey" style="width:auto;min-height:42px;padding:9px 12px" onclick="clearAcceptor('${attr(it.item_id)}')">Changer</button>
+    </div>
+  `;
 }
+
 function renderCandidates(it){
   if(state.noAgent || !it.objectif || it.accepteur_id) return '';
+
   const list=state.candidates[it.item_id];
+
   if(!list) return '<div class="small">Clique un horaire pour charger les collègues.</div>';
   if(!list.length) return '<div class="msg show warn">Aucun collègue trouvé pour cet horaire.</div>';
-  return list.map(c=>`<button class="candidateBtn" onclick="selectCandidate('${attr(it.item_id)}','${attr(c.id_agent)}')">${avatar(c.avatar_image_url)}<span class="candidateMain"><span class="name">${esc(c.nom_affiche)}</span>${shiftInline(c.shift_code,'light')}<span class="mailLine ${c.email?'ok':'missing'}">${c.email?'Mail connu':'Mail à compléter'}</span></span></button>`).join('');
+
+  return list.map(c=>`
+    <button class="candidateBtn" onclick="selectCandidate('${attr(it.item_id)}','${attr(c.id_agent)}')">
+      ${avatar(c.avatar_image_url)}
+      <span class="candidateMain">
+        <span class="name">${esc(c.nom_affiche)}</span>
+        ${shiftInline(c.shift_code,'light')}
+        <span class="mailLine ${c.email?'ok':'missing'}">${c.email?'Mail connu':'Mail à compléter'}</span>
+      </span>
+    </button>
+  `).join('');
 }
+
 async function chooseGoal(itemId, goal){
-  const it=state.basket.find(x=>x.item_id===itemId); if(!it) return;
-  it.objectif=goal; it.objectif_label=(goal==='REPOS'?'Repos / RH / congé':shiftPlain(goal));
-  it.accepteur_id=''; it.accepteur_nom=''; it.accepteur_email=''; it.accepteur_avatar=''; it.shift_accepteur='';
+  const it=state.basket.find(x=>x.item_id===itemId);
+  if(!it) return;
+
+  it.objectif=goal;
+  it.objectif_label=(goal==='REPOS'?'Repos / RH / congé':shiftPlain(goal));
+  it.accepteur_id='';
+  it.accepteur_nom='';
+  it.accepteur_email='';
+  it.accepteur_avatar='';
+  it.shift_accepteur='';
+
   renderExchange();
+
   if(state.noAgent) return;
-  const box=$('cand_'+itemId); if(box) box.innerHTML='<div class="small">Chargement des collègues…</div>';
+
+  const box=$('cand_'+itemId);
+  if(box) box.innerHTML='<div class="small">Chargement des collègues…</div>';
+
   try{
-    const res=await api('candidates', {payload:JSON.stringify({demandeur_id:state.agent.id_agent, mois:it.mois_demandeur, jour:it.jour_demandeur, goal:goal})});
-    if(!res || !res.ok) throw new Error(res && res.error ? res.error : 'Erreur candidats');
+    const res=await api('candidates', {
+      payload:JSON.stringify({
+        demandeur_id:state.agent.id_agent,
+        mois:it.mois_demandeur,
+        jour:it.jour_demandeur,
+        goal:goal
+      })
+    });
+
+    if(!res || !res.ok) {
+      throw new Error(res && res.error ? res.error : 'Erreur candidats');
+    }
+
     state.candidates[itemId]=res.candidates||[];
-  }catch(e){ state.candidates[itemId]=[]; }
+
+  }catch(e){
+    state.candidates[itemId]=[];
+  }
+
   renderExchange();
 }
+
 function selectCandidate(itemId, agentId){
-  const it=state.basket.find(x=>x.item_id===itemId); if(!it) return;
-  const c=(state.candidates[itemId]||[]).find(x=>String(x.id_agent)===String(agentId)); if(!c) return;
-  it.accepteur_id=c.id_agent; it.accepteur_nom=c.nom_affiche; it.accepteur_email=c.email||''; it.accepteur_avatar=c.avatar_image_url||'';
-  it.mois_accepteur=it.mois_demandeur; it.jour_accepteur=it.jour_demandeur; it.label_accepteur=it.label_demandeur; it.shift_accepteur=c.shift_code||'';
+  const it=state.basket.find(x=>x.item_id===itemId);
+  if(!it) return;
+
+  const c=(state.candidates[itemId]||[]).find(x=>String(x.id_agent)===String(agentId));
+  if(!c) return;
+
+  it.accepteur_id=c.id_agent;
+  it.accepteur_nom=c.nom_affiche;
+  it.accepteur_email=c.email||'';
+  it.accepteur_avatar=c.avatar_image_url||'';
+  it.mois_accepteur=it.mois_demandeur;
+  it.jour_accepteur=it.jour_demandeur;
+  it.label_accepteur=it.label_demandeur;
+  it.shift_accepteur=c.shift_code||'';
+
   renderExchange();
+
   const next=state.basket.find(x=>!state.noAgent && (!x.objectif || !x.accepteur_id));
-  if(next && $('card_'+next.item_id)) $('card_'+next.item_id).scrollIntoView({behavior:'smooth', block:'start'});
+  if(next && $('card_'+next.item_id)) {
+    $('card_'+next.item_id).scrollIntoView({behavior:'smooth', block:'start'});
+  }
 }
-function clearAcceptor(itemId){ const it=state.basket.find(x=>x.item_id===itemId); if(!it) return; it.accepteur_id=''; it.accepteur_nom=''; it.accepteur_email=''; it.accepteur_avatar=''; it.shift_accepteur=''; renderExchange(); }
+
+function clearAcceptor(itemId){
+  const it=state.basket.find(x=>x.item_id===itemId);
+  if(!it) return;
+
+  it.accepteur_id='';
+  it.accepteur_nom='';
+  it.accepteur_email='';
+  it.accepteur_avatar='';
+  it.shift_accepteur='';
+
+  renderExchange();
+}
 
 function goSummary(){
   const missingGoal=state.basket.filter(it=>!it.objectif);
-  if(missingGoal.length) return siteAlert('Il manque un horaire souhaité sur '+missingGoal.length+' jour(s).','À compléter');
-  if(!state.noAgent){ const missing=state.basket.filter(it=>!it.accepteur_id); if(missing.length) return siteAlert('Il manque un collègue sur '+missing.length+' jour(s).','À compléter'); }
-  renderSummary(); showPage('pSummary',4);
+
+  if(missingGoal.length) {
+    return siteAlert('Il manque un horaire souhaité sur '+missingGoal.length+' jour(s).','À compléter');
+  }
+
+  if(!state.noAgent){
+    const missing=state.basket.filter(it=>!it.accepteur_id);
+
+    if(missing.length) {
+      return siteAlert('Il manque un collègue sur '+missing.length+' jour(s).','À compléter');
+    }
+  }
+
+  renderSummary();
+  showPage('pSummary',4);
 }
+
 function renderSummary(){
-  $('summaryBox').innerHTML='<div class="card"><h2>Résumé</h2>'+state.basket.map(it=>`<div class="summaryLine"><b>${esc(labelLong(it.label_demandeur,it.mois_demandeur,it.jour_demandeur))}</b><br>Actuel : ${esc(shiftPlain(it.shift_demandeur))}<br>Souhait : ${esc(it.objectif==='RH'?shiftPlain('RH'):shiftPlain(it.objectif))}${it.accepteur_nom?'<br>Avec : '+esc(it.accepteur_nom)+' — '+esc(shiftPlain(it.shift_accepteur)):''}</div>`).join('')+'</div>';
-  renderMissingMails(); renderResponsables(); clearMsg('submitMsg');
+  $('summaryBox').innerHTML='<div class="card"><h2>Résumé</h2>'+state.basket.map(it=>`
+    <div class="summaryLine">
+      <b>${esc(labelLong(it.label_demandeur,it.mois_demandeur,it.jour_demandeur))}</b><br>
+      Actuel : ${esc(shiftPlain(it.shift_demandeur))}<br>
+      Souhait : ${esc(it.objectif==='RH'?shiftPlain('RH'):shiftPlain(it.objectif))}
+      ${it.accepteur_nom?'<br>Avec : '+esc(it.accepteur_nom)+' — '+esc(shiftPlain(it.shift_accepteur)):''}
+    </div>
+  `).join('')+'</div>';
+
+  renderMissingMails();
+  renderResponsables();
+  clearMsg('submitMsg');
 }
-function uniqueAcceptors(){ const m={}; state.basket.forEach(it=>{ if(it.accepteur_id) m[it.accepteur_id]=it; }); return Object.values(m); }
+
+function uniqueAcceptors(){
+  const m={};
+
+  state.basket.forEach(it=>{
+    if(it.accepteur_id) m[it.accepteur_id]=it;
+  });
+
+  return Object.values(m);
+}
+
 function renderMissingMails(){
   const missing=uniqueAcceptors().filter(it=>!it.accepteur_email);
-  $('missingMails').innerHTML=missing.map(it=>`<div style="margin-top:10px"><label style="font-weight:950">Mail de ${esc(it.accepteur_nom)}</label><input type="email" placeholder="email du collègue" oninput="setAcceptorMail('${attr(it.accepteur_id)}',this.value)"></div>`).join('');
+
+  $('missingMails').innerHTML=missing.map(it=>`
+    <div style="margin-top:10px">
+      <label style="font-weight:950">Mail de ${esc(it.accepteur_nom)}</label>
+      <input type="email" placeholder="email du collègue" oninput="setAcceptorMail('${attr(it.accepteur_id)}',this.value)">
+    </div>
+  `).join('');
 }
-function setAcceptorMail(id,mail){ state.basket.forEach(it=>{ if(String(it.accepteur_id)===String(id)) it.accepteur_email=mail.trim(); }); }
+
+function setAcceptorMail(id,mail){
+  state.basket.forEach(it=>{
+    if(String(it.accepteur_id)===String(id)) it.accepteur_email=mail.trim();
+  });
+}
+
 function renderResponsables(){
   const list=DATA.responsables||[];
-  if(!state.responsableId && list[0]) state.responsableId=list[0].id;
-  $('respMain').innerHTML=list.map(r=>`<button class="respCard ${state.responsableId===r.id?'active':''}" onclick="state.responsableId='${attr(r.id)}';state.ccIds=state.ccIds.filter(x=>x!==state.responsableId);renderResponsables()"><span><span class="name">${esc(r.nom)}</span><span class="subline">${esc(r.role)}</span></span></button>`).join('');
-  $('respCopies').innerHTML=list.filter(r=>r.id!==state.responsableId).map(r=>`<button class="respCard ${state.ccIds.includes(r.id)?'ccActive':''}" onclick="toggleCc('${attr(r.id)}')"><span><span class="name">${esc(r.nom)}</span><span class="subline">${esc(r.role)}</span></span></button>`).join('');
+
+  if(!state.responsableId && list[0]) {
+    state.responsableId=list[0].id;
+  }
+
+  $('respMain').innerHTML=list.map(r=>`
+    <button class="respCard ${state.responsableId===r.id?'active':''}" onclick="state.responsableId='${attr(r.id)}';state.ccIds=state.ccIds.filter(x=>x!==state.responsableId);renderResponsables()">
+      <span>
+        <span class="name">${esc(r.nom)}</span>
+        <span class="subline">${esc(r.role)}</span>
+      </span>
+    </button>
+  `).join('');
+
+  $('respCopies').innerHTML=list.filter(r=>r.id!==state.responsableId).map(r=>`
+    <button class="respCard ${state.ccIds.includes(r.id)?'ccActive':''}" onclick="toggleCc('${attr(r.id)}')">
+      <span>
+        <span class="name">${esc(r.nom)}</span>
+        <span class="subline">${esc(r.role)}</span>
+      </span>
+    </button>
+  `).join('');
 }
-function toggleCc(id){ const i=state.ccIds.indexOf(id); if(i>=0) state.ccIds.splice(i,1); else state.ccIds.push(id); renderResponsables(); }
+
+function toggleCc(id){
+  const i=state.ccIds.indexOf(id);
+
+  if(i>=0) {
+    state.ccIds.splice(i,1);
+  } else {
+    state.ccIds.push(id);
+  }
+
+  renderResponsables();
+}
+
 async function submitRequest(){
   const email=($('demandeurEmail').value||'').trim();
+
   if(!email) return msg('submitMsg','err','Ton adresse mail est obligatoire.');
   if(!state.responsableId) return msg('submitMsg','err','Choisis une personne responsable.');
-  if(!state.noAgent){ const mm=uniqueAcceptors().filter(it=>!it.accepteur_email); if(mm.length) return msg('submitMsg','err','Il manque le mail de '+mm[0].accepteur_nom+'.'); }
-  const payload={ demandeur_id:state.agent.id_agent, demandeur_nom:state.agent.nom_affiche, demandeur_email:email, precision_cadre:$('precision').value||'', sans_agent:!!state.noAgent, items:state.basket, responsable_id:state.responsableId, responsable_cc_ids:state.ccIds };
-  $('submitBtn').disabled=true; msg('submitMsg','warn','Envoi en cours…');
+
+  if(!state.noAgent){
+    const mm=uniqueAcceptors().filter(it=>!it.accepteur_email);
+
+    if(mm.length) {
+      return msg('submitMsg','err','Il manque le mail de '+mm[0].accepteur_nom+'.');
+    }
+  }
+
+  const payload={
+    demandeur_id:state.agent.id_agent,
+    demandeur_nom:state.agent.nom_affiche,
+    demandeur_email:email,
+    precision_cadre:$('precision').value||'',
+    sans_agent:!!state.noAgent,
+    items:state.basket,
+    responsable_id:state.responsableId,
+    responsable_cc_ids:state.ccIds
+  };
+
+  $('submitBtn').disabled=true;
+  msg('submitMsg','warn','Envoi en cours…');
+
   try{
     const res=await api('submit', {payload:JSON.stringify(payload)});
+
     $('submitBtn').disabled=false;
-    if(!res || !res.ok) throw new Error(res && res.error ? res.error : 'Erreur envoi.');
+
+    if(!res || !res.ok) {
+      throw new Error(res && res.error ? res.error : 'Erreur envoi.');
+    }
+
     $('successRef').textContent=res.reference_humaine || res.id || 'Demande envoyée';
     $('successText').textContent=(state.noAgent?'Demande envoyée à la personne responsable.':'Mail envoyé au collègue. La demande partira ensuite à la personne responsable après acceptation.');
+
     showPage('pSuccess',5);
-  }catch(e){ $('submitBtn').disabled=false; msg('submitMsg','err',e.message||String(e)); }
+
+  }catch(e){
+    $('submitBtn').disabled=false;
+    msg('submitMsg','err',e.message||String(e));
+  }
 }
 
 init();
