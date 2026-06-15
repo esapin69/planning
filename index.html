@@ -185,39 +185,66 @@ body.secure-loading .modal{
   color:#a40000;
 }
 
+.zone-boite-mail{
+  display:none;
+  gap:10px;
+  margin:12px 0 4px;
+  padding:10px;
+  border:4px solid var(--navy);
+  border-radius:22px;
+  background:#fff1bf;
+}
+
+.zone-boite-mail.is-open{
+  display:grid !important;
+}
+
+.mail-shortcut-title{
+  margin:0;
+  text-align:center;
+  color:var(--ink);
+  font-size:15px;
+  line-height:1.2;
+  font-weight:1000;
+}
+
+.mail-shortcut-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.mail-shortcut{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:52px;
+  padding:10px 12px;
+  border:4px solid var(--navy);
+  border-radius:18px;
+  background:#fff9e8;
+  color:var(--ink);
+  text-align:center;
+  text-decoration:none;
+  font-weight:1000;
+  font-size:16px;
+}
+
+.mail-shortcut.dark{
+  background:var(--navy);
+  color:#fff7dd;
+}
+
+.mail-shortcut:active{
+  transform:translateY(2px);
+}
+
 .connexion-separator{
   height:2px;
   margin:12px 0;
   background:rgba(7,24,63,.16);
 }
 
-.connexion-aide{
-  display:none;
-  margin-top:10px;
-}
-
-.connexion-aide.is-open{
-  display:grid;
-  gap:10px;
-}
-
-.code-zone{
-  display:none;
-}
-
-.code-zone.is-open{
-  display:grid;
-  gap:10px;
-}
-
-.zone-cle-interne{
-  display:none;
-}
-
-.zone-cle-interne.is-open{
-  display:grid;
-  gap:10px;
-}
 
 /* BLOCS ACCUEIL */
 
@@ -600,10 +627,22 @@ body.secure-loading .modal{
           Mail
           <input class="connexion-input" id="connexionMail" type="text" inputmode="email" autocomplete="email" placeholder="Adresse mail">
         </label>
-        <button class="connexion-btn" type="submit" id="btnDemanderCode">
+        <button class="connexion-btn" type="submit" id="btnRecevoirLien">
           Recevoir le lien
         </button>
       </form>
+
+      <div class="zone-boite-mail" id="zoneBoiteMail">
+        <p class="mail-shortcut-title">Lien envoyé. Ouvre ta boîte mail :</p>
+        <a class="mail-shortcut dark" href="mailto:">Choisir l’appli mail</a>
+        <div class="mail-shortcut-grid">
+          <a class="mail-shortcut" href="message://">Apple Mail</a>
+          <a class="mail-shortcut" href="googlegmail://">Gmail</a>
+          <a class="mail-shortcut" href="ms-outlook://">Outlook</a>
+          <a class="mail-shortcut" href="https://www.icloud.com/mail/" target="_blank" rel="noopener">iCloud</a>
+        </div>
+      </div>
+
       <div class="connexion-message" id="messageConnexion"></div>
     </div>
   </div>
@@ -758,11 +797,32 @@ const CLE_SESSION_GHE = "ghe_session_site_token";
 const ecranConnexion = document.getElementById("ecranConnexion");
 const formConnexion = document.getElementById("formConnexion");
 const messageConnexion = document.getElementById("messageConnexion");
-const btnDemanderCode = document.getElementById("btnDemanderCode");
+const zoneBoiteMail = document.getElementById("zoneBoiteMail");
+const btnRecevoirLien = document.getElementById("btnRecevoirLien");
 
 function afficherMessageConnexion(message, type){
   messageConnexion.textContent = message || "";
   messageConnexion.className = "connexion-message" + (type ? " " + type : "");
+}
+
+function afficherRaccourcisMail(){
+  if(zoneBoiteMail){
+    zoneBoiteMail.classList.add("is-open");
+    zoneBoiteMail.style.display = "grid";
+
+    setTimeout(function(){
+      try{
+        zoneBoiteMail.scrollIntoView({behavior:"smooth", block:"center"});
+      }catch(e){}
+    }, 120);
+  }
+}
+
+function cacherRaccourcisMail(){
+  if(zoneBoiteMail){
+    zoneBoiteMail.classList.remove("is-open");
+    zoneBoiteMail.style.display = "none";
+  }
 }
 
 function paramsPage(){
@@ -789,6 +849,7 @@ function ouvrirConnexion(message){
   ecranConnexion.classList.remove("is-hidden");
   document.body.classList.add("modal-open");
   afficherMessageConnexion(message || "", "");
+  cacherRaccourcisMail();
 }
 
 function fermerConnexion(){
@@ -796,6 +857,7 @@ function fermerConnexion(){
   ecranConnexion.classList.add("is-hidden");
   document.body.classList.remove("modal-open");
   afficherMessageConnexion("", "");
+  cacherRaccourcisMail();
 }
 
 function infosConnexion(){
@@ -925,7 +987,8 @@ formConnexion.addEventListener("submit", async function(e){
 
   const infos = infosConnexion();
 
-  btnDemanderCode.disabled = true;
+  btnRecevoirLien.disabled = true;
+  cacherRaccourcisMail();
   afficherMessageConnexion("Demande en cours...", "");
 
   try{
@@ -938,7 +1001,8 @@ formConnexion.addEventListener("submit", async function(e){
     }
 
     if(reponse && reponse.ok && (reponse.besoin_lien || reponse.besoin_code)){
-      afficherMessageConnexion("Lien envoyé. Ouvre ta boîte mail puis clique sur Ouvrir le planning.", "ok");
+      afficherMessageConnexion("Ouvre ta boîte mail puis clique sur Ouvrir le planning.", "ok");
+      afficherRaccourcisMail();
       return;
     }
 
@@ -948,7 +1012,7 @@ formConnexion.addEventListener("submit", async function(e){
     afficherMessageConnexion(String(err.message || err), "err");
 
   }finally{
-    btnDemanderCode.disabled = false;
+    btnRecevoirLien.disabled = false;
   }
 });
 
