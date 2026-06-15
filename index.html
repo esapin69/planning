@@ -614,7 +614,7 @@ body.secure-locked .modal{
         <form class="connexion-form" id="formCode">
           <label class="connexion-label">
             Code reçu par mail
-            <input class="connexion-input" id="connexionCode" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="Code à 6 chiffres">
+            <input class="connexion-input" id="connexionCode" name="one-time-code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="6" placeholder="Code reçu">
           </label>
 
           <button class="connexion-btn" type="submit" id="btnValiderCode">
@@ -907,6 +907,33 @@ document.getElementById("connexionNom").addEventListener("input", verifierAffich
 document.getElementById("connexionPrenom").addEventListener("input", verifierAffichageCleInterne);
 
 async function verifierSessionAuChargement(){
+  const paramsUrl = new URLSearchParams(window.location.search);
+  const cleMail = paramsUrl.get("connexion_mail");
+
+  if(cleMail){
+    verrouillerSite();
+    afficherMessageConnexion("Connexion depuis le mail...", "");
+
+    try{
+      const reponse = await appelerSecurite("connexion_lien_mail", { cle:cleMail });
+
+      if(reponse && reponse.ok && reponse.token){
+        deverrouillerSite(reponse.token);
+        window.history.replaceState({}, document.title, window.location.pathname);
+        return;
+      }
+
+      afficherMessageConnexion((reponse && reponse.message) ? reponse.message : "Lien de connexion refuse.", "err");
+      window.history.replaceState({}, document.title, window.location.pathname);
+      return;
+
+    }catch(err){
+      afficherMessageConnexion(String(err.message || err), "err");
+      window.history.replaceState({}, document.title, window.location.pathname);
+      return;
+    }
+  }
+
   const token = localStorage.getItem(CLE_SESSION_GHE);
 
   if(!token){
