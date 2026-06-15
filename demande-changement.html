@@ -79,7 +79,7 @@
     @media(min-width:680px){.respGrid{grid-template-columns:1fr 1fr}}
     .respCard.active{border-color:#16a34a;background:#f0fdf4;box-shadow:0 0 0 3px rgba(22,163,74,.12)}
     .respCard.ccActive{border-color:#2563eb;background:#eff6ff;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
-    .role{font-size:12px;font-weight:950;color:#2563eb;text-transform:uppercase;letter-spacing:.03em}
+    .role{font-size:12px;font-weight:950;color:#2563eb;text-transform:uppercase;letter-spacing:.03em;display:block;margin-bottom:3px}.agentBtn .name,.candidateBtn .name,.respCard .name{display:block}.respCard .subline{display:block;margin-top:3px}
     .success{background:#ecfdf5;border:1px solid #bbf7d0;color:#065f46;text-align:center;border-radius:26px;padding:18px}
     .success h2{font-size:28px;color:#065f46}
     .ref{background:#fff;border:1px solid #bbf7d0;color:#111827;border-radius:18px;padding:12px;font-weight:950;margin:12px 0}
@@ -147,12 +147,12 @@
       </div>
       <div class="card">
         <h2>Personne responsable</h2>
-        <p class="small">Une seule personne traitera la demande.</p>
+        <p class="small">Choisis la personne qui recevra la demande avec les boutons de décision.</p>
         <div id="respMain" class="respGrid"></div>
       </div>
       <div class="card">
-        <h2>Copies visibles</h2>
-        <p class="small">Choisis uniquement les responsables à informer en copie.</p>
+        <h2>Responsables en copie du mail</h2>
+        <p class="small">Ces personnes recevront le mail en copie pour information. Elles ne traiteront pas la demande.</p>
         <div id="respCopies" class="respGrid"></div>
       </div>
       <div class="card">
@@ -242,7 +242,7 @@ async function init(){
 function renderAgents(){
   const q=($('agentSearch').value||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
   const list=(DATA.agents||[]).filter(a=>String(a.nom_affiche||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').includes(q)).slice(0,90);
-  $('agentList').innerHTML=list.map(a=>`<button class="agentBtn" onclick="selectAgent('${attr(a.id_agent)}')">${avatar(a.avatar_image_url)}<span><span class="name">${esc(a.nom_affiche)}</span><span class="subline">Planning ${esc(a.type_planning||'jour')}</span></span></button>`).join('') || '<p>Aucun agent trouvé.</p>';
+  $('agentList').innerHTML=list.map(a=>`<button class="agentBtn" onclick="selectAgent('${attr(a.id_agent)}')">${avatar(a.avatar_image_url)}<span><span class="name">${esc(a.nom_affiche)}</span></span></button>`).join('') || '<p>Aucun agent trouvé.</p>';
 }
 $('agentSearch').addEventListener('input', renderAgents);
 
@@ -354,8 +354,8 @@ function setAcceptorMail(id,mail){ state.basket.forEach(it=>{ if(String(it.accep
 function renderResponsables(){
   const list=DATA.responsables||[];
   if(!state.responsableId && list[0]) state.responsableId=list[0].id;
-  $('respMain').innerHTML=list.map(r=>`<button class="respCard ${state.responsableId===r.id?'active':''}" onclick="state.responsableId='${attr(r.id)}';state.ccIds=state.ccIds.filter(x=>x!==state.responsableId);renderResponsables()"><span><span class="role">${esc(r.role)}</span><span class="name">${esc(r.nom)}</span><span class="subline">Destinataire principal</span></span></button>`).join('');
-  $('respCopies').innerHTML=list.filter(r=>r.id!==state.responsableId).map(r=>`<button class="respCard ${state.ccIds.includes(r.id)?'ccActive':''}" onclick="toggleCc('${attr(r.id)}')"><span><span class="role">${esc(r.role)}</span><span class="name">${esc(r.nom)}</span><span class="subline">Copie visible</span></span></button>`).join('');
+  $('respMain').innerHTML=list.map(r=>`<button class="respCard ${state.responsableId===r.id?'active':''}" onclick="state.responsableId='${attr(r.id)}';state.ccIds=state.ccIds.filter(x=>x!==state.responsableId);renderResponsables()"><span><span class="name">${esc(r.nom)}</span><span class="subline">${esc(r.role)}</span></span></button>`).join('');
+  $('respCopies').innerHTML=list.filter(r=>r.id!==state.responsableId).map(r=>`<button class="respCard ${state.ccIds.includes(r.id)?'ccActive':''}" onclick="toggleCc('${attr(r.id)}')"><span><span class="name">${esc(r.nom)}</span><span class="subline">${esc(r.role)}</span></span></button>`).join('');
 }
 function toggleCc(id){ const i=state.ccIds.indexOf(id); if(i>=0) state.ccIds.splice(i,1); else state.ccIds.push(id); renderResponsables(); }
 async function submitRequest(){
