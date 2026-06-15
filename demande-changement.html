@@ -21,6 +21,7 @@
   --radius:24px;
 }
 *{box-sizing:border-box}
+html{visibility:hidden}
 html,body{
   margin:0;
   min-height:100%;
@@ -396,7 +397,7 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
   </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycby_5_yM6EQlwc0oGJ6P7hBTSPpZYj0B_cUtFe3Q5IJMau8YUNc0sjD8NZYV07e9wDHL/exec"; // Remplace par l’URL /exec du script pont GitHub.
+const API_URL = "https://script.google.com/macros/s/AKfycby_5_yM6EQlwc0oGJ6P7hBTSPpZYj0B_cUtFe3Q5IJMau8YUNc0sjD8NZYV07e9wDHL/exec";
 const WEEK = {L:"Lundi",M:"Mardi",X:"Mercredi",J:"Jeudi",V:"Vendredi",S:"Samedi",D:"Dimanche"};
 const GOALS = [
   {code:"M", label:"Matin"}, {code:"S", label:"Soir"}, {code:"J", label:"Journée"},
@@ -508,6 +509,14 @@ function siteAlert(text,title='Information'){
 }
 function closeSiteModal(){ $('siteModal').classList.remove('show'); }
 function knownMail(id){ const c=DATA && DATA.contacts ? DATA.contacts[String(id)] : null; if(!c) return ''; return typeof c==='string' ? c : (c.email || ''); }
+function mailAgentConnecte(){
+  try{
+    const agent = JSON.parse(localStorage.getItem("ghe_agent_connecte") || "{}");
+    return agent.mail || "";
+  }catch(e){
+    return "";
+  }
+}
 function maskMail(mail){ const s=String(mail||''); const at=s.indexOf('@'); return at<2 ? s : s.slice(0,1)+'***'+s.slice(at); }
 function labelLong(label, mois, jour){ const s=String(label||''); const m=s.match(/^([A-Z])\s*(\d{1,2})/i); if(m) return (WEEK[m[1].toUpperCase()]||m[1])+' '+Number(m[2])+' '+(mois||''); return (jour?jour+' ':'')+(mois||s); }
 function makeItemId(s){ return 'item_'+String(s.mois).replace(/\W/g,'')+'_'+s.jour+'_'+Date.now()+'_'+Math.floor(Math.random()*9999); }
@@ -594,7 +603,7 @@ async function selectAgent(id){
     if(!res || !res.ok) throw new Error(res && res.error ? res.error : 'Planning introuvable.');
     CAL=res;
     state.currentMonth=firstFutureMonth(res);
-    $('demandeurEmail').value=knownMail(id) || '';
+    $('demandeurEmail').value=knownMail(id) || mailAgentConnecte() || '';
     renderDaysPage();
     showPage('pDays',2);
   }catch(e){ msg('startMsg','err',e.message||String(e)); }
@@ -729,5 +738,6 @@ async function submitRequest(){
 
 init();
 </script>
+<script src="./GHE_SECURITE_GARDE_PAGE.js"></script>
 </body>
 </html>
