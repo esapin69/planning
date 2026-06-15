@@ -37,24 +37,29 @@ body.modal-open{
   overflow:hidden;
 }
 
-body.secure-locked .page{
-  display:none;
-}
-
-body.secure-locked .modal{
+body.secure-loading .page,
+body.secure-loading .ecran-connexion,
+body.secure-loading .modal{
   display:none !important;
 }
 
 /* ÉCRAN DE CONNEXION */
 
 .ecran-connexion{
-  width:min(760px,100%);
+  position:fixed;
+  inset:0;
+  z-index:90;
+  width:100%;
   min-height:100vh;
-  margin:auto;
+  margin:0;
   padding:18px 12px calc(60px + env(safe-area-inset-bottom));
   display:flex;
   align-items:center;
   justify-content:center;
+  background:
+    radial-gradient(circle at 15% 0%,rgba(255,255,255,.92) 0 9%,transparent 31%),
+    radial-gradient(circle at 88% 4%,rgba(255,218,116,.32) 0 9%,transparent 32%),
+    linear-gradient(180deg,#fff9e8 0%,#f5e8bf 58%,#ead9a5 100%);
 }
 
 .ecran-connexion.is-hidden{
@@ -571,10 +576,10 @@ body.secure-locked .modal{
 </style>
 </head>
 
-<body class="secure-locked">
+<body class="secure-loading">
 
 <!-- ÉCRAN CONNEXION -->
-<section class="ecran-connexion" id="ecranConnexion">
+<section class="ecran-connexion is-hidden" id="ecranConnexion">
   <div class="connexion-card">
     <div class="connexion-inner">
       <h1 class="connexion-title">Accès Planning</h1>
@@ -815,12 +820,46 @@ function afficherMessageConnexion(message, type){
   messageConnexion.className = "connexion-message" + (type ? " " + type : "");
 }
 
+function paramsPage(){
+  return new URLSearchParams(window.location.search);
+}
+
+function retourDemande(){
+  return paramsPage().get("retour") || "";
+}
+
+function retourSurPageDemandeeOuAccueil(){
+  const retour = retourDemande();
+
+  if(retour && !retour.startsWith("http") && !retour.startsWith("//") && !retour.toLowerCase().includes("javascript:")){
+    window.location.href = retour;
+    return;
+  }
+
+  window.history.replaceState({}, document.title, window.location.pathname);
+}
+
+function ouvrirConnexion(message){
+  document.body.classList.remove("secure-loading");
+  ecranConnexion.classList.remove("is-hidden");
+  document.body.classList.add("modal-open");
+  afficherMessageConnexion(message || "", "");
+}
+
+function fermerConnexion(){
+  document.body.classList.remove("secure-loading");
+  ecranConnexion.classList.add("is-hidden");
+  document.body.classList.remove("modal-open");
+  afficherMessageConnexion("", "");
+}
+
 function infosConnexion(){
   return {
     nom:document.getElementById("connexionNom").value.trim(),
     prenom:document.getElementById("connexionPrenom").value.trim(),
     mail:document.getElementById("connexionMail").value.trim().toLowerCase(),
-    mot_de_passe:document.getElementById("connexionMotDePasse") ? document.getElementById("connexionMotDePasse").value.trim() : ""
+    mot_de_passe:document.getElementById("connexionMotDePasse") ? document.getElementById("connexionMotDePasse").value.trim() : "",
+    retour:retourDemande()
   };
 }
 
@@ -829,15 +868,12 @@ function deverrouillerSite(token){
     localStorage.setItem(CLE_SESSION_GHE, token);
   }
 
-  document.body.classList.remove("secure-locked");
-  ecranConnexion.classList.add("is-hidden");
-  afficherMessageConnexion("", "");
+  fermerConnexion();
 }
 
 function verrouillerSite(){
   localStorage.removeItem(CLE_SESSION_GHE);
-  document.body.classList.add("secure-locked");
-  ecranConnexion.classList.remove("is-hidden");
+  ouvrirConnexion("");
 }
 
 function appelerSecurite(action, params){
@@ -912,55 +948,55 @@ document.getElementById("connexionNom").addEventListener("input", verifierAffich
 document.getElementById("connexionPrenom").addEventListener("input", verifierAffichageCleInterne);
 
 async function verifierSessionAuChargement(){
-  const paramsUrl = new URLSearchParams(window.location.search);
-  const cleMail = paramsUrl.get("connexion_mail");
+  const params = paramsPage();
+  const cleMail = params.get("connexion_mail");
+  const demandeConnexion = params.get("connexion") === "1";
+  const token = localStorage.getItem(CLE_SESSION_GHE);
 
   if(cleMail){
-    verrouillerSite();
-    afficherMessageConnexion("Connexion depuis le mail...", "");
+    ouvrirConnexion("Connexion depuis le mail...");
 
     try{
       const reponse = await appelerSecurite("connexion_lien_mail", { cle:cleMail });
 
       if(reponse && reponse.ok && reponse.token){
         deverrouillerSite(reponse.token);
-        window.history.replaceState({}, document.title, window.location.pathname);
+        retourSurPageDemandeeOuAccueil();
         return;
       }
 
-      afficherMessageConnexion((reponse && reponse.message) ? reponse.message : "Lien de connexion refuse.", "err");
-      window.history.replaceState({}, document.title, window.location.pathname);
+      afficherMessageConnexion((reponse && reponse.message) ? reponse.message : "Lien de connexion refusé.", "err");
       return;
 
     }catch(err){
       afficherMessageConnexion(String(err.message || err), "err");
-      window.history.replaceState({}, document.title, window.location.pathname);
       return;
     }
   }
 
-  const token = localStorage.getItem(CLE_SESSION_GHE);
+  if(token){
+    try{
+      const reponse = await appelerSecurite("verifier_session", { token:token });
 
-  if(!token){
-    verrouillerSite();
-    return;
-  }
+      if(reponse && reponse.ok && reponse.connecte){
+        if(demandeConnexion && retourDemande()){
+          retourSurPageDemandeeOuAccueil();
+          return;
+        }
 
-  afficherMessageConnexion("Vérification de la connexion...", "");
+        fermerConnexion();
+        window.history.replaceState({}, document.title, window.location.pathname);
+        return;
+      }
 
-  try{
-    const reponse = await appelerSecurite("verifier_session", { token:token });
+      localStorage.removeItem(CLE_SESSION_GHE);
 
-    if(reponse && reponse.ok && reponse.connecte){
-      deverrouillerSite(token);
-    }else{
-      verrouillerSite();
-      afficherMessageConnexion("Connexion expirée. Reconnecte-toi.", "err");
+    }catch(err){
+      localStorage.removeItem(CLE_SESSION_GHE);
     }
-  }catch(err){
-    verrouillerSite();
-    afficherMessageConnexion("Impossible de vérifier la connexion. Réessaie.", "err");
   }
+
+  ouvrirConnexion("");
 }
 
 formConnexion.addEventListener("submit", async function(e){
@@ -976,6 +1012,7 @@ formConnexion.addEventListener("submit", async function(e){
 
     if(reponse && reponse.ok && reponse.token){
       deverrouillerSite(reponse.token);
+      retourSurPageDemandeeOuAccueil();
       return;
     }
 
@@ -1008,6 +1045,7 @@ formCode.addEventListener("submit", async function(e){
 
     if(reponse && reponse.ok && reponse.token){
       deverrouillerSite(reponse.token);
+      retourSurPageDemandeeOuAccueil();
       return;
     }
 
