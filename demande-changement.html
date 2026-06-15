@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0f172a">
-  <title>Demande de changement planning — V4</title>
+  <title>Demande de changement planning — V5 shifts source</title>
   <style>
 :root{
   --cream:#fff7df;
@@ -294,7 +294,7 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
 </style>
 </head>
 <body>
-<!-- VISUEL_SITE_V4_UI_LISIBLE_AVATARS_CONTEXTUELS -->
+<!-- VISUEL_SITE_V5_SHIFTMAP_SOURCE_INTELLIGENTE -->
   <div class="app">
     <header class="top">
       <div class="brand">
@@ -400,7 +400,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycby_5_yM6EQlwc0oGJ6P7hBT
 const WEEK = {L:"Lundi",M:"Mardi",X:"Mercredi",J:"Jeudi",V:"Vendredi",S:"Samedi",D:"Dimanche"};
 const GOALS = [
   {code:"M", label:"Matin"}, {code:"S", label:"Soir"}, {code:"J", label:"Journée"},
-  {code:"J4", label:"J4"}, {code:"N", label:"Nuit"}, {code:"REPOS", label:"Repos"}
+  {code:"J4", label:"J4"}, {code:"N", label:"Nuit"}, {code:"RH", label:"Repos"}
 ];
 let DATA = null;
 let CAL = null;
@@ -414,38 +414,57 @@ function clearMsg(id){ const el=$(id); el.className='msg'; el.textContent=''; }
 function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function attr(v){ return esc(v).replace(/`/g,'&#96;'); }
 function avatar(url, cls=''){ return `<img class="avatar ${cls}" src="${attr(url||'')}" alt="" onerror="this.style.visibility='hidden'">`; }
-function shiftText(code){ const raw=String(code||'').trim(); if(!raw) return 'Non précisé'; const m=DATA && DATA.shift_map ? DATA.shift_map : {}; return m[raw.toUpperCase()] || raw; }
-function shiftVisual(code){
+function shiftText(code){
+  const raw=String(code||'').trim();
+  if(!raw) return 'Non précisé';
+  const key=raw.toUpperCase();
+  const m=DATA && DATA.shift_map ? DATA.shift_map : {};
+  const v=m[key];
+  if(!v) return raw;
+  if(typeof v==='string') return v;
+  const icon=v.icone ? v.icone+' ' : '';
+  const label=v.libelle || v.affichage || raw;
+  const hours=(v.debut && v.fin) ? ' · '+v.debut+' à '+v.fin : '';
+  return icon+label+hours;
+}
+function shiftInfo(code){
   const raw=String(code||'').trim();
   const key=raw.toUpperCase();
-  const full=shiftText(raw);
-  const hours=(String(full).match(/\d{1,2}:\d{2}\s*à\s*\d{1,2}:\d{2}/)||[''])[0];
-  const known={
-    M:{icon:'🌅',label:'Matin',hours:'06:50 à 14:40'},
-    S:{icon:'🌆',label:'Soir',hours:'13:30 à 21:00'},
-    J:{icon:'☀️',label:'Journée',hours:'08:30 à 16:20'},
-    J4:{icon:'4️⃣',label:'Journée J4',hours:'10:10 à 18:00'},
-    N:{icon:'🌙',label:'Nuit',hours:'20:50 à 06:50'},
-    RH:{icon:'🏠',label:'Repos hebdomadaire',hours:''},
-    CA:{icon:'🏖️',label:'Congé annuel',hours:''},
-    MA:{icon:'●',label:'Statut spécial MA',hours:''},
-    REPOS:{icon:'🏠',label:'Repos',hours:''}
-  };
-  if(known[key]) return {...known[key], hours:known[key].hours||hours||''};
-  let clean=String(full||raw||'Non précisé');
-  clean=clean.replace(new RegExp('^'+key+'\\s*[—-]\\s*','i'),'').trim();
-  return {icon:'•', label:clean||raw||'Non précisé', hours:hours||''};
+  const m=DATA && DATA.shift_map ? DATA.shift_map : {};
+  const v=m[key];
+  if(v && typeof v==='object'){
+    return {
+      code:v.code || raw,
+      icon:v.icone || '',
+      label:v.libelle || v.affichage || raw,
+      hours:(v.debut && v.fin) ? v.debut+' à '+v.fin : '',
+      categorie:v.categorie || ''
+    };
+  }
+  const text=typeof v==='string' ? v : raw;
+  const iconMatch=String(text||'').match(/^\S+/);
+  const maybeIcon=iconMatch ? iconMatch[0] : '';
+  const hasEmoji=/[^\w\sÀ-ÿ/.-]/.test(maybeIcon);
+  const withoutIcon=hasEmoji ? String(text).replace(maybeIcon,'').trim() : String(text||raw).trim();
+  const hours=(withoutIcon.match(/\d{1,2}:\d{2}\s*(?:à|-|—)\s*\d{1,2}:\d{2}/)||[''])[0].replace(/\s*—\s*/,' à ');
+  let label=withoutIcon.replace(/\s*[—·-]\s*\d{1,2}:\d{2}\s*(?:à|-|—)\s*\d{1,2}:\d{2}.*/,'').trim();
+  label=label.replace(new RegExp('^'+key+'\\s*[—-]\\s*','i'),'').trim();
+  return {code:raw, icon:hasEmoji?maybeIcon:'', label:label||raw||'Non précisé', hours:hours||'', categorie:''};
 }
 function shiftInline(code, cls=''){
-  const s=shiftVisual(code);
+  const s=shiftInfo(code);
   const h=s.hours ? ' · '+s.hours : '';
-  return `<span class="shiftLine ${cls}"><span class="shiftIcon">${s.icon}</span><span>${esc(s.label+h)}</span></span>`;
+  const icon=s.icon ? `<span class="shiftIcon">${esc(s.icon)}</span>` : '';
+  return `<span class="shiftLine ${cls}">${icon}<span>${esc(s.label+h)}</span></span>`;
 }
 function shiftPlain(code){
-  const s=shiftVisual(code);
-  return `${s.icon} ${s.label}${s.hours?' · '+s.hours:''}`;
+  const s=shiftInfo(code);
+  return `${s.icon ? s.icon+' ' : ''}${s.label}${s.hours?' · '+s.hours:''}`;
 }
-function goalText(code){ return shiftPlain(code).replace(/ · .+$/,''); }
+function goalText(code){
+  const s=shiftInfo(code);
+  return `${s.icon ? s.icon+' ' : ''}${s.label}`;
+}
 function siteAlert(text,title='Information'){
   $('siteModalTitle').textContent=title;
   $('siteModalText').textContent=text;
@@ -596,7 +615,7 @@ function goSummary(){
   renderSummary(); showPage('pSummary',4);
 }
 function renderSummary(){
-  $('summaryBox').innerHTML='<div class="card"><h2>Résumé</h2>'+state.basket.map(it=>`<div class="summaryLine"><b>${esc(labelLong(it.label_demandeur,it.mois_demandeur,it.jour_demandeur))}</b><br>Actuel : ${esc(shiftPlain(it.shift_demandeur))}<br>Souhait : ${esc(it.objectif==='REPOS'?'🏠 Repos':shiftPlain(it.objectif))}${it.accepteur_nom?'<br>Avec : '+esc(it.accepteur_nom)+' — '+esc(shiftPlain(it.shift_accepteur)):''}</div>`).join('')+'</div>';
+  $('summaryBox').innerHTML='<div class="card"><h2>Résumé</h2>'+state.basket.map(it=>`<div class="summaryLine"><b>${esc(labelLong(it.label_demandeur,it.mois_demandeur,it.jour_demandeur))}</b><br>Actuel : ${esc(shiftPlain(it.shift_demandeur))}<br>Souhait : ${esc(it.objectif==='RH'?shiftPlain('RH'):shiftPlain(it.objectif))}${it.accepteur_nom?'<br>Avec : '+esc(it.accepteur_nom)+' — '+esc(shiftPlain(it.shift_accepteur)):''}</div>`).join('')+'</div>';
   renderMissingMails(); renderResponsables(); clearMsg('submitMsg');
 }
 function uniqueAcceptors(){ const m={}; state.basket.forEach(it=>{ if(it.accepteur_id) m[it.accepteur_id]=it; }); return Object.values(m); }
