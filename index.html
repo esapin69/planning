@@ -598,60 +598,13 @@ body.secure-loading .modal{
 
         <label class="connexion-label">
           Mail
-          <input class="connexion-input" id="connexionMail" type="email" autocomplete="email" placeholder="Adresse mail">
+          <input class="connexion-input" id="connexionMail" type="text" inputmode="email" autocomplete="email" placeholder="Adresse mail">
         </label>
-
-        <div class="zone-cle-interne" id="zoneCleInterne">
-          <label class="connexion-label">
-            Clé interne
-            <input class="connexion-input" id="connexionMotDePasse" type="password" autocomplete="off" placeholder="Clé interne">
-          </label>
-        </div>
-
         <button class="connexion-btn" type="submit" id="btnDemanderCode">
           Recevoir le lien
         </button>
       </form>
-
-      <button class="connexion-btn dark" type="button" id="btnAfficherCodeSecours">
-        J’ai un code de secours
-      </button>
-
-      <div class="code-zone" id="zoneCode">
-        <div class="connexion-separator"></div>
-
-        <form class="connexion-form" id="formCode">
-          <label class="connexion-label">
-            Code de secours reçu par mail
-            <input class="connexion-input" id="connexionCode" name="one-time-code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="6" placeholder="Code de secours">
-          </label>
-
-          <button class="connexion-btn" type="submit" id="btnValiderCode">
-            Valider le code de secours
-          </button>
-        </form>
-      </div>
-
       <div class="connexion-message" id="messageConnexion"></div>
-
-      <div class="connexion-separator"></div>
-
-      <button class="connexion-btn dark" type="button" id="btnAfficherAide">
-        Besoin d’aide
-      </button>
-
-      <div class="connexion-aide" id="zoneAide">
-        <form class="connexion-form" id="formAide">
-          <label class="connexion-label">
-            Message
-            <textarea class="connexion-textarea" id="aideMessage" placeholder="Explique le problème : mauvais nom, mail changé, code non reçu..."></textarea>
-          </label>
-
-          <button class="connexion-btn" type="submit">
-            Envoyer l’aide
-          </button>
-        </form>
-      </div>
     </div>
   </div>
 </section>
@@ -804,16 +757,8 @@ const CLE_SESSION_GHE = "ghe_session_site_token";
 
 const ecranConnexion = document.getElementById("ecranConnexion");
 const formConnexion = document.getElementById("formConnexion");
-const formCode = document.getElementById("formCode");
-const formAide = document.getElementById("formAide");
-const zoneCode = document.getElementById("zoneCode");
-const zoneAide = document.getElementById("zoneAide");
-const zoneCleInterne = document.getElementById("zoneCleInterne");
 const messageConnexion = document.getElementById("messageConnexion");
 const btnDemanderCode = document.getElementById("btnDemanderCode");
-const btnValiderCode = document.getElementById("btnValiderCode");
-const btnAfficherAide = document.getElementById("btnAfficherAide");
-const btnAfficherCodeSecours = document.getElementById("btnAfficherCodeSecours");
 
 function afficherMessageConnexion(message, type){
   messageConnexion.textContent = message || "";
@@ -858,7 +803,6 @@ function infosConnexion(){
     nom:document.getElementById("connexionNom").value.trim(),
     prenom:document.getElementById("connexionPrenom").value.trim(),
     mail:document.getElementById("connexionMail").value.trim().toLowerCase(),
-    mot_de_passe:document.getElementById("connexionMotDePasse") ? document.getElementById("connexionMotDePasse").value.trim() : "",
     retour:retourDemande()
   };
 }
@@ -919,33 +863,6 @@ function appelerSecurite(action, params){
   });
 }
 
-function normaliserConnexion(v){
-  return String(v || "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")
-    .toLowerCase()
-    .trim();
-}
-
-function verifierAffichageCleInterne(){
-  const nom = normaliserConnexion(document.getElementById("connexionNom").value);
-  const prenom = normaliserConnexion(document.getElementById("connexionPrenom").value);
-  const champCle = document.getElementById("connexionMotDePasse");
-
-  if(nom === "test" && prenom === "test"){
-    zoneCleInterne.classList.add("is-open");
-    return;
-  }
-
-  zoneCleInterne.classList.remove("is-open");
-
-  if(champCle){
-    champCle.value = "";
-  }
-}
-
-document.getElementById("connexionNom").addEventListener("input", verifierAffichageCleInterne);
-document.getElementById("connexionPrenom").addEventListener("input", verifierAffichageCleInterne);
 
 async function verifierSessionAuChargement(){
   const params = paramsPage();
@@ -975,30 +892,34 @@ async function verifierSessionAuChargement(){
   }
 
   if(token){
-    try{
-      const reponse = await appelerSecurite("verifier_session", { token:token });
+    fermerConnexion();
 
-      if(reponse && reponse.ok && reponse.connecte){
-        if(demandeConnexion && retourDemande()){
-          retourSurPageDemandeeOuAccueil();
+    appelerSecurite("verifier_session", { token:token })
+      .then(function(reponse){
+        if(reponse && reponse.ok && reponse.connecte){
+          if(demandeConnexion && retourDemande()){
+            retourSurPageDemandeeOuAccueil();
+            return;
+          }
+
+          window.history.replaceState({}, document.title, window.location.pathname);
           return;
         }
 
-        fermerConnexion();
-        window.history.replaceState({}, document.title, window.location.pathname);
-        return;
-      }
+        localStorage.removeItem(CLE_SESSION_GHE);
+        ouvrirConnexion("");
 
-      localStorage.removeItem(CLE_SESSION_GHE);
+      })
+      .catch(function(){
+        localStorage.removeItem(CLE_SESSION_GHE);
+        ouvrirConnexion("");
+      });
 
-    }catch(err){
-      localStorage.removeItem(CLE_SESSION_GHE);
-    }
+    return;
   }
 
   ouvrirConnexion("");
 }
-
 formConnexion.addEventListener("submit", async function(e){
   e.preventDefault();
 
@@ -1016,7 +937,7 @@ formConnexion.addEventListener("submit", async function(e){
       return;
     }
 
-    if(reponse && reponse.ok && reponse.besoin_code){
+    if(reponse && reponse.ok && (reponse.besoin_lien || reponse.besoin_code)){
       afficherMessageConnexion("Lien envoyé. Ouvre ta boîte mail puis clique sur Ouvrir le planning.", "ok");
       return;
     }
@@ -1031,70 +952,7 @@ formConnexion.addEventListener("submit", async function(e){
   }
 });
 
-formCode.addEventListener("submit", async function(e){
-  e.preventDefault();
 
-  const infos = infosConnexion();
-  infos.code = document.getElementById("connexionCode").value.trim();
-
-  btnValiderCode.disabled = true;
-  afficherMessageConnexion("Validation du code...", "");
-
-  try{
-    const reponse = await appelerSecurite("valider_code", infos);
-
-    if(reponse && reponse.ok && reponse.token){
-      deverrouillerSite(reponse.token);
-      retourSurPageDemandeeOuAccueil();
-      return;
-    }
-
-    afficherMessageConnexion((reponse && reponse.message) ? reponse.message : "Code refusé.", "err");
-
-  }catch(err){
-    afficherMessageConnexion(String(err.message || err), "err");
-
-  }finally{
-    btnValiderCode.disabled = false;
-  }
-});
-
-btnAfficherCodeSecours.addEventListener("click", function(){
-  zoneCode.classList.toggle("is-open");
-
-  if(zoneCode.classList.contains("is-open")){
-    setTimeout(() => document.getElementById("connexionCode").focus(), 100);
-  }
-});
-
-btnAfficherAide.addEventListener("click", function(){
-  zoneAide.classList.toggle("is-open");
-});
-
-formAide.addEventListener("submit", async function(e){
-  e.preventDefault();
-
-  const infos = infosConnexion();
-  infos.message = document.getElementById("aideMessage").value.trim();
-
-  afficherMessageConnexion("Envoi de la demande d’aide...", "");
-
-  try{
-    const reponse = await appelerSecurite("aide_connexion", infos);
-
-    if(reponse && reponse.ok){
-      document.getElementById("aideMessage").value = "";
-      zoneAide.classList.remove("is-open");
-      afficherMessageConnexion("Demande d’aide envoyée.", "ok");
-      return;
-    }
-
-    afficherMessageConnexion((reponse && reponse.message) ? reponse.message : "Aide non envoyée.", "err");
-
-  }catch(err){
-    afficherMessageConnexion(String(err.message || err), "err");
-  }
-});
 
 verifierSessionAuChargement();
 </script>
