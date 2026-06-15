@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0f172a">
-  <title>Demande de changement planning — V5 shifts source</title>
+  <title>Demande de changement planning — V6 dates futures</title>
   <style>
 :root{
   --cream:#fff7df;
@@ -294,7 +294,7 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
 </style>
 </head>
 <body>
-<!-- VISUEL_SITE_V5_SHIFTMAP_SOURCE_INTELLIGENTE -->
+<!-- VISUEL_SITE_V6_SHIFTS_SOURCE_DATES_FUTURES -->
   <div class="app">
     <header class="top">
       <div class="brand">
@@ -402,6 +402,45 @@ const GOALS = [
   {code:"M", label:"Matin"}, {code:"S", label:"Soir"}, {code:"J", label:"Journée"},
   {code:"J4", label:"J4"}, {code:"N", label:"Nuit"}, {code:"RH", label:"Repos"}
 ];
+const SHIFT_FALLBACK = {
+  "M": {code:"M", icone:"🔵", libelle:"Matin", debut:"06:50", fin:"14:40", affichage:"🔵 Matin · 06:50-14:40", categorie:"TRAVAIL"},
+  "J": {code:"J", icone:"🟢", libelle:"Jour", debut:"08:30", fin:"16:20", affichage:"🟢 Jour · 08:30-16:20", categorie:"TRAVAIL"},
+  "J4": {code:"J4", icone:"🟠", libelle:"J4", debut:"10:10", fin:"18:00", affichage:"🟠 J4 · 10:10-18:00", categorie:"TRAVAIL"},
+  "S": {code:"S", icone:"🟡", libelle:"Soir", debut:"13:30", fin:"21:00", affichage:"🟡 Soir · 13:30-21:00", categorie:"TRAVAIL"},
+  "N": {code:"N", icone:"⚫", libelle:"Nuit", debut:"20:50", fin:"06:50", affichage:"⚫ Nuit · 20:50-06:50", categorie:"TRAVAIL_NUIT"},
+  "RH": {code:"RH", icone:"💤", libelle:"Repos hebdo", debut:"", fin:"", affichage:"💤 Repos hebdo", categorie:"REPOS"},
+  "RTT": {code:"RTT", icone:"🧘", libelle:"RTT", debut:"", fin:"", affichage:"🧘 RTT", categorie:"RECUPERATION"},
+  "RTTA": {code:"RTTa", icone:"🧘", libelle:"RTT", debut:"", fin:"", affichage:"🧘 RTT", categorie:"RECUPERATION"},
+  "RC": {code:"RC", icone:"🔁", libelle:"Repos compensateur", debut:"", fin:"", affichage:"🔁 Repos compensateur", categorie:"RECUPERATION"},
+  "RF": {code:"RF", icone:"🎌", libelle:"Repos férié", debut:"", fin:"", affichage:"🎌 Repos férié", categorie:"RECUPERATION"},
+  "CA": {code:"CA", icone:"🏝️", libelle:"Congé annuel", debut:"", fin:"", affichage:"🏝️ Congé annuel", categorie:"CONGE"},
+  "SYR": {code:"SYR", icone:"🗣️", libelle:"Syndicat", debut:"", fin:"", affichage:"🗣️ Syndicat", categorie:"SYNDICAT"},
+  "AA": {code:"AA", icone:"📝", libelle:"Absence autorisée", debut:"", fin:"", affichage:"📝 Absence autorisée", categorie:"ABSENCE"},
+  "MALADIE": {code:"MALADIE", icone:"🩺", libelle:"Maladie", debut:"", fin:"", affichage:"🩺 Maladie", categorie:"MALADIE"},
+  "AM": {code:"AM", icone:"🩺", libelle:"Arrêt médical", debut:"", fin:"", affichage:"🩺 Arrêt médical", categorie:"MALADIE"},
+  "ABS": {code:"ABS", icone:"⚠️", libelle:"Absence", debut:"", fin:"", affichage:"⚠️ Absence", categorie:"ABSENCE"},
+  "FORMATION": {code:"FORMATION", icone:"🎓", libelle:"Formation", debut:"", fin:"", affichage:"🎓 Formation", categorie:"FORMATION"},
+  "-": {code:"-", icone:"📴", libelle:"Non planifié", debut:"", fin:"", affichage:"📴 Non planifié", categorie:"NON_PLANIFIE"},
+  "M0130": {code:"M0130", icone:"❓", libelle:"À vérifier", debut:"", fin:"", affichage:"❓ À vérifier", categorie:"A_VERIFIER"},
+  "M0131": {code:"M0131", icone:"❓", libelle:"À vérifier", debut:"", fin:"", affichage:"❓ À vérifier", categorie:"A_VERIFIER"},
+  "MA": {code:"MA", icone:"❓", libelle:"À vérifier", debut:"", fin:"", affichage:"❓ À vérifier", categorie:"A_VERIFIER"},
+  "AR": {code:"AR", icone:"❓", libelle:"À vérifier", debut:"", fin:"", affichage:"❓ À vérifier", categorie:"A_VERIFIER"},
+  "FO": {code:"FO", icone:"❓", libelle:"À vérifier", debut:"", fin:"", affichage:"❓ À vérifier", categorie:"A_VERIFIER"}
+};
+function cleanShiftKey(code){
+  let raw=String(code||'').trim();
+  if(!raw) return '';
+  raw=raw.replace(/[❶❷❸❹❺❻❼❽❾]/g,'').trim();
+  raw=raw.replace(/[^A-Za-z0-9-]/g,'').trim();
+  return raw.toUpperCase();
+}
+function shiftSource(code){
+  const raw=String(code||'').trim();
+  const key=cleanShiftKey(raw);
+  const m=DATA && DATA.shift_map ? DATA.shift_map : {};
+  return m[key] || m[String(raw).toUpperCase()] || SHIFT_FALLBACK[key] || SHIFT_FALLBACK[String(raw).toUpperCase()] || null;
+}
+
 let DATA = null;
 let CAL = null;
 let state = { agent:null, currentMonth:"", basket:[], candidates:{}, noAgent:false, responsableId:"", ccIds:[] };
@@ -417,9 +456,7 @@ function avatar(url, cls=''){ return `<img class="avatar ${cls}" src="${attr(url
 function shiftText(code){
   const raw=String(code||'').trim();
   if(!raw) return 'Non précisé';
-  const key=raw.toUpperCase();
-  const m=DATA && DATA.shift_map ? DATA.shift_map : {};
-  const v=m[key];
+  const v=shiftSource(raw);
   if(!v) return raw;
   if(typeof v==='string') return v;
   const icon=v.icone ? v.icone+' ' : '';
@@ -429,9 +466,8 @@ function shiftText(code){
 }
 function shiftInfo(code){
   const raw=String(code||'').trim();
-  const key=raw.toUpperCase();
-  const m=DATA && DATA.shift_map ? DATA.shift_map : {};
-  const v=m[key];
+  const key=cleanShiftKey(raw);
+  const v=shiftSource(raw);
   if(v && typeof v==='object'){
     return {
       code:v.code || raw,
@@ -445,8 +481,8 @@ function shiftInfo(code){
   const iconMatch=String(text||'').match(/^\S+/);
   const maybeIcon=iconMatch ? iconMatch[0] : '';
   const hasEmoji=/[^\w\sÀ-ÿ/.-]/.test(maybeIcon);
-  const withoutIcon=hasEmoji ? String(text).replace(maybeIcon,'').trim() : String(text||raw).trim();
-  const hours=(withoutIcon.match(/\d{1,2}:\d{2}\s*(?:à|-|—)\s*\d{1,2}:\d{2}/)||[''])[0].replace(/\s*—\s*/,' à ');
+  let withoutIcon=hasEmoji ? String(text).replace(maybeIcon,'').trim() : String(text||raw).trim();
+  let hours=(withoutIcon.match(/\d{1,2}:\d{2}\s*(?:à|-|—)\s*\d{1,2}:\d{2}/)||[''])[0].replace(/\s*(?:-|—)\s*/,' à ');
   let label=withoutIcon.replace(/\s*[—·-]\s*\d{1,2}:\d{2}\s*(?:à|-|—)\s*\d{1,2}:\d{2}.*/,'').trim();
   label=label.replace(new RegExp('^'+key+'\\s*[—-]\\s*','i'),'').trim();
   return {code:raw, icon:hasEmoji?maybeIcon:'', label:label||raw||'Non précisé', hours:hours||'', categorie:''};
@@ -519,6 +555,35 @@ function renderAgents(){
 }
 $('agentSearch').addEventListener('input', renderAgents);
 
+function todayIso(){
+  const d=new Date();
+  d.setHours(0,0,0,0);
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,'0');
+  const j=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${j}`;
+}
+function monthNum(mois){
+  const map={JANVIER:1,FEVRIER:2,FÉVRIER:2,MARS:3,AVRIL:4,MAI:5,JUIN:6,JUILLET:7,AOUT:8,AOÛT:8,SEPTEMBRE:9,OCTOBRE:10,NOVEMBRE:11,DECEMBRE:12,DÉCEMBRE:12};
+  const k=String(mois||'').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  return map[k]||0;
+}
+function dateIsoFromShift(s){
+  if(s && s.date_iso) return String(s.date_iso).slice(0,10);
+  const y=(CAL && CAL.year) || new Date().getFullYear();
+  const m=monthNum(s && s.mois);
+  const j=Number(s && s.jour);
+  if(!m||!j) return '';
+  return `${y}-${String(m).padStart(2,'0')}-${String(j).padStart(2,'0')}`;
+}
+function isFutureShift(s){ const iso=dateIsoFromShift(s); return !iso || iso>=todayIso(); }
+function futureShifts(){ return (CAL.agent && CAL.agent.shifts ? CAL.agent.shifts : []).filter(isFutureShift); }
+function firstFutureMonth(res){
+  const shifts=(res.agent && res.agent.shifts ? res.agent.shifts : []).filter(isFutureShift);
+  const months=res.mois || [];
+  return months.find(m=>shifts.some(s=>s.mois===m)) || (shifts[0] && shifts[0].mois) || '';
+}
+
 async function selectAgent(id){
   const a=(DATA.agents||[]).find(x=>String(x.id_agent)===String(id));
   if(!a) return;
@@ -528,7 +593,7 @@ async function selectAgent(id){
     const res=await api('calendar', {agentId:id});
     if(!res || !res.ok) throw new Error(res && res.error ? res.error : 'Planning introuvable.');
     CAL=res;
-    state.currentMonth=(res.mois && res.mois[0]) || '';
+    state.currentMonth=firstFutureMonth(res);
     $('demandeurEmail').value=knownMail(id) || '';
     renderDaysPage();
     showPage('pDays',2);
@@ -538,13 +603,27 @@ async function selectAgent(id){
 function renderDaysPage(){
   const a=state.agent;
   $('whoBox').innerHTML=`<div class="person">${avatar(a.avatar_image_url,'big')}<div><div class="name">${esc(a.nom_affiche)}</div><div class="subline">Choisis les jours à modifier</div></div></div>`;
-  const months=CAL.mois || [];
+
+  const allFuture=futureShifts();
+  const sourceMonths=CAL.mois || [];
+  const months=sourceMonths.filter(m=>allFuture.some(s=>s.mois===m));
+  if(!months.includes(state.currentMonth)) state.currentMonth=months[0] || '';
+
   $('monthChips').innerHTML=months.map(m=>`<button class="chip ${m===state.currentMonth?'active':''}" onclick="state.currentMonth='${attr(m)}';renderDaysPage()">${esc(m)}</button>`).join('');
-  const shifts=(CAL.agent.shifts||[]).filter(s=>s.mois===state.currentMonth).sort((a,b)=>Number(a.jour)-Number(b.jour));
+
+  const shifts=allFuture
+    .filter(s=>s.mois===state.currentMonth)
+    .sort((a,b)=>{
+      const da=dateIsoFromShift(a), db=dateIsoFromShift(b);
+      if(da && db && da!==db) return da.localeCompare(db);
+      return Number(a.jour)-Number(b.jour);
+    });
+
   $('dayList').innerHTML=shifts.map(s=>{
     const selected=state.basket.some(it=>it.mois_demandeur===s.mois && Number(it.jour_demandeur)===Number(s.jour));
     return `<button class="dayBtn ${selected?'selected':''}" onclick='toggleDay(${JSON.stringify(s).replace(/'/g,"&#39;")})'><span><span class="dayTitle">${esc(labelLong(s.label,s.mois,s.jour))}</span><br>${shiftInline(s.code)}</span><span>${selected?'✓':'+'}</span></button>`;
-  }).join('') || '<p>Aucun jour dans ce mois.</p>';
+  }).join('') || '<p>Aucun jour futur disponible pour cet agent.</p>';
+
   updateBasketCount();
 }
 
