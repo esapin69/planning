@@ -1,0 +1,112 @@
+/*
+  GHE_SECURITE_GARDE_PAGE.js
+
+  À mettre sur les pages sensibles.
+  À ajouter juste avant </body> :
+  <script src="./GHE_SECURITE_GARDE_PAGE.js"></script>
+*/
+
+(function(){
+  const PASSERELLE_SECURITE = "https://script.google.com/macros/s/AKfycbx7gnNRAlt6N2l8ODBJ4ycu-gNIELKpoQMNukDLoHOuTrImCv82TcLy3QjVeY30wnwz/exec";
+  const CLE_SESSION_GHE = "ghe_session_site_token";
+  const PAGE_ACCUEIL = "./index.html";
+
+  document.documentElement.style.visibility = "hidden";
+
+  function pageActuelle(){
+    return window.location.pathname + window.location.search + window.location.hash;
+  }
+
+  function retourConnexion(){
+    try{
+      localStorage.removeItem(CLE_SESSION_GHE);
+    }catch(e){}
+
+    window.location.replace(PAGE_ACCUEIL + "?connexion=1&retour=" + encodeURIComponent(pageActuelle()));
+  }
+
+  function afficherPage(){
+    document.documentElement.style.visibility = "visible";
+  }
+
+  function appelerSecurite(action, params){
+    return new Promise((resolve, reject) => {
+      const callbackName = "callbackGardePage_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+      const script = document.createElement("script");
+
+      const data = Object.assign({}, params || {}, {
+        action: action,
+        callback: callbackName,
+        t: Date.now()
+      });
+
+      const timeout = setTimeout(() => {
+        nettoyer();
+        reject(new Error("Temps d attente depasse."));
+      }, 12000);
+
+      function nettoyer(){
+        clearTimeout(timeout);
+
+        if(script.parentNode){
+          script.parentNode.removeChild(script);
+        }
+
+        try{
+          delete window[callbackName];
+        }catch(e){
+          window[callbackName] = undefined;
+        }
+      }
+
+      window[callbackName] = function(reponse){
+        nettoyer();
+        resolve(reponse);
+      };
+
+      script.onerror = function(){
+        nettoyer();
+        reject(new Error("Securite inaccessible."));
+      };
+
+      script.src = PASSERELLE_SECURITE + "?" + new URLSearchParams(data).toString();
+      document.body.appendChild(script);
+    });
+  }
+
+  async function verifier(){
+    let token = "";
+
+    try{
+      token = localStorage.getItem(CLE_SESSION_GHE) || "";
+    }catch(e){
+      retourConnexion();
+      return;
+    }
+
+    if(!token){
+      retourConnexion();
+      return;
+    }
+
+    try{
+      const reponse = await appelerSecurite("verifier_session", { token: token });
+
+      if(reponse && reponse.ok && reponse.connecte){
+        afficherPage();
+        return;
+      }
+
+      retourConnexion();
+
+    }catch(err){
+      retourConnexion();
+    }
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", verifier);
+  }else{
+    verifier();
+  }
+})();
