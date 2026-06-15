@@ -1,208 +1,463 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Refus de changement planning</title>
-<meta name="theme-color" content="#7f1d1d">
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:linear-gradient(180deg,#fff,#fef2f2);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:#111827}
-.app{max-width:920px;margin:0 auto;padding:18px 14px 26px}
-.hero,.card{background:#fff;border:1px solid #e5e7eb;border-radius:24px;padding:18px;box-shadow:0 14px 35px rgba(15,23,42,.10)}
-.hero{margin-bottom:12px}
-.badge{display:inline-block;background:#fee2e2;color:#991b1b;border:1px solid #fecaca;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:950;margin-bottom:12px}
-h1{font-size:clamp(31px,8vw,48px);line-height:.96;letter-spacing:-.06em;margin:0 0 10px;color:#450a0a}
-h2{font-size:22px;letter-spacing:-.035em;margin:0 0 9px}
-p{color:#6b7280;line-height:1.48;margin:0 0 12px}
-.grid{display:grid;gap:12px}
-label{display:block;font-weight:950;margin:13px 0 7px}
-select,textarea{width:100%;border:1px solid #d1d5db;border-radius:16px;padding:13px 12px;font-size:16px;font-family:inherit;background:#fff;color:#111827}
-textarea{min-height:105px;resize:vertical}
-select:focus,textarea:focus{outline:none;border-color:#991b1b;box-shadow:0 0 0 3px rgba(153,27,27,.10)}
-.extra{display:none}.extra.show{display:block}
-.person{display:flex;align-items:center;gap:12px;padding:11px;border:1px solid #eef2f7;background:#f9fafb;border-radius:18px;margin:8px 0}
-.avatar{width:48px;height:48px;object-fit:contain;border-radius:10px;background:#eef2f7;border:1px solid #d1d5db;flex:0 0 auto}
-.name{font-weight:950;line-height:1.12}.role{display:block;color:#6b7280;font-size:13px;margin-top:3px}
-.item{background:#f9fafb;border:1px solid #eef2f7;border-radius:16px;padding:12px;line-height:1.5;margin:8px 0}
-.preview{border:1px solid #d1d5db;background:#fff;border-radius:20px;overflow:hidden;margin-top:10px}
-.previewHead{background:#f9fafb;border-bottom:1px solid #e5e7eb;padding:12px 14px;font-weight:950}
-.previewBody{padding:14px;line-height:1.6}
-.actions{display:grid;gap:10px;margin-top:12px}
-button,.btn{appearance:none;border:0;border-radius:17px;min-height:54px;padding:14px 16px;font-size:16px;font-weight:950;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;width:100%;cursor:pointer}
-.red{background:linear-gradient(180deg,#dc2626,#991b1b);color:#fff;box-shadow:0 12px 28px rgba(220,38,38,.24)}
-.grey{background:#f3f4f6;color:#111827;border:1px solid #d1d5db}
-.err{display:none;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;border-radius:16px;padding:12px;margin-top:10px}
-.ok{display:none;background:#ecfdf5;border:1px solid #bbf7d0;color:#065f46;border-radius:20px;padding:16px}
-.small{font-size:13px;color:#6b7280;line-height:1.42}
-#techFrame{display:none;width:0;height:0;border:0}
-@media(min-width:720px){.app{padding:28px}.hero,.card{padding:24px}.actions{grid-template-columns:1fr 1fr}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <title>Demande de changement planning</title>
+  <style>
+    :root {
+      --bg:#f4f6fb;--card:#fff;--ink:#111827;--muted:#6b7280;--line:#e5e7eb;
+      --blue:#2563eb;--blue2:#1d4ed8;--green:#16a34a;--red:#dc2626;--orange:#ea580c;
+      --soft:#f9fafb;--shadow:0 14px 40px rgba(15,23,42,.10);--radius:22px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+    body{background:radial-gradient(circle at top left,rgba(37,99,235,.13),transparent 32%),linear-gradient(180deg,#fff,#f4f6fb 42%,#edf2f7)}
+    .app{max-width:760px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top)) 12px calc(22px + env(safe-area-inset-bottom))}
+    .top{position:sticky;top:0;z-index:50;background:rgba(244,246,251,.92);backdrop-filter:blur(16px);padding:8px 0 10px;border-bottom:1px solid rgba(229,231,235,.75)}
+    .brand{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .brand strong{font-size:18px;letter-spacing:-.03em}
+    .stepPill{font-size:12px;font-weight:950;color:#1d4ed8;background:#dbeafe;border:1px solid #bfdbfe;border-radius:999px;padding:7px 10px;white-space:nowrap}
+    h1{font-size:clamp(30px,8vw,44px);line-height:.96;letter-spacing:-.06em;margin:16px 0 8px}
+    h2{font-size:23px;line-height:1.05;letter-spacing:-.04em;margin:0 0 8px}
+    p{line-height:1.45;color:var(--muted);margin:0 0 12px}
+    .page{display:none;animation:fade .18s ease-out}
+    .page.active{display:block}
+    @keyframes fade{from{opacity:.2;transform:translateY(6px)}to{opacity:1;transform:none}}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin:12px 0}
+    .small{font-size:13px;color:var(--muted);line-height:1.35}
+    .msg{display:none;margin:10px 0;border-radius:15px;padding:11px 12px;font-size:14px;line-height:1.35}
+    .msg.show{display:block}
+    .msg.err{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
+    .msg.ok{background:#ecfdf5;color:#065f46;border:1px solid #bbf7d0}
+    .msg.warn{background:#fffbeb;color:#92400e;border:1px solid #fde68a}
+    input,textarea{width:100%;border:1px solid #d1d5db;border-radius:16px;background:#fff;padding:14px 13px;font:inherit;font-size:16px;outline:none}
+    textarea{min-height:92px;resize:vertical}
+    input:focus,textarea:focus{border-color:#111827;box-shadow:0 0 0 3px rgba(17,24,39,.10)}
+    .btn{border:0;border-radius:17px;min-height:52px;padding:14px 16px;font-size:16px;font-weight:950;display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;cursor:pointer;width:100%}
+    .btn.primary{color:#fff;background:linear-gradient(180deg,var(--blue),var(--blue2));box-shadow:0 12px 28px rgba(37,99,235,.24)}
+    .btn.dark{color:#fff;background:#111827}
+    .btn.green{color:#fff;background:var(--green)}
+    .btn.red{color:#fff;background:var(--red)}
+    .btn.grey{color:#111827;background:#f3f4f6;border:1px solid #d1d5db}
+    .btn:disabled{opacity:.45;cursor:not-allowed}
+    .grid{display:grid;gap:10px}
+    .two{grid-template-columns:1fr 1fr}
+    .person{display:flex;align-items:center;gap:11px}
+    .avatar{width:46px;height:46px;border-radius:10px;object-fit:contain;background:#eef2f7;border:1px solid #d1d5db;flex:0 0 auto}
+    .avatar.big{width:64px;height:64px}
+    .name{font-weight:950;line-height:1.15}
+    .subline{font-size:13px;color:var(--muted);margin-top:2px}
+    .searchWrap{display:grid;gap:10px}
+    .agentList{display:grid;gap:8px;max-height:58vh;overflow:auto;padding-right:2px}
+    .agentBtn,.candidateBtn,.respCard,.dayBtn{border:1px solid var(--line);background:#fff;border-radius:18px;padding:12px;text-align:left;display:flex;align-items:center;gap:10px;cursor:pointer;width:100%}
+    .agentBtn:active,.candidateBtn:active,.dayBtn:active,.respCard:active{transform:scale(.99)}
+    .monthChips{display:flex;gap:8px;overflow:auto;padding:2px 0 8px;margin:8px -2px 4px}
+    .chip{border:1px solid #d1d5db;background:#fff;border-radius:999px;padding:9px 12px;font-weight:950;white-space:nowrap;cursor:pointer}
+    .chip.active{background:#111827;color:#fff;border-color:#111827}
+    .dayList{display:grid;gap:8px}
+    .dayBtn{justify-content:space-between;align-items:flex-start}
+    .dayBtn.selected{border-color:#ef4444;background:#fff7f7;box-shadow:0 0 0 3px rgba(239,68,68,.12)}
+    .dayTitle{font-size:17px;font-weight:950;letter-spacing:-.02em}
+    .shiftBadge{display:inline-flex;margin-top:6px;border-radius:999px;background:#dbeafe;color:#1e3a8a;padding:6px 9px;font-size:12px;font-weight:950;line-height:1.1}
+    .bottom{position:sticky;bottom:0;background:rgba(244,246,251,.94);backdrop-filter:blur(16px);padding:10px 0 0;margin-top:12px;border-top:1px solid rgba(229,231,235,.85);z-index:40}
+    .counter{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;text-align:center;font-weight:950}
+    .exchangeCard{background:#fff;border:1px solid var(--line);border-radius:22px;padding:14px;margin:12px 0;box-shadow:0 8px 24px rgba(15,23,42,.06)}
+    .exchangeCard.done{border-color:#22c55e;background:#f0fdf4}
+    .goalGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:12px 0}
+    @media(min-width:680px){.goalGrid{grid-template-columns:repeat(6,1fr)}}
+    .goal{border:1px solid #d1d5db;background:#fff;color:#2563eb;border-radius:15px;padding:12px 8px;font-size:14px;font-weight:950;cursor:pointer}
+    .goal.active{background:#111827;color:#fff;border-color:#111827}
+    .candidateList{display:grid;gap:7px;margin-top:10px}
+    .candidateBtn.active{border-color:#16a34a;background:#ecfdf5}
+    .chosen{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #bbf7d0;border-radius:16px;padding:10px;margin-top:10px}
+    .summaryLine{border:1px solid #eef2f7;border-radius:17px;background:#f9fafb;padding:12px;margin:8px 0;line-height:1.45}
+    .checkline{display:flex;align-items:flex-start;gap:10px;background:#f9fafb;border:1px solid var(--line);border-radius:16px;padding:12px}
+    .checkline input{width:21px;height:21px;flex:0 0 auto;margin-top:2px}
+    .respGrid{display:grid;gap:8px}
+    @media(min-width:680px){.respGrid{grid-template-columns:1fr 1fr}}
+    .respCard.active{border-color:#16a34a;background:#f0fdf4;box-shadow:0 0 0 3px rgba(22,163,74,.12)}
+    .respCard.ccActive{border-color:#2563eb;background:#eff6ff;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+    .role{font-size:12px;font-weight:950;color:#2563eb;text-transform:uppercase;letter-spacing:.03em;display:block;margin-bottom:3px}.agentBtn .name,.candidateBtn .name,.respCard .name{display:block}.respCard .subline{display:block;margin-top:3px}
+    .success{background:#ecfdf5;border:1px solid #bbf7d0;color:#065f46;text-align:center;border-radius:26px;padding:18px}
+    .success h2{font-size:28px;color:#065f46}
+    .ref{background:#fff;border:1px solid #bbf7d0;color:#111827;border-radius:18px;padding:12px;font-weight:950;margin:12px 0}
+  </style>
 </head>
 <body>
-<main class="app">
-  <section class="hero">
-    <div class="badge">PAGE REFUS</div>
-    <h1>Refus de changement planning</h1>
-    <p>Avant d’envoyer le refus, indique une raison claire. Aucun changement ne sera apporté au planning.</p>
-  </section>
-
-  <section class="grid" id="formZone">
-    <div class="card">
-      <h2>Raison du refus</h2>
-
-      <label for="raison">Motif principal</label>
-      <select id="raison" onchange="toggleExtra();updatePreview()">
-        <option value="">Sélectionner une raison</option>
-        <option>Planning déjà équilibré</option>
-        <option>Effectif insuffisant</option>
-        <option>Changement trop tardif</option>
-        <option>Incompatibilité avec l’organisation du service</option>
-        <option>Demande incomplète</option>
-        <option>Autre raison à préciser</option>
-      </select>
-
-      <div id="extraWrap" class="extra">
-        <label for="extraReason">Précisez la raison du refus</label>
-        <textarea id="extraReason" placeholder="Exemple : contrainte de service, organisation déjà validée…" oninput="updatePreview()"></textarea>
+  <div class="app">
+    <header class="top">
+      <div class="brand">
+        <strong>Demande de changement planning</strong>
+        <span class="stepPill" id="stepPill">Étape 1</span>
       </div>
+    </header>
 
-      <label for="message">Message complémentaire optionnel</label>
-      <textarea id="message" placeholder="Vous pouvez ajouter une précision si nécessaire." oninput="updatePreview()"></textarea>
-      <div id="err" class="err"></div>
-    </div>
-
-    <div class="card">
-      <h2>Personnes informées du refus</h2>
-      <p class="small">Le demandeur recevra le mail. Les accepteurs et les responsables choisis dans la demande seront en copie.</p>
-      <div id="recipients"></div>
-    </div>
-
-    <div class="card">
-      <h2>Aperçu du mail de refus</h2>
-      <div class="preview">
-        <div class="previewHead">Demande de changement planning refusée</div>
-        <div class="previewBody" id="mailPreview"></div>
+    <section id="pStart" class="page active">
+      <h1>Choisis ton nom</h1>
+      <p>Recherche ton nom, puis sélectionne-le pour ouvrir ton planning.</p>
+      <div class="card searchWrap">
+        <input id="agentSearch" placeholder="Rechercher un agent…" autocomplete="off">
+        <div id="agentList" class="agentList"></div>
+        <div id="startMsg" class="msg"></div>
       </div>
-    </div>
+    </section>
 
-    <div class="actions">
-      <button class="grey" onclick="history.back()">Annuler</button>
-      <button class="red" onclick="sendRefus()">Envoyer le refus par mail</button>
-    </div>
-  </section>
 
-  <section class="grid" id="doneZone" style="display:none">
-    <div class="ok" id="doneBox">
-      <h2 style="margin-top:0;color:#065f46">Refus envoyé</h2>
-      <p style="color:#065f46">Aucune modification n’a été apportée au planning. Le mail de refus a été envoyé aux personnes concernées.</p>
-    </div>
-    <div class="card">
-      <h2>Récapitulatif</h2>
-      <div id="doneSummary"></div>
-    </div>
-    <div class="card">
-      <h2>Mail envoyé</h2>
-      <div class="preview">
-        <div class="previewHead">Demande de changement planning refusée</div>
-        <div class="previewBody" id="doneMail"></div>
+    <section id="pVerify" class="page">
+      <h1>Vérification par mail</h1>
+      <div id="verifyWho" class="card"></div>
+      <div class="card">
+        <h2>Code de sécurité</h2>
+        <p class="small">Un code à 6 chiffres est envoyé à l’adresse mail connue pour cet agent. Sans ce code, la demande ne peut pas continuer.</p>
+        <div id="verifyInfo" class="msg"></div>
+        <input id="verifyCode" inputmode="numeric" maxlength="6" placeholder="Code à 6 chiffres" autocomplete="one-time-code">
+        <div class="grid" style="margin-top:10px">
+          <button class="btn primary" id="verifyBtn" onclick="verifyCodeAndContinue()">Valider le code</button>
+          <button class="btn grey" id="resendBtn" onclick="sendVerificationCode()">Renvoyer le code</button>
+        </div>
       </div>
-    </div>
-  </section>
-</main>
+      <div class="bottom">
+        <button class="btn grey" onclick="showPage('pStart',1)">Retour au choix du nom</button>
+      </div>
+    </section>
 
-<iframe id="techFrame" title="refus technique"></iframe>
+    <section id="pDays" class="page">
+      <h1>Choisis les jours</h1>
+      <div id="whoBox" class="card"></div>
+      <div class="card">
+        <h2>Mois</h2>
+        <div id="monthChips" class="monthChips"></div>
+        <div id="dayList" class="dayList"></div>
+      </div>
+      <div class="bottom">
+        <div class="grid">
+          <div id="basketCount" class="counter">0 jour sélectionné</div>
+          <button id="goExchangeBtn" class="btn primary" onclick="goExchange()" disabled>Continuer</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="pExchange" class="page">
+      <h1>Choisis l’horaire et l’échange</h1>
+      <p>Clique l’horaire souhaité, puis choisis le collègue avec qui échanger.</p>
+      <div class="card checkline">
+        <input id="noAgent" type="checkbox" onchange="toggleNoAgent()">
+        <div><b>Je n’ai personne avec qui échanger.</b><br><span class="small">La demande partira directement à la personne responsable.</span></div>
+      </div>
+      <div id="exchangeList"></div>
+      <div class="bottom">
+        <div class="grid two">
+          <button class="btn grey" onclick="showPage('pDays',3)">Retour</button>
+          <button class="btn primary" onclick="goSummary()">Continuer</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="pSummary" class="page">
+      <h1>Dernière vérification</h1>
+      <div id="summaryBox"></div>
+      <div class="card">
+        <h2>Adresse mail</h2>
+        <p class="small">Elle servira pour les confirmations.</p>
+        <input id="demandeurEmail" placeholder="ton.email@exemple.fr" type="email">
+        <div id="missingMails"></div>
+      </div>
+      <div class="card">
+        <h2>Personne responsable</h2>
+        <p class="small">Choisis la personne qui recevra la demande avec les boutons de décision.</p>
+        <div id="respMain" class="respGrid"></div>
+      </div>
+      <div class="card">
+        <h2>Responsables en copie du mail</h2>
+        <p class="small">Ces personnes recevront le mail en copie pour information. Elles ne traiteront pas la demande.</p>
+        <div id="respCopies" class="respGrid"></div>
+      </div>
+      <div class="card">
+        <h2>Précision optionnelle</h2>
+        <textarea id="precision" placeholder="Message facultatif pour la personne responsable…"></textarea>
+      </div>
+      <div id="submitMsg" class="msg"></div>
+      <div class="bottom">
+        <div class="grid two">
+          <button class="btn grey" onclick="showPage('pExchange',4)">Retour</button>
+          <button id="submitBtn" class="btn green" onclick="submitRequest()">Envoyer la demande</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="pSuccess" class="page">
+      <div class="success">
+        <h2>Demande envoyée</h2>
+        <div id="successRef" class="ref"></div>
+        <p id="successText"></p>
+        <button class="btn green" onclick="location.reload()">Nouvelle demande</button>
+      </div>
+    </section>
+  </div>
 
 <script>
-const BACKEND_URL = "https://script.google.com/macros/s/AKfycbx99VoulRgSXfGS58f8UfvhUsi7GhUhG1gIme-35_HZWkCDxfdrN5KWLCG08hN9q5LA/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycby_5_yM6EQlwc0oGJ6P7hBTSPpZYj0B_cUtFe3Q5IJMau8YUNc0sjD8NZYV07e9wDHL/exec"; // Remplace par l’URL /exec du script pont GitHub.
+const WEEK = {L:"Lundi",M:"Mardi",X:"Mercredi",J:"Jeudi",V:"Vendredi",S:"Samedi",D:"Dimanche"};
+const GOALS = [
+  {code:"M", label:"Matin"}, {code:"S", label:"Soir"}, {code:"J", label:"Journée"},
+  {code:"J4", label:"J4"}, {code:"N", label:"Nuit"}, {code:"REPOS", label:"Repos"}
+];
+let DATA = null;
+let CAL = null;
+let state = { agent:null, currentMonth:"", basket:[], candidates:{}, noAgent:false, responsableId:"", ccIds:[], verificationToken:"", verificationOk:false, verificationEmailMasked:"" };
+
 const $ = id => document.getElementById(id);
+function isReadyUrl(){ return API_URL && API_URL.indexOf("COLLE_ICI") < 0 && /^https:\/\//.test(API_URL); }
+function showPage(id, step){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); $(id).classList.add('active'); $('stepPill').textContent='Étape '+step; window.scrollTo({top:0,behavior:'smooth'}); }
+function msg(id,type,text){ const el=$(id); el.className='msg show '+type; el.textContent=text; }
+function clearMsg(id){ const el=$(id); el.className='msg'; el.textContent=''; }
+function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function attr(v){ return esc(v).replace(/`/g,'&#96;'); }
+function avatar(url, cls=''){ return `<img class="avatar ${cls}" src="${attr(url||'')}" alt="" onerror="this.style.visibility='hidden'">`; }
+function shiftText(code){ const raw=String(code||'').trim(); if(!raw) return 'Non précisé'; const m=DATA && DATA.shift_map ? DATA.shift_map : {}; return m[raw.toUpperCase()] || raw; }
+function knownMail(id){ const c=DATA && DATA.contacts ? DATA.contacts[String(id)] : null; if(!c) return ''; return typeof c==='string' ? c : (c.email || ''); }
+function maskMail(mail){ const s=String(mail||''); const at=s.indexOf('@'); return at<2 ? s : s.slice(0,1)+'***'+s.slice(at); }
+function labelLong(label, mois, jour){ const s=String(label||''); const m=s.match(/^([A-Z])\s*(\d{1,2})/i); if(m) return (WEEK[m[1].toUpperCase()]||m[1])+' '+Number(m[2])+' '+(mois||''); return (jour?jour+' ':'')+(mois||s); }
+function makeItemId(s){ return 'item_'+String(s.mois).replace(/\W/g,'')+'_'+s.jour+'_'+Date.now()+'_'+Math.floor(Math.random()*9999); }
 
-function esc(v) {
-  return String(v == null ? "" : v).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
-}
-function q(name) { return new URLSearchParams(location.search).get(name) || ""; }
-function tryJsonParam(name) {
-  const raw = q(name);
-  if (!raw) return [];
-  try { return JSON.parse(decodeURIComponent(raw)); } catch(e) { return []; }
-}
-function personHtml(p, fallbackRole) {
-  const nom = p.nom || p.name || p.label || p.email || "Personne concernée";
-  const role = p.role || fallbackRole || "";
-  const avatar = p.avatar || p.avatar_image_url || "";
-  return `<div class="person">${avatar ? `<img class="avatar" src="${esc(avatar)}" onerror="this.style.display='none'" alt="">` : ""}<div><div class="name">${esc(nom)}</div>${role ? `<span class="role">${esc(role)}</span>` : ""}</div></div>`;
-}
-function getReason() {
-  const r = $("raison").value;
-  if (r === "Autre raison à préciser") return $("extraReason").value.trim();
-  return r;
-}
-function toggleExtra() {
-  $("extraWrap").classList.toggle("show", $("raison").value === "Autre raison à préciser");
-}
-function renderRecipients() {
-  const demandeur = {nom:q("demandeur") || "Demandeur", avatar:q("demandeurAvatar"), role:"Destinataire principal"};
-  const accepteurs = tryJsonParam("accepteurs");
-  const copies = tryJsonParam("copies");
-
-  const list = [personHtml(demandeur, "Destinataire principal")]
-    .concat(accepteurs.map(a => personHtml(a, "Accepteur en copie")))
-    .concat(copies.map(c => personHtml(c, "Responsable en copie")));
-
-  $("recipients").innerHTML = list.join("") || `<div class="item">Les destinataires seront repris depuis la demande enregistrée.</div>`;
-}
-function updatePreview() {
-  const raison = getReason() || "[raison du refus]";
-  const msg = $("message").value.trim();
-  $("mailPreview").innerHTML = `
-    <p>Bonjour,</p>
-    <p>Je suis désolé, mais votre demande de changement planning n’a pas pu être acceptée.</p>
-    <p>La demande a été refusée pour la raison suivante : <b>${esc(raison)}</b>.</p>
-    ${msg ? `<p>Message complémentaire :<br>${esc(msg)}</p>` : ""}
-    <p>Aucune modification ne sera donc apportée au planning pour cette demande.</p>
-    <p>Merci pour votre compréhension.</p>
-  `;
-}
-function buildRefusUrl() {
-  const url = new URL(BACKEND_URL);
-  url.searchParams.set("action", "cadreDecision");
-  url.searchParams.set("decision", "confirmerRefus");
-  url.searchParams.set("id", q("id"));
-  url.searchParams.set("token", q("token"));
-  url.searchParams.set("raison", getReason());
-  url.searchParams.set("message", $("message").value.trim());
-  return url.toString();
-}
-function showErr(text) {
-  $("err").style.display = "block";
-  $("err").textContent = text;
-}
-function sendRefus() {
-  $("err").style.display = "none";
-
-  if (!q("id") || !q("token")) return showErr("Lien incomplet : identifiant ou jeton manquant.");
-  if (!$("raison").value) return showErr("Sélectionne une raison du refus.");
-  if ($("raison").value === "Autre raison à préciser" && !$("extraReason").value.trim()) return showErr("Précise la raison du refus.");
-
-  const actionUrl = buildRefusUrl();
-  $("techFrame").src = actionUrl;
-
-  $("formZone").style.display = "none";
-  $("doneZone").style.display = "grid";
-  $("doneBox").style.display = "block";
-
-  $("doneSummary").innerHTML = `
-    <div class="item"><b>Statut :</b> refus envoyé</div>
-    <div class="item"><b>Raison :</b> ${esc(getReason())}</div>
-    <div class="item"><b>Horodatage :</b> ${new Date().toLocaleString("fr-FR")}</div>
-  `;
-  $("doneMail").innerHTML = $("mailPreview").innerHTML;
-  window.scrollTo({top:0,behavior:"smooth"});
+function api(action, params={}){
+  return new Promise((resolve,reject)=>{
+    if(!isReadyUrl()) return reject(new Error('URL du script pont manquante dans le fichier GitHub.'));
+    const cb='dc_cb_'+Date.now()+'_'+Math.floor(Math.random()*1000000);
+    const url = new URL(API_URL);
+    url.searchParams.set('api', action);
+    url.searchParams.set('callback', cb);
+    Object.keys(params).forEach(k=>url.searchParams.set(k, params[k]));
+    const s=document.createElement('script');
+    let done=false;
+    const timer=setTimeout(()=>{ if(!done){ cleanup(); reject(new Error('Le script pont ne répond pas.')); } }, 25000);
+    function cleanup(){ done=true; clearTimeout(timer); delete window[cb]; if(s.parentNode) s.parentNode.removeChild(s); }
+    window[cb]=res=>{ cleanup(); resolve(res); };
+    s.onerror=()=>{ cleanup(); reject(new Error('Impossible de joindre le script pont.')); };
+    s.src=url.toString();
+    document.body.appendChild(s);
+  });
 }
 
-renderRecipients();
-toggleExtra();
-updatePreview();
+async function init(){
+  if(!isReadyUrl()) {
+    msg('startMsg','warn','Il faut coller l’URL /exec du script pont GitHub dans la constante API_URL.');
+    $('agentList').innerHTML='';
+    return;
+  }
+  msg('startMsg','warn','Chargement des agents…');
+  try{
+    const res=await api('init');
+    if(!res || !res.ok) throw new Error(res && res.error ? res.error : 'Chargement impossible.');
+    DATA=res;
+    state.responsableId=(DATA.responsables && DATA.responsables[0]) ? DATA.responsables[0].id : '';
+    clearMsg('startMsg');
+    renderAgents();
+  }catch(e){ msg('startMsg','err',e.message||String(e)); }
+}
+
+function renderAgents(){
+  const q=($('agentSearch').value||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  const list=(DATA.agents||[]).filter(a=>String(a.nom_affiche||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').includes(q)).slice(0,90);
+  $('agentList').innerHTML=list.map(a=>`<button class="agentBtn" onclick="selectAgent('${attr(a.id_agent)}')">${avatar(a.avatar_image_url)}<span><span class="name">${esc(a.nom_affiche)}</span></span></button>`).join('') || '<p>Aucun agent trouvé.</p>';
+}
+$('agentSearch').addEventListener('input', renderAgents);
+
+async function selectAgent(id){
+  const a=(DATA.agents||[]).find(x=>String(x.id_agent)===String(id));
+  if(!a) return;
+  state.agent=a;
+  state.verificationToken='';
+  state.verificationOk=false;
+  state.verificationEmailMasked='';
+  CAL=null;
+  $('verifyCode').value='';
+  renderVerifyPage();
+  showPage('pVerify',2);
+  await sendVerificationCode();
+}
+
+function renderVerifyPage(){
+  const a=state.agent;
+  $('verifyWho').innerHTML=`<div class="person">${avatar(a.avatar_image_url,'big')}<div><div class="name">${esc(a.nom_affiche)}</div><div class="subline">Vérification obligatoire avant d’ouvrir le planning</div></div></div>`;
+  $('verifyInfo').className='msg show warn';
+  $('verifyInfo').textContent='Préparation de l’envoi du code…';
+}
+
+async function sendVerificationCode(){
+  if(!state.agent) return;
+  $('resendBtn').disabled=true;
+  $('verifyBtn').disabled=false;
+  msg('verifyInfo','warn','Envoi du code…');
+  try{
+    const res=await api('requestCode', {agentId:state.agent.id_agent});
+    if(!res || !res.ok) throw new Error(res && res.error ? res.error : 'Impossible d’envoyer le code.');
+    state.verificationToken=res.verification_token||'';
+    state.verificationEmailMasked=res.email_masque||'';
+    $('verifyCode').value='';
+    msg('verifyInfo','ok','Code envoyé à '+(state.verificationEmailMasked||'l’adresse mail connue')+'. Il est valable '+(res.expires_minutes||10)+' minutes.');
+    setTimeout(()=>{ $('resendBtn').disabled=false; }, 15000);
+  }catch(e){
+    $('resendBtn').disabled=false;
+    $('verifyBtn').disabled=true;
+    msg('verifyInfo','err',e.message||String(e));
+  }
+}
+
+async function verifyCodeAndContinue(){
+  if(!state.agent) return;
+  const code=($('verifyCode').value||'').replace(/\D/g,'');
+  if(code.length!==6) return msg('verifyInfo','err','Entre le code à 6 chiffres reçu par mail.');
+  if(!state.verificationToken) return msg('verifyInfo','err','Aucun code actif. Clique sur “Renvoyer le code”.');
+  $('verifyBtn').disabled=true;
+  msg('verifyInfo','warn','Vérification du code…');
+  try{
+    const res=await api('verifyCode', {agentId:state.agent.id_agent, token:state.verificationToken, code:code});
+    if(!res || !res.ok) throw new Error(res && res.error ? res.error : 'Code refusé.');
+    state.verificationOk=true;
+    state.verificationEmailMasked=res.email_masque||state.verificationEmailMasked;
+    msg('verifyInfo','ok','Code validé. Chargement du planning…');
+    await loadCalendarAfterVerification();
+  }catch(e){
+    $('verifyBtn').disabled=false;
+    msg('verifyInfo','err',e.message||String(e));
+  }
+}
+
+async function loadCalendarAfterVerification(){
+  if(!state.agent || !state.verificationOk) return;
+  try{
+    const res=await api('calendar', {agentId:state.agent.id_agent});
+    if(!res || !res.ok) throw new Error(res && res.error ? res.error : 'Planning introuvable.');
+    CAL=res;
+    state.currentMonth=(res.mois && res.mois[0]) || '';
+    $('demandeurEmail').value=knownMail(state.agent.id_agent) || state.verificationEmailMasked || '';
+    $('demandeurEmail').readOnly=true;
+    renderDaysPage();
+    showPage('pDays',3);
+  }catch(e){
+    $('verifyBtn').disabled=false;
+    msg('verifyInfo','err',e.message||String(e));
+  }
+}
+
+function renderDaysPage(){
+  const a=state.agent;
+  $('whoBox').innerHTML=`<div class="person">${avatar(a.avatar_image_url,'big')}<div><div class="name">${esc(a.nom_affiche)}</div><div class="subline">Choisis les jours à modifier</div></div></div>`;
+  const months=CAL.mois || [];
+  $('monthChips').innerHTML=months.map(m=>`<button class="chip ${m===state.currentMonth?'active':''}" onclick="state.currentMonth='${attr(m)}';renderDaysPage()">${esc(m)}</button>`).join('');
+  const shifts=(CAL.agent.shifts||[]).filter(s=>s.mois===state.currentMonth).sort((a,b)=>Number(a.jour)-Number(b.jour));
+  $('dayList').innerHTML=shifts.map(s=>{
+    const selected=state.basket.some(it=>it.mois_demandeur===s.mois && Number(it.jour_demandeur)===Number(s.jour));
+    return `<button class="dayBtn ${selected?'selected':''}" onclick='toggleDay(${JSON.stringify(s).replace(/'/g,"&#39;")})'><span><span class="dayTitle">${esc(labelLong(s.label,s.mois,s.jour))}</span><br><span class="shiftBadge">${esc(shiftText(s.code))}</span></span><span>${selected?'✓':'+'}</span></button>`;
+  }).join('') || '<p>Aucun jour dans ce mois.</p>';
+  updateBasketCount();
+}
+
+function toggleDay(s){
+  const i=state.basket.findIndex(it=>it.mois_demandeur===s.mois && Number(it.jour_demandeur)===Number(s.jour));
+  if(i>=0) state.basket.splice(i,1); else state.basket.push({
+    item_id:makeItemId(s), demandeur_id:state.agent.id_agent, demandeur_nom:state.agent.nom_affiche,
+    mois_demandeur:s.mois, jour_demandeur:s.jour, label_demandeur:s.label, shift_demandeur:s.code, demandeur_avatar:state.agent.avatar_image_url||'',
+    objectif:'', objectif_label:'', accepteur_id:'', accepteur_nom:'', accepteur_email:'', accepteur_avatar:'', mois_accepteur:'', jour_accepteur:'', label_accepteur:'', shift_accepteur:''
+  });
+  renderDaysPage();
+}
+function updateBasketCount(){ const n=state.basket.length; $('basketCount').textContent=n+' jour'+(n>1?'s':'')+' sélectionné'+(n>1?'s':''); $('goExchangeBtn').disabled=!n; }
+function goExchange(){ if(!state.basket.length) return; renderExchange(); showPage('pExchange',4); }
+
+function toggleNoAgent(){ state.noAgent=$('noAgent').checked; renderExchange(); }
+function renderExchange(){
+  $('noAgent').checked=state.noAgent;
+  $('exchangeList').innerHTML=state.basket.map((it,idx)=>`<div class="exchangeCard ${(state.noAgent||it.accepteur_id)&&it.objectif?'done':''}" id="card_${attr(it.item_id)}">
+    <div class="dayTitle">${esc(labelLong(it.label_demandeur,it.mois_demandeur,it.jour_demandeur))}</div>
+    <div class="small">Ton horaire actuel : <b>${esc(shiftText(it.shift_demandeur))}</b></div>
+    <div class="goalGrid">${GOALS.map(g=>`<button class="goal ${it.objectif===g.code?'active':''}" onclick="chooseGoal('${attr(it.item_id)}','${g.code}')">${esc(g.label)}</button>`).join('')}</div>
+    ${renderChosen(it)}
+    <div id="cand_${attr(it.item_id)}" class="candidateList">${renderCandidates(it)}</div>
+  </div>`).join('');
+}
+function renderChosen(it){
+  if(state.noAgent) return it.objectif ? `<div class="chosen"><b>Souhait :</b> ${esc(it.objectif==='REPOS'?'Repos':shiftText(it.objectif))}</div>` : '';
+  if(!it.accepteur_id) return it.objectif ? '<div class="small">Choisis un collègue dans la liste.</div>' : '';
+  return `<div class="chosen">${avatar(it.accepteur_avatar)}<div><div class="name">${esc(it.accepteur_nom)}</div><div class="subline">Horaire proposé : ${esc(shiftText(it.shift_accepteur))}</div></div><button class="btn grey" style="width:auto;min-height:40px;padding:9px 12px" onclick="clearAcceptor('${attr(it.item_id)}')">Changer</button></div>`;
+}
+function renderCandidates(it){
+  if(state.noAgent || !it.objectif || it.accepteur_id) return '';
+  const list=state.candidates[it.item_id];
+  if(!list) return '<div class="small">Clique un horaire pour charger les collègues.</div>';
+  if(!list.length) return '<div class="msg show warn">Aucun collègue trouvé pour cet horaire.</div>';
+  return list.map(c=>`<button class="candidateBtn" onclick="selectCandidate('${attr(it.item_id)}','${attr(c.id_agent)}')">${avatar(c.avatar_image_url)}<span><span class="name">${esc(c.nom_affiche)}</span><span class="subline">${esc(shiftText(c.shift_code))}${c.email?' · mail connu':' · mail à compléter'}</span></span></button>`).join('');
+}
+async function chooseGoal(itemId, goal){
+  const it=state.basket.find(x=>x.item_id===itemId); if(!it) return;
+  it.objectif=goal; it.objectif_label=(goal==='REPOS'?'Repos / RH / congé':shiftText(goal));
+  it.accepteur_id=''; it.accepteur_nom=''; it.accepteur_email=''; it.accepteur_avatar=''; it.shift_accepteur='';
+  renderExchange();
+  if(state.noAgent) return;
+  const box=$('cand_'+itemId); if(box) box.innerHTML='<div class="small">Chargement des collègues…</div>';
+  try{
+    const res=await api('candidates', {payload:JSON.stringify({demandeur_id:state.agent.id_agent, mois:it.mois_demandeur, jour:it.jour_demandeur, goal:goal})});
+    if(!res || !res.ok) throw new Error(res && res.error ? res.error : 'Erreur candidats');
+    state.candidates[itemId]=res.candidates||[];
+  }catch(e){ state.candidates[itemId]=[]; }
+  renderExchange();
+}
+function selectCandidate(itemId, agentId){
+  const it=state.basket.find(x=>x.item_id===itemId); if(!it) return;
+  const c=(state.candidates[itemId]||[]).find(x=>String(x.id_agent)===String(agentId)); if(!c) return;
+  it.accepteur_id=c.id_agent; it.accepteur_nom=c.nom_affiche; it.accepteur_email=c.email||''; it.accepteur_avatar=c.avatar_image_url||'';
+  it.mois_accepteur=it.mois_demandeur; it.jour_accepteur=it.jour_demandeur; it.label_accepteur=it.label_demandeur; it.shift_accepteur=c.shift_code||'';
+  renderExchange();
+  const next=state.basket.find(x=>!state.noAgent && (!x.objectif || !x.accepteur_id));
+  if(next && $('card_'+next.item_id)) $('card_'+next.item_id).scrollIntoView({behavior:'smooth', block:'start'});
+}
+function clearAcceptor(itemId){ const it=state.basket.find(x=>x.item_id===itemId); if(!it) return; it.accepteur_id=''; it.accepteur_nom=''; it.accepteur_email=''; it.accepteur_avatar=''; it.shift_accepteur=''; renderExchange(); }
+
+function goSummary(){
+  const missingGoal=state.basket.filter(it=>!it.objectif);
+  if(missingGoal.length) return alert('Il manque un horaire souhaité sur '+missingGoal.length+' jour(s).');
+  if(!state.noAgent){ const missing=state.basket.filter(it=>!it.accepteur_id); if(missing.length) return alert('Il manque un collègue sur '+missing.length+' jour(s).'); }
+  renderSummary(); showPage('pSummary',5);
+}
+function renderSummary(){
+  $('summaryBox').innerHTML='<div class="card"><h2>Résumé</h2>'+state.basket.map(it=>`<div class="summaryLine"><b>${esc(labelLong(it.label_demandeur,it.mois_demandeur,it.jour_demandeur))}</b><br>Actuel : ${esc(shiftText(it.shift_demandeur))}<br>Souhait : ${esc(it.objectif==='REPOS'?'Repos':shiftText(it.objectif))}${it.accepteur_nom?'<br>Avec : '+esc(it.accepteur_nom)+' — '+esc(shiftText(it.shift_accepteur)):''}</div>`).join('')+'</div>';
+  renderMissingMails(); renderResponsables(); clearMsg('submitMsg');
+}
+function uniqueAcceptors(){ const m={}; state.basket.forEach(it=>{ if(it.accepteur_id) m[it.accepteur_id]=it; }); return Object.values(m); }
+function renderMissingMails(){
+  const missing=uniqueAcceptors().filter(it=>!it.accepteur_email);
+  $('missingMails').innerHTML=missing.map(it=>`<div style="margin-top:10px"><label style="font-weight:950">Mail de ${esc(it.accepteur_nom)}</label><input type="email" placeholder="email du collègue" oninput="setAcceptorMail('${attr(it.accepteur_id)}',this.value)"></div>`).join('');
+}
+function setAcceptorMail(id,mail){ state.basket.forEach(it=>{ if(String(it.accepteur_id)===String(id)) it.accepteur_email=mail.trim(); }); }
+function renderResponsables(){
+  const list=DATA.responsables||[];
+  if(!state.responsableId && list[0]) state.responsableId=list[0].id;
+  $('respMain').innerHTML=list.map(r=>`<button class="respCard ${state.responsableId===r.id?'active':''}" onclick="state.responsableId='${attr(r.id)}';state.ccIds=state.ccIds.filter(x=>x!==state.responsableId);renderResponsables()"><span><span class="name">${esc(r.nom)}</span><span class="subline">${esc(r.role)}</span></span></button>`).join('');
+  $('respCopies').innerHTML=list.filter(r=>r.id!==state.responsableId).map(r=>`<button class="respCard ${state.ccIds.includes(r.id)?'ccActive':''}" onclick="toggleCc('${attr(r.id)}')"><span><span class="name">${esc(r.nom)}</span><span class="subline">${esc(r.role)}</span></span></button>`).join('');
+}
+function toggleCc(id){ const i=state.ccIds.indexOf(id); if(i>=0) state.ccIds.splice(i,1); else state.ccIds.push(id); renderResponsables(); }
+async function submitRequest(){
+  if(!state.verificationOk || !state.verificationToken) return msg('submitMsg','err','Vérification mail obligatoire avant l’envoi. Reviens au choix du nom et valide le code.');
+  const email=knownMail(state.agent.id_agent)||($('demandeurEmail').value||'').trim();
+  if(!email) return msg('submitMsg','err','Adresse mail demandeur introuvable.');
+  if(!state.responsableId) return msg('submitMsg','err','Choisis une personne responsable.');
+  if(!state.noAgent){ const mm=uniqueAcceptors().filter(it=>!it.accepteur_email); if(mm.length) return msg('submitMsg','err','Il manque le mail de '+mm[0].accepteur_nom+'.'); }
+  const payload={ demandeur_id:state.agent.id_agent, demandeur_nom:state.agent.nom_affiche, demandeur_email:email, verification_token:state.verificationToken, precision_cadre:$('precision').value||'', sans_agent:!!state.noAgent, items:state.basket, responsable_id:state.responsableId, responsable_cc_ids:state.ccIds };
+  $('submitBtn').disabled=true; msg('submitMsg','warn','Envoi en cours…');
+  try{
+    const res=await api('submit', {payload:JSON.stringify(payload)});
+    $('submitBtn').disabled=false;
+    if(!res || !res.ok) throw new Error(res && res.error ? res.error : 'Erreur envoi.');
+    $('successRef').textContent=res.reference_humaine || res.id || 'Demande envoyée';
+    $('successText').textContent=(state.noAgent?'Demande envoyée à la personne responsable.':'Mail envoyé au collègue. La demande partira ensuite à la personne responsable après acceptation.');
+    showPage('pSuccess',5);
+  }catch(e){ $('submitBtn').disabled=false; msg('submitMsg','err',e.message||String(e)); }
+}
+
+init();
 </script>
 </body>
 </html>
