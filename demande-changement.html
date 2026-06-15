@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0f172a">
-  <title>Demande de changement planning — visuel site V2</title>
+  <title>Demande de changement planning — visuel site V3 corrigé</title>
   <style>
 :root{--cream:#fff7df;--cream2:#fff1bf;--paper:#fffaf0;--navy:#07163f;--ink:#081336;--muted:#566071;--green:#15803d;--red:#b91c1c;--blue:#1d4ed8;--radius:26px}
 *{box-sizing:border-box}
@@ -53,7 +53,7 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 5px rgba(225,184,
 </style>
 </head>
 <body>
-<!-- VISUEL_SITE_V2_SANS_AVATARS -->
+<!-- VISUEL_SITE_V3_CORRIGE_SANS_AVATARS_API_OK -->
   <div class="app">
     <header class="top">
       <div class="brand">
@@ -165,7 +165,30 @@ function clearMsg(id){ const el=$(id); el.className='msg'; el.textContent=''; }
 function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function attr(v){ return esc(v).replace(/`/g,'&#96;'); }
 function avatar(url, cls=''){ return ''; }
+function shiftText(code){ const raw=String(code||'').trim(); if(!raw) return 'Non précisé'; const m=DATA && DATA.shift_map ? DATA.shift_map : {}; return m[raw.toUpperCase()] || raw; }
+function knownMail(id){ const c=DATA && DATA.contacts ? DATA.contacts[String(id)] : null; if(!c) return ''; return typeof c==='string' ? c : (c.email || ''); }
+function maskMail(mail){ const s=String(mail||''); const at=s.indexOf('@'); return at<2 ? s : s.slice(0,1)+'***'+s.slice(at); }
+function labelLong(label, mois, jour){ const s=String(label||''); const m=s.match(/^([A-Z])\s*(\d{1,2})/i); if(m) return (WEEK[m[1].toUpperCase()]||m[1])+' '+Number(m[2])+' '+(mois||''); return (jour?jour+' ':'')+(mois||s); }
+function makeItemId(s){ return 'item_'+String(s.mois).replace(/\W/g,'')+'_'+s.jour+'_'+Date.now()+'_'+Math.floor(Math.random()*9999); }
 
+function api(action, params={}){
+  return new Promise((resolve,reject)=>{
+    if(!isReadyUrl()) return reject(new Error('URL du script pont manquante dans le fichier GitHub.'));
+    const cb='dc_cb_'+Date.now()+'_'+Math.floor(Math.random()*1000000);
+    const url = new URL(API_URL);
+    url.searchParams.set('api', action);
+    url.searchParams.set('callback', cb);
+    Object.keys(params).forEach(k=>url.searchParams.set(k, params[k]));
+    const s=document.createElement('script');
+    let done=false;
+    const timer=setTimeout(()=>{ if(!done){ cleanup(); reject(new Error('Le script pont ne répond pas.')); } }, 25000);
+    function cleanup(){ done=true; clearTimeout(timer); delete window[cb]; if(s.parentNode) s.parentNode.removeChild(s); }
+    window[cb]=res=>{ cleanup(); resolve(res); };
+    s.onerror=()=>{ cleanup(); reject(new Error('Impossible de joindre le script pont.')); };
+    s.src=url.toString();
+    document.body.appendChild(s);
+  });
+}
 
 async function init(){
   if(!isReadyUrl()) {
