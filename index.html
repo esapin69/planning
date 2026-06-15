@@ -703,8 +703,8 @@ body.secure-loading .modal{
     <div class="mail-modal-inner">
       <h2 class="mail-modal-title">Lien envoyé</h2>
       <p class="mail-modal-text">Ouvre ta boîte mail puis clique sur <b>Ouvrir le planning</b>.</p>
-      <a class="mail-open-btn" href="mailto:" id="ouvrirBoiteMail">Ouvrir ma boîte mail</a>
-      <p class="mail-modal-soft">Le téléphone ouvrira l’application mail disponible.</p>
+      <button class="mail-open-btn" type="button" id="ouvrirBoiteMail">Ouvrir ma boîte mail</button>
+      <p class="mail-modal-soft">Le bouton ouvre la boîte de réception quand le domaine est reconnu. Sinon, ouvre ton application mail habituelle.</p>
       <button class="mail-close-btn" type="button" id="fermerMailModal">Fermer</button>
     </div>
   </div>
@@ -861,6 +861,7 @@ const formConnexion = document.getElementById("formConnexion");
 const messageConnexion = document.getElementById("messageConnexion");
 const mailModal = document.getElementById("mailModal");
 const fermerMailModal = document.getElementById("fermerMailModal");
+const ouvrirBoiteMail = document.getElementById("ouvrirBoiteMail");
 const btnRecevoirLien = document.getElementById("btnRecevoirLien");
 
 function afficherMessageConnexion(message, type){
@@ -880,6 +881,57 @@ function fermerFenetreMail(){
     mailModal.classList.remove("is-open");
     mailModal.setAttribute("aria-hidden","true");
   }
+}
+
+function lienBoiteMailSelonAdresse(mail){
+  const adresse = String(mail || "").trim().toLowerCase();
+  const domaine = adresse.includes("@") ? adresse.split("@").pop() : "";
+
+  if(domaine === "gmail.com" || domaine === "googlemail.com"){
+    return "https://mail.google.com/mail/u/0/#inbox";
+  }
+
+  if(domaine === "icloud.com" || domaine === "me.com" || domaine === "mac.com"){
+    return "https://www.icloud.com/mail/";
+  }
+
+  if(domaine === "outlook.com" || domaine === "hotmail.com" || domaine === "live.com" || domaine === "msn.com"){
+    return "https://outlook.live.com/mail/0/inbox";
+  }
+
+  if(domaine === "yahoo.com" || domaine === "yahoo.fr"){
+    return "https://mail.yahoo.com/";
+  }
+
+  if(domaine === "orange.fr" || domaine === "wanadoo.fr"){
+    return "https://mail.orange.fr/";
+  }
+
+  if(domaine === "sfr.fr" || domaine === "neuf.fr"){
+    return "https://messagerie.sfr.fr/";
+  }
+
+  if(domaine === "free.fr"){
+    return "https://webmail.free.fr/";
+  }
+
+  if(domaine === "laposte.net"){
+    return "https://www.laposte.net/accueil";
+  }
+
+  return "";
+}
+
+function ouvrirBoiteMailUtilisateur(){
+  const mail = document.getElementById("connexionMail").value || "";
+  const lien = lienBoiteMailSelonAdresse(mail);
+
+  if(lien){
+    window.location.href = lien;
+    return;
+  }
+
+  alert("Je ne peux pas ouvrir automatiquement cette boîte mail. Ouvre ton application mail habituelle, puis clique sur le mail reçu.");
 }
 
 function paramsPage(){
@@ -1077,6 +1129,10 @@ formConnexion.addEventListener("submit", async function(e){
 
 if(fermerMailModal){
   fermerMailModal.addEventListener("click", fermerFenetreMail);
+}
+
+if(ouvrirBoiteMail){
+  ouvrirBoiteMail.addEventListener("click", ouvrirBoiteMailUtilisateur);
 }
 
 if(mailModal){
