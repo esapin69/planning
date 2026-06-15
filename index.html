@@ -578,7 +578,7 @@ body.secure-locked .modal{
   <div class="connexion-card">
     <div class="connexion-inner">
       <h1 class="connexion-title">Accès Planning</h1>
-      <p class="connexion-subtitle">Entre ton nom, prénom et mail pour recevoir ton code.</p>
+      <p class="connexion-subtitle">Entre ton nom, prénom et mail. Tu recevras un lien d’accès.</p>
 
       <form class="connexion-form" id="formConnexion">
         <label class="connexion-label">
@@ -604,21 +604,25 @@ body.secure-locked .modal{
         </div>
 
         <button class="connexion-btn" type="submit" id="btnDemanderCode">
-          Recevoir le code
+          Recevoir le lien
         </button>
       </form>
+
+      <button class="connexion-btn dark" type="button" id="btnAfficherCodeSecours">
+        J’ai un code de secours
+      </button>
 
       <div class="code-zone" id="zoneCode">
         <div class="connexion-separator"></div>
 
         <form class="connexion-form" id="formCode">
           <label class="connexion-label">
-            Code reçu par mail
-            <input class="connexion-input" id="connexionCode" name="one-time-code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="6" placeholder="Code reçu">
+            Code de secours reçu par mail
+            <input class="connexion-input" id="connexionCode" name="one-time-code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="6" placeholder="Code de secours">
           </label>
 
           <button class="connexion-btn" type="submit" id="btnValiderCode">
-            Valider le code
+            Valider le code de secours
           </button>
         </form>
       </div>
@@ -804,6 +808,7 @@ const messageConnexion = document.getElementById("messageConnexion");
 const btnDemanderCode = document.getElementById("btnDemanderCode");
 const btnValiderCode = document.getElementById("btnValiderCode");
 const btnAfficherAide = document.getElementById("btnAfficherAide");
+const btnAfficherCodeSecours = document.getElementById("btnAfficherCodeSecours");
 
 function afficherMessageConnexion(message, type){
   messageConnexion.textContent = message || "";
@@ -975,9 +980,7 @@ formConnexion.addEventListener("submit", async function(e){
     }
 
     if(reponse && reponse.ok && reponse.besoin_code){
-      zoneCode.classList.add("is-open");
-      afficherMessageConnexion("Code envoyé. Entre le code reçu par mail.", "ok");
-      setTimeout(() => document.getElementById("connexionCode").focus(), 100);
+      afficherMessageConnexion("Lien envoyé. Ouvre ta boîte mail puis clique sur Ouvrir le planning.", "ok");
       return;
     }
 
@@ -1015,6 +1018,14 @@ formCode.addEventListener("submit", async function(e){
 
   }finally{
     btnValiderCode.disabled = false;
+  }
+});
+
+btnAfficherCodeSecours.addEventListener("click", function(){
+  zoneCode.classList.toggle("is-open");
+
+  if(zoneCode.classList.contains("is-open")){
+    setTimeout(() => document.getElementById("connexionCode").focus(), 100);
   }
 });
 
