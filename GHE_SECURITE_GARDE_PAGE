@@ -1,24 +1,19 @@
 /*
   GHE_SECURITE_GARDE_PAGE.js
 
-  A mettre sur les pages sensibles.
-  Ligne a ajouter juste avant </body> :
-  <script src="./GHE_SECURITE_GARDE_PAGE.js"></script>
-
-  Role :
-  - bloque l'acces direct si pas connecte
-  - verifie la session avec Apps Script
-  - garde la connexion 90 jours avec localStorage + cookie
-  - memorise l'agent connecte
-  - remplit automatiquement le premier champ mail vide de la page
+  Version stable :
+  - ne redemande pas la connexion si une session locale 90 jours existe
+  - ne vérifie pas Apps Script à chaque chargement
+  - protège les pages sensibles
+  - conserve l'agent connecté pour préremplir le mail
 */
 
 (function(){
-  const PASSERELLE_SECURITE = "https://script.google.com/macros/s/AKfycbx7gnNRAlt6N2l8ODBJ4ycu-gNIELKpoQMNukDLoHOuTrImCv82TcLy3QjVeY30wnwz/exec";
   const CLE_SESSION_GHE = "ghe_session_site_token";
+  const CLE_SESSION_EXPIRATION_GHE = "ghe_session_site_expiration";
   const CLE_AGENT_GHE = "ghe_agent_connecte";
   const PAGE_ACCUEIL = "./index.html";
-  const DUREE_SESSION_GHE = 90 * 24 * 60 * 60;
+  const DUREE_SESSION_MS_GHE = 90 * 24 * 60 * 60 * 1000;
 
   document.documentElement.style.visibility = "hidden";
 
@@ -29,7 +24,7 @@
     document.cookie =
       CLE_SESSION_GHE + "=" + encodeURIComponent(token) +
       "; path=/" +
-      "; max-age=" + DUREE_SESSION_GHE +
+      "; max-age=" + Math.floor(DUREE_SESSION_MS_GHE / 1000) +
       "; SameSite=Lax" +
       secure;
   }
@@ -49,8 +44,28 @@
     return "";
   }
 
-  function effacerCookieSession(){
-    document.cookie = CLE_SESSION_GHE + "=; path=/; max-age=0; SameSite=Lax";
+  function sessionLocaleValide(){
+    const maintenant = Date.now();
+
+    try{
+      const token = localStorage.getItem(CLE_SESSION_GHE) || "";
+      const expiration = Number(localStorage.getItem(CLE_SESSION_EXPIRATION_GHE) || "0");
+
+      if(token && expiration && expiration > maintenant){
+        return token;
+      }
+
+      const tokenCookie = lireCookieSession();
+
+      if(tokenCookie){
+        localStorage.setItem(CLE_SESSION_GHE, tokenCookie);
+        localStorage.setItem(CLE_SESSION_EXPIRATION_GHE, String(maintenant + DUREE_SESSION_MS_GHE));
+        return tokenCookie;
+      }
+
+    }catch(e){}
+
+    return "";
   }
 
   function pageActuelle(){
@@ -58,31 +73,11 @@
   }
 
   function retourConnexion(){
-    try{
-      localStorage.removeItem(CLE_SESSION_GHE);
-      localStorage.removeItem(CLE_AGENT_GHE);
-      effacerCookieSession();
-    }catch(e){}
-
     window.location.replace(PAGE_ACCUEIL + "?connexion=1&retour=" + encodeURIComponent(pageActuelle()));
   }
 
   function afficherPage(){
     document.documentElement.style.visibility = "visible";
-  }
-
-  function stockerAgent(reponse){
-    if(!reponse) return;
-
-    const agent = {
-      nom: reponse.nom || "",
-      prenom: reponse.prenom || "",
-      mail: reponse.mail || ""
-    };
-
-    try{
-      localStorage.setItem(CLE_AGENT_GHE, JSON.stringify(agent));
-    }catch(e){}
   }
 
   function lireAgent(){
@@ -116,86 +111,20 @@
     }
   }
 
-  function appelerSecurite(action, params){
-    return new Promise((resolve, reject) => {
-      const callbackName = "callbackGardePage_" + Date.now() + "_" + Math.random().toString(36).slice(2);
-      const script = document.createElement("script");
-
-      const data = Object.assign({}, params || {}, {
-        action: action,
-        callback: callbackName,
-        t: Date.now()
-      });
-
-      const timeout = setTimeout(() => {
-        nettoyer();
-        reject(new Error("Temps d attente depasse."));
-      }, 12000);
-
-      function nettoyer(){
-        clearTimeout(timeout);
-
-        if(script.parentNode){
-          script.parentNode.removeChild(script);
-        }
-
-        try{
-          delete window[callbackName];
-        }catch(e){
-          window[callbackName] = undefined;
-        }
-      }
-
-      window[callbackName] = function(reponse){
-        nettoyer();
-        resolve(reponse);
-      };
-
-      script.onerror = function(){
-        nettoyer();
-        reject(new Error("Securite inaccessible."));
-      };
-
-      script.src = PASSERELLE_SECURITE + "?" + new URLSearchParams(data).toString();
-      document.body.appendChild(script);
-    });
-  }
-
-  async function verifier(){
-    let token = "";
-
-    try{
-      token = localStorage.getItem(CLE_SESSION_GHE) || lireCookieSession() || "";
-    }catch(e){
-      retourConnexion();
-      return;
-    }
+  function verifier(){
+    const token = sessionLocaleValide();
 
     if(!token){
       retourConnexion();
       return;
     }
 
-    try{
-      const reponse = await appelerSecurite("verifier_session", { token: token });
+    ecrireCookieSession(token);
+    remplirEmailAgent();
+    afficherPage();
 
-      if(reponse && reponse.ok && reponse.connecte){
-        localStorage.setItem(CLE_SESSION_GHE, token);
-        ecrireCookieSession(token);
-        stockerAgent(reponse);
-        remplirEmailAgent();
-        afficherPage();
-
-        setTimeout(remplirEmailAgent, 300);
-        setTimeout(remplirEmailAgent, 1000);
-        return;
-      }
-
-      retourConnexion();
-
-    }catch(err){
-      retourConnexion();
-    }
+    setTimeout(remplirEmailAgent, 300);
+    setTimeout(remplirEmailAgent, 1000);
   }
 
   if(document.readyState === "loading"){
