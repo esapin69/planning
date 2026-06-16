@@ -1,0 +1,1016 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#081326">
+<title>Validation avec ajustement</title>
+<style>
+:root{
+  --bg:#eef2f7;
+  --paper:#ffffff;
+  --ink:#081326;
+  --muted:#65748a;
+  --line:#d9e0ea;
+  --soft:#f7f9fc;
+  --navy:#0b1730;
+  --green:#16a34a;
+  --greenDark:#065f46;
+  --red:#991b1b;
+  --blue:#2563eb;
+  --blueSoft:#eff6ff;
+  --orange:#f97316;
+  --orangeSoft:#fff7ed;
+  --shadow:0 22px 55px rgba(8,19,38,.14);
+  --radius:28px;
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  min-height:100%;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 14% 0%,rgba(37,99,235,.13),transparent 34%),
+    radial-gradient(circle at 88% 8%,rgba(22,163,74,.10),transparent 32%),
+    linear-gradient(180deg,#ffffff 0%,#eef2f7 46%,#e8eef7 100%);
+}
+button,input,textarea{font-family:inherit}
+.app{
+  width:min(100%,1240px);
+  margin:0 auto;
+  padding:28px 22px 36px;
+}
+.hero{
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(135deg,#081326 0%,#13264a 54%,#0f3d2b 100%);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:34px;
+  padding:30px;
+  color:#fff;
+  box-shadow:var(--shadow);
+}
+.hero:after{
+  content:"";
+  position:absolute;
+  width:360px;
+  height:360px;
+  right:-130px;
+  top:-160px;
+  border-radius:50%;
+  background:rgba(255,255,255,.08);
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:rgba(255,255,255,.12);
+  color:#dbeafe;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:999px;
+  padding:8px 12px;
+  font-size:12px;
+  font-weight:950;
+  margin-bottom:14px;
+  backdrop-filter:blur(8px);
+}
+.previewNote{
+  display:none;
+  margin-top:18px;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.22);
+  color:#e0f2fe;
+  border-radius:18px;
+  padding:12px 14px;
+  font-weight:850;
+  line-height:1.45;
+  position:relative;
+  z-index:1;
+}
+.previewNote.show{display:block}
+
+h1{
+  position:relative;
+  z-index:1;
+  font-size:clamp(38px,5vw,66px);
+  line-height:.92;
+  letter-spacing:-.07em;
+  margin:0 0 12px;
+}
+.hero p{
+  position:relative;
+  z-index:1;
+  max-width:780px;
+  color:#cbd5e1;
+  font-size:18px;
+  line-height:1.45;
+  margin:0;
+}
+.grid{display:grid;gap:18px;margin-top:18px}
+.card{
+  background:rgba(255,255,255,.92);
+  border:1px solid rgba(217,224,234,.95);
+  border-radius:var(--radius);
+  padding:20px;
+  box-shadow:0 12px 32px rgba(8,19,38,.08);
+  backdrop-filter:blur(10px);
+}
+h2{
+  font-size:24px;
+  letter-spacing:-.045em;
+  margin:0 0 8px;
+}
+h3{font-size:18px;margin:0 0 8px}
+p{color:var(--muted);line-height:1.48;margin:0 0 12px}
+.small{font-size:13px;color:var(--muted);line-height:1.42}
+.exchangeShell{
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(217,224,234,.95);
+  border-radius:34px;
+  padding:20px;
+  box-shadow:0 16px 42px rgba(8,19,38,.08);
+}
+.exchangeHeaderGrid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 76px minmax(0,1fr);
+  gap:14px;
+  align-items:stretch;
+  margin-bottom:14px;
+}
+.exchangeRows{
+  display:grid;
+  gap:12px;
+}
+.exchangeRow{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 76px minmax(0,1fr);
+  gap:14px;
+  align-items:stretch;
+}
+.exchangeArrow,
+.rowArrow{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100%;
+}
+.arrowBubble{
+  width:64px;
+  height:64px;
+  border-radius:999px;
+  background:linear-gradient(180deg,#fff,#eef2ff);
+  border:1px solid #d9e0ea;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#1e3a8a;
+  font-size:32px;
+  font-weight:1000;
+  box-shadow:0 12px 28px rgba(8,19,38,.10);
+}
+.rowArrow .arrowBubble{
+  width:48px;
+  height:48px;
+  font-size:25px;
+  background:linear-gradient(180deg,#ffffff,#f8fafc);
+}
+.agentIdentity{
+  background:#fff;
+  border:1px solid #d9e0ea;
+  border-radius:30px;
+  padding:18px;
+}
+.agentPanel{
+  background:#fff;
+  border:1px solid #d9e0ea;
+  border-radius:30px;
+  padding:14px;
+}
+.personHeader{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:8px;
+  padding:6px 0 4px;
+}
+.panelKicker{
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:#64748b;
+  font-size:12px;
+  font-weight:1000;
+}
+.personAvatar{
+  width:86px;
+  height:86px;
+  border-radius:22px;
+  object-fit:cover;
+  background:#f1f5f9;
+  border:1px solid #d9e0ea;
+  box-shadow:0 12px 26px rgba(8,19,38,.10);
+}
+.personAvatarFallback{
+  width:86px;
+  height:86px;
+  border-radius:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(180deg,#f8fafc,#e2e8f0);
+  border:1px solid #d9e0ea;
+  color:#0b1730;
+  font-size:24px;
+  font-weight:1000;
+  box-shadow:0 12px 26px rgba(8,19,38,.10);
+}
+.personName{
+  font-size:25px;
+  line-height:1.05;
+  font-weight:1000;
+  letter-spacing:-.045em;
+  color:#081326;
+  max-width:100%;
+}
+.panelCount{
+  white-space:nowrap;
+  background:#f1f5f9;
+  border:1px solid #e2e8f0;
+  color:#334155;
+  border-radius:999px;
+  padding:7px 10px;
+  font-size:12px;
+  font-weight:1000;
+}
+.shiftCard{
+  position:relative;
+  width:100%;
+  border:1px solid #dde5ef;
+  background:
+    linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
+  border-radius:26px;
+  padding:16px;
+  text-align:left;
+  cursor:pointer;
+  box-shadow:0 10px 24px rgba(8,19,38,.06);
+  transition:transform .12s ease,border-color .12s ease,box-shadow .12s ease;
+}
+.shiftCard:hover{
+  transform:translateY(-2px);
+  border-color:#94a3b8;
+  box-shadow:0 18px 38px rgba(8,19,38,.12);
+}
+.shiftRow{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:14px;
+  align-items:center;
+}
+.shiftIconBox{
+  width:78px;
+  height:78px;
+  border-radius:24px;
+  background:#f1f5f9;
+  border:1px solid #e2e8f0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:42px;
+}
+.shiftMain{min-width:0}
+.shiftCode{
+  font-size:46px;
+  line-height:.85;
+  font-weight:1000;
+  letter-spacing:-.09em;
+  color:#081326;
+}
+.shiftLabel{
+  margin-top:8px;
+  font-size:16px;
+  font-weight:1000;
+  color:#1e293b;
+}
+.shiftDate{
+  margin-top:10px;
+  color:#334155;
+  font-size:14px;
+  font-weight:900;
+}
+.shiftHint{
+  margin-top:4px;
+  color:#64748b;
+  font-size:13px;
+  font-weight:750;
+}
+.changedPill{
+  position:absolute;
+  top:12px;
+  right:12px;
+  border-radius:999px;
+  padding:5px 8px;
+  background:#ecfdf5;
+  color:#065f46;
+  border:1px solid #bbf7d0;
+  font-size:12px;
+  font-weight:1000;
+}
+.messageBox textarea{
+  width:100%;
+  min-height:104px;
+  border:1px solid #cbd5e1;
+  border-radius:20px;
+  padding:15px;
+  font-size:16px;
+  resize:vertical;
+  outline:none;
+  background:#fff;
+}
+.messageBox textarea:focus{
+  border-color:#081326;
+  box-shadow:0 0 0 4px rgba(8,19,38,.10);
+}
+.line{
+  height:1px;
+  background:linear-gradient(90deg,transparent,#cbd5e1,transparent);
+  margin:20px 0;
+}
+.alertList{display:grid;gap:10px}
+.alert{
+  border-radius:20px;
+  padding:14px;
+  border:1px solid #e5e7eb;
+  background:#f8fafc;
+  line-height:1.42;
+}
+.alert .aTitle{font-weight:1000;margin-bottom:5px}
+.alert.danger{background:#fef2f2;border-color:#fecaca;color:#7f1d1d}
+.alert.warn{background:#fff7ed;border-color:#fed7aa;color:#7c2d12}
+.alert.watch{background:#f8fafc;border-color:#cbd5e1;color:#334155}
+.alert.info{background:#eff6ff;border-color:#bfdbfe;color:#1e3a8a}
+.mailPreview{
+  border:1px solid #d1d5db;
+  background:#fff;
+  border-radius:26px;
+  overflow:hidden;
+  margin-top:10px;
+  box-shadow:0 12px 28px rgba(8,19,38,.06);
+}
+.mailHead{
+  background:#f8fafc;
+  border-bottom:1px solid #e5e7eb;
+  padding:14px 18px;
+  font-weight:1000;
+}
+.mailBody{
+  padding:20px;
+  color:#111827;
+  line-height:1.62;
+}
+.mailBlockTitle{
+  font-size:13px;
+  font-weight:1000;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:#64748b;
+  margin-bottom:6px;
+}
+.mailName{
+  font-size:21px;
+  font-weight:1000;
+  margin-bottom:10px;
+  letter-spacing:-.035em;
+}
+.mailItem{
+  padding:9px 0;
+  border-bottom:1px solid #f1f5f9;
+}
+.actions{
+  position:sticky;
+  bottom:0;
+  z-index:10;
+  background:rgba(238,242,247,.94);
+  backdrop-filter:blur(14px);
+  border-top:1px solid #d9e0ea;
+  padding:14px 0 0;
+  margin-top:18px;
+}
+.btn{
+  appearance:none;
+  border:0;
+  border-radius:20px;
+  min-height:60px;
+  padding:16px 18px;
+  font-size:17px;
+  font-weight:1000;
+  text-align:center;
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  cursor:pointer;
+}
+.btn.green{
+  background:linear-gradient(180deg,var(--green),var(--greenDark));
+  color:#fff;
+  box-shadow:0 14px 32px rgba(22,163,74,.28);
+}
+.btn.grey{
+  background:#fff;
+  color:#111827;
+  border:1px solid #cbd5e1;
+}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.actionGrid{display:grid;gap:10px;grid-template-columns:1.35fr .65fr}
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:80;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(8,19,38,.62);
+  padding:16px;
+}
+.modal.show{display:flex}
+.modalBox{
+  width:min(100%,820px);
+  max-height:92vh;
+  overflow:auto;
+  background:#fff;
+  border-radius:32px;
+  border:1px solid #e5e7eb;
+  box-shadow:0 28px 80px rgba(0,0,0,.26);
+  padding:22px;
+}
+.choiceSectionTitle{
+  margin:16px 0 9px;
+  font-size:13px;
+  color:#64748b;
+  font-weight:1000;
+  text-transform:uppercase;
+  letter-spacing:.07em;
+}
+.choiceGrid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.choice{
+  border:1px solid #d1d5db;
+  background:#fff;
+  border-radius:20px;
+  padding:14px;
+  text-align:left;
+  cursor:pointer;
+}
+.choice:hover{background:#f8fafc;border-color:#94a3b8}
+.choiceMain{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+.choiceIcon{font-size:30px}
+.choiceCode{font-size:24px;font-weight:1000;min-width:52px}
+.choiceLabel{font-weight:1000}
+.choiceHours{font-size:13px;color:#64748b;margin-top:3px}
+.status{
+  display:none;
+  border-radius:18px;
+  padding:13px;
+  margin-top:12px;
+  font-weight:850;
+}
+.status.show{display:block}
+.status.ok{background:#ecfdf5;border:1px solid #bbf7d0;color:#065f46}
+.status.warn{background:#fff7ed;border:1px solid #fed7aa;color:#7c2d12}
+.status.err{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
+#techFrame{display:none;width:0;height:0;border:0}
+
+@media(max-width:860px){
+  .app{padding:16px 14px 28px}
+  .hero{padding:22px}
+  .exchangeHeaderGrid{grid-template-columns:1fr;gap:12px}
+  .exchangeRows{gap:14px}
+  .exchangeRow{
+    grid-template-columns:1fr;
+    gap:10px;
+    background:#fff;
+    border:1px solid #d9e0ea;
+    border-radius:28px;
+    padding:12px;
+  }
+  .exchangeArrow,
+  .rowArrow{min-height:auto}
+  .arrowBubble{
+    width:54px;
+    height:54px;
+    transform:rotate(90deg);
+  }
+  .rowArrow .arrowBubble{
+    width:44px;
+    height:44px;
+    font-size:22px;
+  }
+  .personName{font-size:22px}
+  .shiftIconBox{width:66px;height:66px;font-size:34px}
+  .shiftCode{font-size:38px}
+  .actionGrid{grid-template-columns:1fr}
+  .choiceGrid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<main class="app">
+  <section class="hero">
+    <div class="badge">DÃ©cision responsable</div>
+    <h1>Validation avec ajustement</h1>
+    <p>Ajustez uniquement les horaires nÃ©cessaires, vÃ©rifiez le mail final, puis validez lâajustement.</p>
+    <div id="previewNote" class="previewNote">Mode aperÃ§u visuel : cette page est ouverte sans demande rÃ©elle. Les noms, dates et horaires ci-dessous servent uniquement Ã  voir le rendu.</div>
+    <div id="missingBox" class="status err"></div>
+  </section>
+
+  <section class="grid">
+    <section class="exchangeShell">
+      <div class="exchangeHeaderGrid">
+        <section class="agentIdentity">
+          <div class="personHeader">
+            <div class="panelKicker">Agent demandeur</div>
+            <div id="demandeurAvatarWrap"></div>
+            <div class="personName" id="demandeurName">â</div>
+            <div class="panelCount" id="demandeurCount">0 date</div>
+          </div>
+        </section>
+
+        <div class="exchangeArrow" aria-hidden="true">
+          <div class="arrowBubble">â</div>
+        </div>
+
+        <section class="agentIdentity">
+          <div class="personHeader">
+            <div class="panelKicker">Agent concernÃ© par lâÃ©change</div>
+            <div id="accepteurAvatarWrap"></div>
+            <div class="personName" id="accepteurName">â</div>
+            <div class="panelCount" id="accepteurCount">0 date</div>
+          </div>
+        </section>
+      </div>
+
+      <div id="exchangeRows" class="exchangeRows"></div>
+    </section>
+
+    <section class="card messageBox">
+      <h2>Message complÃ©mentaire</h2>
+      <p class="small">Optionnel. Il apparaÃ®t dans le mail uniquement sâil est rempli.</p>
+      <textarea id="messageCadre" placeholder="Exemple : Accord validÃ©, avec ajustement du vendredi en J4."></textarea>
+    </section>
+
+    <section class="card" id="alertsCard" style="display:none">
+      <h2>Alertes de lâajustement</h2>
+      <div id="alerts" class="alertList"></div>
+    </section>
+
+    <section class="card">
+      <h2>AperÃ§u du mail envoyÃ©</h2>
+      <div class="mailPreview">
+        <div class="mailHead">Demande de changement planning validÃ©e avec ajustement</div>
+        <div class="mailBody" id="mailPreview"></div>
+      </div>
+    </section>
+
+    <section class="actions">
+      <div class="actionGrid">
+        <button class="btn green" id="submitBtn" type="button">Valider et envoyer lâajustement</button>
+        <button class="btn grey" type="button" onclick="window.close()">Fermer</button>
+      </div>
+      <div id="status" class="status"></div>
+    </section>
+  </section>
+</main>
+
+<div id="modal" class="modal" onclick="if(event.target.id==='modal') closeModal()">
+  <div class="modalBox">
+    <h2 id="modalTitle">Choisir un horaire</h2>
+    <p class="small" id="modalSub"></p>
+
+    <div class="choiceSectionTitle">Horaires travaillÃ©s</div>
+    <div id="workChoices" class="choiceGrid"></div>
+
+    <div class="line"></div>
+
+    <div class="choiceSectionTitle">Repos / absences</div>
+    <div id="restChoices" class="choiceGrid"></div>
+
+    <div class="line"></div>
+    <button class="btn grey" type="button" onclick="closeModal()">Fermer</button>
+  </div>
+</div>
+
+<iframe id="techFrame" title="validation technique"></iframe>
+
+<script>
+const BACKEND_URL = "https://script.google.com/macros/s/AKfycbx99VoulRgSXfGS58f8UfvhUsi7GhUhG1gIme-35_HZWkCDxfdrN5KWLCG08hN9q5LA/exec";
+
+const SHIFT_OPTIONS = [
+  {code:"M",  icon:"ðµ", label:"Matin", heure:"06:50-14:40", worked:true, night:false, category:"work"},
+  {code:"J",  icon:"ð¢", label:"Jour", heure:"08:30-16:20", worked:true, night:false, category:"work"},
+  {code:"J4", icon:"ð ", label:"J4", heure:"10:10-18:00", worked:true, night:false, category:"work"},
+  {code:"S",  icon:"ð¡", label:"Soir", heure:"13:30-21:00", worked:true, night:false, category:"work"},
+  {code:"N",  icon:"â«", label:"Nuit", heure:"20:50-06:50", worked:true, night:true, category:"work"},
+  {code:"RH", icon:"ðï¸", label:"Repos hebdomadaire", heure:"", worked:false, night:false, category:"rest"},
+  {code:"RC", icon:"ð", label:"RÃ©cupÃ©ration", heure:"", worked:false, night:false, category:"rest"},
+  {code:"CA", icon:"ðï¸", label:"CongÃ© annuel", heure:"", worked:false, night:false, category:"rest"},
+  {code:"RTT",icon:"ð§", label:"RTT", heure:"", worked:false, night:false, category:"rest"},
+  {code:"RF", icon:"ð", label:"Repos fÃ©riÃ©", heure:"", worked:false, night:false, category:"rest"},
+  {code:"MA", icon:"ð©º", label:"Maladie / absence mÃ©dicale", heure:"", worked:false, night:false, category:"rest"}
+];
+
+const $ = id => document.getElementById(id);
+let state = {
+  id:"",
+  token:"",
+  ref:"",
+  demandeur:{nom:"Demandeur", avatar:""},
+  accepteur:{nom:"Agent concernÃ©", avatar:""},
+  copies:[],
+  items:[],
+  currentEdit:null,
+  demoMode:false
+};
+
+function esc(v){
+  return String(v == null ? "" : v).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+}
+function q(name){
+  return new URLSearchParams(location.search).get(name) || "";
+}
+function tryJsonParam(name){
+  const raw = q(name);
+  if(!raw) return [];
+  try { return JSON.parse(decodeURIComponent(raw)); }
+  catch(e1){
+    try { return JSON.parse(raw); }
+    catch(e2){ return []; }
+  }
+}
+function initials(name){
+  const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+  if(!parts.length) return "?";
+  if(parts.length === 1) return parts[0].slice(0,2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+function avatarHtml(person){
+  const nom = person && person.nom ? person.nom : "Agent";
+  const avatar = person && person.avatar ? person.avatar : "";
+  if(avatar){
+    return `<img class="personAvatar" src="${esc(avatar)}" alt="" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'personAvatarFallback',textContent:'${esc(initials(nom))}'}))">`;
+  }
+  return `<div class="personAvatarFallback">${esc(initials(nom))}</div>`;
+}
+function shiftInfo(code){
+  const c = String(code || "").trim().toUpperCase();
+  return SHIFT_OPTIONS.find(s => s.code === c) || {code:c || "?", icon:"â¬", label:c || "Non prÃ©cisÃ©", heure:"", worked:false, night:false, category:"rest"};
+}
+function labelShift(s){
+  if(!s) return "Non prÃ©cisÃ©";
+  return s.heure ? `${s.label} Â· ${s.heure}` : s.label;
+}
+function normalizeDateLabel(value){
+  const raw = String(value || "").trim();
+  if(!raw) return "Date concernÃ©e";
+  const iso = raw.match(/\d{4}-\d{2}-\d{2}/);
+  if(iso){
+    try{
+      const d = new Date(iso[0] + "T12:00:00");
+      return d.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+    }catch(e){}
+  }
+  return raw;
+}
+function getDateObject(value){
+  const raw = String(value || "");
+  const iso = raw.match(/\d{4}-\d{2}-\d{2}/);
+  if(!iso) return null;
+  const d = new Date(iso[0] + "T12:00:00");
+  return isNaN(d.getTime()) ? null : d;
+}
+function isWeekend(value){
+  const d = getDateObject(value);
+  if(!d) return false;
+  const day = d.getDay();
+  return day === 0 || day === 6;
+}
+
+function init(){
+  state.id = q("id");
+  state.token = q("token");
+  state.ref = q("ref") || state.id || "Demande";
+
+  const rawItems = tryJsonParam("items");
+  state.demoMode = !state.id && !state.token && !rawItems.length;
+
+  state.demandeur = {
+    nom: q("demandeur") || (state.demoMode ? "SAPIN Eddy" : "Demandeur"),
+    avatar: q("demandeurAvatar") || ""
+  };
+
+  const accepteurs = tryJsonParam("accepteurs");
+  state.accepteur = accepteurs[0] || {
+    nom: q("accepteur") || (state.demoMode ? "TRIBOULET Mathieu" : "Agent concernÃ©"),
+    avatar: q("accepteurAvatar") || ""
+  };
+  state.copies = tryJsonParam("copies");
+
+  state.items = buildItems(rawItems);
+
+  if(state.demoMode){
+    $("previewNote").classList.add("show");
+  }
+
+  $("demandeurName").textContent = state.demandeur.nom;
+  $("accepteurName").textContent = state.accepteur.nom || "Agent concernÃ©";
+  $("demandeurAvatarWrap").innerHTML = avatarHtml(state.demandeur);
+  $("accepteurAvatarWrap").innerHTML = avatarHtml(state.accepteur);
+  $("demandeurCount").textContent = state.items.length + (state.items.length > 1 ? " dates" : " date");
+  $("accepteurCount").textContent = state.items.length + (state.items.length > 1 ? " dates" : " date");
+
+  if(!state.demoMode && (!state.id || !state.token)){
+    showMissing("Lien incomplet : identifiant ou jeton manquant.");
+  }
+
+  $("messageCadre").addEventListener("input", refresh);
+  $("submitBtn").addEventListener("click", submitAdjustment);
+
+  renderChoices();
+  refresh();
+}
+
+function buildItems(rawItems){
+  if(!rawItems.length){
+    return [
+      {
+        item_id:"demo-1",
+        date:"2026-06-08",
+        demandeur_nom:state.demandeur.nom,
+        accepteur_nom:state.accepteur.nom || "Agent concernÃ©",
+        demandeur_shift_initial:"M",
+        accepteur_shift_initial:"S",
+        demandeur_shift:"M",
+        accepteur_shift:"S",
+        resume:""
+      },
+      {
+        item_id:"demo-2",
+        date:"2026-06-09",
+        demandeur_nom:state.demandeur.nom,
+        accepteur_nom:state.accepteur.nom || "Agent concernÃ©",
+        demandeur_shift_initial:"M",
+        accepteur_shift_initial:"S",
+        demandeur_shift:"J4",
+        accepteur_shift:"S",
+        resume:""
+      },
+      {
+        item_id:"demo-3",
+        date:"2026-06-13",
+        demandeur_nom:state.demandeur.nom,
+        accepteur_nom:state.accepteur.nom || "Agent concernÃ©",
+        demandeur_shift_initial:"M",
+        accepteur_shift_initial:"S",
+        demandeur_shift:"RH",
+        accepteur_shift:"M",
+        resume:""
+      }
+    ];
+  }
+
+  return rawItems.map((it, idx) => {
+    const dCode = it.demandeur_shift_code || it.shift_demandeur || it.demandeurShift || it.from || "";
+    const aCode = it.accepteur_shift_code || it.shift_accepteur || it.accepteurShift || it.to || "";
+    return {
+      item_id: it.item_id || it.id || ("item-" + idx),
+      date: it.date || it.date_iso || it.label_demandeur || it.jour || "Date concernÃ©e",
+      resume: it.resume || it.label || "",
+      demandeur_nom: it.demandeur_nom || state.demandeur.nom,
+      accepteur_nom: it.accepteur_nom || state.accepteur.nom || "Agent concernÃ©",
+      demandeur_shift_initial: dCode || "M",
+      accepteur_shift_initial: aCode || "S",
+      demandeur_shift: dCode || "M",
+      accepteur_shift: aCode || "S"
+    };
+  });
+}
+
+function shiftCardHtml(item, side){
+  const code = side === "demandeur" ? item.demandeur_shift : item.accepteur_shift;
+  const initial = side === "demandeur" ? item.demandeur_shift_initial : item.accepteur_shift_initial;
+  const person = side === "demandeur" ? item.demandeur_nom : item.accepteur_nom;
+  const s = shiftInfo(code);
+  const changed = String(code).toUpperCase() !== String(initial).toUpperCase();
+
+  return `<button class="shiftCard" type="button" onclick="openModal('${esc(item.item_id)}','${side}')">
+    ${changed ? `<span class="changedPill">AjustÃ©</span>` : ``}
+    <div class="shiftRow">
+      <div class="shiftIconBox">${esc(s.icon)}</div>
+      <div class="shiftMain">
+        <div class="shiftCode">${esc(s.code)}</div>
+        <div class="shiftLabel">${esc(labelShift(s))}</div>
+        <div class="shiftDate">${esc(normalizeDateLabel(item.date))}</div>
+        <div class="shiftHint">${esc(person)} Â· cliquer pour modifier</div>
+      </div>
+    </div>
+  </button>`;
+}
+
+function renderCards(){
+  $("exchangeRows").innerHTML = state.items.map(it => `
+    <div class="exchangeRow">
+      <section class="agentPanel">
+        ${shiftCardHtml(it, "demandeur")}
+      </section>
+
+      <div class="rowArrow" aria-hidden="true">
+        <div class="arrowBubble">â</div>
+      </div>
+
+      <section class="agentPanel">
+        ${shiftCardHtml(it, "accepteur")}
+      </section>
+    </div>
+  `).join("");
+}
+
+function renderChoices(){
+  const work = SHIFT_OPTIONS.filter(s => s.category === "work");
+  const rest = SHIFT_OPTIONS.filter(s => s.category === "rest");
+  $("workChoices").innerHTML = work.map(choiceHtml).join("");
+  $("restChoices").innerHTML = rest.map(choiceHtml).join("");
+}
+function choiceHtml(s){
+  return `<button class="choice" type="button" onclick="chooseShift('${esc(s.code)}')">
+    <div class="choiceMain">
+      <div class="choiceIcon">${esc(s.icon)}</div>
+      <div class="choiceCode">${esc(s.code)}</div>
+      <div>
+        <div class="choiceLabel">${esc(s.label)}</div>
+        <div class="choiceHours">${esc(s.heure || "Repos / absence")}</div>
+      </div>
+    </div>
+  </button>`;
+}
+function openModal(itemId, side){
+  const item = state.items.find(x => x.item_id === itemId);
+  if(!item) return;
+  state.currentEdit = {itemId, side};
+  const person = side === "demandeur" ? item.demandeur_nom : item.accepteur_nom;
+  $("modalTitle").textContent = "Choisir un horaire";
+  $("modalSub").textContent = person + " â " + normalizeDateLabel(item.date);
+  $("modal").classList.add("show");
+}
+function closeModal(){
+  $("modal").classList.remove("show");
+  state.currentEdit = null;
+}
+function chooseShift(code){
+  if(!state.currentEdit) return;
+  const item = state.items.find(x => x.item_id === state.currentEdit.itemId);
+  if(!item) return;
+  if(state.currentEdit.side === "demandeur") item.demandeur_shift = code;
+  else item.accepteur_shift = code;
+  closeModal();
+  refresh();
+}
+
+function computeAlerts(){
+  const alerts = [];
+
+  state.items.forEach(item => {
+    const d = shiftInfo(item.demandeur_shift);
+    const a = shiftInfo(item.accepteur_shift);
+    const dateLabel = normalizeDateLabel(item.date);
+
+    if(d.night){
+      alerts.push({level:"warn", icon:"â ï¸", title:"Nuit concernÃ©e â " + item.demandeur_nom, text:"Lâajustement place lâagent demandeur sur une nuit le " + dateLabel + ". VÃ©rification renforcÃ©e recommandÃ©e."});
+    }
+    if(a.night){
+      alerts.push({level:"warn", icon:"â ï¸", title:"Nuit concernÃ©e â " + item.accepteur_nom, text:"Lâajustement place lâagent concernÃ© par lâÃ©change sur une nuit le " + dateLabel + ". VÃ©rification renforcÃ©e recommandÃ©e."});
+    }
+
+    if(isWeekend(item.date) && d.worked){
+      alerts.push({level:"watch", icon:"ð", title:"Week-end travaillÃ© â " + item.demandeur_nom, text:"Cet ajustement prÃ©voit un horaire travaillÃ© sur week-end pour lâagent demandeur. Ã vÃ©rifier selon lâorganisation habituelle du service."});
+    }
+    if(isWeekend(item.date) && a.worked){
+      alerts.push({level:"watch", icon:"ð", title:"Week-end travaillÃ© â " + item.accepteur_nom, text:"Cet ajustement prÃ©voit un horaire travaillÃ© sur week-end pour lâagent concernÃ© par lâÃ©change. Ã vÃ©rifier selon lâorganisation habituelle du service."});
+    }
+  });
+
+  return alerts;
+}
+
+function renderAlerts(){
+  const alerts = computeAlerts();
+  const card = $("alertsCard");
+
+  if(!alerts.length){
+    card.style.display = "none";
+    $("alerts").innerHTML = "";
+    return;
+  }
+
+  card.style.display = "";
+  $("alerts").innerHTML = alerts.map(a => `<div class="alert ${esc(a.level)}"><div class="aTitle">${esc(a.icon)} ${esc(a.title)}</div><div>${esc(a.text)}</div></div>`).join("");
+}
+
+function groupLines(side){
+  return state.items.map(item => {
+    const code = side === "demandeur" ? item.demandeur_shift : item.accepteur_shift;
+    const s = shiftInfo(code);
+    return `<div class="mailItem">â¢ <b>${esc(normalizeDateLabel(item.date))}</b> : ${esc(s.code)} â ${esc(labelShift(s))}</div>`;
+  }).join("");
+}
+
+function renderMail(){
+  const msg = $("messageCadre").value.trim();
+  $("mailPreview").innerHTML = `
+    <p>Bonjour,</p>
+    <p>Votre demande de changement planning est validÃ©e avec ajustement.</p>
+    <p><b>Le planning a Ã©tÃ© mis Ã  jour avec les horaires validÃ©s ci-dessous.</b></p>
+
+    <div class="line"></div>
+
+    <div class="mailBlockTitle">Agent demandeur</div>
+    <div class="mailName">${esc(state.demandeur.nom)}</div>
+    ${groupLines("demandeur")}
+
+    <div class="line"></div>
+
+    <div class="mailBlockTitle">Agent concernÃ© par lâÃ©change</div>
+    <div class="mailName">${esc(state.accepteur.nom || "Agent concernÃ©")}</div>
+    ${groupLines("accepteur")}
+
+    ${msg ? `<div class="line"></div><div class="mailBlockTitle">Message complÃ©mentaire</div><p>${esc(msg).replace(/\n/g,"<br>")}</p>` : ``}
+
+    <div class="line"></div>
+    <p>Cette validation remplace la proposition initiale pour les dates indiquÃ©es ci-dessus.</p>
+    <p>Cordialement.</p>
+  `;
+}
+
+function buildActionUrl(){
+  const url = new URL(BACKEND_URL);
+  url.searchParams.set("action","cadreDecision");
+  url.searchParams.set("decision","validerAjustement");
+  url.searchParams.set("id",state.id);
+  url.searchParams.set("token",state.token);
+  url.searchParams.set("message", $("messageCadre").value.trim());
+
+  const adjustments = state.items.map(it => ({
+    item_id: it.item_id,
+    date: it.date,
+    demandeur_shift: it.demandeur_shift,
+    accepteur_shift: it.accepteur_shift
+  }));
+  url.searchParams.set("adjustments", JSON.stringify(adjustments));
+  return url.toString();
+}
+
+function submitAdjustment(){
+  if(state.demoMode){
+    showStatus("warn","Mode aperÃ§u : aucun envoi rÃ©el nâest effectuÃ©.");
+    return;
+  }
+  if(!state.id || !state.token){
+    showStatus("err","Lien incomplet : impossible dâenvoyer lâajustement.");
+    return;
+  }
+  $("submitBtn").disabled = true;
+  showStatus("warn","Envoi de lâajustement en coursâ¦");
+  $("techFrame").src = buildActionUrl();
+
+  setTimeout(() => {
+    showStatus("ok","Ajustement envoyÃ©. Si le lien est valide, le planning a Ã©tÃ© mis Ã  jour et le mail final a Ã©tÃ© envoyÃ©.");
+    $("submitBtn").disabled = false;
+  }, 1800);
+}
+
+function showMissing(text){
+  $("missingBox").textContent = text;
+  $("missingBox").className = "status err show";
+}
+function showStatus(type,text){
+  $("status").textContent = text;
+  $("status").className = "status " + type + " show";
+}
+function refresh(){
+  renderCards();
+  renderAlerts();
+  renderMail();
+}
+
+init();
+</script>
+</body>
+</html>
