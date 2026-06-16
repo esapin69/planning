@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0f172a">
-  <title>Demande de changement planning — V9 mails seulement si manquants</title>
+  <title>Demande de changement planning — V10 mails visibles non modifiables</title>
   <style>
 :root{
   --cream:#fff7df;
@@ -314,10 +314,32 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
   color:var(--navy);
 }
 
+
+.mailKnown .mailAddress{
+  display:block;
+  margin-top:5px;
+  font-size:15px;
+  line-height:1.25;
+  word-break:break-word;
+  color:#064e3b;
+  font-weight:950;
+}
+.mailKnown .mailPerson{
+  display:block;
+  margin-top:8px;
+  padding-top:8px;
+  border-top:2px solid rgba(21,128,61,.18);
+}
+.mailKnown .mailPerson:first-child{
+  margin-top:0;
+  padding-top:0;
+  border-top:0;
+}
+
 </style>
 </head>
 <body>
-<!-- VISUEL_SITE_V9_MAILS_DEMANDES_SEULEMENT_SI_MANQUANTS -->
+<!-- VISUEL_SITE_V10_MAILS_CONNUS_VISIBLES_NON_MODIFIABLES -->
   <div class="app">
     <header class="top">
       <div class="brand">
@@ -373,7 +395,7 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
       <div id="summaryBox"></div>
       <div class="card" id="mailCard">
         <h2>Adresses mail</h2>
-        <p class="small">Le site demande seulement les adresses absentes.</p>
+        <p class="small">Les adresses connues sont affichées, mais non modifiables. Le site demande seulement celles qui manquent.</p>
         <div id="demandeurMailKnown"></div>
         <div id="demandeurMailAsk" class="mailAsk">
           <label style="font-weight:950">Ton adresse mail</label>
@@ -590,7 +612,7 @@ function renderDemandeurMail(){
   if(!known || !ask) return;
 
   if(hasDemandeurMail()){
-    known.innerHTML=`<div class="mailKnown">Mail demandeur connu ✅<br><b>${esc(state.demandeur_email)}</b></div>`;
+    known.innerHTML=`<div class="mailKnown">Mail demandeur connu ✅<span class="mailAddress">${esc(state.demandeur_email)}</span></div>`;
     ask.classList.remove('show');
   }else{
     known.innerHTML='';
@@ -796,7 +818,7 @@ function renderMissingMails(){
 
   let html='';
   if(known.length){
-    html += '<div class="mailKnown">Mails collègues connus ✅<br>'+known.map(it=>`<b>${esc(it.accepteur_nom)}</b>`).join('<br>')+'</div>';
+    html += '<div class="mailKnown">Mails collègues connus ✅<br>'+known.map(it=>`<span class="mailPerson"><b>${esc(it.accepteur_nom)}</b><span class="mailAddress">${esc(it.accepteur_email)}</span></span>`).join('')+'</div>';
   }
   if(missing.length){
     html += '<div class="mailMissingTitle">Mails à compléter</div>';
