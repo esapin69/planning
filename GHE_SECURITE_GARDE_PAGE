@@ -1,1199 +1,206 @@
-<!doctype html>
-<html lang="fr">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Planning GHE — Accueil</title>
-
-<style>
-*,*::before,*::after{box-sizing:border-box}
-
-:root{
-  --ink:#07183f;
-  --paper:#fff7dd;
-  --paper2:#fff9e8;
-  --cream:#fff1c4;
-  --navy:#061738;
-  --soft:#5f6878;
-}
-
-html{
-  scroll-behavior:smooth;
-}
-
-body{
-  margin:0;
-  min-height:100vh;
-  color:var(--ink);
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-  background:
-    radial-gradient(circle at 15% 0%,rgba(255,255,255,.92) 0 9%,transparent 31%),
-    radial-gradient(circle at 88% 4%,rgba(255,218,116,.32) 0 9%,transparent 32%),
-    repeating-linear-gradient(-6deg,rgba(7,24,63,.025) 0 1px,transparent 1px 13px),
-    linear-gradient(180deg,#fff9e8 0%,#f5e8bf 58%,#ead9a5 100%);
-}
-
-body.modal-open{
-  overflow:hidden;
-}
-
-body.secure-loading .page,
-body.secure-loading .ecran-connexion,
-body.secure-loading .modal{
-  display:none !important;
-}
-
-/* ÉCRAN DE CONNEXION */
-
-.ecran-connexion{
-  position:fixed;
-  inset:0;
-  z-index:90;
-  width:100%;
-  min-height:100vh;
-  margin:0;
-  padding:18px 12px calc(60px + env(safe-area-inset-bottom));
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:
-    radial-gradient(circle at 15% 0%,rgba(255,255,255,.92) 0 9%,transparent 31%),
-    radial-gradient(circle at 88% 4%,rgba(255,218,116,.32) 0 9%,transparent 32%),
-    linear-gradient(180deg,#fff9e8 0%,#f5e8bf 58%,#ead9a5 100%);
-}
-
-.ecran-connexion.is-hidden{
-  display:none;
-}
-
-.connexion-card{
-  width:100%;
-  position:relative;
-  padding:18px 12px 18px;
-  background:var(--paper);
-  border:6px solid var(--ink);
-  border-radius:34px;
-}
-
-.connexion-card::before{
-  content:"";
-  position:absolute;
-  inset:8px;
-  border:3px solid rgba(255,218,123,.40);
-  border-radius:24px;
-  pointer-events:none;
-}
-
-.connexion-inner{
-  position:relative;
-  z-index:3;
-}
-
-.connexion-title{
-  margin:0 0 8px;
-  color:var(--ink);
-  text-align:center;
-  text-transform:uppercase;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(32px,8vw,58px);
-  line-height:.92;
-  text-shadow:0 3px 0 #f8d67d;
-}
-
-.connexion-subtitle{
-  margin:0 0 16px;
-  text-align:center;
-  font-size:17px;
-  line-height:1.2;
-  font-weight:900;
-}
-
-.connexion-form{
-  display:grid;
-  gap:10px;
-}
-
-.connexion-label{
-  display:grid;
-  gap:5px;
-  font-weight:1000;
-  text-transform:uppercase;
-  font-size:13px;
-  letter-spacing:.02em;
-}
-
-.connexion-input,
-.connexion-textarea{
-  width:100%;
-  padding:14px 13px;
-  border:4px solid var(--ink);
-  border-radius:20px;
-  background:#fff9e8;
-  color:var(--ink);
-  font-size:18px;
-  font-weight:900;
-  outline:none;
-}
-
-.connexion-textarea{
-  min-height:92px;
-  resize:vertical;
-  text-transform:none;
-}
-
-.connexion-btn{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:100%;
-  min-height:58px;
-  padding:9px 18px;
-  border:4px solid var(--navy);
-  border-radius:22px;
-  background:#fff9e8;
-  color:var(--ink);
-  text-transform:uppercase;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(23px,6vw,38px);
-  line-height:.92;
-  cursor:pointer;
-}
-
-.connexion-btn.dark{
-  background:#2c2f36;
-  color:#fff7dd;
-}
-
-.connexion-btn:active{
-  transform:translateY(2px);
-}
-
-.connexion-message{
-  min-height:24px;
-  padding:8px 4px 0;
-  text-align:center;
-  font-size:16px;
-  line-height:1.25;
-  font-weight:1000;
-}
-
-.connexion-message.ok{
-  color:#0b6b2a;
-}
-
-.connexion-message.err{
-  color:#a40000;
-}
-
-.zone-boite-mail{
-  display:none;
-  gap:8px;
-  margin-top:10px;
-}
-
-.zone-boite-mail.is-open{
-  display:grid;
-}
-
-.mail-shortcut-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-}
-
-.mail-shortcut{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:50px;
-  padding:10px 12px;
-  border:4px solid var(--navy);
-  border-radius:18px;
-  background:#fff9e8;
-  color:var(--ink);
-  text-align:center;
-  text-decoration:none;
-  font-weight:1000;
-}
-
-.mail-shortcut.dark{
-  background:var(--navy);
-  color:#fff7dd;
-}
-
-.connexion-separator{
-  height:2px;
-  margin:12px 0;
-  background:rgba(7,24,63,.16);
-}
-
-.connexion-aide{
-  display:none;
-  margin-top:10px;
-}
-
-.connexion-aide.is-open{
-  display:grid;
-  gap:10px;
-}
-
-.code-zone{
-  display:none;
-}
-
-.code-zone.is-open{
-  display:grid;
-  gap:10px;
-}
-
-.zone-cle-interne{
-  display:none;
-}
-
-.zone-cle-interne.is-open{
-  display:grid;
-  gap:10px;
-}
-
-/* BLOCS ACCUEIL */
-
-.page{
-  width:min(760px,100%);
-  margin:auto;
-  padding:10px 12px calc(60px + env(safe-area-inset-bottom));
-}
-
-.home-block{
-  position:relative;
-  margin:16px 0 28px;
-  padding:14px 11px 18px;
-  background:var(--paper);
-  border:6px solid var(--ink);
-  border-radius:34px;
-}
-
-.home-block::before{
-  content:"";
-  position:absolute;
-  inset:8px;
-  border:3px solid rgba(255,218,123,.40);
-  border-radius:24px;
-  pointer-events:none;
-}
-
-.block-action,
-.block-link{
-  position:relative;
-  z-index:3;
-  display:block;
-  width:100%;
-  padding:0;
-  margin:0;
-  border:0;
-  background:transparent;
-  cursor:pointer;
-  text-decoration:none;
-  -webkit-tap-highlight-color:transparent;
-}
-
-.scene-img{
-  display:block;
-  width:100%;
-  height:auto;
-  border:6px solid var(--ink);
-  border-radius:27px;
-  background:white;
-}
-
-.block-action:active .scene-img,
-.block-link:active .scene-img,
-.main-btn:active,
-.option-link:active,
-.modal-close:active,
-.agent-btn:active{
-  transform:translateY(2px);
-}
-
-.main-btn{
-  position:relative;
-  z-index:3;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:max-content;
-  max-width:100%;
-  min-height:64px;
-  margin:16px auto 0;
-  padding:10px 26px 12px;
-  border:5px solid var(--navy);
-  border-radius:24px;
-  background:#fff9e8;
-  color:var(--ink);
-  text-align:center;
-  text-transform:uppercase;
-  text-decoration:none;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(24px,6vw,42px);
-  line-height:.92;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-
-/* MODALES */
-
-.modal{
-  position:fixed;
-  inset:0;
-  z-index:60;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:calc(12px + env(safe-area-inset-top)) 10px calc(12px + env(safe-area-inset-bottom));
-  background:rgba(2,9,25,.58);
-}
-
-.modal.is-open{
-  display:flex;
-}
-
-.modal-panel{
-  width:min(720px,100%);
-  max-height:calc(100svh - 28px);
-  overflow:auto;
-  position:relative;
-  padding:14px 12px 14px;
-  background:var(--paper);
-  border:6px solid var(--ink);
-  border-radius:30px;
-}
-
-.modal-title{
-  position:relative;
-  z-index:3;
-  margin:0 0 4px;
-  color:var(--ink);
-  text-align:center;
-  text-transform:uppercase;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(30px,7vw,48px);
-  line-height:.92;
-  text-shadow:0 3px 0 #f8d67d;
-}
-
-.modal-subtitle{
-  position:relative;
-  z-index:3;
-  margin:0 0 12px;
-  color:var(--ink);
-  text-align:center;
-  font-size:17px;
-  line-height:1.15;
-  font-weight:900;
-}
-
-.modal-grid{
-  position:relative;
-  z-index:3;
-  display:grid;
-  gap:9px;
-}
-
-.option-link{
-  display:grid;
-  grid-template-columns:42px 1fr 34px;
-  gap:10px;
-  align-items:center;
-  min-height:74px;
-  padding:10px 12px;
-  border:4px solid var(--navy);
-  border-radius:22px;
-  background:#fff9e8;
-  color:var(--ink);
-  text-decoration:none;
-}
-
-.option-icon{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:30px;
-  line-height:1;
-}
-
-.option-text strong{
-  display:block;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(23px,5.8vw,36px);
-  line-height:.92;
-  text-transform:uppercase;
-}
-
-.option-text small{
-  display:block;
-  margin-top:4px;
-  color:var(--soft);
-  font-size:clamp(13px,3.5vw,17px);
-  line-height:1.12;
-  font-weight:900;
-}
-
-.option-arrow{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:34px;
-  height:34px;
-  margin-left:auto;
-  border-radius:999px;
-  background:var(--navy);
-  color:#fff7dd;
-  font-size:24px;
-  font-weight:900;
-  line-height:1;
-}
-
-.modal-close{
-  position:relative;
-  z-index:3;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:100%;
-  min-height:56px;
-  margin:12px 0 0;
-  padding:9px 18px;
-  border:4px solid var(--navy);
-  border-radius:22px;
-  background:#2c2f36;
-  color:#fff7dd;
-  text-transform:uppercase;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(24px,6vw,38px);
-  line-height:.92;
-  cursor:pointer;
-}
-
-/* MODALE AGENTS */
-
-.search-agent{
-  position:relative;
-  z-index:3;
-  width:100%;
-  margin:2px 0 10px;
-  padding:14px 13px;
-  border:4px solid var(--ink);
-  border-radius:20px;
-  background:#fff9e8;
-  color:var(--ink);
-  font-size:18px;
-  font-weight:900;
-  outline:none;
-}
-
-.agent-list{
-  position:relative;
-  z-index:3;
-  display:grid;
-  gap:8px;
-  max-height:48svh;
-  overflow:auto;
-  padding:2px 2px 6px;
-}
-
-.agent-btn{
-  min-height:56px;
-  padding:9px 12px;
-  border:4px solid var(--ink);
-  border-radius:18px;
-  background:#fff9e8;
-  color:var(--ink);
-  text-align:center;
-  text-transform:uppercase;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(21px,5.2vw,32px);
-  line-height:.92;
-  cursor:pointer;
-}
-
-.modal-message{
-  position:relative;
-  z-index:3;
-  padding:8px 4px;
-  color:var(--ink);
-  text-align:center;
-  font-size:17px;
-  line-height:1.25;
-  font-weight:900;
-}
-
-/* RESPONSIVE */
-
-@media(max-width:520px){
-  .page{
-    padding:8px 10px calc(48px + env(safe-area-inset-bottom));
+/*
+  GHE_SECURITE_GARDE_PAGE.js
+
+  A mettre sur les pages sensibles.
+  Ligne a ajouter juste avant </body> :
+  <script src="./GHE_SECURITE_GARDE_PAGE.js"></script>
+
+  Role :
+  - bloque l'acces direct si pas connecte
+  - verifie la session avec Apps Script
+  - garde la connexion 90 jours avec localStorage + cookie
+  - memorise l'agent connecte
+  - remplit automatiquement le premier champ mail vide de la page
+*/
+
+(function(){
+  const PASSERELLE_SECURITE = "https://script.google.com/macros/s/AKfycbx7gnNRAlt6N2l8ODBJ4ycu-gNIELKpoQMNukDLoHOuTrImCv82TcLy3QjVeY30wnwz/exec";
+  const CLE_SESSION_GHE = "ghe_session_site_token";
+  const CLE_AGENT_GHE = "ghe_agent_connecte";
+  const PAGE_ACCUEIL = "./index.html";
+  const DUREE_SESSION_GHE = 90 * 24 * 60 * 60;
+
+  document.documentElement.style.visibility = "hidden";
+
+  function ecrireCookieSession(token){
+    if(!token) return;
+
+    const secure = window.location.protocol === "https:" ? "; Secure" : "";
+    document.cookie =
+      CLE_SESSION_GHE + "=" + encodeURIComponent(token) +
+      "; path=/" +
+      "; max-age=" + DUREE_SESSION_GHE +
+      "; SameSite=Lax" +
+      secure;
   }
 
-  .ecran-connexion{
-    padding:12px 10px calc(48px + env(safe-area-inset-bottom));
-  }
+  function lireCookieSession(){
+    const morceaux = document.cookie ? document.cookie.split(";") : [];
 
-  .connexion-card{
-    border-width:5px;
-    border-radius:30px;
-    padding:14px 10px 14px;
-  }
+    for(const morceau of morceaux){
+      const parts = morceau.trim().split("=");
+      const nom = parts.shift();
 
-  .connexion-card::before{
-    inset:7px;
-    border-width:2px;
-  }
-
-  .connexion-input,
-  .connexion-textarea{
-    border-width:4px;
-    font-size:17px;
-  }
-
-  .home-block{
-    margin:14px 0 25px;
-    padding:12px 9px 16px;
-    border-width:5px;
-    border-radius:30px;
-  }
-
-  .home-block::before{
-    inset:7px;
-    border-width:2px;
-  }
-
-  .scene-img{
-    border-width:5px;
-    border-radius:23px;
-  }
-
-  .main-btn{
-    min-height:58px;
-    border-width:4px;
-    padding:8px 18px 10px;
-    font-size:clamp(21px,5.7vw,34px);
-  }
-
-  .modal-panel{
-    border-width:5px;
-    border-radius:26px;
-    padding:12px 10px 12px;
-  }
-
-  .option-link{
-    grid-template-columns:38px 1fr 32px;
-    min-height:70px;
-    padding:9px 10px;
-    border-width:4px;
-  }
-
-  .option-icon{
-    font-size:27px;
-  }
-
-  .modal-title{
-    font-size:clamp(29px,7vw,44px);
-  }
-
-  .modal-subtitle{
-    font-size:16px;
-    margin-bottom:10px;
-  }
-
-  .search-agent{
-    border-width:4px;
-    font-size:17px;
-  }
-}
-</style>
-</head>
-
-<body class="secure-loading">
-
-<!-- ÉCRAN CONNEXION -->
-<section class="ecran-connexion is-hidden" id="ecranConnexion">
-  <div class="connexion-card">
-    <div class="connexion-inner">
-      <h1 class="connexion-title">Accès Planning</h1>
-      <p class="connexion-subtitle">Entre ton nom, prénom et mail. Tu recevras un lien d’accès.</p>
-
-      <form class="connexion-form" id="formConnexion">
-        <label class="connexion-label">
-          Nom
-          <input class="connexion-input" id="connexionNom" type="text" autocomplete="family-name" placeholder="Nom" required>
-        </label>
-
-        <label class="connexion-label">
-          Prénom
-          <input class="connexion-input" id="connexionPrenom" type="text" autocomplete="given-name" placeholder="Prénom" required>
-        </label>
-
-        <label class="connexion-label">
-          Mail
-          <input class="connexion-input" id="connexionMail" type="text" inputmode="email" autocomplete="email" placeholder="Adresse mail">
-        </label>
-        <button class="connexion-btn" type="submit" id="btnDemanderCode">
-          Recevoir le lien
-        </button>
-      </form>
-      <div class="connexion-message" id="messageConnexion"></div>
-
-      <div class="zone-boite-mail" id="zoneBoiteMail">
-        <a class="mail-shortcut dark" href="message://">Ouvrir Mail</a>
-        <div class="mail-shortcut-grid">
-          <a class="mail-shortcut" href="googlegmail://">Gmail</a>
-          <a class="mail-shortcut" href="ms-outlook://">Outlook</a>
-        </div>
-        <a class="mail-shortcut" href="https://www.icloud.com/mail/" target="_blank" rel="noopener">iCloud Mail</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<main class="page">
-
-  <!-- PLANNING OFFICIEL -->
-  <section class="home-block" id="planning-officiel">
-    <button class="block-action" type="button" data-open="modal-officiel" aria-label="Ouvrir le planning officiel">
-      <img class="scene-img" src="Image/Bannière/01-accueil-planning-acces.png" alt="Planning officiel GHE">
-    </button>
-
-    <button class="main-btn" type="button" data-open="modal-officiel">
-      Planning officiel
-    </button>
-  </section>
-
-  <!-- MON PLANNING -->
-  <section class="home-block" id="mon-planning-personnel">
-    <button class="block-action" type="button" data-open="modal-personnel" aria-label="Ouvrir mon planning personnel">
-      <img class="scene-img" src="Image/Bannière/02-mon-planning-personnel.png" alt="Mon planning personnel">
-    </button>
-
-    <button class="main-btn" type="button" data-open="modal-personnel">
-      Mon planning personnel
-    </button>
-  </section>
-
-  <!-- DEMANDE DE CHANGEMENT -->
-  <section class="home-block" id="demander-changement">
-    <a class="block-link" href="./demande-changement.html" aria-label="Demander un changement">
-      <img class="scene-img" src="Image/Bannière/04-demander-changement.png" alt="Demander un changement de planning">
-    </a>
-
-    <a class="main-btn" href="./demande-changement.html">
-      Demander un changement
-    </a>
-  </section>
-
-  <!-- ORGANISATION -->
-  <section class="home-block" id="organisation">
-    <button class="block-action" type="button" data-open="modal-organisation" aria-label="Ouvrir l’organisation">
-      <img class="scene-img" src="Image/Bannière/03-organisation.png" alt="Organisation GHE">
-    </button>
-
-    <button class="main-btn" type="button" data-open="modal-organisation">
-      Organisation
-    </button>
-  </section>
-
-</main>
-
-<!-- MODALE PLANNING OFFICIEL -->
-<div class="modal" id="modal-officiel" aria-hidden="true">
-  <div class="modal-panel">
-    <h2 class="modal-title">Planning officiel</h2>
-    <p class="modal-subtitle">Choisis la vue officielle à ouvrir.</p>
-
-    <div class="modal-grid">
-      <a class="option-link" href="mois.html?type=jour">
-        <span class="option-icon">☀️</span>
-        <span class="option-text">
-          <strong>Jour</strong>
-          <small>Pour l’équipe qui travaille en journée.</small>
-        </span>
-        <span class="option-arrow">→</span>
-      </a>
-
-      <a class="option-link" href="mois.html?type=nuit">
-        <span class="option-icon">🌙</span>
-        <span class="option-text">
-          <strong>Nuit</strong>
-          <small>Pour l’équipe qui travaille de nuit.</small>
-        </span>
-        <span class="option-arrow">→</span>
-      </a>
-
-      <a class="option-link" href="mois.html?type=chef">
-        <span class="option-icon">👥</span>
-        <span class="option-text">
-          <strong>Chefs</strong>
-          <small>Pour l’équipe de coordination et les chefs.</small>
-        </span>
-        <span class="option-arrow">→</span>
-      </a>
-    </div>
-
-    <button class="modal-close" type="button" data-close>Fermer</button>
-  </div>
-</div>
-
-<!-- MODALE MON PLANNING -->
-<div class="modal" id="modal-personnel" aria-hidden="true">
-  <div class="modal-panel">
-    <h2 class="modal-title">Choisis ton nom</h2>
-    <p class="modal-subtitle">Recherche ton nom puis ouvre ton aperçu personnel.</p>
-
-    <input class="search-agent" id="agentSearch" type="search" placeholder="Rechercher mon nom">
-
-    <div class="agent-list" id="agentList">
-      <div class="modal-message">Chargement des agents...</div>
-    </div>
-
-    <button class="modal-close" type="button" data-close>Fermer</button>
-  </div>
-</div>
-
-<!-- MODALE ORGANISATION -->
-<div class="modal" id="modal-organisation" aria-hidden="true">
-  <div class="modal-panel">
-    <h2 class="modal-title">Organisation</h2>
-    <p class="modal-subtitle">Choisis l’accès dont tu as besoin.</p>
-
-    <div class="modal-grid">
-      <a class="option-link" href="./esprit-equipe.html">
-        <span class="option-icon">👑</span>
-        <span class="option-text">
-          <strong>Esprit d’équipe</strong>
-          <small>Vue collective pour suivre l’organisation de l’équipe.</small>
-        </span>
-        <span class="option-arrow">→</span>
-      </a>
-
-      <a class="option-link" href="stagiaires.html">
-        <span class="option-icon">👶</span>
-        <span class="option-text">
-          <strong>Stagiaires</strong>
-          <small>Pour voir les stagiaires prévus et leurs référents.</small>
-        </span>
-        <span class="option-arrow">→</span>
-      </a>
-
-      <a class="option-link" href="formations.html">
-        <span class="option-icon">🎓</span>
-        <span class="option-text">
-          <strong>Formations</strong>
-          <small>Pour suivre les convocations et les agents concernés.</small>
-        </span>
-        <span class="option-arrow">→</span>
-      </a>
-    </div>
-
-    <button class="modal-close" type="button" data-close>Fermer</button>
-  </div>
-</div>
-
-<script>
-const PASSERELLE_SECURITE = "https://script.google.com/macros/s/AKfycbx7gnNRAlt6N2l8ODBJ4ycu-gNIELKpoQMNukDLoHOuTrImCv82TcLy3QjVeY30wnwz/exec";
-const CLE_SESSION_GHE = "ghe_session_site_token";
-
-const ecranConnexion = document.getElementById("ecranConnexion");
-const formConnexion = document.getElementById("formConnexion");
-const messageConnexion = document.getElementById("messageConnexion");
-const zoneBoiteMail = document.getElementById("zoneBoiteMail");
-const btnDemanderCode = document.getElementById("btnDemanderCode");
-
-function afficherMessageConnexion(message, type){
-  messageConnexion.textContent = message || "";
-  messageConnexion.className = "connexion-message" + (type ? " " + type : "");
-}
-
-function afficherRaccourcisMail(){
-  if(zoneBoiteMail){
-    zoneBoiteMail.classList.add("is-open");
-  }
-}
-
-function cacherRaccourcisMail(){
-  if(zoneBoiteMail){
-    zoneBoiteMail.classList.remove("is-open");
-  }
-}
-
-function paramsPage(){
-  return new URLSearchParams(window.location.search);
-}
-
-function retourDemande(){
-  return paramsPage().get("retour") || "";
-}
-
-function retourSurPageDemandeeOuAccueil(){
-  const retour = retourDemande();
-
-  if(retour && !retour.startsWith("http") && !retour.startsWith("//") && !retour.toLowerCase().includes("javascript:")){
-    window.location.href = retour;
-    return;
-  }
-
-  window.history.replaceState({}, document.title, window.location.pathname);
-}
-
-function ouvrirConnexion(message){
-  document.body.classList.remove("secure-loading");
-  ecranConnexion.classList.remove("is-hidden");
-  document.body.classList.add("modal-open");
-  afficherMessageConnexion(message || "", "");
-}
-
-function fermerConnexion(){
-  document.body.classList.remove("secure-loading");
-  ecranConnexion.classList.add("is-hidden");
-  document.body.classList.remove("modal-open");
-  afficherMessageConnexion("", "");
-  cacherRaccourcisMail();
-}
-
-function infosConnexion(){
-  return {
-    nom:document.getElementById("connexionNom").value.trim(),
-    prenom:document.getElementById("connexionPrenom").value.trim(),
-    mail:document.getElementById("connexionMail").value.trim().toLowerCase(),
-    retour:retourDemande()
-  };
-}
-
-function deverrouillerSite(token){
-  if(token){
-    localStorage.setItem(CLE_SESSION_GHE, token);
-  }
-
-  fermerConnexion();
-}
-
-function verrouillerSite(){
-  localStorage.removeItem(CLE_SESSION_GHE);
-  ouvrirConnexion("");
-}
-
-function appelerSecurite(action, params){
-  return new Promise((resolve, reject) => {
-    const callbackName = "callbackSecurite_" + Date.now() + "_" + Math.random().toString(36).slice(2);
-    const script = document.createElement("script");
-
-    const data = Object.assign({}, params || {}, {
-      action:action,
-      callback:callbackName,
-      t:Date.now()
-    });
-
-    const timeout = setTimeout(() => {
-      nettoyer();
-      reject(new Error("Temps d’attente dépassé."));
-    }, 18000);
-
-    function nettoyer(){
-      clearTimeout(timeout);
-      if(script.parentNode){
-        script.parentNode.removeChild(script);
-      }
-      try{
-        delete window[callbackName];
-      }catch(e){
-        window[callbackName] = undefined;
+      if(nom === CLE_SESSION_GHE){
+        return decodeURIComponent(parts.join("=") || "");
       }
     }
 
-    window[callbackName] = function(reponse){
-      nettoyer();
-      resolve(reponse);
+    return "";
+  }
+
+  function effacerCookieSession(){
+    document.cookie = CLE_SESSION_GHE + "=; path=/; max-age=0; SameSite=Lax";
+  }
+
+  function pageActuelle(){
+    return window.location.pathname + window.location.search + window.location.hash;
+  }
+
+  function retourConnexion(){
+    try{
+      localStorage.removeItem(CLE_SESSION_GHE);
+      localStorage.removeItem(CLE_AGENT_GHE);
+      effacerCookieSession();
+    }catch(e){}
+
+    window.location.replace(PAGE_ACCUEIL + "?connexion=1&retour=" + encodeURIComponent(pageActuelle()));
+  }
+
+  function afficherPage(){
+    document.documentElement.style.visibility = "visible";
+  }
+
+  function stockerAgent(reponse){
+    if(!reponse) return;
+
+    const agent = {
+      nom: reponse.nom || "",
+      prenom: reponse.prenom || "",
+      mail: reponse.mail || ""
     };
-
-    script.onerror = function(){
-      nettoyer();
-      reject(new Error("Impossible de joindre la sécurité du site."));
-    };
-
-    script.src = PASSERELLE_SECURITE + "?" + new URLSearchParams(data).toString();
-    document.body.appendChild(script);
-  });
-}
-
-
-async function verifierSessionAuChargement(){
-  const params = paramsPage();
-  const cleMail = params.get("connexion_mail");
-  const demandeConnexion = params.get("connexion") === "1";
-  const token = localStorage.getItem(CLE_SESSION_GHE);
-
-  if(cleMail){
-    ouvrirConnexion("Connexion depuis le mail...");
 
     try{
-      const reponse = await appelerSecurite("connexion_lien_mail", { cle:cleMail });
+      localStorage.setItem(CLE_AGENT_GHE, JSON.stringify(agent));
+    }catch(e){}
+  }
 
-      if(reponse && reponse.ok && reponse.token){
-        deverrouillerSite(reponse.token);
-        retourSurPageDemandeeOuAccueil();
+  function lireAgent(){
+    try{
+      return JSON.parse(localStorage.getItem(CLE_AGENT_GHE) || "{}");
+    }catch(e){
+      return {};
+    }
+  }
+
+  function remplirEmailAgent(){
+    const agent = lireAgent();
+
+    if(!agent || !agent.mail){
+      return;
+    }
+
+    const champs = Array.from(document.querySelectorAll("input"));
+
+    const champMailPrincipal =
+      champs.find(input => String(input.type || "").toLowerCase() === "email" && !input.value) ||
+      champs.find(input => String(input.placeholder || "").toLowerCase().includes("ton.email") && !input.value) ||
+      champs.find(input => String(input.placeholder || "").toLowerCase().includes("exemple.fr") && !input.value) ||
+      champs.find(input => String(input.name || "").toLowerCase().includes("mail") && !input.value) ||
+      champs.find(input => String(input.id || "").toLowerCase().includes("mail") && !input.value);
+
+    if(champMailPrincipal){
+      champMailPrincipal.value = agent.mail;
+      champMailPrincipal.dispatchEvent(new Event("input", { bubbles:true }));
+      champMailPrincipal.dispatchEvent(new Event("change", { bubbles:true }));
+    }
+  }
+
+  function appelerSecurite(action, params){
+    return new Promise((resolve, reject) => {
+      const callbackName = "callbackGardePage_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+      const script = document.createElement("script");
+
+      const data = Object.assign({}, params || {}, {
+        action: action,
+        callback: callbackName,
+        t: Date.now()
+      });
+
+      const timeout = setTimeout(() => {
+        nettoyer();
+        reject(new Error("Temps d attente depasse."));
+      }, 12000);
+
+      function nettoyer(){
+        clearTimeout(timeout);
+
+        if(script.parentNode){
+          script.parentNode.removeChild(script);
+        }
+
+        try{
+          delete window[callbackName];
+        }catch(e){
+          window[callbackName] = undefined;
+        }
+      }
+
+      window[callbackName] = function(reponse){
+        nettoyer();
+        resolve(reponse);
+      };
+
+      script.onerror = function(){
+        nettoyer();
+        reject(new Error("Securite inaccessible."));
+      };
+
+      script.src = PASSERELLE_SECURITE + "?" + new URLSearchParams(data).toString();
+      document.body.appendChild(script);
+    });
+  }
+
+  async function verifier(){
+    let token = "";
+
+    try{
+      token = localStorage.getItem(CLE_SESSION_GHE) || lireCookieSession() || "";
+    }catch(e){
+      retourConnexion();
+      return;
+    }
+
+    if(!token){
+      retourConnexion();
+      return;
+    }
+
+    try{
+      const reponse = await appelerSecurite("verifier_session", { token: token });
+
+      if(reponse && reponse.ok && reponse.connecte){
+        localStorage.setItem(CLE_SESSION_GHE, token);
+        ecrireCookieSession(token);
+        stockerAgent(reponse);
+        remplirEmailAgent();
+        afficherPage();
+
+        setTimeout(remplirEmailAgent, 300);
+        setTimeout(remplirEmailAgent, 1000);
         return;
       }
 
-      afficherMessageConnexion((reponse && reponse.message) ? reponse.message : "Lien de connexion refusé.", "err");
-      return;
+      retourConnexion();
 
     }catch(err){
-      afficherMessageConnexion(String(err.message || err), "err");
-      return;
+      retourConnexion();
     }
   }
 
-  if(token){
-    fermerConnexion();
-
-    appelerSecurite("verifier_session", { token:token })
-      .then(function(reponse){
-        if(reponse && reponse.ok && reponse.connecte){
-          if(demandeConnexion && retourDemande()){
-            retourSurPageDemandeeOuAccueil();
-            return;
-          }
-
-          window.history.replaceState({}, document.title, window.location.pathname);
-          return;
-        }
-
-        localStorage.removeItem(CLE_SESSION_GHE);
-        ouvrirConnexion("");
-
-      })
-      .catch(function(){
-        localStorage.removeItem(CLE_SESSION_GHE);
-        ouvrirConnexion("");
-      });
-
-    return;
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", verifier);
+  }else{
+    verifier();
   }
-
-  ouvrirConnexion("");
-}
-formConnexion.addEventListener("submit", async function(e){
-  e.preventDefault();
-
-  const infos = infosConnexion();
-
-  btnDemanderCode.disabled = true;
-  cacherRaccourcisMail();
-  afficherMessageConnexion("Demande en cours...", "");
-
-  try{
-    const reponse = await appelerSecurite("demander_code", infos);
-
-    if(reponse && reponse.ok && reponse.token){
-      deverrouillerSite(reponse.token);
-      retourSurPageDemandeeOuAccueil();
-      return;
-    }
-
-    if(reponse && reponse.ok && (reponse.besoin_lien || reponse.besoin_code)){
-      afficherMessageConnexion("Lien envoyé. Ouvre ta boîte mail puis clique sur Ouvrir le planning.", "ok");
-      afficherRaccourcisMail();
-      return;
-    }
-
-    afficherMessageConnexion((reponse && reponse.message) ? reponse.message : "Connexion refusée.", "err");
-
-  }catch(err){
-    afficherMessageConnexion(String(err.message || err), "err");
-
-  }finally{
-    btnDemanderCode.disabled = false;
-  }
-});
-
-
-
-verifierSessionAuChargement();
-</script>
-
-<script>
-const PASSERELLE_AGENTS = "https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8HZ_g_ota7tajTKLY3jvLKEF9AvSPjIbVpqcSkSRcl5OdWV9/exec";
-
-let agents = [];
-let agentsDejaCharges = false;
-let chargementEnCours = false;
-
-const agentList = document.getElementById("agentList");
-const agentSearch = document.getElementById("agentSearch");
-
-function normaliserRecherche(v){
-  return String(v || "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")
-    .toUpperCase()
-    .trim();
-}
-
-function openModal(id){
-  document.querySelectorAll(".modal").forEach(m => {
-    m.classList.remove("is-open");
-    m.setAttribute("aria-hidden","true");
-  });
-
-  const modal = document.getElementById(id);
-
-  if(modal){
-    modal.classList.add("is-open");
-    modal.setAttribute("aria-hidden","false");
-    document.body.classList.add("modal-open");
-
-    if(id === "modal-personnel"){
-      if(!agentsDejaCharges && !chargementEnCours){
-        chargerAgents();
-      }
-
-      setTimeout(() => agentSearch.focus(), 120);
-    }
-  }
-}
-
-function closeModals(){
-  document.querySelectorAll(".modal").forEach(m => {
-    m.classList.remove("is-open");
-    m.setAttribute("aria-hidden","true");
-  });
-
-  document.body.classList.remove("modal-open");
-}
-
-document.addEventListener("click", function(e){
-  const openBtn = e.target.closest("[data-open]");
-  const closeBtn = e.target.closest("[data-close]");
-  const agentBtn = e.target.closest("[data-agent-key]");
-
-  if(closeBtn){
-    closeModals();
-    return;
-  }
-
-  if(openBtn){
-    openModal(openBtn.dataset.open);
-    return;
-  }
-
-  if(agentBtn){
-    choisirAgent(agentBtn.dataset.agentKey);
-    return;
-  }
-
-  if(e.target.classList.contains("modal")){
-    closeModals();
-  }
-});
-
-document.addEventListener("keydown", function(e){
-  if(e.key === "Escape"){
-    closeModals();
-  }
-});
-
-function choisirAgent(agentKey){
-  if(!agentKey) return;
-  window.location.href = "apercu.html?type=agent&agent=" + encodeURIComponent(agentKey);
-}
-
-function normaliserAgentDepuisApi(a){
-  const agentKey = a.agent || a.key || "";
-  const nom = a.nom || a.nomComplet || a.nom_complet || a.fullName || agentKey.replace(/_/g," ");
-
-  return {
-    agent:agentKey,
-    nom:nom,
-    avatar_image_url:a.avatar_image_url || (a.avatar && a.avatar.avatar_image_url) || "",
-    avatar_thumb_url:a.avatar_thumb_url || (a.avatar && a.avatar.avatar_thumb_url) || "",
-    avatar_statut:a.avatar_statut || (a.avatar && a.avatar.avatar_statut) || ""
-  };
-}
-
-function renderAgents(filtre){
-  const q = normaliserRecherche(filtre);
-  agentList.innerHTML = "";
-
-  const visibles = agents.filter(agent => {
-    const nom = normaliserRecherche(agent.nom);
-    const key = normaliserRecherche(agent.agent);
-    return !q || nom.includes(q) || key.includes(q);
-  });
-
-  if(visibles.length === 0){
-    agentList.innerHTML = agents.length === 0
-      ? '<div class="modal-message">Aucun agent reçu depuis la passerelle.</div>'
-      : '<div class="modal-message">Aucun agent trouvé.</div>';
-    return;
-  }
-
-  visibles.forEach(agent => {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "agent-btn";
-    btn.dataset.agentKey = agent.agent;
-    btn.textContent = agent.nom;
-    agentList.appendChild(btn);
-  });
-}
-
-async function chargerAgents(){
-  chargementEnCours = true;
-  agentList.innerHTML = '<div class="modal-message">Chargement des agents...</div>';
-
-  try{
-    const url = PASSERELLE_AGENTS + "?mode=list&t=" + Date.now();
-
-    const res = await fetch(url,{
-      method:"GET",
-      cache:"no-store"
-    });
-
-    if(!res.ok){
-      throw new Error("HTTP " + res.status);
-    }
-
-    const data = await res.json();
-
-    if(!data || data.ok === false){
-      throw new Error(data && data.erreur ? data.erreur : "Réponse passerelle invalide.");
-    }
-
-    if(!Array.isArray(data.agents)){
-      throw new Error("La passerelle ne renvoie pas de tableau agents.");
-    }
-
-    agents = data.agents
-      .map(normaliserAgentDepuisApi)
-      .filter(a => a.agent && a.nom)
-      .sort((a,b) => String(a.nom).localeCompare(String(b.nom),"fr"));
-
-    agentsDejaCharges = true;
-    renderAgents(agentSearch.value || "");
-
-  }catch(err){
-    console.error(err);
-    agentList.innerHTML =
-      '<div class="modal-message">' +
-      'Impossible de charger les agents.<br>' +
-      'Erreur : ' + String(err.message || err) +
-      '</div>';
-
-  }finally{
-    chargementEnCours = false;
-  }
-}
-
-agentSearch.addEventListener("input", function(){
-  renderAgents(agentSearch.value);
-});
-</script>
-</body>
-</html>
+})();
