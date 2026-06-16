@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0f172a">
-  <title>Demande de changement planning — V10 mails visibles non modifiables</title>
+  <title>Demande de changement planning — V11 stable mails visibles</title>
   <style>
 :root{
   --cream:#fff7df;
@@ -303,18 +303,6 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
   line-height:1.35;
 }
 .mailKnown b{color:#064e3b}
-.mailAsk{
-  display:none;
-  margin-top:10px;
-}
-.mailAsk.show{display:block}
-.mailMissingTitle{
-  margin:14px 0 8px;
-  font-weight:950;
-  color:var(--navy);
-}
-
-
 .mailKnown .mailAddress{
   display:block;
   margin-top:5px;
@@ -335,11 +323,14 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
   padding-top:0;
   border-top:0;
 }
+.mailAsk{display:none;margin-top:10px}
+.mailAsk.show{display:block}
+.mailMissingTitle{margin:14px 0 8px;font-weight:950;color:var(--navy)}
 
 </style>
 </head>
 <body>
-<!-- VISUEL_SITE_V10_MAILS_CONNUS_VISIBLES_NON_MODIFIABLES -->
+<!-- VISUEL_SITE_V11_STABLE_MAILS_CONNUS_VISIBLES -->
   <div class="app">
     <header class="top">
       <div class="brand">
@@ -501,10 +492,10 @@ function normaliseMailName(name){
     .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
     .toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/^_+|_+$/g,'');
 }
-function globalMailStorageKey(){ return "demande_changement_mails_global_v3"; }
+function globalMailStorageKey(){ return "demande_changement_mails_global_v4"; }
 function mailStorageKey(){
   const id=state.agent && state.agent.id_agent ? state.agent.id_agent : "NO_AGENT";
-  return "demande_changement_mails_agent_v3_"+String(id);
+  return "demande_changement_mails_agent_v4_"+String(id);
 }
 function readJsonStore(key){
   try{ return JSON.parse(localStorage.getItem(key)||"{}") || {}; }catch(e){ return {}; }
@@ -515,13 +506,11 @@ function writeJsonStore(key,data){
 function loadMailDrafts(){
   const global=readJsonStore(globalMailStorageKey());
   const local=readJsonStore(mailStorageKey());
-
   state.mailDrafts=Object.assign({}, global.mailDrafts||{}, local.mailDrafts||{});
   state.mailDraftsByName=Object.assign({}, global.mailDraftsByName||{}, local.mailDraftsByName||{});
-
   const agentId=state.agent && state.agent.id_agent ? String(state.agent.id_agent) : "";
   const agentName=state.agent && state.agent.nom_affiche ? normaliseMailName(state.agent.nom_affiche) : "";
-  state.demandeur_email = String(
+  state.demandeur_email=String(
     local.demandeur_email ||
     (global.demandeursById && global.demandeursById[agentId]) ||
     (global.demandeursByName && global.demandeursByName[agentName]) ||
@@ -533,19 +522,16 @@ function loadMailDrafts(){
 function saveMailDrafts(){
   const agentId=state.agent && state.agent.id_agent ? String(state.agent.id_agent) : "";
   const agentName=state.agent && state.agent.nom_affiche ? normaliseMailName(state.agent.nom_affiche) : "";
-
   const global=readJsonStore(globalMailStorageKey());
   global.mailDrafts=Object.assign({}, global.mailDrafts||{}, state.mailDrafts||{});
   global.mailDraftsByName=Object.assign({}, global.mailDraftsByName||{}, state.mailDraftsByName||{});
   global.demandeursById=global.demandeursById||{};
   global.demandeursByName=global.demandeursByName||{};
-
   if(state.demandeur_email){
     global.lastDemandeurEmail=state.demandeur_email;
     if(agentId) global.demandeursById[agentId]=state.demandeur_email;
     if(agentName) global.demandeursByName[agentName]=state.demandeur_email;
   }
-
   writeJsonStore(globalMailStorageKey(), global);
   writeJsonStore(mailStorageKey(), {
     demandeur_email: state.demandeur_email || "",
@@ -575,7 +561,6 @@ function setDemandeurEmail(value){
 function syncMailInputs(){
   const de=$('demandeurEmail');
   if(de) state.demandeur_email=String(de.value||"").trim();
-
   document.querySelectorAll('[data-mail-agent-id]').forEach(inp=>{
     const id=inp.getAttribute('data-mail-agent-id') || "";
     const name=inp.getAttribute('data-mail-agent-name') || "";
@@ -610,7 +595,6 @@ function renderDemandeurMail(){
   const known=$('demandeurMailKnown');
   const ask=$('demandeurMailAsk');
   if(!known || !ask) return;
-
   if(hasDemandeurMail()){
     known.innerHTML=`<div class="mailKnown">Mail demandeur connu ✅<span class="mailAddress">${esc(state.demandeur_email)}</span></div>`;
     ask.classList.remove('show');
@@ -622,6 +606,102 @@ function renderDemandeurMail(){
 }
 window.addEventListener('pagehide', syncMailInputs);
 window.addEventListener('beforeunload', syncMailInputs);
+
+function isReadyUrl(){ return API_URL && API_URL.indexOf("COLLE_ICI") < 0 && /^https:\/\//.test(API_URL); }
+function showPage(id, step){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); $(id).classList.add('active'); $('stepPill').textContent='Étape '+step; window.scrollTo({top:0,behavior:'smooth'}); }
+function msg(id,type,text){ const el=$(id); el.className='msg show '+type; el.textContent=text; }
+function clearMsg(id){ const el=$(id); el.className='msg'; el.textContent=''; }
+function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function attr(v){ return esc(v).replace(/`/g,'&#96;'); }
+function avatar(url, cls=''){ return `<img class="avatar ${cls}" src="${attr(url||'')}" alt="" onerror="this.style.visibility='hidden'">`; }
+function shiftText(code){
+  const raw=String(code||'').trim();
+  if(!raw) return 'Non précisé';
+  const v=shiftSource(raw);
+  if(!v) return raw;
+  if(typeof v==='string') return v;
+  const icon=v.icone ? v.icone+' ' : '';
+  const label=v.libelle || v.affichage || raw;
+  const hours=(v.debut && v.fin) ? ' · '+v.debut+' à '+v.fin : '';
+  return icon+label+hours;
+}
+function shiftInfo(code){
+  const raw=String(code||'').trim();
+  const key=cleanShiftKey(raw);
+  const v=shiftSource(raw);
+  if(v && typeof v==='object'){
+    return {
+      code:v.code || raw,
+      icon:v.icone || '',
+      label:v.libelle || v.affichage || raw,
+      hours:(v.debut && v.fin) ? v.debut+' à '+v.fin : '',
+      categorie:v.categorie || ''
+    };
+  }
+  const text=typeof v==='string' ? v : raw;
+  const iconMatch=String(text||'').match(/^\S+/);
+  const maybeIcon=iconMatch ? iconMatch[0] : '';
+  const hasEmoji=/[^\w\sÀ-ÿ/.-]/.test(maybeIcon);
+  let withoutIcon=hasEmoji ? String(text).replace(maybeIcon,'').trim() : String(text||raw).trim();
+  let hours=(withoutIcon.match(/\d{1,2}:\d{2}\s*(?:à|-|—)\s*\d{1,2}:\d{2}/)||[''])[0].replace(/\s*(?:-|—)\s*/,' à ');
+  let label=withoutIcon.replace(/\s*[—·-]\s*\d{1,2}:\d{2}\s*(?:à|-|—)\s*\d{1,2}:\d{2}.*/,'').trim();
+  label=label.replace(new RegExp('^'+key+'\\s*[—-]\\s*','i'),'').trim();
+  return {code:raw, icon:hasEmoji?maybeIcon:'', label:label||raw||'Non précisé', hours:hours||'', categorie:''};
+}
+function shiftInline(code, cls=''){
+  const s=shiftInfo(code);
+  const h=s.hours ? ' · '+s.hours : '';
+  const icon=s.icon ? `<span class="shiftIcon">${esc(s.icon)}</span>` : '';
+  return `<span class="shiftLine ${cls}">${icon}<span>${esc(s.label+h)}</span></span>`;
+}
+function shiftPlain(code){
+  const s=shiftInfo(code);
+  return `${s.icon ? s.icon+' ' : ''}${s.label}${s.hours?' · '+s.hours:''}`;
+}
+function goalText(code){
+  const s=shiftInfo(code);
+  return `${s.icon ? s.icon+' ' : ''}${s.label}`;
+}
+function siteAlert(text,title='Information'){
+  $('siteModalTitle').textContent=title;
+  $('siteModalText').textContent=text;
+  $('siteModal').classList.add('show');
+}
+function closeSiteModal(){ $('siteModal').classList.remove('show'); }
+function knownMail(id){
+  const contacts=DATA && DATA.contacts ? DATA.contacts : {};
+  const a=state.agent || {};
+  const keys=[id, a.id_agent, a.agent_uid, a.id_source, normaliseMailName(a.nom_affiche)];
+  for(const k of keys){
+    if(!k) continue;
+    const c=contacts[String(k)];
+    if(!c) continue;
+    return typeof c==='string' ? c : (c.email || '');
+  }
+  return '';
+}
+function maskMail(mail){ const s=String(mail||''); const at=s.indexOf('@'); return at<2 ? s : s.slice(0,1)+'***'+s.slice(at); }
+function labelLong(label, mois, jour){ const s=String(label||''); const m=s.match(/^([A-Z])\s*(\d{1,2})/i); if(m) return (WEEK[m[1].toUpperCase()]||m[1])+' '+Number(m[2])+' '+(mois||''); return (jour?jour+' ':'')+(mois||s); }
+function makeItemId(s){ return 'item_'+String(s.mois).replace(/\W/g,'')+'_'+s.jour+'_'+Date.now()+'_'+Math.floor(Math.random()*9999); }
+
+function api(action, params={}){
+  return new Promise((resolve,reject)=>{
+    if(!isReadyUrl()) return reject(new Error('URL du script pont manquante dans le fichier GitHub.'));
+    const cb='dc_cb_'+Date.now()+'_'+Math.floor(Math.random()*1000000);
+    const url = new URL(API_URL);
+    url.searchParams.set('api', action);
+    url.searchParams.set('callback', cb);
+    Object.keys(params).forEach(k=>url.searchParams.set(k, params[k]));
+    const s=document.createElement('script');
+    let done=false;
+    const timer=setTimeout(()=>{ if(!done){ cleanup(); reject(new Error('Le script pont ne répond pas.')); } }, 25000);
+    function cleanup(){ done=true; clearTimeout(timer); delete window[cb]; if(s.parentNode) s.parentNode.removeChild(s); }
+    window[cb]=res=>{ cleanup(); resolve(res); };
+    s.onerror=()=>{ cleanup(); reject(new Error('Impossible de joindre le script pont.')); };
+    s.src=url.toString();
+    document.body.appendChild(s);
+  });
+}
 
 async function init(){
   if(!isReadyUrl()) {
@@ -676,19 +756,6 @@ function firstFutureMonth(res){
   return months.find(m=>shifts.some(s=>s.mois===m)) || (shifts[0] && shifts[0].mois) || '';
 }
 
-function knownMail(id){
-  const contacts=DATA && DATA.contacts ? DATA.contacts : {};
-  const a=state.agent || {};
-  const keys=[id, a.id_agent, a.agent_uid, a.id_source, normaliseMailName(a.nom_affiche)];
-  for(const k of keys){
-    if(!k) continue;
-    const v=contacts[String(k)];
-    if(!v) continue;
-    if(typeof v === 'string') return v;
-    if(v.email) return v.email;
-  }
-  return '';
-}
 async function selectAgent(id){
   const a=(DATA.agents||[]).find(x=>String(x.id_agent)===String(id));
   if(!a) return;
@@ -788,7 +855,7 @@ async function chooseGoal(itemId, goal){
 function selectCandidate(itemId, agentId){
   const it=state.basket.find(x=>x.item_id===itemId); if(!it) return;
   const c=(state.candidates[itemId]||[]).find(x=>String(x.id_agent)===String(agentId)); if(!c) return;
-  it.accepteur_id=c.id_agent; it.accepteur_nom=c.nom_affiche; it.accepteur_email=c.email||getSavedMail(c.id_agent,c.nom_affiche)||''; it.accepteur_avatar=c.avatar_image_url||'';
+  it.accepteur_id=c.id_agent; it.accepteur_nom=c.nom_affiche; it.accepteur_email=c.email||state.mailDrafts[c.id_agent]||''; it.accepteur_avatar=c.avatar_image_url||'';
   it.mois_accepteur=it.mois_demandeur; it.jour_accepteur=it.jour_demandeur; it.label_accepteur=it.label_demandeur; it.shift_accepteur=c.shift_code||'';
   renderExchange();
   const next=state.basket.find(x=>!state.noAgent && (!x.objectif || !x.accepteur_id));
@@ -815,7 +882,6 @@ function renderMissingMails(){
   hydrateSavedMails();
   const missing=uniqueAcceptors().filter(it=>!it.accepteur_email);
   const known=uniqueAcceptors().filter(it=>!!it.accepteur_email);
-
   let html='';
   if(known.length){
     html += '<div class="mailKnown">Mails collègues connus ✅<br>'+known.map(it=>`<span class="mailPerson"><b>${esc(it.accepteur_nom)}</b><span class="mailAddress">${esc(it.accepteur_email)}</span></span>`).join('')+'</div>';
