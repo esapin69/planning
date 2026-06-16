@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#081326">
 <title>Validation avec ajustement</title>
@@ -18,9 +19,9 @@
   --greenDark:#065f46;
   --red:#991b1b;
   --blue:#2563eb;
-  --blueSoft:#eff6ff;
   --orange:#f97316;
-  --orangeSoft:#fff7ed;
+  --yellow:#ca8a04;
+  --black:#111827;
   --shadow:0 22px 55px rgba(8,19,38,.14);
   --radius:28px;
 }
@@ -76,6 +77,23 @@ button,input,textarea{font-family:inherit}
   margin-bottom:14px;
   backdrop-filter:blur(8px);
 }
+h1{
+  position:relative;
+  z-index:1;
+  font-size:clamp(38px,5vw,66px);
+  line-height:.92;
+  letter-spacing:-.07em;
+  margin:0 0 12px;
+}
+.hero p{
+  position:relative;
+  z-index:1;
+  max-width:800px;
+  color:#cbd5e1;
+  font-size:18px;
+  line-height:1.45;
+  margin:0;
+}
 .previewNote{
   display:none;
   margin-top:18px;
@@ -90,24 +108,6 @@ button,input,textarea{font-family:inherit}
   z-index:1;
 }
 .previewNote.show{display:block}
-
-h1{
-  position:relative;
-  z-index:1;
-  font-size:clamp(38px,5vw,66px);
-  line-height:.92;
-  letter-spacing:-.07em;
-  margin:0 0 12px;
-}
-.hero p{
-  position:relative;
-  z-index:1;
-  max-width:780px;
-  color:#cbd5e1;
-  font-size:18px;
-  line-height:1.45;
-  margin:0;
-}
 .grid{display:grid;gap:18px;margin-top:18px}
 .card{
   background:rgba(255,255,255,.92);
@@ -122,7 +122,6 @@ h2{
   letter-spacing:-.045em;
   margin:0 0 8px;
 }
-h3{font-size:18px;margin:0 0 8px}
 p{color:var(--muted);line-height:1.48;margin:0 0 12px}
 .small{font-size:13px;color:var(--muted);line-height:1.42}
 .exchangeShell{
@@ -138,16 +137,6 @@ p{color:var(--muted);line-height:1.48;margin:0 0 12px}
   gap:14px;
   align-items:stretch;
   margin-bottom:14px;
-}
-.exchangeRows{
-  display:grid;
-  gap:12px;
-}
-.exchangeRow{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 76px minmax(0,1fr);
-  gap:14px;
-  align-items:stretch;
 }
 .exchangeArrow,
 .rowArrow{
@@ -170,23 +159,11 @@ p{color:var(--muted);line-height:1.48;margin:0 0 12px}
   font-weight:1000;
   box-shadow:0 12px 28px rgba(8,19,38,.10);
 }
-.rowArrow .arrowBubble{
-  width:48px;
-  height:48px;
-  font-size:25px;
-  background:linear-gradient(180deg,#ffffff,#f8fafc);
-}
 .agentIdentity{
   background:#fff;
   border:1px solid #d9e0ea;
   border-radius:30px;
   padding:18px;
-}
-.agentPanel{
-  background:#fff;
-  border:1px solid #d9e0ea;
-  border-radius:30px;
-  padding:14px;
 }
 .personHeader{
   display:flex;
@@ -244,14 +221,50 @@ p{color:var(--muted);line-height:1.48;margin:0 0 12px}
   font-size:12px;
   font-weight:1000;
 }
+.exchangeRows{display:grid;gap:14px}
+.exchangeRow{
+  background:#fff;
+  border:1px solid #d9e0ea;
+  border-radius:30px;
+  padding:14px;
+  box-shadow:0 10px 24px rgba(8,19,38,.05);
+}
+.dateTitle{
+  text-align:center;
+  font-size:15px;
+  font-weight:1000;
+  color:#334155;
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  border-radius:999px;
+  padding:8px 12px;
+  margin-bottom:12px;
+}
+.pairGrid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 76px minmax(0,1fr);
+  gap:14px;
+  align-items:stretch;
+}
+.agentPanel{
+  background:#fff;
+  border:1px solid #e2e8f0;
+  border-radius:24px;
+  padding:12px;
+}
+.rowArrow .arrowBubble{
+  width:48px;
+  height:48px;
+  font-size:25px;
+  background:linear-gradient(180deg,#ffffff,#f8fafc);
+}
 .shiftCard{
   position:relative;
   width:100%;
   border:1px solid #dde5ef;
-  background:
-    linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
-  border-radius:26px;
-  padding:16px;
+  background:linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
+  border-radius:22px;
+  padding:15px;
   text-align:left;
   cursor:pointer;
   box-shadow:0 10px 24px rgba(8,19,38,.06);
@@ -272,13 +285,21 @@ p{color:var(--muted);line-height:1.48;margin:0 0 12px}
   width:78px;
   height:78px;
   border-radius:24px;
-  background:#f1f5f9;
-  border:1px solid #e2e8f0;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:42px;
+  color:#fff;
+  font-size:34px;
+  font-weight:1000;
+  letter-spacing:-.06em;
+  box-shadow:0 10px 24px rgba(8,19,38,.12);
 }
+.shiftIconBox.M{background:#2563eb}
+.shiftIconBox.J{background:#16a34a}
+.shiftIconBox.J4{background:#f97316}
+.shiftIconBox.S{background:#ca8a04}
+.shiftIconBox.N{background:#111827}
+.shiftIconBox.REST{background:#64748b}
 .shiftMain{min-width:0}
 .shiftCode{
   font-size:46px;
@@ -473,8 +494,23 @@ p{color:var(--muted);line-height:1.48;margin:0 0 12px}
   align-items:center;
   gap:11px;
 }
-.choiceIcon{font-size:30px}
-.choiceCode{font-size:24px;font-weight:1000;min-width:52px}
+.choiceBadge{
+  width:54px;
+  height:54px;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-weight:1000;
+  font-size:18px;
+}
+.choiceBadge.M{background:#2563eb}
+.choiceBadge.J{background:#16a34a}
+.choiceBadge.J4{background:#f97316}
+.choiceBadge.S{background:#ca8a04}
+.choiceBadge.N{background:#111827}
+.choiceBadge.REST{background:#64748b}
 .choiceLabel{font-weight:1000}
 .choiceHours{font-size:13px;color:#64748b;margin-top:3px}
 .status{
@@ -489,20 +525,11 @@ p{color:var(--muted);line-height:1.48;margin:0 0 12px}
 .status.warn{background:#fff7ed;border:1px solid #fed7aa;color:#7c2d12}
 .status.err{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
 #techFrame{display:none;width:0;height:0;border:0}
-
 @media(max-width:860px){
   .app{padding:16px 14px 28px}
   .hero{padding:22px}
   .exchangeHeaderGrid{grid-template-columns:1fr;gap:12px}
-  .exchangeRows{gap:14px}
-  .exchangeRow{
-    grid-template-columns:1fr;
-    gap:10px;
-    background:#fff;
-    border:1px solid #d9e0ea;
-    border-radius:28px;
-    padding:12px;
-  }
+  .pairGrid{grid-template-columns:1fr;gap:10px}
   .exchangeArrow,
   .rowArrow{min-height:auto}
   .arrowBubble{
@@ -516,7 +543,7 @@ p{color:var(--muted);line-height:1.48;margin:0 0 12px}
     font-size:22px;
   }
   .personName{font-size:22px}
-  .shiftIconBox{width:66px;height:66px;font-size:34px}
+  .shiftIconBox{width:66px;height:66px;font-size:28px}
   .shiftCode{font-size:38px}
   .actionGrid{grid-template-columns:1fr}
   .choiceGrid{grid-template-columns:1fr}
@@ -526,10 +553,10 @@ p{color:var(--muted);line-height:1.48;margin:0 0 12px}
 <body>
 <main class="app">
   <section class="hero">
-    <div class="badge">DÃ©cision responsable</div>
+    <div class="badge">Decision responsable</div>
     <h1>Validation avec ajustement</h1>
-    <p>Ajustez uniquement les horaires nÃ©cessaires, vÃ©rifiez le mail final, puis validez lâajustement.</p>
-    <div id="previewNote" class="previewNote">Mode aperÃ§u visuel : cette page est ouverte sans demande rÃ©elle. Les noms, dates et horaires ci-dessous servent uniquement Ã  voir le rendu.</div>
+    <p>Ajustez uniquement les horaires necessaires, verifiez le mail final, puis validez l'ajustement.</p>
+    <div id="previewNote" class="previewNote">Mode apercu visuel : cette page est ouverte sans demande reelle. Les noms, dates et horaires ci-dessous servent uniquement a voir le rendu.</div>
     <div id="missingBox" class="status err"></div>
   </section>
 
@@ -540,20 +567,20 @@ p{color:var(--muted);line-height:1.48;margin:0 0 12px}
           <div class="personHeader">
             <div class="panelKicker">Agent demandeur</div>
             <div id="demandeurAvatarWrap"></div>
-            <div class="personName" id="demandeurName">â</div>
+            <div class="personName" id="demandeurName">-</div>
             <div class="panelCount" id="demandeurCount">0 date</div>
           </div>
         </section>
 
         <div class="exchangeArrow" aria-hidden="true">
-          <div class="arrowBubble">â</div>
+          <div class="arrowBubble">&rarr;</div>
         </div>
 
         <section class="agentIdentity">
           <div class="personHeader">
-            <div class="panelKicker">Agent concernÃ© par lâÃ©change</div>
+            <div class="panelKicker">Agent concerne par l'echange</div>
             <div id="accepteurAvatarWrap"></div>
-            <div class="personName" id="accepteurName">â</div>
+            <div class="personName" id="accepteurName">-</div>
             <div class="panelCount" id="accepteurCount">0 date</div>
           </div>
         </section>
@@ -563,27 +590,27 @@ p{color:var(--muted);line-height:1.48;margin:0 0 12px}
     </section>
 
     <section class="card messageBox">
-      <h2>Message complÃ©mentaire</h2>
-      <p class="small">Optionnel. Il apparaÃ®t dans le mail uniquement sâil est rempli.</p>
-      <textarea id="messageCadre" placeholder="Exemple : Accord validÃ©, avec ajustement du vendredi en J4."></textarea>
+      <h2>Message complementaire</h2>
+      <p class="small">Optionnel. Si l'ajustement concerne un seul agent, precisez toujours le nom de l'agent, la date et l'horaire.</p>
+      <textarea id="messageCadre" placeholder="Exemple : Accord valide avec ajustement pour SAPIN Eddy : vendredi 12 juin en J4."></textarea>
     </section>
 
     <section class="card" id="alertsCard" style="display:none">
-      <h2>Alertes de lâajustement</h2>
+      <h2>Alertes de l'ajustement</h2>
       <div id="alerts" class="alertList"></div>
     </section>
 
     <section class="card">
-      <h2>AperÃ§u du mail envoyÃ©</h2>
+      <h2>Apercu du mail envoye</h2>
       <div class="mailPreview">
-        <div class="mailHead">Demande de changement planning validÃ©e avec ajustement</div>
+        <div class="mailHead">Demande de changement planning validee avec ajustement</div>
         <div class="mailBody" id="mailPreview"></div>
       </div>
     </section>
 
     <section class="actions">
       <div class="actionGrid">
-        <button class="btn green" id="submitBtn" type="button">Valider et envoyer lâajustement</button>
+        <button class="btn green" id="submitBtn" type="button">Valider et envoyer l'ajustement</button>
         <button class="btn grey" type="button" onclick="window.close()">Fermer</button>
       </div>
       <div id="status" class="status"></div>
@@ -596,7 +623,7 @@ p{color:var(--muted);line-height:1.48;margin:0 0 12px}
     <h2 id="modalTitle">Choisir un horaire</h2>
     <p class="small" id="modalSub"></p>
 
-    <div class="choiceSectionTitle">Horaires travaillÃ©s</div>
+    <div class="choiceSectionTitle">Horaires travailles</div>
     <div id="workChoices" class="choiceGrid"></div>
 
     <div class="line"></div>
@@ -615,17 +642,17 @@ p{color:var(--muted);line-height:1.48;margin:0 0 12px}
 const BACKEND_URL = "https://script.google.com/macros/s/AKfycbx99VoulRgSXfGS58f8UfvhUsi7GhUhG1gIme-35_HZWkCDxfdrN5KWLCG08hN9q5LA/exec";
 
 const SHIFT_OPTIONS = [
-  {code:"M",  icon:"ðµ", label:"Matin", heure:"06:50-14:40", worked:true, night:false, category:"work"},
-  {code:"J",  icon:"ð¢", label:"Jour", heure:"08:30-16:20", worked:true, night:false, category:"work"},
-  {code:"J4", icon:"ð ", label:"J4", heure:"10:10-18:00", worked:true, night:false, category:"work"},
-  {code:"S",  icon:"ð¡", label:"Soir", heure:"13:30-21:00", worked:true, night:false, category:"work"},
-  {code:"N",  icon:"â«", label:"Nuit", heure:"20:50-06:50", worked:true, night:true, category:"work"},
-  {code:"RH", icon:"ðï¸", label:"Repos hebdomadaire", heure:"", worked:false, night:false, category:"rest"},
-  {code:"RC", icon:"ð", label:"RÃ©cupÃ©ration", heure:"", worked:false, night:false, category:"rest"},
-  {code:"CA", icon:"ðï¸", label:"CongÃ© annuel", heure:"", worked:false, night:false, category:"rest"},
-  {code:"RTT",icon:"ð§", label:"RTT", heure:"", worked:false, night:false, category:"rest"},
-  {code:"RF", icon:"ð", label:"Repos fÃ©riÃ©", heure:"", worked:false, night:false, category:"rest"},
-  {code:"MA", icon:"ð©º", label:"Maladie / absence mÃ©dicale", heure:"", worked:false, night:false, category:"rest"}
+  {code:"M",  label:"Matin", heure:"06:50-14:40", worked:true, night:false, category:"work"},
+  {code:"J",  label:"Jour", heure:"08:30-16:20", worked:true, night:false, category:"work"},
+  {code:"J4", label:"J4", heure:"10:10-18:00", worked:true, night:false, category:"work"},
+  {code:"S",  label:"Soir", heure:"13:30-21:00", worked:true, night:false, category:"work"},
+  {code:"N",  label:"Nuit", heure:"20:50-06:50", worked:true, night:true, category:"work"},
+  {code:"RH", label:"Repos hebdomadaire", heure:"", worked:false, night:false, category:"rest"},
+  {code:"RC", label:"Recuperation", heure:"", worked:false, night:false, category:"rest"},
+  {code:"CA", label:"Conge annuel", heure:"", worked:false, night:false, category:"rest"},
+  {code:"RTT",label:"RTT", heure:"", worked:false, night:false, category:"rest"},
+  {code:"RF", label:"Repos ferie", heure:"", worked:false, night:false, category:"rest"},
+  {code:"MA", label:"Maladie / absence medicale", heure:"", worked:false, night:false, category:"rest"}
 ];
 
 const $ = id => document.getElementById(id);
@@ -634,7 +661,7 @@ let state = {
   token:"",
   ref:"",
   demandeur:{nom:"Demandeur", avatar:""},
-  accepteur:{nom:"Agent concernÃ©", avatar:""},
+  accepteur:{nom:"Agent concerne", avatar:""},
   copies:[],
   items:[],
   currentEdit:null,
@@ -672,15 +699,19 @@ function avatarHtml(person){
 }
 function shiftInfo(code){
   const c = String(code || "").trim().toUpperCase();
-  return SHIFT_OPTIONS.find(s => s.code === c) || {code:c || "?", icon:"â¬", label:c || "Non prÃ©cisÃ©", heure:"", worked:false, night:false, category:"rest"};
+  return SHIFT_OPTIONS.find(s => s.code === c) || {code:c || "?", label:c || "Non precise", heure:"", worked:false, night:false, category:"rest"};
+}
+function badgeClass(code){
+  const c = String(code || "").trim().toUpperCase();
+  return ["M","J","J4","S","N"].includes(c) ? c : "REST";
 }
 function labelShift(s){
-  if(!s) return "Non prÃ©cisÃ©";
-  return s.heure ? `${s.label} Â· ${s.heure}` : s.label;
+  if(!s) return "Non precise";
+  return s.heure ? `${s.label} - ${s.heure}` : s.label;
 }
 function normalizeDateLabel(value){
   const raw = String(value || "").trim();
-  if(!raw) return "Date concernÃ©e";
+  if(!raw) return "Date concernee";
   const iso = raw.match(/\d{4}-\d{2}-\d{2}/);
   if(iso){
     try{
@@ -719,11 +750,10 @@ function init(){
 
   const accepteurs = tryJsonParam("accepteurs");
   state.accepteur = accepteurs[0] || {
-    nom: q("accepteur") || (state.demoMode ? "TRIBOULET Mathieu" : "Agent concernÃ©"),
+    nom: q("accepteur") || (state.demoMode ? "TRIBOULET Mathieu" : "Agent concerne"),
     avatar: q("accepteurAvatar") || ""
   };
   state.copies = tryJsonParam("copies");
-
   state.items = buildItems(rawItems);
 
   if(state.demoMode){
@@ -731,7 +761,7 @@ function init(){
   }
 
   $("demandeurName").textContent = state.demandeur.nom;
-  $("accepteurName").textContent = state.accepteur.nom || "Agent concernÃ©";
+  $("accepteurName").textContent = state.accepteur.nom || "Agent concerne";
   $("demandeurAvatarWrap").innerHTML = avatarHtml(state.demandeur);
   $("accepteurAvatarWrap").innerHTML = avatarHtml(state.accepteur);
   $("demandeurCount").textContent = state.items.length + (state.items.length > 1 ? " dates" : " date");
@@ -755,18 +785,18 @@ function buildItems(rawItems){
         item_id:"demo-1",
         date:"2026-06-08",
         demandeur_nom:state.demandeur.nom,
-        accepteur_nom:state.accepteur.nom || "Agent concernÃ©",
+        accepteur_nom:state.accepteur.nom || "Agent concerne",
         demandeur_shift_initial:"M",
         accepteur_shift_initial:"S",
         demandeur_shift:"M",
-        accepteur_shift:"S",
+        accepteur_shift:"M",
         resume:""
       },
       {
         item_id:"demo-2",
         date:"2026-06-09",
         demandeur_nom:state.demandeur.nom,
-        accepteur_nom:state.accepteur.nom || "Agent concernÃ©",
+        accepteur_nom:state.accepteur.nom || "Agent concerne",
         demandeur_shift_initial:"M",
         accepteur_shift_initial:"S",
         demandeur_shift:"J4",
@@ -777,7 +807,7 @@ function buildItems(rawItems){
         item_id:"demo-3",
         date:"2026-06-13",
         demandeur_nom:state.demandeur.nom,
-        accepteur_nom:state.accepteur.nom || "Agent concernÃ©",
+        accepteur_nom:state.accepteur.nom || "Agent concerne",
         demandeur_shift_initial:"M",
         accepteur_shift_initial:"S",
         demandeur_shift:"RH",
@@ -792,10 +822,10 @@ function buildItems(rawItems){
     const aCode = it.accepteur_shift_code || it.shift_accepteur || it.accepteurShift || it.to || "";
     return {
       item_id: it.item_id || it.id || ("item-" + idx),
-      date: it.date || it.date_iso || it.label_demandeur || it.jour || "Date concernÃ©e",
+      date: it.date || it.date_iso || it.label_demandeur || it.jour || "Date concernee",
       resume: it.resume || it.label || "",
       demandeur_nom: it.demandeur_nom || state.demandeur.nom,
-      accepteur_nom: it.accepteur_nom || state.accepteur.nom || "Agent concernÃ©",
+      accepteur_nom: it.accepteur_nom || state.accepteur.nom || "Agent concerne",
       demandeur_shift_initial: dCode || "M",
       accepteur_shift_initial: aCode || "S",
       demandeur_shift: dCode || "M",
@@ -812,14 +842,14 @@ function shiftCardHtml(item, side){
   const changed = String(code).toUpperCase() !== String(initial).toUpperCase();
 
   return `<button class="shiftCard" type="button" onclick="openModal('${esc(item.item_id)}','${side}')">
-    ${changed ? `<span class="changedPill">AjustÃ©</span>` : ``}
+    ${changed ? `<span class="changedPill">Ajuste</span>` : ``}
     <div class="shiftRow">
-      <div class="shiftIconBox">${esc(s.icon)}</div>
+      <div class="shiftIconBox ${esc(badgeClass(s.code))}">${esc(s.code)}</div>
       <div class="shiftMain">
         <div class="shiftCode">${esc(s.code)}</div>
         <div class="shiftLabel">${esc(labelShift(s))}</div>
         <div class="shiftDate">${esc(normalizeDateLabel(item.date))}</div>
-        <div class="shiftHint">${esc(person)} Â· cliquer pour modifier</div>
+        <div class="shiftHint">${esc(person)} - cliquer pour modifier</div>
       </div>
     </div>
   </button>`;
@@ -828,17 +858,20 @@ function shiftCardHtml(item, side){
 function renderCards(){
   $("exchangeRows").innerHTML = state.items.map(it => `
     <div class="exchangeRow">
-      <section class="agentPanel">
-        ${shiftCardHtml(it, "demandeur")}
-      </section>
+      <div class="dateTitle">${esc(normalizeDateLabel(it.date))}</div>
+      <div class="pairGrid">
+        <section class="agentPanel">
+          ${shiftCardHtml(it, "demandeur")}
+        </section>
 
-      <div class="rowArrow" aria-hidden="true">
-        <div class="arrowBubble">â</div>
+        <div class="rowArrow" aria-hidden="true">
+          <div class="arrowBubble">&rarr;</div>
+        </div>
+
+        <section class="agentPanel">
+          ${shiftCardHtml(it, "accepteur")}
+        </section>
       </div>
-
-      <section class="agentPanel">
-        ${shiftCardHtml(it, "accepteur")}
-      </section>
     </div>
   `).join("");
 }
@@ -852,8 +885,7 @@ function renderChoices(){
 function choiceHtml(s){
   return `<button class="choice" type="button" onclick="chooseShift('${esc(s.code)}')">
     <div class="choiceMain">
-      <div class="choiceIcon">${esc(s.icon)}</div>
-      <div class="choiceCode">${esc(s.code)}</div>
+      <div class="choiceBadge ${esc(badgeClass(s.code))}">${esc(s.code)}</div>
       <div>
         <div class="choiceLabel">${esc(s.label)}</div>
         <div class="choiceHours">${esc(s.heure || "Repos / absence")}</div>
@@ -867,7 +899,7 @@ function openModal(itemId, side){
   state.currentEdit = {itemId, side};
   const person = side === "demandeur" ? item.demandeur_nom : item.accepteur_nom;
   $("modalTitle").textContent = "Choisir un horaire";
-  $("modalSub").textContent = person + " â " + normalizeDateLabel(item.date);
+  $("modalSub").textContent = person + " - " + normalizeDateLabel(item.date);
   $("modal").classList.add("show");
 }
 function closeModal(){
@@ -891,19 +923,52 @@ function computeAlerts(){
     const d = shiftInfo(item.demandeur_shift);
     const a = shiftInfo(item.accepteur_shift);
     const dateLabel = normalizeDateLabel(item.date);
+    const sameCode = String(d.code).toUpperCase() === String(a.code).toUpperCase();
+
+    if(sameCode && d.worked && a.worked){
+      alerts.push({
+        level:"warn",
+        title:"Meme horaire pour les deux agents - " + dateLabel,
+        text:"Les deux agents sont positionnes en " + d.code + " sur la meme date. A verifier : l'ajustement peut annuler l'echange ou creer une incoherence."
+      });
+    }
+
+    if(sameCode && !d.worked && !a.worked){
+      alerts.push({
+        level:"watch",
+        title:"Meme repos / absence pour les deux agents - " + dateLabel,
+        text:"Les deux agents ont le meme code " + d.code + " sur la meme date. A verifier avant validation."
+      });
+    }
 
     if(d.night){
-      alerts.push({level:"warn", icon:"â ï¸", title:"Nuit concernÃ©e â " + item.demandeur_nom, text:"Lâajustement place lâagent demandeur sur une nuit le " + dateLabel + ". VÃ©rification renforcÃ©e recommandÃ©e."});
+      alerts.push({
+        level:"warn",
+        title:"Nuit concernee - " + item.demandeur_nom,
+        text:"L'ajustement place l'agent demandeur sur une nuit le " + dateLabel + ". Verification renforcee recommandee."
+      });
     }
     if(a.night){
-      alerts.push({level:"warn", icon:"â ï¸", title:"Nuit concernÃ©e â " + item.accepteur_nom, text:"Lâajustement place lâagent concernÃ© par lâÃ©change sur une nuit le " + dateLabel + ". VÃ©rification renforcÃ©e recommandÃ©e."});
+      alerts.push({
+        level:"warn",
+        title:"Nuit concernee - " + item.accepteur_nom,
+        text:"L'ajustement place l'agent concerne par l'echange sur une nuit le " + dateLabel + ". Verification renforcee recommandee."
+      });
     }
 
     if(isWeekend(item.date) && d.worked){
-      alerts.push({level:"watch", icon:"ð", title:"Week-end travaillÃ© â " + item.demandeur_nom, text:"Cet ajustement prÃ©voit un horaire travaillÃ© sur week-end pour lâagent demandeur. Ã vÃ©rifier selon lâorganisation habituelle du service."});
+      alerts.push({
+        level:"watch",
+        title:"Week-end travaille - " + item.demandeur_nom,
+        text:"Cet ajustement prevoit un horaire travaille sur week-end pour l'agent demandeur. A verifier selon l'organisation habituelle du service."
+      });
     }
     if(isWeekend(item.date) && a.worked){
-      alerts.push({level:"watch", icon:"ð", title:"Week-end travaillÃ© â " + item.accepteur_nom, text:"Cet ajustement prÃ©voit un horaire travaillÃ© sur week-end pour lâagent concernÃ© par lâÃ©change. Ã vÃ©rifier selon lâorganisation habituelle du service."});
+      alerts.push({
+        level:"watch",
+        title:"Week-end travaille - " + item.accepteur_nom,
+        text:"Cet ajustement prevoit un horaire travaille sur week-end pour l'agent concerne par l'echange. A verifier selon l'organisation habituelle du service."
+      });
     }
   });
 
@@ -921,14 +986,14 @@ function renderAlerts(){
   }
 
   card.style.display = "";
-  $("alerts").innerHTML = alerts.map(a => `<div class="alert ${esc(a.level)}"><div class="aTitle">${esc(a.icon)} ${esc(a.title)}</div><div>${esc(a.text)}</div></div>`).join("");
+  $("alerts").innerHTML = alerts.map(a => `<div class="alert ${esc(a.level)}"><div class="aTitle">${esc(a.title)}</div><div>${esc(a.text)}</div></div>`).join("");
 }
 
 function groupLines(side){
   return state.items.map(item => {
     const code = side === "demandeur" ? item.demandeur_shift : item.accepteur_shift;
     const s = shiftInfo(code);
-    return `<div class="mailItem">â¢ <b>${esc(normalizeDateLabel(item.date))}</b> : ${esc(s.code)} â ${esc(labelShift(s))}</div>`;
+    return `<div class="mailItem">- <b>${esc(normalizeDateLabel(item.date))}</b> : ${esc(s.code)} - ${esc(labelShift(s))}</div>`;
   }).join("");
 }
 
@@ -936,8 +1001,8 @@ function renderMail(){
   const msg = $("messageCadre").value.trim();
   $("mailPreview").innerHTML = `
     <p>Bonjour,</p>
-    <p>Votre demande de changement planning est validÃ©e avec ajustement.</p>
-    <p><b>Le planning a Ã©tÃ© mis Ã  jour avec les horaires validÃ©s ci-dessous.</b></p>
+    <p>Votre demande de changement planning est validee avec ajustement.</p>
+    <p><b>Le planning a ete mis a jour avec les horaires valides ci-dessous.</b></p>
 
     <div class="line"></div>
 
@@ -947,14 +1012,14 @@ function renderMail(){
 
     <div class="line"></div>
 
-    <div class="mailBlockTitle">Agent concernÃ© par lâÃ©change</div>
-    <div class="mailName">${esc(state.accepteur.nom || "Agent concernÃ©")}</div>
+    <div class="mailBlockTitle">Agent concerne par l'echange</div>
+    <div class="mailName">${esc(state.accepteur.nom || "Agent concerne")}</div>
     ${groupLines("accepteur")}
 
-    ${msg ? `<div class="line"></div><div class="mailBlockTitle">Message complÃ©mentaire</div><p>${esc(msg).replace(/\n/g,"<br>")}</p>` : ``}
+    ${msg ? `<div class="line"></div><div class="mailBlockTitle">Precision responsable</div><p>${esc(msg).replace(/\n/g,"<br>")}</p>` : ``}
 
     <div class="line"></div>
-    <p>Cette validation remplace la proposition initiale pour les dates indiquÃ©es ci-dessus.</p>
+    <p>Cette validation remplace la proposition initiale pour les dates indiquees ci-dessus.</p>
     <p>Cordialement.</p>
   `;
 }
@@ -979,19 +1044,19 @@ function buildActionUrl(){
 
 function submitAdjustment(){
   if(state.demoMode){
-    showStatus("warn","Mode aperÃ§u : aucun envoi rÃ©el nâest effectuÃ©.");
+    showStatus("warn","Mode apercu : aucun envoi reel n'est effectue.");
     return;
   }
   if(!state.id || !state.token){
-    showStatus("err","Lien incomplet : impossible dâenvoyer lâajustement.");
+    showStatus("err","Lien incomplet : impossible d'envoyer l'ajustement.");
     return;
   }
   $("submitBtn").disabled = true;
-  showStatus("warn","Envoi de lâajustement en coursâ¦");
+  showStatus("warn","Envoi de l'ajustement en cours...");
   $("techFrame").src = buildActionUrl();
 
   setTimeout(() => {
-    showStatus("ok","Ajustement envoyÃ©. Si le lien est valide, le planning a Ã©tÃ© mis Ã  jour et le mail final a Ã©tÃ© envoyÃ©.");
+    showStatus("ok","Ajustement envoye. Si le lien est valide, le planning a ete mis a jour et le mail final a ete envoye.");
     $("submitBtn").disabled = false;
   }, 1800);
 }
