@@ -702,8 +702,9 @@ body.secure-loading .modal{
   <div class="mail-modal-card">
     <div class="mail-modal-inner">
       <h2 class="mail-modal-title">Lien envoyé</h2>
-      <p class="mail-modal-text">Ouvre ta boîte mail, puis clique sur le mail reçu.</p>
-      <p class="mail-modal-soft">Tu peux fermer cette fenêtre après avoir ouvert tes mails.</p>
+      <p class="mail-modal-text">Ouvre ta boîte mail puis clique sur <b>Ouvrir le planning</b>.</p>
+      <button class="mail-open-btn" type="button" id="ouvrirBoiteMail">Ouvrir ma boîte mail</button>
+      <p class="mail-modal-soft">Le bouton ouvre la boîte de réception quand le domaine est reconnu. Sinon, ouvre ton application mail habituelle.</p>
       <button class="mail-close-btn" type="button" id="fermerMailModal">Fermer</button>
     </div>
   </div>
@@ -854,15 +855,13 @@ body.secure-loading .modal{
 <script>
 const PASSERELLE_SECURITE = "https://script.google.com/macros/s/AKfycbx7gnNRAlt6N2l8ODBJ4ycu-gNIELKpoQMNukDLoHOuTrImCv82TcLy3QjVeY30wnwz/exec";
 const CLE_SESSION_GHE = "ghe_session_site_token";
-const CLE_SESSION_EXPIRATION_GHE = "ghe_session_site_expiration";
-const CLE_AGENT_GHE = "ghe_agent_connecte";
-const DUREE_SESSION_MS_GHE = 90 * 24 * 60 * 60 * 1000;
 
 const ecranConnexion = document.getElementById("ecranConnexion");
 const formConnexion = document.getElementById("formConnexion");
 const messageConnexion = document.getElementById("messageConnexion");
 const mailModal = document.getElementById("mailModal");
 const fermerMailModal = document.getElementById("fermerMailModal");
+const ouvrirBoiteMail = document.getElementById("ouvrirBoiteMail");
 const btnRecevoirLien = document.getElementById("btnRecevoirLien");
 
 function afficherMessageConnexion(message, type){
@@ -884,6 +883,56 @@ function fermerFenetreMail(){
   }
 }
 
+function lienBoiteMailSelonAdresse(mail){
+  const adresse = String(mail || "").trim().toLowerCase();
+  const domaine = adresse.includes("@") ? adresse.split("@").pop() : "";
+
+  if(domaine === "gmail.com" || domaine === "googlemail.com"){
+    return "https://mail.google.com/mail/u/0/#inbox";
+  }
+
+  if(domaine === "icloud.com" || domaine === "me.com" || domaine === "mac.com"){
+    return "https://www.icloud.com/mail/";
+  }
+
+  if(domaine === "outlook.com" || domaine === "hotmail.com" || domaine === "live.com" || domaine === "msn.com"){
+    return "https://outlook.live.com/mail/0/inbox";
+  }
+
+  if(domaine === "yahoo.com" || domaine === "yahoo.fr"){
+    return "https://mail.yahoo.com/";
+  }
+
+  if(domaine === "orange.fr" || domaine === "wanadoo.fr"){
+    return "https://mail.orange.fr/";
+  }
+
+  if(domaine === "sfr.fr" || domaine === "neuf.fr"){
+    return "https://messagerie.sfr.fr/";
+  }
+
+  if(domaine === "free.fr"){
+    return "https://webmail.free.fr/";
+  }
+
+  if(domaine === "laposte.net"){
+    return "https://www.laposte.net/accueil";
+  }
+
+  return "";
+}
+
+function ouvrirBoiteMailUtilisateur(){
+  const mail = document.getElementById("connexionMail").value || "";
+  const lien = lienBoiteMailSelonAdresse(mail);
+
+  if(lien){
+    window.location.href = lien;
+    return;
+  }
+
+  alert("Je ne peux pas ouvrir automatiquement cette boîte mail. Ouvre ton application mail habituelle, puis clique sur le mail reçu.");
+}
 
 function paramsPage(){
   return new URLSearchParams(window.location.search);
@@ -929,17 +978,16 @@ function infosConnexion(){
   };
 }
 
-function deverrouillerSite(token, reponse, infos){
+function deverrouillerSite(token){
   if(token){
-    enregistrerSessionLocale(token);
-    stockerAgentConnecte(reponse, infos);
+    localStorage.setItem(CLE_SESSION_GHE, token);
   }
 
   fermerConnexion();
 }
 
 function verrouillerSite(){
-  effacerSessionLocale();
+  localStorage.removeItem(CLE_SESSION_GHE);
   ouvrirConnexion("");
 }
 
@@ -991,7 +1039,7 @@ async function verifierSessionAuChargement(){
   const params = paramsPage();
   const cleMail = params.get("connexion_mail");
   const demandeConnexion = params.get("connexion") === "1";
-  const tokenLocal = sessionLocaleValide();
+  const token = localStorage.getItem(CLE_SESSION_GHE);
 
   if(cleMail){
     ouvrirConnexion("Connexion depuis le mail...");
@@ -1000,7 +1048,7 @@ async function verifierSessionAuChargement(){
       const reponse = await appelerSecurite("connexion_lien_mail", { cle:cleMail });
 
       if(reponse && reponse.ok && reponse.token){
-        deverrouillerSite(reponse.token, reponse, null);
+        deverrouillerSite(reponse.token);
         retourSurPageDemandeeOuAccueil();
         return;
       }
@@ -1014,15 +1062,30 @@ async function verifierSessionAuChargement(){
     }
   }
 
-  if(tokenLocal){
+  if(token){
     fermerConnexion();
 
-    if(demandeConnexion && retourDemande()){
-      retourSurPageDemandeeOuAccueil();
-      return;
-    }
+    appelerSecurite("verifier_session", { token:token })
+      .then(function(reponse){
+        if(reponse && reponse.ok && reponse.connecte){
+          if(demandeConnexion && retourDemande()){
+            retourSurPageDemandeeOuAccueil();
+            return;
+          }
 
-    window.history.replaceState({}, document.title, window.location.pathname);
+          window.history.replaceState({}, document.title, window.location.pathname);
+          return;
+        }
+
+        localStorage.removeItem(CLE_SESSION_GHE);
+        ouvrirConnexion("");
+
+      })
+      .catch(function(){
+        localStorage.removeItem(CLE_SESSION_GHE);
+        ouvrirConnexion("");
+      });
+
     return;
   }
 
@@ -1041,7 +1104,7 @@ formConnexion.addEventListener("submit", async function(e){
     const reponse = await appelerSecurite("demander_code", infos);
 
     if(reponse && reponse.ok && reponse.token){
-      deverrouillerSite(reponse.token, reponse, infos);
+      deverrouillerSite(reponse.token);
       retourSurPageDemandeeOuAccueil();
       return;
     }
@@ -1068,6 +1131,9 @@ if(fermerMailModal){
   fermerMailModal.addEventListener("click", fermerFenetreMail);
 }
 
+if(ouvrirBoiteMail){
+  ouvrirBoiteMail.addEventListener("click", ouvrirBoiteMailUtilisateur);
+}
 
 if(mailModal){
   mailModal.addEventListener("click", function(e){
