@@ -1,71 +1,26 @@
 /*
   GHE_SECURITE_GARDE_PAGE.js
 
-  Version stable :
-  - ne redemande pas la connexion si une session locale 90 jours existe
-  - ne vérifie pas Apps Script à chaque chargement
-  - protège les pages sensibles
-  - conserve l'agent connecté pour préremplir le mail
+  Sécurité simple GHE :
+  - une validation mail autorise le téléphone
+  - ensuite les pages sensibles s'ouvrent sans reposer la question
+  - pas d'expiration 90 jours
+  - pas de vérification serveur à chaque refresh
 */
 
 (function(){
-  const CLE_SESSION_GHE = "ghe_session_site_token";
-  const CLE_SESSION_EXPIRATION_GHE = "ghe_session_site_expiration";
+  const CLE_ACCES_GHE = "ghe_acces_autorise";
   const CLE_AGENT_GHE = "ghe_agent_connecte";
   const PAGE_ACCUEIL = "./index.html";
-  const DUREE_SESSION_MS_GHE = 90 * 24 * 60 * 60 * 1000;
 
   document.documentElement.style.visibility = "hidden";
 
-  function ecrireCookieSession(token){
-    if(!token) return;
-
-    const secure = window.location.protocol === "https:" ? "; Secure" : "";
-    document.cookie =
-      CLE_SESSION_GHE + "=" + encodeURIComponent(token) +
-      "; path=/" +
-      "; max-age=" + Math.floor(DUREE_SESSION_MS_GHE / 1000) +
-      "; SameSite=Lax" +
-      secure;
-  }
-
-  function lireCookieSession(){
-    const morceaux = document.cookie ? document.cookie.split(";") : [];
-
-    for(const morceau of morceaux){
-      const parts = morceau.trim().split("=");
-      const nom = parts.shift();
-
-      if(nom === CLE_SESSION_GHE){
-        return decodeURIComponent(parts.join("=") || "");
-      }
-    }
-
-    return "";
-  }
-
-  function sessionLocaleValide(){
-    const maintenant = Date.now();
-
+  function accesAutorise(){
     try{
-      const token = localStorage.getItem(CLE_SESSION_GHE) || "";
-      const expiration = Number(localStorage.getItem(CLE_SESSION_EXPIRATION_GHE) || "0");
-
-      if(token && expiration && expiration > maintenant){
-        return token;
-      }
-
-      const tokenCookie = lireCookieSession();
-
-      if(tokenCookie){
-        localStorage.setItem(CLE_SESSION_GHE, tokenCookie);
-        localStorage.setItem(CLE_SESSION_EXPIRATION_GHE, String(maintenant + DUREE_SESSION_MS_GHE));
-        return tokenCookie;
-      }
-
-    }catch(e){}
-
-    return "";
+      return localStorage.getItem(CLE_ACCES_GHE) === "oui";
+    }catch(e){
+      return false;
+    }
   }
 
   function pageActuelle(){
@@ -112,14 +67,11 @@
   }
 
   function verifier(){
-    const token = sessionLocaleValide();
-
-    if(!token){
+    if(!accesAutorise()){
       retourConnexion();
       return;
     }
 
-    ecrireCookieSession(token);
     remplirEmailAgent();
     afficherPage();
 
