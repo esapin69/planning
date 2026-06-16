@@ -855,6 +855,38 @@ body.secure-loading .modal{
 <script>
 const PASSERELLE_SECURITE = "https://script.google.com/macros/s/AKfycbx7gnNRAlt6N2l8ODBJ4ycu-gNIELKpoQMNukDLoHOuTrImCv82TcLy3QjVeY30wnwz/exec";
 const CLE_SESSION_GHE = "ghe_session_site_token";
+const DUREE_SESSION_GHE = 90 * 24 * 60 * 60;
+
+function ecrireCookieSession(token){
+  if(!token) return;
+
+  const secure = window.location.protocol === "https:" ? "; Secure" : "";
+  document.cookie =
+    CLE_SESSION_GHE + "=" + encodeURIComponent(token) +
+    "; path=/" +
+    "; max-age=" + DUREE_SESSION_GHE +
+    "; SameSite=Lax" +
+    secure;
+}
+
+function lireCookieSession(){
+  const morceaux = document.cookie ? document.cookie.split(";") : [];
+
+  for(const morceau of morceaux){
+    const parts = morceau.trim().split("=");
+    const nom = parts.shift();
+
+    if(nom === CLE_SESSION_GHE){
+      return decodeURIComponent(parts.join("=") || "");
+    }
+  }
+
+  return "";
+}
+
+function effacerCookieSession(){
+  document.cookie = CLE_SESSION_GHE + "=; path=/; max-age=0; SameSite=Lax";
+}
 
 const ecranConnexion = document.getElementById("ecranConnexion");
 const formConnexion = document.getElementById("formConnexion");
@@ -981,6 +1013,7 @@ function infosConnexion(){
 function deverrouillerSite(token){
   if(token){
     localStorage.setItem(CLE_SESSION_GHE, token);
+    ecrireCookieSession(token);
   }
 
   fermerConnexion();
@@ -988,6 +1021,7 @@ function deverrouillerSite(token){
 
 function verrouillerSite(){
   localStorage.removeItem(CLE_SESSION_GHE);
+  effacerCookieSession();
   ouvrirConnexion("");
 }
 
@@ -1039,7 +1073,7 @@ async function verifierSessionAuChargement(){
   const params = paramsPage();
   const cleMail = params.get("connexion_mail");
   const demandeConnexion = params.get("connexion") === "1";
-  const token = localStorage.getItem(CLE_SESSION_GHE);
+  const token = localStorage.getItem(CLE_SESSION_GHE) || lireCookieSession();
 
   if(cleMail){
     ouvrirConnexion("Connexion depuis le mail...");
@@ -1068,6 +1102,9 @@ async function verifierSessionAuChargement(){
     appelerSecurite("verifier_session", { token:token })
       .then(function(reponse){
         if(reponse && reponse.ok && reponse.connecte){
+          localStorage.setItem(CLE_SESSION_GHE, token);
+          ecrireCookieSession(token);
+
           if(demandeConnexion && retourDemande()){
             retourSurPageDemandeeOuAccueil();
             return;
@@ -1078,11 +1115,13 @@ async function verifierSessionAuChargement(){
         }
 
         localStorage.removeItem(CLE_SESSION_GHE);
+        effacerCookieSession();
         ouvrirConnexion("");
 
       })
       .catch(function(){
         localStorage.removeItem(CLE_SESSION_GHE);
+        effacerCookieSession();
         ouvrirConnexion("");
       });
 
