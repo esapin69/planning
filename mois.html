@@ -441,22 +441,7 @@ const monthImages = [
   { number: 12, key: "12.2026", image: "Image/Mois/Decembre.jpeg" }
 ];
 
-const today = new Date();
-const currentMonth = today.getMonth() + 1;
-
-let visibleMonths = monthImages.filter(month => month.number === currentMonth);
-
-if(today.getDate() >= 20){
-  const nextMonthNumber = currentMonth === 12 ? 1 : currentMonth + 1;
-  visibleMonths.push(
-    ...monthImages.filter(month => month.number === nextMonthNumber)
-  );
-}
-
-/*
-Pour afficher tous les mois :
-visibleMonths = monthImages;
-*/
+let visibleMonths = monthImages;
 
 const monthsDiv = document.getElementById("months");
 
