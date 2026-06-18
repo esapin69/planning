@@ -579,40 +579,14 @@ function icsAgentUrl(){
 function afficherActionsAgent(){
   if(type !== "agent" || !agent) return;
 
+  const printUrl = "mois.html?type=agent&agent=" + encodeURIComponent(agent);
   const ics = icsAgentUrl();
 
   topActions.innerHTML = `
-    <a class="action-btn action-print" href="#" id="printPlanningBtn">
+    <a class="action-btn action-print" href="${printUrl}">
       🖨️ Imprimer mon planning
     </a>
   `;
-
-  const printBtn = document.getElementById("printPlanningBtn");
-
-  printBtn.addEventListener("click", async function(e){
-    e.preventDefault();
-
-    const oldText = printBtn.textContent;
-    printBtn.textContent = "⏳ Recherche du PDF...";
-
-    try{
-      const data = await fetchJson(apiUrl("pdf_agent", {
-        agent: agent,
-        mois: moisParam || "auto"
-      }));
-
-      if(!data || data.ok === false || !data.lien_pdf){
-        throw new Error(data && data.erreur ? data.erreur : "PDF indisponible");
-      }
-
-      window.location.href = data.lien_pdf;
-
-    }catch(err){
-      console.error(err);
-      printBtn.textContent = oldText;
-      alert("PDF indisponible pour le moment. Le planning est peut-être encore en préparation.");
-    }
-  });
 
   agendaSeparator.style.display = "block";
 
