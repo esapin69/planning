@@ -42,7 +42,6 @@ body::before{
   mix-blend-mode:multiply;
 }
 
-/* BANNIÈRE */
 .hero{
   position:relative;
   z-index:2;
@@ -64,7 +63,6 @@ body::before{
   display:none;
 }
 
-/* PAGE */
 .page{
   position:relative;
   z-index:3;
@@ -94,7 +92,6 @@ body::before{
   font-size:clamp(20px,5vw,31px);
 }
 
-/* TITRE */
 .title-box{
   position:relative;
   margin:4px auto 24px;
@@ -135,7 +132,6 @@ h1{
   line-height:1.25;
 }
 
-/* CARTES MOIS */
 .months-list{
   display:flex;
   flex-direction:column;
@@ -197,6 +193,24 @@ h1{
   font-size:20px;
 }
 
+.loading-box{
+  background:white;
+  border:5px solid #07183f;
+  border-radius:28px;
+  padding:18px 16px;
+  margin:0 0 18px;
+  text-align:center;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-weight:950;
+  font-size:17px;
+  line-height:1.25;
+  display:none;
+}
+
+.loading-box.show{
+  display:block;
+}
+
 @media(max-width:520px){
   .page{padding:14px 10px 42px}
   .hero img{height:118px}
@@ -222,11 +236,15 @@ h1{
     <div class="subtitle" id="subtitle">Sélectionne le mois souhaité</div>
   </div>
 
+  <div id="loadingBox" class="loading-box"></div>
+
   <div id="months" class="months-list"></div>
 
 </main>
 
 <script>
+const PASSERELLE = "https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8HZ_g_ota7tajTKLY3jvLKEF9AvSPjIbVpqcSkSRcl5OdWV9/exec";
+
 const params = new URLSearchParams(window.location.search);
 const type = params.get("type") || "jour";
 const agent = String(params.get("agent") || "").trim();
@@ -245,6 +263,7 @@ const labels = {
 
 const pageTitle = document.getElementById("pageTitle");
 const subtitle = document.getElementById("subtitle");
+const loadingBox = document.getElementById("loadingBox");
 
 if(type === "agent"){
   pageTitle.textContent = "Choisis ton mois";
@@ -253,6 +272,41 @@ if(type === "agent"){
     : "Agent manquant";
 }else{
   subtitle.textContent = labels[type] || "Sélectionne le mois souhaité";
+}
+
+function apiUrl(mode, extra){
+  const url = new URL(PASSERELLE);
+  url.searchParams.set("mode", mode);
+  url.searchParams.set("t", Date.now());
+
+  Object.keys(extra || {}).forEach(k => {
+    url.searchParams.set(k, extra[k]);
+  });
+
+  return url.toString();
+}
+
+async function fetchJson(url){
+  const res = await fetch(url, {
+    method:"GET",
+    cache:"no-store"
+  });
+
+  if(!res.ok){
+    throw new Error("HTTP " + res.status);
+  }
+
+  return await res.json();
+}
+
+function showLoading(message){
+  loadingBox.textContent = message;
+  loadingBox.classList.add("show");
+}
+
+function hideLoading(){
+  loadingBox.textContent = "";
+  loadingBox.classList.remove("show");
 }
 
 const links = {
@@ -347,7 +401,6 @@ const links = {
   }
 };
 
-/* BANNIÈRE */
 const banner = document.getElementById("banner");
 const hero = document.getElementById("hero");
 
@@ -373,7 +426,6 @@ function tryBanner(){
 banner.onerror = tryBanner;
 tryBanner();
 
-/* IMAGES DES MOIS */
 const monthImages = [
   { number: 1, key: "01.2026", image: "Image/Mois/Janvier.jpeg" },
   { number: 2, key: "02.2026", image: "Image/Mois/Fevrier.jpeg" },
@@ -408,20 +460,36 @@ visibleMonths = monthImages;
 
 const monthsDiv = document.getElementById("months");
 
-function ouvrirMois(month){
-  if(type === "agent"){
-    if(!agent){
-      alert("Agent manquant.");
-      return;
+async function ouvrirPdfAgentMois(month){
+  if(!agent){
+    alert("Agent manquant.");
+    return;
+  }
+
+  showLoading("Recherche du PDF " + month.key + "...");
+
+  try{
+    const data = await fetchJson(apiUrl("pdf_agent", {
+      agent: agent,
+      mois: month.key
+    }));
+
+    if(!data || data.ok === false || !data.lien_pdf){
+      throw new Error(data && data.erreur ? data.erreur : "PDF indisponible");
     }
 
-    window.location.href =
-      "apercu.html?type=agent&agent=" +
-      encodeURIComponent(agent) +
-      "&mois=" +
-      encodeURIComponent(month.key) +
-      "&print=1";
+    window.location.href = data.lien_pdf;
 
+  }catch(err){
+    console.error(err);
+    hideLoading();
+    alert("PDF indisponible pour " + month.key + ". Le planning est peut-être encore en préparation.");
+  }
+}
+
+function ouvrirMois(month){
+  if(type === "agent"){
+    ouvrirPdfAgentMois(month);
     return;
   }
 
