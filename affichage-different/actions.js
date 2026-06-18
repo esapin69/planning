@@ -1,4 +1,4 @@
-// Actions de l'affichage différent — v6
+// Actions de l'affichage différent — v7
 // Rôle : personnaliser l'accueil APRÈS connexion Cloudflare.
 // - Avatar + prénom en haut
 // - Mon planning personnel direct
@@ -204,7 +204,7 @@
     if(role !== "agent") return "";
 
     var key = norm(agentKey(session)) || norm(agentNom(session) + "_" + agentPrenom(session));
-    var cacheKey = "ghe_type_planning_v6_" + key;
+    var cacheKey = "ghe_type_planning_v7_" + key;
 
     try{
       var cached = sessionStorage.getItem(cacheKey);
@@ -247,7 +247,7 @@
 
   async function trouverAvatar(session){
     var key = norm(agentKey(session)) || norm(agentNom(session) + "_" + agentPrenom(session));
-    var cacheKey = "ghe_avatar_v6_" + key;
+    var cacheKey = "ghe_avatar_v7_" + key;
 
     try{
       var cached = sessionStorage.getItem(cacheKey);
@@ -369,7 +369,8 @@
   function rendreMonPlanningDirect(session){
     if(!utilisateurConnecteAvecRole(session)) return;
 
-    var bloc = document.getElementById("mon-planning-personnel");
+    // Compatible avec les deux noms d'id utilisés sur la page.
+    var bloc = document.getElementById("planning-individuel") || document.getElementById("mon-planning-personnel");
     if(!bloc) return;
 
     bloc.querySelectorAll("[data-open]").forEach(function(el){
