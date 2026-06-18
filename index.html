@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Planning GHE — Accueil</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
+
 <link rel="stylesheet" href="affichage-different/apparence.css?v=4">
 
 <style>
@@ -17,6 +21,8 @@
   --cream:#fff1c4;
   --navy:#061738;
   --soft:#5f6878;
+  --gold:#f8d67d;
+  --title-font:"Baloo 2","Arial Rounded MT Bold","Trebuchet MS",system-ui,sans-serif;
 }
 
 html{
@@ -50,21 +56,27 @@ body.modal-open{
 .home-block{
   position:relative;
   margin:16px 0 28px;
-  padding:14px 11px 18px;
-  background:var(--paper);
-  border:6px solid var(--ink);
-  border-radius:34px;
+  padding:12px 10px 14px;
+  background:
+    radial-gradient(circle at 18% 0%,rgba(255,255,255,.72) 0 12%,transparent 34%),
+    linear-gradient(180deg,var(--paper2),var(--paper));
+  border:5px solid var(--ink);
+  border-radius:32px;
+  box-shadow:
+    0 8px 0 rgba(7,24,63,.12),
+    0 14px 24px rgba(7,24,63,.10);
 }
 
 .home-block::before{
   content:"";
   position:absolute;
-  inset:8px;
-  border:3px solid rgba(255,218,123,.40);
+  inset:7px;
+  border:2px solid rgba(255,218,123,.42);
   border-radius:24px;
   pointer-events:none;
 }
 
+.home-card,
 .block-action,
 .block-link{
   position:relative;
@@ -75,27 +87,43 @@ body.modal-open{
   margin:0;
   border:0;
   background:transparent;
+  color:inherit;
   cursor:pointer;
   text-decoration:none;
   -webkit-tap-highlight-color:transparent;
+  transform-origin:center;
+  transition:transform .12s ease, filter .12s ease;
+}
+
+.home-card:active,
+.block-action:active,
+.block-link:active{
+  transform:translateY(2px) scale(.995);
+}
+
+.scene-frame{
+  width:100%;
+  height:clamp(132px,34vw,220px);
+  overflow:hidden;
+  border:5px solid var(--ink);
+  border-radius:25px;
+  background:
+    linear-gradient(110deg,rgba(255,255,255,.58),rgba(255,241,196,.74)),
+    repeating-linear-gradient(-8deg,rgba(7,24,63,.06) 0 1px,transparent 1px 14px);
+  box-shadow:0 4px 0 rgba(7,24,63,.10);
+}
+
+.home-block--hero .scene-frame{
+  height:clamp(155px,40vw,255px);
 }
 
 .scene-img{
   display:block;
   width:100%;
-  height:auto;
-  border:6px solid var(--ink);
-  border-radius:27px;
-  background:white;
-}
-
-.block-action:active .scene-img,
-.block-link:active .scene-img,
-.main-btn:active,
-.option-link:active,
-.modal-close:active,
-.agent-btn:active{
-  transform:translateY(2px);
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  background:#fff9e8;
 }
 
 .main-btn{
@@ -105,22 +133,39 @@ body.modal-open{
   align-items:center;
   justify-content:center;
   width:max-content;
-  max-width:100%;
-  min-height:64px;
-  margin:16px auto 0;
-  padding:10px 26px 12px;
-  border:5px solid var(--navy);
-  border-radius:24px;
-  background:#fff9e8;
+  max-width:calc(100% - 18px);
+  min-height:58px;
+  margin:13px auto 0;
+  padding:8px 24px 10px;
+  border:4px solid var(--navy);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 20% 0%,rgba(255,255,255,.82),transparent 38%),
+    linear-gradient(180deg,#fffdf1 0%,#fff1c4 100%);
   color:var(--ink);
   text-align:center;
   text-transform:uppercase;
   text-decoration:none;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(24px,6vw,42px);
-  line-height:.92;
+  font-family:var(--title-font);
+  font-size:clamp(24px,6.1vw,42px);
+  font-weight:800;
+  letter-spacing:.02em;
+  line-height:.9;
   cursor:pointer;
+  box-shadow:
+    0 4px 0 rgba(6,23,56,.20),
+    0 0 0 3px rgba(255,255,255,.45) inset;
   -webkit-tap-highlight-color:transparent;
+}
+
+.home-card:active .main-btn,
+.block-action:active .main-btn,
+.block-link:active .main-btn,
+.main-btn:active,
+.option-link:active,
+.modal-close:active,
+.agent-btn:active{
+  transform:translateY(2px);
 }
 
 /* MODALES */
@@ -158,10 +203,11 @@ body.modal-open{
   color:var(--ink);
   text-align:center;
   text-transform:uppercase;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-family:var(--title-font);
   font-size:clamp(30px,7vw,48px);
+  font-weight:800;
   line-height:.92;
-  text-shadow:0 3px 0 #f8d67d;
+  text-shadow:0 3px 0 var(--gold);
 }
 
 .modal-subtitle{
@@ -206,8 +252,9 @@ body.modal-open{
 
 .option-text strong{
   display:block;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-family:var(--title-font);
   font-size:clamp(23px,5.8vw,36px);
+  font-weight:800;
   line-height:.92;
   text-transform:uppercase;
 }
@@ -251,8 +298,9 @@ body.modal-open{
   background:#2c2f36;
   color:#fff7dd;
   text-transform:uppercase;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-family:var(--title-font);
   font-size:clamp(24px,6vw,38px);
+  font-weight:800;
   line-height:.92;
   cursor:pointer;
 }
@@ -293,8 +341,9 @@ body.modal-open{
   color:var(--ink);
   text-align:center;
   text-transform:uppercase;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-family:var(--title-font);
   font-size:clamp(21px,5.2vw,32px);
+  font-weight:800;
   line-height:.92;
   cursor:pointer;
 }
@@ -310,6 +359,18 @@ body.modal-open{
   font-weight:900;
 }
 
+@media(prefers-reduced-motion:reduce){
+  html{
+    scroll-behavior:auto;
+  }
+
+  .home-card,
+  .block-action,
+  .block-link{
+    transition:none;
+  }
+}
+
 /* RESPONSIVE */
 
 @media(max-width:520px){
@@ -319,7 +380,7 @@ body.modal-open{
 
   .home-block{
     margin:14px 0 25px;
-    padding:12px 9px 16px;
+    padding:10px 8px 13px;
     border-width:5px;
     border-radius:30px;
   }
@@ -329,16 +390,23 @@ body.modal-open{
     border-width:2px;
   }
 
-  .scene-img{
+  .scene-frame{
+    height:clamp(122px,34vw,165px);
     border-width:5px;
     border-radius:23px;
   }
 
+  .home-block--hero .scene-frame{
+    height:clamp(145px,40vw,195px);
+  }
+
   .main-btn{
-    min-height:58px;
+    min-height:54px;
+    margin-top:12px;
     border-width:4px;
-    padding:8px 18px 10px;
-    font-size:clamp(21px,5.7vw,34px);
+    padding:7px 16px 9px;
+    font-size:clamp(22px,6.2vw,34px);
+    border-radius:20px;
   }
 
   .modal-panel{
@@ -380,46 +448,42 @@ body.modal-open{
 <main class="page">
 
   <!-- PLANNING OFFICIEL -->
-  <section class="home-block" id="planning-officiel">
-    <button class="block-action" type="button" data-open="modal-officiel" aria-label="Ouvrir le planning officiel">
-      <img class="scene-img" src="Image/Bannière/01-accueil-planning-acces.png?v=4" alt="Planning officiel GHE">
-    </button>
-
-    <button class="main-btn" type="button" data-open="modal-officiel">
-      Planning officiel
-    </button>
-  </section>
-
-  <!-- MON PLANNING -->
-  <section class="home-block" id="mon-planning-personnel">
-    <button class="block-action" type="button" data-open="modal-personnel" aria-label="Ouvrir mon planning personnel">
-      <img class="scene-img" src="Image/Bannière/02-mon-planning-personnel.PNG?v=4" alt="Mon planning personnel">
-    </button>
-
-    <button class="main-btn" type="button" data-open="modal-personnel">
-      Mon planning personnel
+  <section class="home-block home-block--hero" id="planning-officiel">
+    <button class="home-card block-action" type="button" data-open="modal-officiel" aria-label="Ouvrir le planning officiel">
+      <span class="scene-frame">
+        <img class="scene-img" src="Image/Bannière/01-accueil-planning-acces.png?v=5" alt="Planning officiel GHE" fetchpriority="high" decoding="async">
+      </span>
+      <span class="main-btn">Planning officiel</span>
     </button>
   </section>
 
-  <!-- DEMANDE DE CHANGEMENT -->
+  <!-- PLANNING INDIVIDUEL -->
+  <section class="home-block" id="planning-individuel">
+    <button class="home-card block-action" type="button" data-open="modal-personnel" aria-label="Ouvrir mon planning individuel">
+      <span class="scene-frame">
+        <img class="scene-img" src="Image/Bannière/02-mon-planning-personnel.PNG?v=5" alt="Planning individuel" loading="lazy" decoding="async">
+      </span>
+      <span class="main-btn">Planning individuel</span>
+    </button>
+  </section>
+
+  <!-- DEMANDER UN CHANGEMENT -->
   <section class="home-block" id="demander-changement">
-    <a class="block-link" href="./demande-changement.html" aria-label="Demander un changement">
-      <img class="scene-img" src="Image/Bannière/04-demander-changement.PNG?v=4" alt="Demander un changement de planning">
-    </a>
-
-    <a class="main-btn" href="./demande-changement.html">
-      Demander un changement
+    <a class="home-card block-link" href="./demande-changement.html" aria-label="Demander un changement">
+      <span class="scene-frame">
+        <img class="scene-img" src="Image/Bannière/04-demander-changement.PNG?v=5" alt="Demander un changement de planning" loading="lazy" decoding="async">
+      </span>
+      <span class="main-btn">Demander un changement</span>
     </a>
   </section>
 
   <!-- ORGANISATION -->
   <section class="home-block" id="organisation">
-    <button class="block-action" type="button" data-open="modal-organisation" aria-label="Ouvrir l’organisation">
-      <img class="scene-img" src="Image/Bannière/03-organisation.png?v=4" alt="Organisation GHE">
-    </button>
-
-    <button class="main-btn" type="button" data-open="modal-organisation">
-      Organisation
+    <button class="home-card block-action" type="button" data-open="modal-organisation" aria-label="Ouvrir l’organisation">
+      <span class="scene-frame">
+        <img class="scene-img" src="Image/Bannière/03-organisation.png?v=5" alt="Organisation GHE" loading="lazy" decoding="async">
+      </span>
+      <span class="main-btn">Organisation</span>
     </button>
   </section>
 
@@ -464,11 +528,11 @@ body.modal-open{
   </div>
 </div>
 
-<!-- MODALE MON PLANNING -->
+<!-- MODALE PLANNING INDIVIDUEL -->
 <div class="modal" id="modal-personnel" aria-hidden="true">
   <div class="modal-panel">
     <h2 class="modal-title">Choisis ton nom</h2>
-    <p class="modal-subtitle">Recherche ton nom puis ouvre ton aperçu personnel.</p>
+    <p class="modal-subtitle">Recherche ton nom puis ouvre ton aperçu individuel.</p>
 
     <input class="search-agent" id="agentSearch" type="search" placeholder="Rechercher mon nom">
 
@@ -674,7 +738,7 @@ async function chargerAgents(){
     agents = data.agents
       .map(normaliserAgentDepuisApi)
       .filter(a => a.agent && a.nom)
-      .sort((a,b) => String(a.nom).localeCompare(String(b.nom),"fr"));
+      .sort((a,b) => String(a.nom).localeCompare(String(a.nom),"fr"));
 
     agentsDejaCharges = true;
     renderAgents(agentSearch.value || "");
