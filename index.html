@@ -56,15 +56,15 @@ body.modal-open{
 .home-block{
   position:relative;
   margin:16px 0 28px;
-  padding:12px 10px 14px;
+  padding:13px 10px 15px;
   background:
     radial-gradient(circle at 18% 0%,rgba(255,255,255,.72) 0 12%,transparent 34%),
     linear-gradient(180deg,var(--paper2),var(--paper));
   border:5px solid var(--ink);
   border-radius:32px;
   box-shadow:
-    0 8px 0 rgba(7,24,63,.12),
-    0 14px 24px rgba(7,24,63,.10);
+    0 7px 0 rgba(7,24,63,.12),
+    0 13px 22px rgba(7,24,63,.10);
 }
 
 .home-block::before{
@@ -76,6 +76,7 @@ body.modal-open{
   pointer-events:none;
 }
 
+/* Toute la carte est cliquable, mais l'image garde son format naturel */
 .home-card,
 .block-action,
 .block-link{
@@ -101,31 +102,28 @@ body.modal-open{
   transform:translateY(2px) scale(.995);
 }
 
+/* Cadre image simple : pas de hauteur forcée, donc pas de traits bizarres */
 .scene-frame{
+  display:block;
   width:100%;
-  height:clamp(132px,34vw,220px);
   overflow:hidden;
   border:5px solid var(--ink);
   border-radius:25px;
-  background:
-    linear-gradient(110deg,rgba(255,255,255,.58),rgba(255,241,196,.74)),
-    repeating-linear-gradient(-8deg,rgba(7,24,63,.06) 0 1px,transparent 1px 14px);
+  background:#fff9e8;
   box-shadow:0 4px 0 rgba(7,24,63,.10);
-}
-
-.home-block--hero .scene-frame{
-  height:clamp(155px,40vw,255px);
 }
 
 .scene-img{
   display:block;
   width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:center;
+  height:auto;
+  margin:0;
+  border:0;
+  border-radius:19px;
   background:#fff9e8;
 }
 
+/* Titre = cartouche ajouté à la carte, pas collé dans l'image */
 .main-btn{
   position:relative;
   z-index:3;
@@ -135,10 +133,10 @@ body.modal-open{
   width:max-content;
   max-width:calc(100% - 18px);
   min-height:58px;
-  margin:13px auto 0;
+  margin:14px auto 0;
   padding:8px 24px 10px;
   border:4px solid var(--navy);
-  border-radius:22px;
+  border-radius:24px;
   background:
     radial-gradient(circle at 20% 0%,rgba(255,255,255,.82),transparent 38%),
     linear-gradient(180deg,#fffdf1 0%,#fff1c4 100%);
@@ -380,7 +378,7 @@ body.modal-open{
 
   .home-block{
     margin:14px 0 25px;
-    padding:10px 8px 13px;
+    padding:11px 8px 14px;
     border-width:5px;
     border-radius:30px;
   }
@@ -391,13 +389,12 @@ body.modal-open{
   }
 
   .scene-frame{
-    height:clamp(122px,34vw,165px);
     border-width:5px;
     border-radius:23px;
   }
 
-  .home-block--hero .scene-frame{
-    height:clamp(145px,40vw,195px);
+  .scene-img{
+    border-radius:18px;
   }
 
   .main-btn{
@@ -406,7 +403,7 @@ body.modal-open{
     border-width:4px;
     padding:7px 16px 9px;
     font-size:clamp(22px,6.2vw,34px);
-    border-radius:20px;
+    border-radius:22px;
   }
 
   .modal-panel{
@@ -448,10 +445,10 @@ body.modal-open{
 <main class="page">
 
   <!-- PLANNING OFFICIEL -->
-  <section class="home-block home-block--hero" id="planning-officiel">
+  <section class="home-block" id="planning-officiel">
     <button class="home-card block-action" type="button" data-open="modal-officiel" aria-label="Ouvrir le planning officiel">
       <span class="scene-frame">
-        <img class="scene-img" src="Image/Bannière/01-accueil-planning-acces.png?v=5" alt="Planning officiel GHE" fetchpriority="high" decoding="async">
+        <img class="scene-img" src="Image/Bannière/01-accueil-planning-acces.png?v=6" alt="Planning officiel GHE" fetchpriority="high" decoding="async">
       </span>
       <span class="main-btn">Planning officiel</span>
     </button>
@@ -461,7 +458,7 @@ body.modal-open{
   <section class="home-block" id="planning-individuel">
     <button class="home-card block-action" type="button" data-open="modal-personnel" aria-label="Ouvrir mon planning individuel">
       <span class="scene-frame">
-        <img class="scene-img" src="Image/Bannière/02-mon-planning-personnel.PNG?v=5" alt="Planning individuel" loading="lazy" decoding="async">
+        <img class="scene-img" src="Image/Bannière/02-mon-planning-personnel.PNG?v=6" alt="Planning individuel" loading="lazy" decoding="async">
       </span>
       <span class="main-btn">Planning individuel</span>
     </button>
@@ -471,7 +468,7 @@ body.modal-open{
   <section class="home-block" id="demander-changement">
     <a class="home-card block-link" href="./demande-changement.html" aria-label="Demander un changement">
       <span class="scene-frame">
-        <img class="scene-img" src="Image/Bannière/04-demander-changement.PNG?v=5" alt="Demander un changement de planning" loading="lazy" decoding="async">
+        <img class="scene-img" src="Image/Bannière/04-demander-changement.PNG?v=6" alt="Demander un changement de planning" loading="lazy" decoding="async">
       </span>
       <span class="main-btn">Demander un changement</span>
     </a>
@@ -481,7 +478,7 @@ body.modal-open{
   <section class="home-block" id="organisation">
     <button class="home-card block-action" type="button" data-open="modal-organisation" aria-label="Ouvrir l’organisation">
       <span class="scene-frame">
-        <img class="scene-img" src="Image/Bannière/03-organisation.png?v=5" alt="Organisation GHE" loading="lazy" decoding="async">
+        <img class="scene-img" src="Image/Bannière/03-organisation.png?v=6" alt="Organisation GHE" loading="lazy" decoding="async">
       </span>
       <span class="main-btn">Organisation</span>
     </button>
@@ -738,7 +735,7 @@ async function chargerAgents(){
     agents = data.agents
       .map(normaliserAgentDepuisApi)
       .filter(a => a.agent && a.nom)
-      .sort((a,b) => String(a.nom).localeCompare(String(a.nom),"fr"));
+      .sort((a,b) => String(a.nom).localeCompare(String(b.nom),"fr"));
 
     agentsDejaCharges = true;
     renderAgents(agentSearch.value || "");
