@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Planning GHE — Accueil</title>
 
+<link rel="stylesheet" href="affichage-different/apparence.css?v=4">
+
 <style>
 *,*::before,*::after{box-sizing:border-box}
 
@@ -36,7 +38,6 @@ body{
 body.modal-open{
   overflow:hidden;
 }
-
 
 /* BLOCS ACCUEIL */
 
@@ -381,7 +382,7 @@ body.modal-open{
   <!-- PLANNING OFFICIEL -->
   <section class="home-block" id="planning-officiel">
     <button class="block-action" type="button" data-open="modal-officiel" aria-label="Ouvrir le planning officiel">
-      <img class="scene-img" src="Image/Bannière/01-accueil-planning-acces.png" alt="Planning officiel GHE">
+      <img class="scene-img" src="Image/Bannière/01-accueil-planning-acces.png?v=4" alt="Planning officiel GHE">
     </button>
 
     <button class="main-btn" type="button" data-open="modal-officiel">
@@ -392,7 +393,7 @@ body.modal-open{
   <!-- MON PLANNING -->
   <section class="home-block" id="mon-planning-personnel">
     <button class="block-action" type="button" data-open="modal-personnel" aria-label="Ouvrir mon planning personnel">
-      <img class="scene-img" src="Image/Bannière/02-mon-planning-personnel.PNG" alt="Mon planning personnel">
+      <img class="scene-img" src="Image/Bannière/02-mon-planning-personnel.PNG?v=4" alt="Mon planning personnel">
     </button>
 
     <button class="main-btn" type="button" data-open="modal-personnel">
@@ -403,7 +404,7 @@ body.modal-open{
   <!-- DEMANDE DE CHANGEMENT -->
   <section class="home-block" id="demander-changement">
     <a class="block-link" href="./demande-changement.html" aria-label="Demander un changement">
-      <img class="scene-img" src="Image/Bannière/04-demander-changement.PNG" alt="Demander un changement de planning">
+      <img class="scene-img" src="Image/Bannière/04-demander-changement.PNG?v=4" alt="Demander un changement de planning">
     </a>
 
     <a class="main-btn" href="./demande-changement.html">
@@ -414,7 +415,7 @@ body.modal-open{
   <!-- ORGANISATION -->
   <section class="home-block" id="organisation">
     <button class="block-action" type="button" data-open="modal-organisation" aria-label="Ouvrir l’organisation">
-      <img class="scene-img" src="Image/Bannière/03-organisation.png" alt="Organisation GHE">
+      <img class="scene-img" src="Image/Bannière/03-organisation.png?v=4" alt="Organisation GHE">
     </button>
 
     <button class="main-btn" type="button" data-open="modal-organisation">
@@ -695,5 +696,7 @@ agentSearch.addEventListener("input", function(){
   renderAgents(agentSearch.value);
 });
 </script>
+
+<script src="affichage-different/actions.js?v=4"></script>
 </body>
 </html>
