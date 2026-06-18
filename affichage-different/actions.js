@@ -1,13 +1,9 @@
-// Actions de l'affichage différent — v7
+// Actions de l'affichage différent — v10
 // Rôle : personnaliser l'accueil APRÈS connexion Cloudflare.
-// - Avatar + prénom en haut
-// - Mon planning personnel direct
-// - Planning officiel direct JOUR/NUIT pour agents
-// - Chef / total gardent le choix
-// - Demande changement préremplie pour agents, cachée aux chefs
+// Corrections v10 : avatar invisible pendant le chargement, rien si l'image échoue, menu profil conservé.
 (function(){
   var PASSERELLE_AVATARS = "https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8HZ_g_ota7tajTKLY3jvLKEF9AvSPjIbVpqcSkSRcl5OdWV9/exec";
-  var AVATAR_DEFAUT = "https://drive.google.com/uc?export=view&id=1_B49ks3EwD6g1iABJ9y5A35u8vuegN-g";
+  var AVATAR_DEFAUT_ID = "1_B49ks3EwD6g1iABJ9y5A35u8vuegN-g";
   var agentsPromise = null;
 
   function clean(v){
@@ -32,6 +28,15 @@
       }
     }
     return "";
+  }
+
+  function uniq(arr){
+    var out = [];
+    arr.forEach(function(v){
+      v = clean(v);
+      if(v && out.indexOf(v) === -1) out.push(v);
+    });
+    return out;
   }
 
   function agentSession(session){
@@ -66,21 +71,49 @@
     });
   }
 
-  function normaliserUrlImage(url){
-    url = clean(url);
-    if(!url) return "";
+  function extraireDriveId(v){
+    v = clean(v);
+    if(!v) return "";
 
-    var m = url.match(/\/file\/d\/([^/]+)/);
-    if(m && m[1]){
-      return "https://drive.google.com/uc?export=view&id=" + encodeURIComponent(m[1]);
-    }
+    var m = v.match(/\/file\/d\/([^/]+)/);
+    if(m && m[1]) return m[1];
 
-    m = url.match(/[?&]id=([^&]+)/);
-    if(m && m[1] && url.indexOf("drive.google.com") !== -1){
-      return "https://drive.google.com/uc?export=view&id=" + encodeURIComponent(m[1]);
-    }
+    m = v.match(/[?&]id=([^&]+)/);
+    if(m && m[1]) return decodeURIComponent(m[1]);
 
-    return url;
+    m = v.match(/\/d\/([A-Za-z0-9_-]{20,})/);
+    if(m && m[1]) return m[1];
+
+    if(/^[A-Za-z0-9_-]{20,}$/.test(v)) return v;
+
+    return "";
+  }
+
+  function urlsDepuisDriveId(id){
+    id = clean(id);
+    if(!id) return [];
+
+    return [
+      "https://drive.google.com/thumbnail?id=" + encodeURIComponent(id) + "&sz=w500",
+      "https://drive.google.com/uc?export=view&id=" + encodeURIComponent(id),
+      "https://lh3.googleusercontent.com/d/" + encodeURIComponent(id) + "=w500"
+    ];
+  }
+
+  function urlsImageDepuisValeur(v){
+    v = clean(v);
+    if(!v) return [];
+
+    var id = extraireDriveId(v);
+    if(id) return urlsDepuisDriveId(id);
+
+    if(/^https?:\/\//i.test(v)) return [v];
+
+    return [];
+  }
+
+  function urlsAvatarDefaut(){
+    return urlsDepuisDriveId(AVATAR_DEFAUT_ID);
   }
 
   function optimiserImagesPage(){
@@ -99,7 +132,6 @@
   }
 
   function doitAfficherCarte(session){
-    if(estDemo(session)) return false;
     if(estCadreCachee(session)) return false;
     return true;
   }
@@ -199,12 +231,11 @@
   async function trouverTypePlanningAgent(session){
     var role = roleSession(session);
 
-    // Chef / total : on garde le choix officiel, on ne force pas jour/nuit.
     if(role === "chef" || role === "total") return "chef";
     if(role !== "agent") return "";
 
     var key = norm(agentKey(session)) || norm(agentNom(session) + "_" + agentPrenom(session));
-    var cacheKey = "ghe_type_planning_v7_" + key;
+    var cacheKey = "ghe_type_planning_v10_" + key;
 
     try{
       var cached = sessionStorage.getItem(cacheKey);
@@ -232,9 +263,9 @@
   function ajusterPrenom(el){
     if(!el) return;
 
-    var size = parseFloat(window.getComputedStyle(el).fontSize) || 80;
+    var size = parseFloat(window.getComputedStyle(el).fontSize) || 68;
 
-    while(el.scrollWidth > el.clientWidth && size > 48){
+    while(el.scrollWidth > el.clientWidth && size > 38){
       size -= 2;
       el.style.fontSize = size + "px";
     }
@@ -245,45 +276,219 @@
     }
   }
 
-  async function trouverAvatar(session){
+  function urlsAvatarDansObjet(obj){
+    if(!obj) return [];
+
+    var vals = [];
+    [
+      "avatar_image_url", "avatar_thumb_url", "avatar_url", "avatar", "avatar_id",
+      "AVATAR_IMAGE_URL", "AVATAR_THUMB_URL", "AVATAR_URL", "AVATAR", "AVATAR_ID", "AVATAR_IMAGE"
+    ].forEach(function(k){
+      if(obj[k] !== undefined && obj[k] !== null && clean(obj[k]) !== "") vals.push(clean(obj[k]));
+    });
+
+    if(obj.avatar){
+      ["avatar_image_url", "avatar_thumb_url", "avatar_url", "avatar_id", "AVATAR_IMAGE_URL", "AVATAR_URL", "AVATAR_ID"].forEach(function(k){
+        if(obj.avatar[k] !== undefined && obj.avatar[k] !== null && clean(obj.avatar[k]) !== "") vals.push(clean(obj.avatar[k]));
+      });
+    }
+
+    var urls = [];
+    vals.forEach(function(v){
+      urls = urls.concat(urlsImageDepuisValeur(v));
+    });
+
+    return uniq(urls);
+  }
+
+  async function trouverUrlsAvatar(session){
     var key = norm(agentKey(session)) || norm(agentNom(session) + "_" + agentPrenom(session));
-    var cacheKey = "ghe_avatar_v7_" + key;
+    var cacheKey = "ghe_avatar_urls_v10_" + key;
 
     try{
       var cached = sessionStorage.getItem(cacheKey);
-      if(cached) return cached;
+      if(cached){
+        var parsed = JSON.parse(cached);
+        if(Array.isArray(parsed) && parsed.length) return parsed;
+      }
     }catch(e){}
 
-    var direct = normaliserUrlImage(texte(agentSession(session), [
-      "avatar_image_url", "avatar_thumb_url", "avatar_url", "avatar", "AVATAR_URL", "AVATAR_IMAGE_URL", "AVATAR_IMAGE", "AVATAR_ID"
-    ]));
-
-    if(direct && direct.indexOf("http") === 0){
-      try{ sessionStorage.setItem(cacheKey, direct); }catch(e){}
+    var direct = urlsAvatarDansObjet(agentSession(session));
+    if(direct.length){
+      try{ sessionStorage.setItem(cacheKey, JSON.stringify(direct)); }catch(e){}
       return direct;
     }
 
     var agents = await chargerAgentsPasserelle();
     var trouve = trouverAgentDansListe(session, agents);
+    var depuisListe = urlsAvatarDansObjet(trouve);
 
-    if(!trouve) return AVATAR_DEFAUT;
-
-    var avatar = normaliserUrlImage(
-      texte(trouve, ["avatar_image_url", "avatar_thumb_url", "avatar_url", "AVATAR_IMAGE_URL", "AVATAR_URL", "AVATAR_IMAGE"]) ||
-      (trouve.avatar && texte(trouve.avatar, ["avatar_image_url", "avatar_thumb_url", "avatar_url", "AVATAR_IMAGE_URL", "AVATAR_URL"]))
-    );
-
-    if(!avatar && texte(trouve, ["AVATAR_ID", "avatar_id"])){
-      avatar = "https://drive.google.com/uc?export=view&id=" + encodeURIComponent(texte(trouve, ["AVATAR_ID", "avatar_id"]));
+    if(depuisListe.length){
+      try{ sessionStorage.setItem(cacheKey, JSON.stringify(depuisListe)); }catch(e){}
+      return depuisListe;
     }
 
-    if(!avatar) avatar = AVATAR_DEFAUT;
-
-    try{ sessionStorage.setItem(cacheKey, avatar); }catch(e){}
-    return avatar;
+    return urlsAvatarDefaut();
   }
 
-  function creerCarteProfil(prenom, avatar){
+  function appliquerImageSansSecours(img, avatarWrap, candidats){
+    candidats = uniq(candidats || []);
+    var i = 0;
+
+    function cacherAvatar(){
+      img.removeAttribute("src");
+      img.style.opacity = "0";
+      img.style.display = "block";
+
+      if(avatarWrap){
+        avatarWrap.hidden = true;
+      }
+    }
+
+    function essayerSuivante(){
+      if(i >= candidats.length){
+        cacherAvatar();
+        return;
+      }
+
+      if(avatarWrap){
+        avatarWrap.hidden = true;
+      }
+
+      img.style.opacity = "0";
+      img.style.display = "block";
+      img.src = candidats[i++];
+    }
+
+    img.onload = function(){
+      if(avatarWrap){
+        avatarWrap.hidden = false;
+      }
+      img.style.opacity = "1";
+    };
+
+    img.onerror = function(){
+      essayerSuivante();
+    };
+
+    cacherAvatar();
+    essayerSuivante();
+  }
+
+  function fermerMenuProfil(){
+    var menu = document.getElementById("ghe-menu-profil");
+    var carte = document.getElementById("ghe-carte-profil");
+
+    if(menu){
+      menu.hidden = true;
+      menu.classList.remove("is-open");
+    }
+
+    if(carte){
+      carte.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  function ouvrirMenuProfil(){
+    var menu = document.getElementById("ghe-menu-profil");
+    var carte = document.getElementById("ghe-carte-profil");
+
+    if(!menu) return;
+
+    menu.hidden = false;
+    menu.classList.add("is-open");
+
+    if(carte){
+      carte.setAttribute("aria-expanded", "true");
+    }
+  }
+
+  function basculerMenuProfil(){
+    var menu = document.getElementById("ghe-menu-profil");
+    if(!menu) return;
+
+    if(menu.hidden || !menu.classList.contains("is-open")){
+      ouvrirMenuProfil();
+    }else{
+      fermerMenuProfil();
+    }
+  }
+
+  function installerMenuProfil(carte, prenom){
+    if(!carte) return;
+
+    carte.setAttribute("role", "button");
+    carte.setAttribute("tabindex", "0");
+    carte.setAttribute("aria-haspopup", "dialog");
+    carte.setAttribute("aria-expanded", "false");
+    carte.setAttribute("aria-label", "Ouvrir le menu du profil");
+
+    var menu = document.createElement("div");
+    menu.className = "ghe-menu-profil";
+    menu.id = "ghe-menu-profil";
+    menu.hidden = true;
+    menu.setAttribute("role", "dialog");
+    menu.setAttribute("aria-label", "Menu du profil");
+
+    var titre = document.createElement("div");
+    titre.className = "ghe-menu-profil-titre";
+    titre.textContent = "Connecté en " + (prenom || "agent");
+
+    var lien = document.createElement("a");
+    lien.className = "ghe-menu-profil-action";
+    lien.href = "/__ghe/logout";
+    lien.textContent = "Se déconnecter / changer de compte";
+
+    var annuler = document.createElement("button");
+    annuler.type = "button";
+    annuler.className = "ghe-menu-profil-annuler";
+    annuler.textContent = "Annuler";
+    annuler.addEventListener("click", function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      fermerMenuProfil();
+    });
+
+    menu.appendChild(titre);
+    menu.appendChild(lien);
+    menu.appendChild(annuler);
+    carte.appendChild(menu);
+
+    carte.addEventListener("click", function(e){
+      if(e.target.closest("#ghe-menu-profil")){
+        return;
+      }
+
+      e.preventDefault();
+      e.stopPropagation();
+      basculerMenuProfil();
+    });
+
+    carte.addEventListener("keydown", function(e){
+      if(e.key === "Enter" || e.key === " "){
+        e.preventDefault();
+        basculerMenuProfil();
+      }
+
+      if(e.key === "Escape"){
+        fermerMenuProfil();
+      }
+    });
+
+    document.addEventListener("click", function(e){
+      if(!e.target.closest("#ghe-carte-profil")){
+        fermerMenuProfil();
+      }
+    });
+
+    document.addEventListener("keydown", function(e){
+      if(e.key === "Escape"){
+        fermerMenuProfil();
+      }
+    });
+  }
+
+  function creerCarteProfil(prenom, nom, urlsAvatar){
     var premierBloc = document.getElementById("planning-officiel");
     if(!premierBloc) return;
 
@@ -299,15 +504,12 @@
     avatarWrap.id = "ghe-avatar-wrap";
 
     var img = new Image();
-    img.alt = "Avatar";
+    img.alt = "";
     img.decoding = "async";
     img.loading = "eager";
-    img.src = avatar || AVATAR_DEFAUT;
-    img.onerror = function(){
-      if(img.src !== AVATAR_DEFAUT){
-        img.src = AVATAR_DEFAUT;
-      }
-    };
+    img.className = "ghe-avatar-img";
+
+    avatarWrap.hidden = true;
 
     var prenomEl = document.createElement("div");
     prenomEl.className = "ghe-prenom";
@@ -318,7 +520,12 @@
     section.appendChild(avatarWrap);
     section.appendChild(prenomEl);
 
+    installerMenuProfil(section, prenom);
+
     premierBloc.insertAdjacentElement("beforebegin", section);
+    if(urlsAvatar && urlsAvatar.length){
+      appliquerImageSansSecours(img, avatarWrap, urlsAvatar);
+    }
     ajusterPrenom(prenomEl);
   }
 
@@ -328,13 +535,15 @@
     var prenom = formatPrenom(agentPrenom(session));
     if(!prenom) return;
 
-    // On affiche tout de suite quelque chose. L'avatar réel arrive ensuite.
-    creerCarteProfil(prenom, AVATAR_DEFAUT);
+    var nom = agentNom(session);
 
-    var avatar = await trouverAvatar(session);
+    creerCarteProfil(prenom, nom, []);
+
+    var urlsAvatar = await trouverUrlsAvatar(session);
     var img = document.querySelector("#ghe-avatar-wrap img");
-    if(img && avatar){
-      img.src = avatar;
+    var avatarWrap = document.getElementById("ghe-avatar-wrap");
+    if(img && avatarWrap && urlsAvatar && urlsAvatar.length){
+      appliquerImageSansSecours(img, avatarWrap, urlsAvatar);
     }
   }
 
@@ -343,7 +552,6 @@
     var bloc = document.getElementById("planning-officiel");
     if(!bloc) return;
 
-    // Chef / total : on ne force rien, ils gardent la modale officielle.
     if(role === "chef" || role === "total") return;
     if(role !== "agent") return;
 
@@ -367,9 +575,8 @@
   }
 
   function rendreMonPlanningDirect(session){
-    if(!utilisateurConnecteAvecRole(session)) return;
+    if(roleSession(session) !== "agent") return;
 
-    // Compatible avec les deux noms d'id utilisés sur la page.
     var bloc = document.getElementById("planning-individuel") || document.getElementById("mon-planning-personnel");
     if(!bloc) return;
 
