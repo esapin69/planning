@@ -1,6 +1,6 @@
-// Actions de l'affichage différent — v10
+// Actions de l'affichage différent — v11
 // Rôle : personnaliser l'accueil APRÈS connexion Cloudflare.
-// Corrections v10 : avatar invisible pendant le chargement, rien si l'image échoue, menu profil conservé.
+// Corrections v11 : Planning officiel direct JOUR/NUIT plus robuste + demande changement directe agent.
 (function(){
   var PASSERELLE_AVATARS = "https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8HZ_g_ota7tajTKLY3jvLKEF9AvSPjIbVpqcSkSRcl5OdWV9/exec";
   var AVATAR_DEFAUT_ID = "1_B49ks3EwD6g1iABJ9y5A35u8vuegN-g";
@@ -235,17 +235,29 @@
     if(role !== "agent") return "";
 
     var key = norm(agentKey(session)) || norm(agentNom(session) + "_" + agentPrenom(session));
-    var cacheKey = "ghe_type_planning_v10_" + key;
+    var cacheKey = "ghe_type_planning_v11_" + key;
 
     try{
       var cached = sessionStorage.getItem(cacheKey);
       if(cached === "jour" || cached === "nuit") return cached;
     }catch(e){}
 
-    var direct = detecterTypeDansObjet(agentSession(session));
-    if(direct === "jour" || direct === "nuit"){
-      try{ sessionStorage.setItem(cacheKey, direct); }catch(e){}
-      return direct;
+    var directSession = detecterTypeDansObjet(session);
+    if(directSession === "jour" || directSession === "nuit"){
+      try{ sessionStorage.setItem(cacheKey, directSession); }catch(e){}
+      return directSession;
+    }
+
+    var directDroits = detecterTypeDansObjet(droitsSession(session));
+    if(directDroits === "jour" || directDroits === "nuit"){
+      try{ sessionStorage.setItem(cacheKey, directDroits); }catch(e){}
+      return directDroits;
+    }
+
+    var directAgent = detecterTypeDansObjet(agentSession(session));
+    if(directAgent === "jour" || directAgent === "nuit"){
+      try{ sessionStorage.setItem(cacheKey, directAgent); }catch(e){}
+      return directAgent;
     }
 
     var agents = await chargerAgentsPasserelle();
@@ -303,7 +315,7 @@
 
   async function trouverUrlsAvatar(session){
     var key = norm(agentKey(session)) || norm(agentNom(session) + "_" + agentPrenom(session));
-    var cacheKey = "ghe_avatar_urls_v10_" + key;
+    var cacheKey = "ghe_avatar_urls_v11_" + key;
 
     try{
       var cached = sessionStorage.getItem(cacheKey);
@@ -552,26 +564,22 @@
     var bloc = document.getElementById("planning-officiel");
     if(!bloc) return;
 
+    /*
+      Agent normal :
+      - JOUR -> planning officiel jour direct
+      - NUIT -> planning officiel nuit direct
+
+      Chef / cadre / démo-total :
+      - on ne touche pas au bloc
+      - ils gardent le choix Jour / Nuit / Chefs
+    */
     if(role === "chef" || role === "total") return;
     if(role !== "agent") return;
 
     var typePlanning = await trouverTypePlanningAgent(session);
     if(typePlanning !== "jour" && typePlanning !== "nuit") return;
 
-    var destination = "mois.html?type=" + encodeURIComponent(typePlanning);
-
-    bloc.querySelectorAll("[data-open]").forEach(function(el){
-      if(el.getAttribute("data-open") === "modal-officiel"){
-        el.removeAttribute("data-open");
-        el.dataset.gheDestination = destination;
-
-        el.addEventListener("click", function(e){
-          e.preventDefault();
-          e.stopPropagation();
-          window.location.href = destination;
-        }, true);
-      }
-    });
+    appliquerLienDirectBloc(bloc, "mois.html?type=" + encodeURIComponent(typePlanning));
   }
 
   function rendreMonPlanningDirect(session){
@@ -580,18 +588,65 @@
     var bloc = document.getElementById("planning-individuel") || document.getElementById("mon-planning-personnel");
     if(!bloc) return;
 
-    bloc.querySelectorAll("[data-open]").forEach(function(el){
-      if(el.getAttribute("data-open") === "modal-personnel"){
-        el.removeAttribute("data-open");
-        el.dataset.gheDestination = "/__ghe/mon-planning";
+    appliquerLienDirectBloc(bloc, "/__ghe/mon-planning");
+  }
 
-        el.addEventListener("click", function(e){
-          e.preventDefault();
-          e.stopPropagation();
-          window.location.href = "/__ghe/mon-planning";
-        }, true);
-      }
+  function urlDemandeChangementAgent(session){
+    var key = agentKey(session);
+    var nom = agentNom(session);
+    var prenom = agentPrenom(session);
+
+    var params = new URLSearchParams();
+
+    /*
+      On met plusieurs noms de paramètres volontairement.
+      Comme ça la page demande-changement peut reconnaître l’agent connecté
+      même si elle attend "agent", "demandeur", ou "demandeur_agent".
+      Ça ne bloque pas le choix des autres agents dans la demande.
+    */
+    if(key){
+      params.set("agent", key);
+      params.set("agent_key", key);
+      params.set("demandeur", key);
+      params.set("demandeur_agent", key);
+    }
+
+    if(nom){
+      params.set("nom", nom);
+      params.set("demandeur_nom", nom);
+    }
+
+    if(prenom){
+      params.set("prenom", prenom);
+      params.set("demandeur_prenom", prenom);
+    }
+
+    params.set("source", "accueil");
+    params.set("direct", "1");
+
+    return "./demande-changement.html?" + params.toString();
+  }
+
+  function appliquerLienDirectBloc(bloc, destination){
+    if(!bloc || !destination) return;
+
+    bloc.querySelectorAll("a").forEach(function(a){
+      a.setAttribute("href", destination);
     });
+
+    bloc.querySelectorAll("[data-open]").forEach(function(el){
+      el.removeAttribute("data-open");
+      el.dataset.gheDestination = destination;
+    });
+
+    bloc.addEventListener("click", function(e){
+      var cibleInteractive = e.target.closest("a, button, .home-card, .block-action, .block-link, .main-btn");
+      if(!cibleInteractive || !bloc.contains(cibleInteractive)) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+      window.location.href = destination;
+    }, true);
   }
 
   function reglerDemandeChangement(session){
@@ -599,21 +654,17 @@
     var bloc = document.getElementById("demander-changement");
     if(!bloc) return;
 
-    if(role === "chef"){
-      bloc.remove();
-      return;
-    }
+    /*
+      Agent normal :
+      - bouton direct vers sa page de demande pré-identifiée.
 
-    if(role !== "agent" && role !== "total") return;
+      Chef / cadre / démo-total :
+      - on ne touche pas au bouton.
+      - ils gardent l’accès général / la liste.
+    */
+    if(role !== "agent") return;
 
-    var url = "./demande-changement.html" +
-      "?demandeur_agent=" + encodeURIComponent(agentKey(session)) +
-      "&demandeur_nom=" + encodeURIComponent(agentNom(session)) +
-      "&demandeur_prenom=" + encodeURIComponent(agentPrenom(session));
-
-    bloc.querySelectorAll("a[href*='demande-changement.html']").forEach(function(a){
-      a.setAttribute("href", url);
-    });
+    appliquerLienDirectBloc(bloc, urlDemandeChangementAgent(session));
   }
 
   async function main(){
