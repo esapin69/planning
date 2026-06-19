@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0f172a">
-  <title>Demande de changement planning — V11 stable mails visibles</title>
-  <style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<title>Demande de changement planning — V13 session sécurisée</title>
+<style>
 :root{
   --cream:#fff7df;
   --cream2:#fff1bf;
@@ -13,11 +13,9 @@
   --navy:#07163f;
   --ink:#081336;
   --muted:#5d6678;
-  --line:#07163f;
   --green:#2f7d3f;
   --red:#b91c1c;
   --blue:#1d4ed8;
-  --orange:#c2410c;
   --radius:24px;
 }
 *{box-sizing:border-box}
@@ -33,905 +31,174 @@ html,body{
     linear-gradient(180deg,var(--cream),var(--cream2));
 }
 body{overflow-x:hidden}
-.app{
-  max-width:760px;
-  margin:0 auto;
-  padding:calc(12px + env(safe-area-inset-top)) 12px calc(18px + env(safe-area-inset-bottom));
-}
-.top{
-  position:sticky;
-  top:0;
-  z-index:50;
-  background:rgba(255,247,223,.96);
-  backdrop-filter:blur(10px);
-  border:3px solid var(--navy);
-  border-radius:0 0 24px 24px;
-  padding:10px 12px;
-  margin:-12px 0 14px;
-}
+.app{max-width:760px;margin:0 auto;padding:calc(12px + env(safe-area-inset-top)) 12px calc(18px + env(safe-area-inset-bottom))}
+.top{position:sticky;top:0;z-index:50;background:rgba(255,247,223,.96);backdrop-filter:blur(10px);border:3px solid var(--navy);border-radius:0 0 24px 24px;padding:10px 12px;margin:-12px 0 14px}
 .brand{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.brand strong{
-  font-family:"Arial Black","Impact",system-ui,sans-serif;
-  text-transform:uppercase;
-  font-size:clamp(17px,5vw,25px);
-  line-height:.95;
-  letter-spacing:-.04em;
-  color:var(--navy);
-}
-.stepPill{
-  flex:0 0 auto;
-  font-weight:950;
-  font-size:13px;
-  color:var(--navy);
-  background:var(--paper);
-  border:3px solid var(--navy);
-  border-radius:999px;
-  padding:8px 12px;
-  white-space:nowrap;
-}
-h1{
-  font-family:"Arial Black","Impact",system-ui,sans-serif;
-  text-transform:uppercase;
-  font-size:clamp(34px,9.2vw,54px);
-  line-height:.88;
-  letter-spacing:-.045em;
-  margin:18px 0 10px;
-  color:var(--navy);
-  text-align:center;
-  text-shadow:0 4px 0 rgba(225,184,64,.38);
-}
-h2{
-  font-family:"Arial Black","Impact",system-ui,sans-serif;
-  text-transform:uppercase;
-  font-size:clamp(22px,5.6vw,31px);
-  line-height:.95;
-  letter-spacing:-.035em;
-  margin:0 0 10px;
-  color:var(--navy);
-  text-align:center;
-}
-p{
-  line-height:1.35;
-  color:var(--muted);
-  margin:0 0 12px;
-  font-size:clamp(16px,4.3vw,21px);
-  font-weight:800;
-  text-align:center;
-}
+.brand strong{font-family:"Arial Black","Impact",system-ui,sans-serif;text-transform:uppercase;font-size:clamp(17px,5vw,25px);line-height:.95;letter-spacing:-.04em;color:var(--navy)}
+.stepPill{flex:0 0 auto;font-weight:950;font-size:13px;color:var(--navy);background:var(--paper);border:3px solid var(--navy);border-radius:999px;padding:8px 12px;white-space:nowrap}
+h1{font-family:"Arial Black","Impact",system-ui,sans-serif;text-transform:uppercase;font-size:clamp(34px,9.2vw,54px);line-height:.88;letter-spacing:-.045em;margin:18px 0 10px;color:var(--navy);text-align:center;text-shadow:0 4px 0 rgba(225,184,64,.38)}
+h2{font-family:"Arial Black","Impact",system-ui,sans-serif;text-transform:uppercase;font-size:clamp(22px,5.6vw,31px);line-height:.95;letter-spacing:-.035em;margin:0 0 10px;color:var(--navy);text-align:center}
+p{line-height:1.35;color:var(--muted);margin:0 0 12px;font-size:clamp(16px,4.3vw,21px);font-weight:800;text-align:center}
 .small{font-size:14px;color:var(--muted);line-height:1.35;text-align:left;font-weight:750}
 .page{display:none;animation:fade .16s ease-out}.page.active{display:block}
 @keyframes fade{from{opacity:.25;transform:translateY(5px)}to{opacity:1;transform:none}}
-.card{
-  background:rgba(255,250,240,.96);
-  border:3px solid var(--navy);
-  border-radius:var(--radius);
-  padding:16px;
-  margin:14px 0;
-}
+.card{background:rgba(255,250,240,.96);border:3px solid var(--navy);border-radius:var(--radius);padding:16px;margin:14px 0}
 .searchWrap{display:grid;gap:12px;padding:16px}
-input,textarea{
-  width:100%;
-  border:3px solid var(--navy);
-  border-radius:21px;
-  background:#fffaf0;
-  padding:16px 17px;
-  font:inherit;
-  font-size:20px;
-  font-weight:850;
-  color:var(--navy);
-  outline:none;
-}
+input,textarea{width:100%;border:3px solid var(--navy);border-radius:21px;background:#fffaf0;padding:16px 17px;font:inherit;font-size:20px;font-weight:850;color:var(--navy);outline:none}
 input::placeholder,textarea::placeholder{color:rgba(8,19,54,.42);font-weight:900}
 textarea{min-height:100px;resize:vertical;font-size:16px;line-height:1.35}
 input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,64,.28)}
 .msg{display:none;margin:10px 0;border-radius:16px;padding:12px 13px;font-size:15px;line-height:1.35;font-weight:850;text-align:center}
 .msg.show{display:block}.msg.err{background:#fef2f2;color:#991b1b;border:2px solid #fecaca}.msg.ok{background:#ecfdf5;color:#065f46;border:2px solid #bbf7d0}.msg.warn{background:#fffbeb;color:#92400e;border:2px solid #fde68a}
-.btn{
-  border:3px solid var(--navy);
-  border-radius:22px;
-  min-height:54px;
-  padding:14px 16px;
-  font-size:16px;
-  font-family:"Arial Black","Impact",system-ui,sans-serif;
-  text-transform:uppercase;
-  letter-spacing:.01em;
-  font-weight:950;
-  display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;cursor:pointer;width:100%;
-}
-.btn.primary,.btn.dark{color:#fff7df;background:var(--navy)}
-.btn.green{color:#fff7df;background:var(--green)}
-.btn.red{color:#fff7df;background:var(--red)}
-.btn.grey{color:#fff7df;background:#2b3038}
-.btn:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.45)}
+.btn{border:3px solid var(--navy);border-radius:22px;min-height:54px;padding:14px 16px;font-size:16px;font-family:"Arial Black","Impact",system-ui,sans-serif;text-transform:uppercase;letter-spacing:.01em;font-weight:950;display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;cursor:pointer;width:100%}
+.btn.primary,.btn.dark{color:#fff7df;background:var(--navy)}.btn.green{color:#fff7df;background:var(--green)}.btn.red{color:#fff7df;background:var(--red)}.btn.grey{color:#fff7df;background:#2b3038}.btn:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.45)}
 .grid{display:grid;gap:11px}.two{grid-template-columns:1fr 1fr}
-.person{display:flex;align-items:center;justify-content:center;gap:12px;text-align:center}
-.avatar{width:44px;height:44px;border-radius:10px;object-fit:contain;background:#eef2f7;border:2px solid rgba(7,22,63,.15);flex:0 0 auto}
-.avatar.big{width:58px;height:58px}
-.name{
-  font-weight:950;
-  line-height:1.05;
-  letter-spacing:-.015em;
-  color:var(--navy);
-}
-.agentList{display:grid;gap:12px;max-height:58vh;overflow:auto;padding:2px 0 4px}
-.agentBtn,.candidateBtn,.respCard,.dayBtn{
-  border:3px solid var(--navy);
-  background:rgba(255,250,240,.90);
-  border-radius:22px;
-  padding:15px;
-  text-align:center;
-  display:flex;align-items:center;justify-content:center;gap:12px;cursor:pointer;width:100%;color:var(--navy);
-}
-.agentBtn .name{
-  font-family:"Arial Black","Impact",system-ui,sans-serif;
-  text-transform:uppercase;
-  font-size:clamp(23px,6.4vw,34px);
-  width:100%;
-}
-.candidateBtn,.respCard{text-align:left;justify-content:flex-start}
-.candidateBtn .name,.respCard .name{
-  display:block;
-  font-size:clamp(18px,4.9vw,23px);
-  font-weight:950;
-}
-.candidateMain{display:grid;gap:5px}
-.subline,.mailLine{font-size:14px;color:var(--muted);font-weight:800;line-height:1.25}
-.mailLine.missing{color:#92400e}
-.mailLine.ok{color:#166534}
+.person{display:flex;align-items:center;justify-content:center;gap:12px;text-align:center}.avatar{width:44px;height:44px;border-radius:10px;object-fit:contain;background:#eef2f7;border:2px solid rgba(7,22,63,.15);flex:0 0 auto}.avatar.big{width:58px;height:58px}.name{font-weight:950;line-height:1.05;letter-spacing:-.015em;color:var(--navy)}
+.agentList{display:grid;gap:12px;max-height:58vh;overflow:auto;padding:2px 0 4px}.agentBtn,.candidateBtn,.respCard,.dayBtn{border:3px solid var(--navy);background:rgba(255,250,240,.90);border-radius:22px;padding:15px;text-align:center;display:flex;align-items:center;justify-content:center;gap:12px;cursor:pointer;width:100%;color:var(--navy)}
+.agentBtn .name{font-family:"Arial Black","Impact",system-ui,sans-serif;text-transform:uppercase;font-size:clamp(23px,6.4vw,34px);width:100%}.candidateBtn,.respCard{text-align:left;justify-content:flex-start}.candidateBtn .name,.respCard .name{display:block;font-size:clamp(18px,4.9vw,23px);font-weight:950}.candidateMain{display:grid;gap:5px}.subline,.mailLine{font-size:14px;color:var(--muted);font-weight:800;line-height:1.25}.mailLine.missing{color:#92400e}.mailLine.ok{color:#166534}
 .agentBtn:active,.candidateBtn:active,.dayBtn:active,.respCard:active,.btn:active{transform:translateY(1px)}
-.monthChips{display:flex;gap:8px;overflow:auto;padding:2px 0 8px;margin:6px -2px 8px}
-.chip{
-  border:3px solid var(--navy);
-  background:rgba(255,250,240,.94);
-  color:var(--navy);
-  border-radius:999px;
-  padding:10px 13px;
-  font-weight:950;
-  white-space:nowrap;
-  cursor:pointer;
-}
-.chip.active{background:var(--navy);color:#fff7df}
-.dayList{display:grid;gap:11px}
-.dayBtn{justify-content:space-between;align-items:flex-start;text-align:left}
-.dayBtn.selected{background:#fff1f1;border-color:#b91c1c;box-shadow:0 0 0 4px rgba(185,28,28,.10)}
-.dayTitle{
-  font-family:"Arial Black","Impact",system-ui,sans-serif;
-  text-transform:uppercase;
-  font-size:clamp(23px,6vw,31px);
-  font-weight:950;
-  letter-spacing:-.02em;
-  color:var(--navy);
-}
-.shiftLine{
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-  margin-top:8px;
-  border-radius:999px;
-  background:var(--navy);
-  color:#fff7df;
-  padding:7px 10px;
-  font-size:13px;
-  font-weight:900;
-  line-height:1.1;
-  max-width:100%;
-}
-.shiftLine.light{background:transparent;color:var(--muted);padding:0;margin-top:0;border-radius:0;font-size:15px;font-weight:850}
-.shiftIcon{font-size:16px;line-height:1}
-.bottom{
-  position:sticky;
-  bottom:0;
-  background:linear-gradient(180deg,rgba(255,247,223,0),rgba(255,247,223,.96) 24%,#fff7df);
-  padding:14px 0 0;
-  margin-top:12px;
-  z-index:40;
-}
-.counter{
-  background:rgba(255,250,240,.96);
-  border:3px solid var(--navy);
-  color:var(--navy);
-  border-radius:20px;
-  padding:11px;
-  text-align:center;
-  font-weight:950;
-  text-transform:uppercase;
-}
-.exchangeCard{
-  background:rgba(255,250,240,.96);
-  border:3px solid var(--navy);
-  border-radius:24px;
-  padding:15px;
-  margin:14px 0;
-}
-.exchangeCard.done{border-color:#15803d;background:#f0fdf4}
-.goalGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:13px 0}
-@media(min-width:680px){.goalGrid{grid-template-columns:repeat(6,1fr)}.respGrid{grid-template-columns:1fr 1fr}}
-.goal{
-  border:3px solid var(--navy);
-  background:rgba(255,250,240,.95);
-  color:var(--navy);
-  border-radius:17px;
-  padding:12px 8px;
-  font-size:14px;
-  font-weight:950;
-  cursor:pointer;
-}
-.goal.active{background:var(--navy);color:#fff7df}
-.candidateList{display:grid;gap:9px;margin-top:11px}
-.candidateBtn.active{border-color:#15803d;background:#ecfdf5}
-.chosen{
-  display:grid;
-  grid-template-columns:auto 1fr auto;
-  align-items:center;
-  gap:10px;
-  background:#ecfdf5;
-  border:3px solid #15803d;
-  border-radius:20px;
-  padding:11px;
-  margin-top:11px;
-}
-.summaryLine{border:3px solid var(--navy);border-radius:20px;background:rgba(255,250,240,.92);padding:13px;margin:9px 0;line-height:1.4;font-weight:800}
-.summaryLine b{color:var(--navy)}
-.checkline{display:flex;align-items:flex-start;gap:11px;background:rgba(255,250,240,.96);border:3px solid var(--navy);border-radius:22px;padding:14px}
-.checkline input{width:22px;height:22px;flex:0 0 auto;margin-top:3px;border:0;box-shadow:none;padding:0}
-.respGrid{display:grid;gap:9px}
-.respCard.active{border-color:#15803d;background:#ecfdf5}
-.respCard.ccActive{border-color:#1d4ed8;background:#eff6ff}
-.role{font-size:12px;font-weight:950;color:#1d4ed8;text-transform:uppercase;letter-spacing:.03em;display:block;margin-bottom:3px}
-.success{background:#ecfdf5;border:3px solid #15803d;color:#065f46;text-align:center;border-radius:26px;padding:18px}
-.success h2{font-size:31px;color:#065f46}.success p{color:#065f46}
-.ref{background:#fff;border:3px solid #15803d;color:#111827;border-radius:18px;padding:12px;font-weight:950;margin:12px 0}
-.siteModal{
-  position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;
-  background:rgba(7,22,63,.55);padding:18px;
-}
-.siteModal.show{display:flex}
-.siteModalBox{
-  width:min(100%,520px);background:#fffaf0;border:3px solid var(--navy);border-radius:24px;padding:18px;
-}
-.siteModalTitle{font-weight:950;color:var(--navy);font-size:22px;margin-bottom:8px}
-.siteModalText{font-size:17px;color:var(--ink);font-weight:750;line-height:1.35;text-align:left;margin-bottom:14px}
-
-.mailKnown{
-  border:3px solid #15803d;
-  background:#ecfdf5;
-  color:#065f46;
-  border-radius:20px;
-  padding:12px 13px;
-  margin:10px 0;
-  font-weight:900;
-  line-height:1.35;
-}
-.mailKnown b{color:#064e3b}
-.mailKnown .mailAddress{
-  display:block;
-  margin-top:5px;
-  font-size:15px;
-  line-height:1.25;
-  word-break:break-word;
-  color:#064e3b;
-  font-weight:950;
-}
-.mailKnown .mailPerson{
-  display:block;
-  margin-top:8px;
-  padding-top:8px;
-  border-top:2px solid rgba(21,128,61,.18);
-}
-.mailKnown .mailPerson:first-child{
-  margin-top:0;
-  padding-top:0;
-  border-top:0;
-}
-.mailAsk{display:none;margin-top:10px}
-.mailAsk.show{display:block}
-.mailMissingTitle{margin:14px 0 8px;font-weight:950;color:var(--navy)}
-
+.monthChips{display:flex;gap:8px;overflow:auto;padding:2px 0 8px;margin:6px -2px 8px}.chip{border:3px solid var(--navy);background:rgba(255,250,240,.94);color:var(--navy);border-radius:999px;padding:10px 13px;font-weight:950;white-space:nowrap;cursor:pointer}.chip.active{background:var(--navy);color:#fff7df}
+.dayList{display:grid;gap:11px}.dayBtn{justify-content:space-between;align-items:flex-start;text-align:left}.dayBtn.selected{background:#fff1f1;border-color:#b91c1c;box-shadow:0 0 0 4px rgba(185,28,28,.10)}.dayTitle{font-family:"Arial Black","Impact",system-ui,sans-serif;text-transform:uppercase;font-size:clamp(23px,6vw,31px);font-weight:950;letter-spacing:-.02em;color:var(--navy)}
+.shiftLine{display:inline-flex;align-items:center;gap:7px;margin-top:8px;border-radius:999px;background:var(--navy);color:#fff7df;padding:7px 10px;font-size:13px;font-weight:900;line-height:1.1;max-width:100%}.shiftLine.light{background:transparent;color:var(--muted);padding:0;margin-top:0;border-radius:0;font-size:15px;font-weight:850}.shiftIcon{font-size:16px;line-height:1}
+.bottom{position:sticky;bottom:0;background:linear-gradient(180deg,rgba(255,247,223,0),rgba(255,247,223,.96) 24%,#fff7df);padding:14px 0 0;margin-top:12px;z-index:40}.counter{background:rgba(255,250,240,.96);border:3px solid var(--navy);color:var(--navy);border-radius:20px;padding:11px;text-align:center;font-weight:950;text-transform:uppercase}
+.exchangeCard{background:rgba(255,250,240,.96);border:3px solid var(--navy);border-radius:24px;padding:15px;margin:14px 0}.exchangeCard.done{border-color:#15803d;background:#f0fdf4}.goalGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:13px 0}@media(min-width:680px){.goalGrid{grid-template-columns:repeat(6,1fr)}.respGrid{grid-template-columns:1fr 1fr}}
+.goal{border:3px solid var(--navy);background:rgba(255,250,240,.95);color:var(--navy);border-radius:17px;padding:12px 8px;font-size:14px;font-weight:950;cursor:pointer}.goal.active{background:var(--navy);color:#fff7df}.candidateList{display:grid;gap:9px;margin-top:11px}.candidateBtn.active{border-color:#15803d;background:#ecfdf5}.chosen{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;background:#ecfdf5;border:3px solid #15803d;border-radius:20px;padding:11px;margin-top:11px}
+.summaryLine{border:3px solid var(--navy);border-radius:20px;background:rgba(255,250,240,.92);padding:13px;margin:9px 0;line-height:1.4;font-weight:800}.summaryLine b{color:var(--navy)}.checkline{display:flex;align-items:flex-start;gap:11px;background:rgba(255,250,240,.96);border:3px solid var(--navy);border-radius:22px;padding:14px}.checkline input{width:22px;height:22px;flex:0 0 auto;margin-top:3px;border:0;box-shadow:none;padding:0}.respGrid{display:grid;gap:9px}.respCard.active{border-color:#15803d;background:#ecfdf5}.respCard.ccActive{border-color:#1d4ed8;background:#eff6ff}
+.success{background:#ecfdf5;border:3px solid #15803d;color:#065f46;text-align:center;border-radius:26px;padding:18px}.success h2{font-size:31px;color:#065f46}.success p{color:#065f46}.ref{background:#fff;border:3px solid #15803d;color:#111827;border-radius:18px;padding:12px;font-weight:950;margin:12px 0}
+.siteModal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;background:rgba(7,22,63,.55);padding:18px}.siteModal.show{display:flex}.siteModalBox{width:min(100%,520px);background:#fffaf0;border:3px solid var(--navy);border-radius:24px;padding:18px}.siteModalTitle{font-weight:950;color:var(--navy);font-size:22px;margin-bottom:8px}.siteModalText{font-size:17px;color:var(--ink);font-weight:750;line-height:1.35;text-align:left;margin-bottom:14px}
+.mailKnown{border:3px solid #15803d;background:#ecfdf5;color:#065f46;border-radius:20px;padding:12px 13px;margin:10px 0;font-weight:900;line-height:1.35}.mailKnown b{color:#064e3b}.mailKnown .mailAddress{display:block;margin-top:5px;font-size:15px;line-height:1.25;word-break:break-word;color:#064e3b;font-weight:950}.mailKnown .mailPerson{display:block;margin-top:8px;padding-top:8px;border-top:2px solid rgba(21,128,61,.18)}.mailKnown .mailPerson:first-child{margin-top:0;padding-top:0;border-top:0}.mailAsk{display:none;margin-top:10px}.mailAsk.show{display:block}.mailMissingTitle{margin:14px 0 8px;font-weight:950;color:var(--navy)}
 </style>
 </head>
 <body>
-<!-- VISUEL_SITE_V11_STABLE_MAILS_CONNUS_VISIBLES -->
-  <div class="app">
-    <header class="top">
-      <div class="brand">
-        <strong>Planning GHE<br>Demande de changement</strong>
-        <span class="stepPill" id="stepPill">Étape 1</span>
-      </div>
-    </header>
+<!-- VISUEL_SITE_V13_SESSION_SECURISÉE_DEMANDEUR_AUTO -->
+<div class="app">
+  <header class="top"><div class="brand"><strong>Planning GHE<br>Demande de changement</strong><span class="stepPill" id="stepPill">Étape 1</span></div></header>
 
-    <section id="pStart" class="page active">
-      <h1>Choisis ton nom</h1>
-      <p>Recherche ton nom puis ouvre ton aperçu personnel.</p>
-      <div class="card searchWrap">
-        <input id="agentSearch" placeholder="Rechercher mon nom" autocomplete="off">
-        <div id="agentList" class="agentList"></div>
-        <div id="startMsg" class="msg"></div>
-      </div>
-    </section>
+  <section id="pStart" class="page active">
+    <h1>Choisis ton nom</h1>
+    <p>Si tu es connecté, ton planning se charge automatiquement.</p>
+    <div class="card searchWrap"><input id="agentSearch" placeholder="Rechercher mon nom" autocomplete="off"><div id="agentList" class="agentList"></div><div id="startMsg" class="msg"></div></div>
+  </section>
 
-    <section id="pDays" class="page">
-      <h1>Choisis les jours</h1>
-      <div id="whoBox" class="card"></div>
-      <div class="card">
-        <h2>Mois</h2>
-        <div id="monthChips" class="monthChips"></div>
-        <div id="dayList" class="dayList"></div>
-      </div>
-      <div class="bottom">
-        <div class="grid">
-          <div id="basketCount" class="counter">0 jour sélectionné</div>
-          <button id="goExchangeBtn" class="btn primary" onclick="goExchange()" disabled>Continuer</button>
-        </div>
-      </div>
-    </section>
+  <section id="pDays" class="page"><h1>Choisis les jours</h1><div id="whoBox" class="card"></div><div class="card"><h2>Mois</h2><div id="monthChips" class="monthChips"></div><div id="dayList" class="dayList"></div></div><div class="bottom"><div class="grid"><div id="basketCount" class="counter">0 jour sélectionné</div><button id="goExchangeBtn" class="btn primary" onclick="goExchange()" disabled>Continuer</button></div></div></section>
 
-    <section id="pExchange" class="page">
-      <h1>Choisis l’horaire et l’échange</h1>
-      <p>Clique l’horaire souhaité, puis choisis le collègue avec qui échanger.</p>
-      <div class="card checkline">
-        <input id="noAgent" type="checkbox" onchange="toggleNoAgent()">
-        <div><b>Je n’ai personne avec qui échanger.</b><br><span class="small">La demande partira directement à la personne responsable.</span></div>
-      </div>
-      <div id="exchangeList"></div>
-      <div class="bottom">
-        <div class="grid two">
-          <button class="btn grey" onclick="showPage('pDays',2)">Retour</button>
-          <button class="btn primary" onclick="goSummary()">Continuer</button>
-        </div>
-      </div>
-    </section>
+  <section id="pExchange" class="page"><h1>Choisis l’horaire et l’échange</h1><p>Clique l’horaire souhaité, puis choisis le collègue avec qui échanger.</p><div class="card checkline"><input id="noAgent" type="checkbox" onchange="toggleNoAgent()"><div><b>Je n’ai personne avec qui échanger.</b><br><span class="small">La demande partira directement à la personne responsable.</span></div></div><div id="exchangeList"></div><div class="bottom"><div class="grid two"><button class="btn grey" onclick="showPage('pDays',2)">Retour</button><button class="btn primary" onclick="goSummary()">Continuer</button></div></div></section>
 
-    <section id="pSummary" class="page">
-      <h1>Dernière vérification</h1>
-      <div id="summaryBox"></div>
-      <div class="card" id="mailCard">
-        <h2>Adresses mail</h2>
-        <p class="small">Les adresses connues sont affichées, mais non modifiables. Le site demande seulement celles qui manquent.</p>
-        <div id="demandeurMailKnown"></div>
-        <div id="demandeurMailAsk" class="mailAsk">
-          <label style="font-weight:950">Ton adresse mail</label>
-          <input id="demandeurEmail" name="demandeur_email" placeholder="ton.email@exemple.fr" type="email" inputmode="email" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" oninput="setDemandeurEmail(this.value)" onblur="setDemandeurEmail(this.value)">
-        </div>
-        <div id="missingMails"></div>
-      </div>
-      <div class="card">
-        <h2>Personne responsable</h2>
-        <p class="small">Choisis la personne qui recevra la demande avec les boutons de décision.</p>
-        <div id="respMain" class="respGrid"></div>
-      </div>
-      <div class="card">
-        <h2>Responsables en copie du mail</h2>
-        <p class="small">Ces personnes recevront le mail en copie pour information. Elles ne traiteront pas la demande.</p>
-        <div id="respCopies" class="respGrid"></div>
-      </div>
-      <div class="card">
-        <h2>Précision optionnelle</h2>
-        <textarea id="precision" placeholder="Message facultatif pour la personne responsable…"></textarea>
-      </div>
-      <div id="submitMsg" class="msg"></div>
-      <div class="bottom">
-        <div class="grid two">
-          <button class="btn grey" onclick="showPage('pExchange',3)">Retour</button>
-          <button id="submitBtn" class="btn green" onclick="submitRequest()">Envoyer la demande</button>
-        </div>
-      </div>
-    </section>
+  <section id="pSummary" class="page"><h1>Dernière vérification</h1><div id="summaryBox"></div><div class="card" id="mailCard"><h2>Adresses mail</h2><p class="small">Les adresses connues sont affichées, mais non modifiables. Le site demande seulement celles qui manquent.</p><div id="demandeurMailKnown"></div><div id="demandeurMailAsk" class="mailAsk"><label style="font-weight:950">Ton adresse mail</label><input id="demandeurEmail" name="demandeur_email" placeholder="ton.email@exemple.fr" type="email" inputmode="email" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" oninput="setDemandeurEmail(this.value)" onblur="setDemandeurEmail(this.value)"></div><div id="missingMails"></div></div><div class="card"><h2>Personne responsable</h2><p class="small">Choisis la personne qui recevra la demande avec les boutons de décision.</p><div id="respMain" class="respGrid"></div></div><div class="card"><h2>Responsables en copie du mail</h2><p class="small">Ces personnes recevront le mail en copie pour information. Elles ne traiteront pas la demande.</p><div id="respCopies" class="respGrid"></div></div><div class="card"><h2>Précision optionnelle</h2><textarea id="precision" placeholder="Message facultatif pour la personne responsable…"></textarea></div><div id="submitMsg" class="msg"></div><div class="bottom"><div class="grid two"><button class="btn grey" onclick="showPage('pExchange',3)">Retour</button><button id="submitBtn" class="btn green" onclick="submitRequest()">Envoyer la demande</button></div></div></section>
 
-    <section id="pSuccess" class="page">
-      <div class="success">
-        <h2>Demande envoyée</h2>
-        <div id="successRef" class="ref"></div>
-        <p id="successText"></p>
-        <button class="btn green" onclick="location.reload()">Nouvelle demande</button>
-      </div>
-    </section>
-  </div>
+  <section id="pSuccess" class="page"><div class="success"><h2>Demande envoyée</h2><div id="successRef" class="ref"></div><p id="successText"></p><button class="btn green" onclick="location.reload()">Nouvelle demande</button></div></section>
+</div>
 
-  <div id="siteModal" class="siteModal" onclick="if(event.target.id==='siteModal') closeSiteModal()">
-    <div class="siteModalBox">
-      <div class="siteModalTitle" id="siteModalTitle">Information</div>
-      <div class="siteModalText" id="siteModalText"></div>
-      <button class="btn primary" onclick="closeSiteModal()">Compris</button>
-    </div>
-  </div>
+<div id="siteModal" class="siteModal" onclick="if(event.target.id==='siteModal') closeSiteModal()"><div class="siteModalBox"><div class="siteModalTitle" id="siteModalTitle">Information</div><div class="siteModalText" id="siteModalText"></div><button class="btn primary" onclick="closeSiteModal()">Compris</button></div></div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycby_5_yM6EQlwc0oGJ6P7hBTSPpZYj0B_cUtFe3Q5IJMau8YUNc0sjD8NZYV07e9wDHL/exec"; // Remplace par l’URL /exec du script pont GitHub.
+const API_URL = "https://script.google.com/macros/s/AKfycby_5_yM6EQlwc0oGJ6P7hBTSPpZYj0B_cUtFe3Q5IJMau8YUNc0sjD8NZYV07e9wDHL/exec";
 const WEEK = {L:"Lundi",M:"Mardi",X:"Mercredi",J:"Jeudi",V:"Vendredi",S:"Samedi",D:"Dimanche"};
-const GOALS = [
-  {code:"M", label:"Matin"}, {code:"S", label:"Soir"}, {code:"J", label:"Journée"},
-  {code:"J4", label:"J4"}, {code:"N", label:"Nuit"}, {code:"RH", label:"Repos"}
-];
+const GOALS = [{code:"M", label:"Matin"},{code:"S", label:"Soir"},{code:"J", label:"Journée"},{code:"J4", label:"J4"},{code:"N", label:"Nuit"},{code:"RH", label:"Repos"}];
 const SHIFT_FALLBACK = {
-  "M": {code:"M", icone:"🔵", libelle:"Matin", debut:"06:50", fin:"14:40", affichage:"🔵 Matin · 06:50-14:40", categorie:"TRAVAIL"},
-  "J": {code:"J", icone:"🟢", libelle:"Jour", debut:"08:30", fin:"16:20", affichage:"🟢 Jour · 08:30-16:20", categorie:"TRAVAIL"},
-  "J4": {code:"J4", icone:"🟠", libelle:"J4", debut:"10:10", fin:"18:00", affichage:"🟠 J4 · 10:10-18:00", categorie:"TRAVAIL"},
-  "S": {code:"S", icone:"🟡", libelle:"Soir", debut:"13:30", fin:"21:00", affichage:"🟡 Soir · 13:30-21:00", categorie:"TRAVAIL"},
-  "N": {code:"N", icone:"⚫", libelle:"Nuit", debut:"20:50", fin:"06:50", affichage:"⚫ Nuit · 20:50-06:50", categorie:"TRAVAIL_NUIT"},
-  "RH": {code:"RH", icone:"💤", libelle:"Repos hebdo", debut:"", fin:"", affichage:"💤 Repos hebdo", categorie:"REPOS"},
-  "RTT": {code:"RTT", icone:"🧘", libelle:"RTT", debut:"", fin:"", affichage:"🧘 RTT", categorie:"RECUPERATION"},
-  "RTTA": {code:"RTTa", icone:"🧘", libelle:"RTT", debut:"", fin:"", affichage:"🧘 RTT", categorie:"RECUPERATION"},
-  "RC": {code:"RC", icone:"🔁", libelle:"Repos compensateur", debut:"", fin:"", affichage:"🔁 Repos compensateur", categorie:"RECUPERATION"},
-  "RF": {code:"RF", icone:"🎌", libelle:"Repos férié", debut:"", fin:"", affichage:"🎌 Repos férié", categorie:"RECUPERATION"},
-  "CA": {code:"CA", icone:"🏝️", libelle:"Congé annuel", debut:"", fin:"", affichage:"🏝️ Congé annuel", categorie:"CONGE"},
-  "SYR": {code:"SYR", icone:"🗣️", libelle:"Syndicat", debut:"", fin:"", affichage:"🗣️ Syndicat", categorie:"SYNDICAT"},
-  "AA": {code:"AA", icone:"📝", libelle:"Absence autorisée", debut:"", fin:"", affichage:"📝 Absence autorisée", categorie:"ABSENCE"},
-  "MALADIE": {code:"MALADIE", icone:"🩺", libelle:"Maladie", debut:"", fin:"", affichage:"🩺 Maladie", categorie:"MALADIE"},
-  "AM": {code:"AM", icone:"🩺", libelle:"Arrêt médical", debut:"", fin:"", affichage:"🩺 Arrêt médical", categorie:"MALADIE"},
-  "ABS": {code:"ABS", icone:"⚠️", libelle:"Absence", debut:"", fin:"", affichage:"⚠️ Absence", categorie:"ABSENCE"},
-  "FORMATION": {code:"FORMATION", icone:"🎓", libelle:"Formation", debut:"", fin:"", affichage:"🎓 Formation", categorie:"FORMATION"},
-  "-": {code:"-", icone:"📴", libelle:"Non planifié", debut:"", fin:"", affichage:"📴 Non planifié", categorie:"NON_PLANIFIE"},
-  "M0130": {code:"M0130", icone:"❓", libelle:"À vérifier", debut:"", fin:"", affichage:"❓ À vérifier", categorie:"A_VERIFIER"},
-  "M0131": {code:"M0131", icone:"❓", libelle:"À vérifier", debut:"", fin:"", affichage:"❓ À vérifier", categorie:"A_VERIFIER"},
-  "MA": {code:"MA", icone:"❓", libelle:"À vérifier", debut:"", fin:"", affichage:"❓ À vérifier", categorie:"A_VERIFIER"},
-  "AR": {code:"AR", icone:"❓", libelle:"À vérifier", debut:"", fin:"", affichage:"❓ À vérifier", categorie:"A_VERIFIER"},
-  "FO": {code:"FO", icone:"❓", libelle:"À vérifier", debut:"", fin:"", affichage:"❓ À vérifier", categorie:"A_VERIFIER"}
+  "M":{code:"M",icone:"🔵",libelle:"Matin",debut:"06:50",fin:"14:40",affichage:"🔵 Matin · 06:50-14:40",categorie:"TRAVAIL"},
+  "J":{code:"J",icone:"🟢",libelle:"Jour",debut:"08:30",fin:"16:20",affichage:"🟢 Jour · 08:30-16:20",categorie:"TRAVAIL"},
+  "J4":{code:"J4",icone:"🟠",libelle:"J4",debut:"10:10",fin:"18:00",affichage:"🟠 J4 · 10:10-18:00",categorie:"TRAVAIL"},
+  "S":{code:"S",icone:"🟡",libelle:"Soir",debut:"13:30",fin:"21:00",affichage:"🟡 Soir · 13:30-21:00",categorie:"TRAVAIL"},
+  "N":{code:"N",icone:"⚫",libelle:"Nuit",debut:"20:50",fin:"06:50",affichage:"⚫ Nuit · 20:50-06:50",categorie:"TRAVAIL_NUIT"},
+  "RH":{code:"RH",icone:"💤",libelle:"Repos hebdo",debut:"",fin:"",affichage:"💤 Repos hebdo",categorie:"REPOS"},
+  "RTT":{code:"RTT",icone:"🧘",libelle:"RTT",debut:"",fin:"",affichage:"🧘 RTT",categorie:"RECUPERATION"},
+  "RTTA":{code:"RTTa",icone:"🧘",libelle:"RTT",debut:"",fin:"",affichage:"🧘 RTT",categorie:"RECUPERATION"},
+  "RC":{code:"RC",icone:"🔁",libelle:"Repos compensateur",debut:"",fin:"",affichage:"🔁 Repos compensateur",categorie:"RECUPERATION"},
+  "RF":{code:"RF",icone:"🎌",libelle:"Repos férié",debut:"",fin:"",affichage:"🎌 Repos férié",categorie:"RECUPERATION"},
+  "CA":{code:"CA",icone:"🏝️",libelle:"Congé annuel",debut:"",fin:"",affichage:"🏝️ Congé annuel",categorie:"CONGE"},
+  "SYR":{code:"SYR",icone:"🗣️",libelle:"Syndicat",debut:"",fin:"",affichage:"🗣️ Syndicat",categorie:"SYNDICAT"},
+  "AA":{code:"AA",icone:"📝",libelle:"Absence autorisée",debut:"",fin:"",affichage:"📝 Absence autorisée",categorie:"ABSENCE"},
+  "MALADIE":{code:"MALADIE",icone:"🩺",libelle:"Maladie",debut:"",fin:"",affichage:"🩺 Maladie",categorie:"MALADIE"},
+  "AM":{code:"AM",icone:"🩺",libelle:"Arrêt médical",debut:"",fin:"",affichage:"🩺 Arrêt médical",categorie:"MALADIE"},
+  "ABS":{code:"ABS",icone:"⚠️",libelle:"Absence",debut:"",fin:"",affichage:"⚠️ Absence",categorie:"ABSENCE"},
+  "FORMATION":{code:"FORMATION",icone:"🎓",libelle:"Formation",debut:"",fin:"",affichage:"🎓 Formation",categorie:"FORMATION"},
+  "-":{code:"-",icone:"📴",libelle:"Non planifié",debut:"",fin:"",affichage:"📴 Non planifié",categorie:"NON_PLANIFIE"},
+  "M0130":{code:"M0130",icone:"❓",libelle:"À vérifier",debut:"",fin:"",affichage:"❓ À vérifier",categorie:"A_VERIFIER"},
+  "M0131":{code:"M0131",icone:"❓",libelle:"À vérifier",debut:"",fin:"",affichage:"❓ À vérifier",categorie:"A_VERIFIER"},
+  "MA":{code:"MA",icone:"❓",libelle:"À vérifier",debut:"",fin:"",affichage:"❓ À vérifier",categorie:"A_VERIFIER"},
+  "AR":{code:"AR",icone:"❓",libelle:"À vérifier",debut:"",fin:"",affichage:"❓ À vérifier",categorie:"A_VERIFIER"},
+  "FO":{code:"FO",icone:"❓",libelle:"À vérifier",debut:"",fin:"",affichage:"❓ À vérifier",categorie:"A_VERIFIER"}
 };
-function cleanShiftKey(code){
-  let raw=String(code||'').trim();
-  if(!raw) return '';
-  raw=raw.replace(/[❶❷❸❹❺❻❼❽❾]/g,'').trim();
-  raw=raw.replace(/[^A-Za-z0-9-]/g,'').trim();
-  return raw.toUpperCase();
-}
-function shiftSource(code){
-  const raw=String(code||'').trim();
-  const key=cleanShiftKey(raw);
-  const m=DATA && DATA.shift_map ? DATA.shift_map : {};
-  return m[key] || m[String(raw).toUpperCase()] || SHIFT_FALLBACK[key] || SHIFT_FALLBACK[String(raw).toUpperCase()] || null;
-}
+let DATA=null, CAL=null, SECURE_SESSION=null;
+let state={agent:null,currentMonth:"",basket:[],candidates:{},noAgent:false,responsableId:"",ccIds:[],demandeur_email:"",mailDrafts:{},mailDraftsByName:{}};
+const $=id=>document.getElementById(id);
 
-let DATA = null;
-let CAL = null;
-let state = { agent:null, currentMonth:"", basket:[], candidates:{}, noAgent:false, responsableId:"", ccIds:[], demandeur_email:"", mailDrafts:{}, mailDraftsByName:{} };
+function cleanShiftKey(code){let raw=String(code||'').trim();if(!raw)return '';raw=raw.replace(/[❶❷❸❹❺❻❼❽❾]/g,'').trim();raw=raw.replace(/[^A-Za-z0-9-]/g,'').trim();return raw.toUpperCase()}
+function shiftSource(code){const raw=String(code||'').trim();const key=cleanShiftKey(raw);const m=DATA&&DATA.shift_map?DATA.shift_map:{};return m[key]||m[String(raw).toUpperCase()]||SHIFT_FALLBACK[key]||SHIFT_FALLBACK[String(raw).toUpperCase()]||null}
+function normaliseMailName(name){return String(name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/^_+|_+$/g,'')}
+function idNormalise(v){return String(v||'').trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Za-z0-9]+/g,'_').replace(/^_+|_+$/g,'').toUpperCase()}
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function attr(v){return esc(v).replace(/`/g,'&#96;')}
+function avatar(url,cls=''){return `<img class="avatar ${cls}" src="${attr(url||'')}" alt="" onerror="this.style.visibility='hidden'">`}
+function msg(id,type,text){const el=$(id);el.className='msg show '+type;el.textContent=text}
+function clearMsg(id){const el=$(id);el.className='msg';el.textContent=''}
+function showPage(id,step){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$(id).classList.add('active');$('stepPill').textContent='Étape '+step;window.scrollTo({top:0,behavior:'smooth'})}
+function siteAlert(text,title='Information'){$('siteModalTitle').textContent=title;$('siteModalText').textContent=text;$('siteModal').classList.add('show')}
+function closeSiteModal(){$('siteModal').classList.remove('show')}
+function isReadyUrl(){return API_URL&&API_URL.indexOf('COLLE_ICI')<0&&/^https:\/\//.test(API_URL)}
 
-const $ = id => document.getElementById(id);
+function api(action,params={}){return new Promise((resolve,reject)=>{if(!isReadyUrl())return reject(new Error('URL du script pont manquante.'));const cb='dc_cb_'+Date.now()+'_'+Math.floor(Math.random()*1000000);const url=new URL(API_URL);url.searchParams.set('api',action);url.searchParams.set('callback',cb);Object.keys(params).forEach(k=>url.searchParams.set(k,params[k]));const s=document.createElement('script');let done=false;const timer=setTimeout(()=>{if(!done){cleanup();reject(new Error('Le script pont ne répond pas.'))}},25000);function cleanup(){done=true;clearTimeout(timer);delete window[cb];if(s.parentNode)s.parentNode.removeChild(s)}window[cb]=res=>{cleanup();resolve(res)};s.onerror=()=>{cleanup();reject(new Error('Impossible de joindre le script pont.'))};s.src=url.toString();document.body.appendChild(s)})}
 
-function normaliseMailName(name){
-  return String(name||'')
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-    .toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/^_+|_+$/g,'');
-}
-function globalMailStorageKey(){ return "demande_changement_mails_global_v4"; }
-function mailStorageKey(){
-  const id=state.agent && state.agent.id_agent ? state.agent.id_agent : "NO_AGENT";
-  return "demande_changement_mails_agent_v4_"+String(id);
-}
-function readJsonStore(key){
-  try{ return JSON.parse(localStorage.getItem(key)||"{}") || {}; }catch(e){ return {}; }
-}
-function writeJsonStore(key,data){
-  try{ localStorage.setItem(key, JSON.stringify(data||{})); }catch(e){}
-}
-function loadMailDrafts(){
-  const global=readJsonStore(globalMailStorageKey());
-  const local=readJsonStore(mailStorageKey());
-  state.mailDrafts=Object.assign({}, global.mailDrafts||{}, local.mailDrafts||{});
-  state.mailDraftsByName=Object.assign({}, global.mailDraftsByName||{}, local.mailDraftsByName||{});
-  const agentId=state.agent && state.agent.id_agent ? String(state.agent.id_agent) : "";
-  const agentName=state.agent && state.agent.nom_affiche ? normaliseMailName(state.agent.nom_affiche) : "";
-  state.demandeur_email=String(
-    local.demandeur_email ||
-    (global.demandeursById && global.demandeursById[agentId]) ||
-    (global.demandeursByName && global.demandeursByName[agentName]) ||
-    global.lastDemandeurEmail ||
-    state.demandeur_email ||
-    ""
-  );
-}
-function saveMailDrafts(){
-  const agentId=state.agent && state.agent.id_agent ? String(state.agent.id_agent) : "";
-  const agentName=state.agent && state.agent.nom_affiche ? normaliseMailName(state.agent.nom_affiche) : "";
-  const global=readJsonStore(globalMailStorageKey());
-  global.mailDrafts=Object.assign({}, global.mailDrafts||{}, state.mailDrafts||{});
-  global.mailDraftsByName=Object.assign({}, global.mailDraftsByName||{}, state.mailDraftsByName||{});
-  global.demandeursById=global.demandeursById||{};
-  global.demandeursByName=global.demandeursByName||{};
-  if(state.demandeur_email){
-    global.lastDemandeurEmail=state.demandeur_email;
-    if(agentId) global.demandeursById[agentId]=state.demandeur_email;
-    if(agentName) global.demandeursByName[agentName]=state.demandeur_email;
-  }
-  writeJsonStore(globalMailStorageKey(), global);
-  writeJsonStore(mailStorageKey(), {
-    demandeur_email: state.demandeur_email || "",
-    mailDrafts: state.mailDrafts || {},
-    mailDraftsByName: state.mailDraftsByName || {}
-  });
-}
-function getSavedMail(id,name){
-  const keyName=normaliseMailName(name);
-  return String(
-    (id && state.mailDrafts[String(id)]) ||
-    (keyName && state.mailDraftsByName[keyName]) ||
-    ""
-  ).trim();
-}
-function setSavedMail(id,name,mail){
-  const clean=String(mail||"").trim();
-  if(id) state.mailDrafts[String(id)]=clean;
-  const keyName=normaliseMailName(name);
-  if(keyName) state.mailDraftsByName[keyName]=clean;
-  saveMailDrafts();
-}
-function setDemandeurEmail(value){
-  state.demandeur_email=String(value||"").trim();
-  saveMailDrafts();
-}
-function syncMailInputs(){
-  const de=$('demandeurEmail');
-  if(de) state.demandeur_email=String(de.value||"").trim();
-  document.querySelectorAll('[data-mail-agent-id]').forEach(inp=>{
-    const id=inp.getAttribute('data-mail-agent-id') || "";
-    const name=inp.getAttribute('data-mail-agent-name') || "";
-    const mail=String(inp.value||"").trim();
-    setSavedMail(id,name,mail);
-    state.basket.forEach(it=>{
-      if(String(it.accepteur_id)===String(id) || normaliseMailName(it.accepteur_nom)===normaliseMailName(name)){
-        it.accepteur_email=mail;
-      }
-    });
-  });
-  saveMailDrafts();
-}
-function restoreDemandeurMailInput(){
-  const de=$('demandeurEmail');
-  if(de) de.value=state.demandeur_email || "";
-}
-function hydrateSavedMails(){
-  if(!state.demandeur_email){
-    const official=state.agent ? knownMail(state.agent.id_agent) : "";
-    if(official) state.demandeur_email=official;
-  }
-  state.basket.forEach(it=>{
-    if(!it.accepteur_email){
-      const saved=getSavedMail(it.accepteur_id,it.accepteur_nom);
-      if(saved) it.accepteur_email=saved;
-    }
-  });
-}
-function hasDemandeurMail(){ return !!String(state.demandeur_email||"").trim(); }
-function renderDemandeurMail(){
-  const known=$('demandeurMailKnown');
-  const ask=$('demandeurMailAsk');
-  if(!known || !ask) return;
-  if(hasDemandeurMail()){
-    known.innerHTML=`<div class="mailKnown">Mail demandeur connu ✅<span class="mailAddress">${esc(state.demandeur_email)}</span></div>`;
-    ask.classList.remove('show');
-  }else{
-    known.innerHTML='';
-    ask.classList.add('show');
-    restoreDemandeurMailInput();
-  }
-}
-window.addEventListener('pagehide', syncMailInputs);
-window.addEventListener('beforeunload', syncMailInputs);
+async function lireSessionSecurisee(){try{const res=await fetch('/__ghe/me?t='+Date.now(),{method:'GET',cache:'no-store',credentials:'include'});if(!res.ok)return null;const data=await res.json();if(!data||!data.ok||!data.connecte||!data.session||!data.session.agent)return null;return data.session}catch(e){return null}}
+function sessionAgentKey(session){const a=session&&session.agent?session.agent:{};return idNormalise(a.agent_key||a.AGENT_KEY||'')}
+function sessionAgentNameKey(session){const a=session&&session.agent?session.agent:{};return idNormalise((a.nom||'')+'_'+(a.prenom||''))}
+function sessionAgentEmail(session){const a=session&&session.agent?session.agent:{};return String(a.email||a.EMAIL||'').trim()}
+function trouverAgentConnecte(session){if(!session||!DATA||!Array.isArray(DATA.agents))return null;const key=sessionAgentKey(session);const nameKey=sessionAgentNameKey(session);return DATA.agents.find(a=>{const ids=[a.id_agent,a.agent_key,a.agent_uid,a.id_source,a.nom_affiche].map(idNormalise);return (key&&ids.includes(key))||(nameKey&&ids.includes(nameKey))})||null}
 
-function isReadyUrl(){ return API_URL && API_URL.indexOf("COLLE_ICI") < 0 && /^https:\/\//.test(API_URL); }
-function showPage(id, step){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); $(id).classList.add('active'); $('stepPill').textContent='Étape '+step; window.scrollTo({top:0,behavior:'smooth'}); }
-function msg(id,type,text){ const el=$(id); el.className='msg show '+type; el.textContent=text; }
-function clearMsg(id){ const el=$(id); el.className='msg'; el.textContent=''; }
-function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function attr(v){ return esc(v).replace(/`/g,'&#96;'); }
-function avatar(url, cls=''){ return `<img class="avatar ${cls}" src="${attr(url||'')}" alt="" onerror="this.style.visibility='hidden'">`; }
-function shiftText(code){
-  const raw=String(code||'').trim();
-  if(!raw) return 'Non précisé';
-  const v=shiftSource(raw);
-  if(!v) return raw;
-  if(typeof v==='string') return v;
-  const icon=v.icone ? v.icone+' ' : '';
-  const label=v.libelle || v.affichage || raw;
-  const hours=(v.debut && v.fin) ? ' · '+v.debut+' à '+v.fin : '';
-  return icon+label+hours;
-}
-function shiftInfo(code){
-  const raw=String(code||'').trim();
-  const key=cleanShiftKey(raw);
-  const v=shiftSource(raw);
-  if(v && typeof v==='object'){
-    return {
-      code:v.code || raw,
-      icon:v.icone || '',
-      label:v.libelle || v.affichage || raw,
-      hours:(v.debut && v.fin) ? v.debut+' à '+v.fin : '',
-      categorie:v.categorie || ''
-    };
-  }
-  const text=typeof v==='string' ? v : raw;
-  const iconMatch=String(text||'').match(/^\S+/);
-  const maybeIcon=iconMatch ? iconMatch[0] : '';
-  const hasEmoji=/[^\w\sÀ-ÿ/.-]/.test(maybeIcon);
-  let withoutIcon=hasEmoji ? String(text).replace(maybeIcon,'').trim() : String(text||raw).trim();
-  let hours=(withoutIcon.match(/\d{1,2}:\d{2}\s*(?:à|-|—)\s*\d{1,2}:\d{2}/)||[''])[0].replace(/\s*(?:-|—)\s*/,' à ');
-  let label=withoutIcon.replace(/\s*[—·-]\s*\d{1,2}:\d{2}\s*(?:à|-|—)\s*\d{1,2}:\d{2}.*/,'').trim();
-  label=label.replace(new RegExp('^'+key+'\\s*[—-]\\s*','i'),'').trim();
-  return {code:raw, icon:hasEmoji?maybeIcon:'', label:label||raw||'Non précisé', hours:hours||'', categorie:''};
-}
-function shiftInline(code, cls=''){
-  const s=shiftInfo(code);
-  const h=s.hours ? ' · '+s.hours : '';
-  const icon=s.icon ? `<span class="shiftIcon">${esc(s.icon)}</span>` : '';
-  return `<span class="shiftLine ${cls}">${icon}<span>${esc(s.label+h)}</span></span>`;
-}
-function shiftPlain(code){
-  const s=shiftInfo(code);
-  return `${s.icon ? s.icon+' ' : ''}${s.label}${s.hours?' · '+s.hours:''}`;
-}
-function goalText(code){
-  const s=shiftInfo(code);
-  return `${s.icon ? s.icon+' ' : ''}${s.label}`;
-}
-function siteAlert(text,title='Information'){
-  $('siteModalTitle').textContent=title;
-  $('siteModalText').textContent=text;
-  $('siteModal').classList.add('show');
-}
-function closeSiteModal(){ $('siteModal').classList.remove('show'); }
-function knownMail(id){
-  const contacts=DATA && DATA.contacts ? DATA.contacts : {};
-  const a=state.agent || {};
-  const keys=[id, a.id_agent, a.agent_uid, a.id_source, normaliseMailName(a.nom_affiche)];
-  for(const k of keys){
-    if(!k) continue;
-    const c=contacts[String(k)];
-    if(!c) continue;
-    return typeof c==='string' ? c : (c.email || '');
-  }
-  return '';
-}
-function maskMail(mail){ const s=String(mail||''); const at=s.indexOf('@'); return at<2 ? s : s.slice(0,1)+'***'+s.slice(at); }
-function labelLong(label, mois, jour){ const s=String(label||''); const m=s.match(/^([A-Z])\s*(\d{1,2})/i); if(m) return (WEEK[m[1].toUpperCase()]||m[1])+' '+Number(m[2])+' '+(mois||''); return (jour?jour+' ':'')+(mois||s); }
-function makeItemId(s){ return 'item_'+String(s.mois).replace(/\W/g,'')+'_'+s.jour+'_'+Date.now()+'_'+Math.floor(Math.random()*9999); }
+function globalMailStorageKey(){return 'demande_changement_mails_global_v4'}
+function mailStorageKey(){const id=state.agent&&state.agent.id_agent?state.agent.id_agent:'NO_AGENT';return 'demande_changement_mails_agent_v4_'+String(id)}
+function readJsonStore(key){try{return JSON.parse(localStorage.getItem(key)||'{}')||{}}catch(e){return {}}}
+function writeJsonStore(key,data){try{localStorage.setItem(key,JSON.stringify(data||{}))}catch(e){}}
+function loadMailDrafts(){const global=readJsonStore(globalMailStorageKey());const local=readJsonStore(mailStorageKey());state.mailDrafts=Object.assign({},global.mailDrafts||{},local.mailDrafts||{});state.mailDraftsByName=Object.assign({},global.mailDraftsByName||{},local.mailDraftsByName||{});const agentId=state.agent&&state.agent.id_agent?String(state.agent.id_agent):'';const agentName=state.agent&&state.agent.nom_affiche?normaliseMailName(state.agent.nom_affiche):'';state.demandeur_email=String(local.demandeur_email||(global.demandeursById&&global.demandeursById[agentId])||(global.demandeursByName&&global.demandeursByName[agentName])||global.lastDemandeurEmail||state.demandeur_email||'')}
+function saveMailDrafts(){const agentId=state.agent&&state.agent.id_agent?String(state.agent.id_agent):'';const agentName=state.agent&&state.agent.nom_affiche?normaliseMailName(state.agent.nom_affiche):'';const global=readJsonStore(globalMailStorageKey());global.mailDrafts=Object.assign({},global.mailDrafts||{},state.mailDrafts||{});global.mailDraftsByName=Object.assign({},global.mailDraftsByName||{},state.mailDraftsByName||{});global.demandeursById=global.demandeursById||{};global.demandeursByName=global.demandeursByName||{};if(state.demandeur_email){global.lastDemandeurEmail=state.demandeur_email;if(agentId)global.demandeursById[agentId]=state.demandeur_email;if(agentName)global.demandeursByName[agentName]=state.demandeur_email}writeJsonStore(globalMailStorageKey(),global);writeJsonStore(mailStorageKey(),{demandeur_email:state.demandeur_email||'',mailDrafts:state.mailDrafts||{},mailDraftsByName:state.mailDraftsByName||{}})}
+function getSavedMail(id,name){const keyName=normaliseMailName(name);return String((id&&state.mailDrafts[String(id)])||(keyName&&state.mailDraftsByName[keyName])||'').trim()}
+function setSavedMail(id,name,mail){const clean=String(mail||'').trim();if(id)state.mailDrafts[String(id)]=clean;const keyName=normaliseMailName(name);if(keyName)state.mailDraftsByName[keyName]=clean;saveMailDrafts()}
+function setDemandeurEmail(value){state.demandeur_email=String(value||'').trim();saveMailDrafts()}
+function syncMailInputs(){const de=$('demandeurEmail');if(de)state.demandeur_email=String(de.value||'').trim();document.querySelectorAll('[data-mail-agent-id]').forEach(inp=>{const id=inp.getAttribute('data-mail-agent-id')||'';const name=inp.getAttribute('data-mail-agent-name')||'';const mail=String(inp.value||'').trim();setSavedMail(id,name,mail);state.basket.forEach(it=>{if(String(it.accepteur_id)===String(id)||normaliseMailName(it.accepteur_nom)===normaliseMailName(name)){it.accepteur_email=mail}})});saveMailDrafts()}
+function restoreDemandeurMailInput(){const de=$('demandeurEmail');if(de)de.value=state.demandeur_email||''}
+function hydrateSavedMails(){if(!state.demandeur_email){const official=state.agent?knownMail(state.agent.id_agent):'';const sessionMail=sessionAgentEmail(SECURE_SESSION);if(official||sessionMail)state.demandeur_email=official||sessionMail}state.basket.forEach(it=>{if(!it.accepteur_email){const saved=getSavedMail(it.accepteur_id,it.accepteur_nom);if(saved)it.accepteur_email=saved}})}
+function hasDemandeurMail(){return !!String(state.demandeur_email||'').trim()}
+function renderDemandeurMail(){const known=$('demandeurMailKnown');const ask=$('demandeurMailAsk');if(!known||!ask)return;if(hasDemandeurMail()){known.innerHTML=`<div class="mailKnown">Mail demandeur connu ✅<span class="mailAddress">${esc(state.demandeur_email)}</span></div>`;ask.classList.remove('show')}else{known.innerHTML='';ask.classList.add('show');restoreDemandeurMailInput()}}
+window.addEventListener('pagehide',syncMailInputs);window.addEventListener('beforeunload',syncMailInputs);
 
-function api(action, params={}){
-  return new Promise((resolve,reject)=>{
-    if(!isReadyUrl()) return reject(new Error('URL du script pont manquante dans le fichier GitHub.'));
-    const cb='dc_cb_'+Date.now()+'_'+Math.floor(Math.random()*1000000);
-    const url = new URL(API_URL);
-    url.searchParams.set('api', action);
-    url.searchParams.set('callback', cb);
-    Object.keys(params).forEach(k=>url.searchParams.set(k, params[k]));
-    const s=document.createElement('script');
-    let done=false;
-    const timer=setTimeout(()=>{ if(!done){ cleanup(); reject(new Error('Le script pont ne répond pas.')); } }, 25000);
-    function cleanup(){ done=true; clearTimeout(timer); delete window[cb]; if(s.parentNode) s.parentNode.removeChild(s); }
-    window[cb]=res=>{ cleanup(); resolve(res); };
-    s.onerror=()=>{ cleanup(); reject(new Error('Impossible de joindre le script pont.')); };
-    s.src=url.toString();
-    document.body.appendChild(s);
-  });
-}
+function knownMail(id){const contacts=DATA&&DATA.contacts?DATA.contacts:{};const a=state.agent||{};const keys=[id,a.id_agent,a.agent_uid,a.id_source,normaliseMailName(a.nom_affiche)];for(const k of keys){if(!k)continue;const c=contacts[String(k)];if(!c)continue;return typeof c==='string'?c:(c.email||'')}return ''}
+function shiftInfo(code){const raw=String(code||'').trim();const key=cleanShiftKey(raw);const v=shiftSource(raw);if(v&&typeof v==='object')return{code:v.code||raw,icon:v.icone||'',label:v.libelle||v.affichage||raw,hours:(v.debut&&v.fin)?v.debut+' à '+v.fin:'',categorie:v.categorie||''};const text=typeof v==='string'?v:raw;return{code:raw,icon:'',label:text||raw||'Non précisé',hours:'',categorie:''}}
+function shiftInline(code,cls=''){const s=shiftInfo(code);const h=s.hours?' · '+s.hours:'';const icon=s.icon?`<span class="shiftIcon">${esc(s.icon)}</span>`:'';return `<span class="shiftLine ${cls}">${icon}<span>${esc(s.label+h)}</span></span>`}
+function shiftPlain(code){const s=shiftInfo(code);return `${s.icon?s.icon+' ':''}${s.label}${s.hours?' · '+s.hours:''}`}
+function goalText(code){return shiftPlain(code)}
+function labelLong(label,mois,jour){const s=String(label||'');const m=s.match(/^([A-Z])\s*(\d{1,2})/i);if(m)return(WEEK[m[1].toUpperCase()]||m[1])+' '+Number(m[2])+' '+(mois||'');return(jour?jour+' ':'')+(mois||s)}
+function makeItemId(s){return 'item_'+String(s.mois).replace(/\W/g,'')+'_'+s.jour+'_'+Date.now()+'_'+Math.floor(Math.random()*9999)}
 
-async function init(){
-  if(!isReadyUrl()) {
-    msg('startMsg','warn','Il faut coller l’URL /exec du script pont GitHub dans la constante API_URL.');
-    $('agentList').innerHTML='';
-    return;
-  }
-  msg('startMsg','warn','Chargement des agents…');
-  try{
-    const res=await api('init');
-    if(!res || !res.ok) throw new Error(res && res.error ? res.error : 'Chargement impossible.');
-    DATA=res;
-    state.responsableId=(DATA.responsables && DATA.responsables[0]) ? DATA.responsables[0].id : '';
-    clearMsg('startMsg');
-    renderAgents();
-  }catch(e){ msg('startMsg','err',e.message||String(e)); }
-}
-
-function renderAgents(){
-  const q=($('agentSearch').value||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
-  const list=(DATA.agents||[]).filter(a=>String(a.nom_affiche||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').includes(q)).slice(0,90);
-  $('agentList').innerHTML=list.map(a=>`<button class="agentBtn" onclick="selectAgent('${attr(a.id_agent)}')"><span class="name">${esc(a.nom_affiche)}</span></button>`).join('') || '<p>Aucun agent trouvé.</p>';
-}
-$('agentSearch').addEventListener('input', renderAgents);
-
-function todayIso(){
-  const d=new Date();
-  d.setHours(0,0,0,0);
-  const y=d.getFullYear();
-  const m=String(d.getMonth()+1).padStart(2,'0');
-  const j=String(d.getDate()).padStart(2,'0');
-  return `${y}-${m}-${j}`;
-}
-function monthNum(mois){
-  const map={JANVIER:1,FEVRIER:2,FÉVRIER:2,MARS:3,AVRIL:4,MAI:5,JUIN:6,JUILLET:7,AOUT:8,AOÛT:8,SEPTEMBRE:9,OCTOBRE:10,NOVEMBRE:11,DECEMBRE:12,DÉCEMBRE:12};
-  const k=String(mois||'').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-  return map[k]||0;
-}
-function dateIsoFromShift(s){
-  if(s && s.date_iso) return String(s.date_iso).slice(0,10);
-  const y=(CAL && CAL.year) || new Date().getFullYear();
-  const m=monthNum(s && s.mois);
-  const j=Number(s && s.jour);
-  if(!m||!j) return '';
-  return `${y}-${String(m).padStart(2,'0')}-${String(j).padStart(2,'0')}`;
-}
-function isFutureShift(s){ const iso=dateIsoFromShift(s); return !iso || iso>=todayIso(); }
-function futureShifts(){ return (CAL.agent && CAL.agent.shifts ? CAL.agent.shifts : []).filter(isFutureShift); }
-function firstFutureMonth(res){
-  const shifts=(res.agent && res.agent.shifts ? res.agent.shifts : []).filter(isFutureShift);
-  const months=res.mois || [];
-  return months.find(m=>shifts.some(s=>s.mois===m)) || (shifts[0] && shifts[0].mois) || '';
-}
-
-async function selectAgent(id){
-  const a=(DATA.agents||[]).find(x=>String(x.id_agent)===String(id));
-  if(!a) return;
-  state.agent=a;
-  msg('startMsg','warn','Chargement du planning…');
-  try{
-    const res=await api('calendar', {agentId:id});
-    if(!res || !res.ok) throw new Error(res && res.error ? res.error : 'Planning introuvable.');
-    CAL=res;
-    state.currentMonth=firstFutureMonth(res);
-    loadMailDrafts();
-    const officialMail=knownMail(id);
-    state.demandeur_email=officialMail || state.demandeur_email || '';
-    saveMailDrafts();
-    renderDaysPage();
-    setTimeout(restoreDemandeurMailInput,0);
-    showPage('pDays',2);
-  }catch(e){ msg('startMsg','err',e.message||String(e)); }
-}
-
-function renderDaysPage(){
-  const a=state.agent;
-  $('whoBox').innerHTML=`<div class="person">${avatar(a.avatar_image_url,'big')}<div><div class="name">${esc(a.nom_affiche)}</div><div class="subline">Choisis les jours à modifier</div></div></div>`;
-
-  const allFuture=futureShifts();
-  const sourceMonths=CAL.mois || [];
-  const months=sourceMonths.filter(m=>allFuture.some(s=>s.mois===m));
-  if(!months.includes(state.currentMonth)) state.currentMonth=months[0] || '';
-
-  $('monthChips').innerHTML=months.map(m=>`<button class="chip ${m===state.currentMonth?'active':''}" onclick="state.currentMonth='${attr(m)}';renderDaysPage()">${esc(m)}</button>`).join('');
-
-  const shifts=allFuture
-    .filter(s=>s.mois===state.currentMonth)
-    .sort((a,b)=>{
-      const da=dateIsoFromShift(a), db=dateIsoFromShift(b);
-      if(da && db && da!==db) return da.localeCompare(db);
-      return Number(a.jour)-Number(b.jour);
-    });
-
-  $('dayList').innerHTML=shifts.map(s=>{
-    const selected=state.basket.some(it=>it.mois_demandeur===s.mois && Number(it.jour_demandeur)===Number(s.jour));
-    return `<button class="dayBtn ${selected?'selected':''}" onclick='toggleDay(${JSON.stringify(s).replace(/'/g,"&#39;")})'><span><span class="dayTitle">${esc(labelLong(s.label,s.mois,s.jour))}</span><br>${shiftInline(s.code)}</span><span>${selected?'✓':'+'}</span></button>`;
-  }).join('') || '<p>Aucun jour futur disponible pour cet agent.</p>';
-
-  updateBasketCount();
-}
-
-function toggleDay(s){
-  const i=state.basket.findIndex(it=>it.mois_demandeur===s.mois && Number(it.jour_demandeur)===Number(s.jour));
-  if(i>=0) state.basket.splice(i,1); else state.basket.push({
-    item_id:makeItemId(s), demandeur_id:state.agent.id_agent, demandeur_nom:state.agent.nom_affiche,
-    mois_demandeur:s.mois, jour_demandeur:s.jour, label_demandeur:s.label, shift_demandeur:s.code, demandeur_avatar:state.agent.avatar_image_url||'',
-    objectif:'', objectif_label:'', accepteur_id:'', accepteur_nom:'', accepteur_email:'', accepteur_avatar:'', mois_accepteur:'', jour_accepteur:'', label_accepteur:'', shift_accepteur:''
-  });
-  renderDaysPage();
-}
-function updateBasketCount(){ const n=state.basket.length; $('basketCount').textContent=n+' jour'+(n>1?'s':'')+' sélectionné'+(n>1?'s':''); $('goExchangeBtn').disabled=!n; }
-function goExchange(){ if(!state.basket.length) return; renderExchange(); showPage('pExchange',3); }
-
-function toggleNoAgent(){ state.noAgent=$('noAgent').checked; renderExchange(); }
-function renderExchange(){
-  $('noAgent').checked=state.noAgent;
-  $('exchangeList').innerHTML=state.basket.map((it,idx)=>`<div class="exchangeCard ${(state.noAgent||it.accepteur_id)&&it.objectif?'done':''}" id="card_${attr(it.item_id)}">
-    <div class="dayTitle">${esc(labelLong(it.label_demandeur,it.mois_demandeur,it.jour_demandeur))}</div>
-    <div class="small">Ton horaire actuel :</div><div>${shiftInline(it.shift_demandeur,'light')}</div>
-    <div class="goalGrid">${GOALS.map(g=>`<button class="goal ${it.objectif===g.code?'active':''}" onclick="chooseGoal('${attr(it.item_id)}','${g.code}')">${esc(goalText(g.code))}</button>`).join('')}</div>
-    ${renderChosen(it)}
-    <div id="cand_${attr(it.item_id)}" class="candidateList">${renderCandidates(it)}</div>
-  </div>`).join('');
-}
-function renderChosen(it){
-  if(state.noAgent) return it.objectif ? `<div class="chosen"><b>Souhait :</b> ${esc(it.objectif==='REPOS'?'Repos':shiftText(it.objectif))}</div>` : '';
-  if(!it.accepteur_id) return it.objectif ? '<div class="small">Choisis un collègue dans la liste.</div>' : '';
-  return `<div class="chosen">${avatar(it.accepteur_avatar)}<div><div class="name">${esc(it.accepteur_nom)}</div><div>${shiftInline(it.shift_accepteur,'light')}</div></div><button class="btn grey" style="width:auto;min-height:42px;padding:9px 12px" onclick="clearAcceptor('${attr(it.item_id)}')">Changer</button></div>`;
-}
-function renderCandidates(it){
-  if(state.noAgent || !it.objectif || it.accepteur_id) return '';
-  const list=state.candidates[it.item_id];
-  if(!list) return '<div class="small">Clique un horaire pour charger les collègues.</div>';
-  if(!list.length) return '<div class="msg show warn">Aucun collègue trouvé pour cet horaire.</div>';
-  return list.map(c=>`<button class="candidateBtn" onclick="selectCandidate('${attr(it.item_id)}','${attr(c.id_agent)}')">${avatar(c.avatar_image_url)}<span class="candidateMain"><span class="name">${esc(c.nom_affiche)}</span>${shiftInline(c.shift_code,'light')}<span class="mailLine ${c.email?'ok':'missing'}">${c.email?'Mail connu':'Mail à compléter'}</span></span></button>`).join('');
-}
-async function chooseGoal(itemId, goal){
-  const it=state.basket.find(x=>x.item_id===itemId); if(!it) return;
-  it.objectif=goal; it.objectif_label=(goal==='REPOS'?'Repos / RH / congé':shiftPlain(goal));
-  it.accepteur_id=''; it.accepteur_nom=''; it.accepteur_email=''; it.accepteur_avatar=''; it.shift_accepteur='';
-  renderExchange();
-  if(state.noAgent) return;
-  const box=$('cand_'+itemId); if(box) box.innerHTML='<div class="small">Chargement des collègues…</div>';
-  try{
-    const res=await api('candidates', {payload:JSON.stringify({demandeur_id:state.agent.id_agent, mois:it.mois_demandeur, jour:it.jour_demandeur, goal:goal})});
-    if(!res || !res.ok) throw new Error(res && res.error ? res.error : 'Erreur candidats');
-    state.candidates[itemId]=res.candidates||[];
-  }catch(e){ state.candidates[itemId]=[]; }
-  renderExchange();
-}
-function selectCandidate(itemId, agentId){
-  const it=state.basket.find(x=>x.item_id===itemId); if(!it) return;
-  const c=(state.candidates[itemId]||[]).find(x=>String(x.id_agent)===String(agentId)); if(!c) return;
-  it.accepteur_id=c.id_agent; it.accepteur_nom=c.nom_affiche; it.accepteur_email=c.email||state.mailDrafts[c.id_agent]||''; it.accepteur_avatar=c.avatar_image_url||'';
-  it.mois_accepteur=it.mois_demandeur; it.jour_accepteur=it.jour_demandeur; it.label_accepteur=it.label_demandeur; it.shift_accepteur=c.shift_code||'';
-  renderExchange();
-  const next=state.basket.find(x=>!state.noAgent && (!x.objectif || !x.accepteur_id));
-  if(next && $('card_'+next.item_id)) $('card_'+next.item_id).scrollIntoView({behavior:'smooth', block:'start'});
-}
-function clearAcceptor(itemId){ const it=state.basket.find(x=>x.item_id===itemId); if(!it) return; it.accepteur_id=''; it.accepteur_nom=''; it.accepteur_email=''; it.accepteur_avatar=''; it.shift_accepteur=''; renderExchange(); }
-
-function goSummary(){
-  syncMailInputs();
-  hydrateSavedMails();
-  const missingGoal=state.basket.filter(it=>!it.objectif);
-  if(missingGoal.length) return siteAlert('Il manque un horaire souhaité sur '+missingGoal.length+' jour(s).','À compléter');
-  if(!state.noAgent){ const missing=state.basket.filter(it=>!it.accepteur_id); if(missing.length) return siteAlert('Il manque un collègue sur '+missing.length+' jour(s).','À compléter'); }
-  renderSummary(); showPage('pSummary',4);
-}
-function renderSummary(){
-  syncMailInputs();
-  hydrateSavedMails();
-  $('summaryBox').innerHTML='<div class="card"><h2>Résumé</h2>'+state.basket.map(it=>`<div class="summaryLine"><b>${esc(labelLong(it.label_demandeur,it.mois_demandeur,it.jour_demandeur))}</b><br>Actuel : ${esc(shiftPlain(it.shift_demandeur))}<br>Souhait : ${esc(it.objectif==='RH'?shiftPlain('RH'):shiftPlain(it.objectif))}${it.accepteur_nom?'<br>Avec : '+esc(it.accepteur_nom)+' — '+esc(shiftPlain(it.shift_accepteur)):''}</div>`).join('')+'</div>';
-  renderDemandeurMail(); renderMissingMails(); renderResponsables(); restoreDemandeurMailInput(); setTimeout(()=>{ hydrateSavedMails(); renderDemandeurMail(); renderMissingMails(); restoreDemandeurMailInput(); },0); clearMsg('submitMsg');
-}
-function uniqueAcceptors(){ const m={}; state.basket.forEach(it=>{ if(it.accepteur_id) m[it.accepteur_id]=it; }); return Object.values(m); }
-function renderMissingMails(){
-  hydrateSavedMails();
-  const missing=uniqueAcceptors().filter(it=>!it.accepteur_email);
-  const known=uniqueAcceptors().filter(it=>!!it.accepteur_email);
-  let html='';
-  if(known.length){
-    html += '<div class="mailKnown">Mails collègues connus ✅<br>'+known.map(it=>`<span class="mailPerson"><b>${esc(it.accepteur_nom)}</b><span class="mailAddress">${esc(it.accepteur_email)}</span></span>`).join('')+'</div>';
-  }
-  if(missing.length){
-    html += '<div class="mailMissingTitle">Mails à compléter</div>';
-    html += missing.map(it=>{
-      const saved=getSavedMail(it.accepteur_id,it.accepteur_nom) || it.accepteur_email || '';
-      return `<div style="margin-top:10px"><label style="font-weight:950">Mail de ${esc(it.accepteur_nom)}</label><input data-mail-agent-id="${attr(it.accepteur_id)}" data-mail-agent-name="${attr(it.accepteur_nom)}" name="mail_${attr(it.accepteur_id)}" type="email" inputmode="email" placeholder="email du collègue" value="${attr(saved)}" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" oninput="setAcceptorMail('${attr(it.accepteur_id)}','${attr(it.accepteur_nom)}',this.value)" onblur="setAcceptorMail('${attr(it.accepteur_id)}','${attr(it.accepteur_nom)}',this.value)"></div>`;
-    }).join('');
-  }
-  if(!missing.length && !known.length){
-    html += '<div class="mailKnown">Aucun collègue à contacter directement ✅</div>';
-  }
-  $('missingMails').innerHTML=html;
-}
-function setAcceptorMail(id,name,mail){
-  const clean=String(mail||'').trim();
-  setSavedMail(id,name,clean);
-  state.basket.forEach(it=>{
-    if(String(it.accepteur_id)===String(id) || normaliseMailName(it.accepteur_nom)===normaliseMailName(name)) it.accepteur_email=clean;
-  });
-  saveMailDrafts();
-}
-function renderResponsables(){
-  const list=DATA.responsables||[];
-  if(!state.responsableId && list[0]) state.responsableId=list[0].id;
-  $('respMain').innerHTML=list.map(r=>`<button class="respCard ${state.responsableId===r.id?'active':''}" onclick="state.responsableId='${attr(r.id)}';state.ccIds=state.ccIds.filter(x=>x!==state.responsableId);renderResponsables()"><span><span class="name">${esc(r.nom)}</span><span class="subline">${esc(r.role)}</span></span></button>`).join('');
-  $('respCopies').innerHTML=list.filter(r=>r.id!==state.responsableId).map(r=>`<button class="respCard ${state.ccIds.includes(r.id)?'ccActive':''}" onclick="toggleCc('${attr(r.id)}')"><span><span class="name">${esc(r.nom)}</span><span class="subline">${esc(r.role)}</span></span></button>`).join('');
-}
-function toggleCc(id){ const i=state.ccIds.indexOf(id); if(i>=0) state.ccIds.splice(i,1); else state.ccIds.push(id); renderResponsables(); }
-async function submitRequest(){
-  syncMailInputs();
-  hydrateSavedMails();
-  const email=(state.demandeur_email||($('demandeurEmail')?$('demandeurEmail').value:'')||'').trim();
-  if(!email) return msg('submitMsg','err','Ton adresse mail est obligatoire.');
-  if(!state.responsableId) return msg('submitMsg','err','Choisis une personne responsable.');
-  if(!state.noAgent){ const mm=uniqueAcceptors().filter(it=>!it.accepteur_email); if(mm.length) return msg('submitMsg','err','Il manque le mail de '+mm[0].accepteur_nom+'.'); }
-  const payload={ demandeur_id:state.agent.id_agent, demandeur_nom:state.agent.nom_affiche, demandeur_email:email, precision_cadre:$('precision').value||'', sans_agent:!!state.noAgent, items:state.basket, responsable_id:state.responsableId, responsable_cc_ids:state.ccIds };
-  $('submitBtn').disabled=true; msg('submitMsg','warn','Envoi en cours…');
-  try{
-    const res=await api('submit', {payload:JSON.stringify(payload)});
-    $('submitBtn').disabled=false;
-    if(!res || !res.ok) throw new Error(res && res.error ? res.error : 'Erreur envoi.');
-    $('successRef').textContent=res.reference_humaine || res.id || 'Demande envoyée';
-    $('successText').textContent=(state.noAgent?'Demande envoyée à la personne responsable.':'Mail envoyé au collègue. La demande partira ensuite à la personne responsable après acceptation.');
-    showPage('pSuccess',5);
-  }catch(e){ $('submitBtn').disabled=false; msg('submitMsg','err',e.message||String(e)); }
-}
-
+async function init(){if(!isReadyUrl()){msg('startMsg','warn','Il faut coller l’URL /exec du script pont.');$('agentList').innerHTML='';return}msg('startMsg','warn','Chargement des agents…');try{const sessionPromise=lireSessionSecurisee();const initPromise=api('init');const res=await initPromise;SECURE_SESSION=await sessionPromise;if(!res||!res.ok)throw new Error(res&&res.error?res.error:'Chargement impossible.');DATA=res;state.responsableId=(DATA.responsables&&DATA.responsables[0])?DATA.responsables[0].id:'';clearMsg('startMsg');renderAgents();const agentConnecte=trouverAgentConnecte(SECURE_SESSION);if(agentConnecte){$('agentSearch').value=agentConnecte.nom_affiche||'';renderAgents();msg('startMsg','warn','Connexion détectée : chargement de ton planning…');selectAgent(agentConnecte.id_agent);return}}catch(e){msg('startMsg','err',e.message||String(e))}}
+function renderAgents(){const q=($('agentSearch').value||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');const list=(DATA.agents||[]).filter(a=>String(a.nom_affiche||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(q)).slice(0,90);$('agentList').innerHTML=list.map(a=>`<button class="agentBtn" onclick="selectAgent('${attr(a.id_agent)}')"><span class="name">${esc(a.nom_affiche)}</span></button>`).join('')||'<p>Aucun agent trouvé.</p>'}
+$('agentSearch').addEventListener('input',renderAgents);
+function todayIso(){const d=new Date();d.setHours(0,0,0,0);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function monthNum(mois){const map={JANVIER:1,FEVRIER:2,FÉVRIER:2,MARS:3,AVRIL:4,MAI:5,JUIN:6,JUILLET:7,AOUT:8,AOÛT:8,SEPTEMBRE:9,OCTOBRE:10,NOVEMBRE:11,DECEMBRE:12,DÉCEMBRE:12};const k=String(mois||'').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');return map[k]||0}
+function dateIsoFromShift(s){if(s&&s.date_iso)return String(s.date_iso).slice(0,10);const y=(CAL&&CAL.year)||new Date().getFullYear();const m=monthNum(s&&s.mois);const j=Number(s&&s.jour);if(!m||!j)return '';return `${y}-${String(m).padStart(2,'0')}-${String(j).padStart(2,'0')}`}
+function isFutureShift(s){const iso=dateIsoFromShift(s);return !iso||iso>=todayIso()}
+function futureShifts(){return(CAL.agent&&CAL.agent.shifts?CAL.agent.shifts:[]).filter(isFutureShift)}
+function firstFutureMonth(res){const shifts=(res.agent&&res.agent.shifts?res.agent.shifts:[]).filter(isFutureShift);const months=res.mois||[];return months.find(m=>shifts.some(s=>s.mois===m))||(shifts[0]&&shifts[0].mois)||''}
+async function selectAgent(id){const a=(DATA.agents||[]).find(x=>String(x.id_agent)===String(id));if(!a)return;state.agent=a;msg('startMsg','warn','Chargement du planning…');try{const res=await api('calendar',{agentId:id});if(!res||!res.ok)throw new Error(res&&res.error?res.error:'Planning introuvable.');CAL=res;state.currentMonth=firstFutureMonth(res);loadMailDrafts();const officialMail=knownMail(id);const secureMail=sessionAgentEmail(SECURE_SESSION);state.demandeur_email=officialMail||secureMail||state.demandeur_email||'';saveMailDrafts();renderDaysPage();setTimeout(restoreDemandeurMailInput,0);showPage('pDays',2)}catch(e){msg('startMsg','err',e.message||String(e))}}
+function renderDaysPage(){const a=state.agent;$('whoBox').innerHTML=`<div class="person">${avatar(a.avatar_image_url,'big')}<div><div class="name">${esc(a.nom_affiche)}</div><div class="subline">Choisis les jours à modifier</div></div></div>`;const allFuture=futureShifts();const sourceMonths=CAL.mois||[];const months=sourceMonths.filter(m=>allFuture.some(s=>s.mois===m));if(!months.includes(state.currentMonth))state.currentMonth=months[0]||'';$('monthChips').innerHTML=months.map(m=>`<button class="chip ${m===state.currentMonth?'active':''}" onclick="state.currentMonth='${attr(m)}';renderDaysPage()">${esc(m)}</button>`).join('');const shifts=allFuture.filter(s=>s.mois===state.currentMonth).sort((a,b)=>{const da=dateIsoFromShift(a),db=dateIsoFromShift(b);if(da&&db&&da!==db)return da.localeCompare(db);return Number(a.jour)-Number(b.jour)});$('dayList').innerHTML=shifts.map(s=>{const selected=state.basket.some(it=>it.mois_demandeur===s.mois&&Number(it.jour_demandeur)===Number(s.jour));return `<button class="dayBtn ${selected?'selected':''}" onclick='toggleDay(${JSON.stringify(s).replace(/'/g,"&#39;")})'><span><span class="dayTitle">${esc(labelLong(s.label,s.mois,s.jour))}</span><br>${shiftInline(s.code)}</span><span>${selected?'✓':'+'}</span></button>`}).join('')||'<p>Aucun jour futur disponible pour cet agent.</p>';updateBasketCount()}
+function toggleDay(s){const i=state.basket.findIndex(it=>it.mois_demandeur===s.mois&&Number(it.jour_demandeur)===Number(s.jour));if(i>=0)state.basket.splice(i,1);else state.basket.push({item_id:makeItemId(s),demandeur_id:state.agent.id_agent,demandeur_nom:state.agent.nom_affiche,mois_demandeur:s.mois,jour_demandeur:s.jour,label_demandeur:s.label,shift_demandeur:s.code,demandeur_avatar:state.agent.avatar_image_url||'',objectif:'',objectif_label:'',accepteur_id:'',accepteur_nom:'',accepteur_email:'',accepteur_avatar:'',mois_accepteur:'',jour_accepteur:'',label_accepteur:'',shift_accepteur:''});renderDaysPage()}
+function updateBasketCount(){const n=state.basket.length;$('basketCount').textContent=n+' jour'+(n>1?'s':'')+' sélectionné'+(n>1?'s':'');$('goExchangeBtn').disabled=!n}
+function goExchange(){if(!state.basket.length)return;renderExchange();showPage('pExchange',3)}
+function toggleNoAgent(){state.noAgent=$('noAgent').checked;renderExchange()}
+function renderExchange(){$('noAgent').checked=state.noAgent;$('exchangeList').innerHTML=state.basket.map(it=>`<div class="exchangeCard ${(state.noAgent||it.accepteur_id)&&it.objectif?'done':''}" id="card_${attr(it.item_id)}"><div class="dayTitle">${esc(labelLong(it.label_demandeur,it.mois_demandeur,it.jour_demandeur))}</div><div class="small">Ton horaire actuel :</div><div>${shiftInline(it.shift_demandeur,'light')}</div><div class="goalGrid">${GOALS.map(g=>`<button class="goal ${it.objectif===g.code?'active':''}" onclick="chooseGoal('${attr(it.item_id)}','${g.code}')">${esc(goalText(g.code))}</button>`).join('')}</div>${renderChosen(it)}<div id="cand_${attr(it.item_id)}" class="candidateList">${renderCandidates(it)}</div></div>`).join('')}
+function renderChosen(it){if(state.noAgent)return it.objectif?`<div class="chosen"><b>Souhait :</b> ${esc(it.objectif==='REPOS'?'Repos':shiftPlain(it.objectif))}</div>`:'';if(!it.accepteur_id)return it.objectif?'<div class="small">Choisis un collègue dans la liste.</div>':'';return `<div class="chosen">${avatar(it.accepteur_avatar)}<div><div class="name">${esc(it.accepteur_nom)}</div><div>${shiftInline(it.shift_accepteur,'light')}</div></div><button class="btn grey" style="width:auto;min-height:42px;padding:9px 12px" onclick="clearAcceptor('${attr(it.item_id)}')">Changer</button></div>`}
+function renderCandidates(it){if(state.noAgent||!it.objectif||it.accepteur_id)return '';const list=state.candidates[it.item_id];if(!list)return '<div class="small">Clique un horaire pour charger les collègues.</div>';if(!list.length)return '<div class="msg show warn">Aucun collègue trouvé pour cet horaire.</div>';return list.map(c=>`<button class="candidateBtn" onclick="selectCandidate('${attr(it.item_id)}','${attr(c.id_agent)}')">${avatar(c.avatar_image_url)}<span class="candidateMain"><span class="name">${esc(c.nom_affiche)}</span>${shiftInline(c.shift_code,'light')}<span class="mailLine ${c.email?'ok':'missing'}">${c.email?'Mail connu':'Mail à compléter'}</span></span></button>`).join('')}
+async function chooseGoal(itemId,goal){const it=state.basket.find(x=>x.item_id===itemId);if(!it)return;it.objectif=goal;it.objectif_label=(goal==='REPOS'?'Repos / RH / congé':shiftPlain(goal));it.accepteur_id='';it.accepteur_nom='';it.accepteur_email='';it.accepteur_avatar='';it.shift_accepteur='';renderExchange();if(state.noAgent)return;const box=$('cand_'+itemId);if(box)box.innerHTML='<div class="small">Chargement des collègues…</div>';try{const res=await api('candidates',{payload:JSON.stringify({demandeur_id:state.agent.id_agent,mois:it.mois_demandeur,jour:it.jour_demandeur,goal:goal})});if(!res||!res.ok)throw new Error(res&&res.error?res.error:'Erreur candidats');state.candidates[itemId]=res.candidates||[]}catch(e){state.candidates[itemId]=[]}renderExchange()}
+function selectCandidate(itemId,agentId){const it=state.basket.find(x=>x.item_id===itemId);if(!it)return;const c=(state.candidates[itemId]||[]).find(x=>String(x.id_agent)===String(agentId));if(!c)return;it.accepteur_id=c.id_agent;it.accepteur_nom=c.nom_affiche;it.accepteur_email=c.email||state.mailDrafts[c.id_agent]||'';it.accepteur_avatar=c.avatar_image_url||'';it.mois_accepteur=it.mois_demandeur;it.jour_accepteur=it.jour_demandeur;it.label_accepteur=it.label_demandeur;it.shift_accepteur=c.shift_code||'';renderExchange();const next=state.basket.find(x=>!state.noAgent&&(!x.objectif||!x.accepteur_id));if(next&&$('card_'+next.item_id))$('card_'+next.item_id).scrollIntoView({behavior:'smooth',block:'start'})}
+function clearAcceptor(itemId){const it=state.basket.find(x=>x.item_id===itemId);if(!it)return;it.accepteur_id='';it.accepteur_nom='';it.accepteur_email='';it.accepteur_avatar='';it.shift_accepteur='';renderExchange()}
+function goSummary(){syncMailInputs();hydrateSavedMails();const missingGoal=state.basket.filter(it=>!it.objectif);if(missingGoal.length)return siteAlert('Il manque un horaire souhaité sur '+missingGoal.length+' jour(s).','À compléter');if(!state.noAgent){const missing=state.basket.filter(it=>!it.accepteur_id);if(missing.length)return siteAlert('Il manque un collègue sur '+missing.length+' jour(s).','À compléter')}renderSummary();showPage('pSummary',4)}
+function renderSummary(){syncMailInputs();hydrateSavedMails();$('summaryBox').innerHTML='<div class="card"><h2>Résumé</h2>'+state.basket.map(it=>`<div class="summaryLine"><b>${esc(labelLong(it.label_demandeur,it.mois_demandeur,it.jour_demandeur))}</b><br>Actuel : ${esc(shiftPlain(it.shift_demandeur))}<br>Souhait : ${esc(it.objectif==='RH'?shiftPlain('RH'):shiftPlain(it.objectif))}${it.accepteur_nom?'<br>Avec : '+esc(it.accepteur_nom)+' — '+esc(shiftPlain(it.shift_accepteur)):''}</div>`).join('')+'</div>';renderDemandeurMail();renderMissingMails();renderResponsables();restoreDemandeurMailInput();setTimeout(()=>{hydrateSavedMails();renderDemandeurMail();renderMissingMails();restoreDemandeurMailInput()},0);clearMsg('submitMsg')}
+function uniqueAcceptors(){const m={};state.basket.forEach(it=>{if(it.accepteur_id)m[it.accepteur_id]=it});return Object.values(m)}
+function renderMissingMails(){hydrateSavedMails();const missing=uniqueAcceptors().filter(it=>!it.accepteur_email);const known=uniqueAcceptors().filter(it=>!!it.accepteur_email);let html='';if(known.length){html+='<div class="mailKnown">Mails collègues connus ✅<br>'+known.map(it=>`<span class="mailPerson"><b>${esc(it.accepteur_nom)}</b><span class="mailAddress">${esc(it.accepteur_email)}</span></span>`).join('')+'</div>'}if(missing.length){html+='<div class="mailMissingTitle">Mails à compléter</div>';html+=missing.map(it=>{const saved=getSavedMail(it.accepteur_id,it.accepteur_nom)||it.accepteur_email||'';return `<div style="margin-top:10px"><label style="font-weight:950">Mail de ${esc(it.accepteur_nom)}</label><input data-mail-agent-id="${attr(it.accepteur_id)}" data-mail-agent-name="${attr(it.accepteur_nom)}" name="mail_${attr(it.accepteur_id)}" type="email" inputmode="email" placeholder="email du collègue" value="${attr(saved)}" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" oninput="setAcceptorMail('${attr(it.accepteur_id)}','${attr(it.accepteur_nom)}',this.value)" onblur="setAcceptorMail('${attr(it.accepteur_id)}','${attr(it.accepteur_nom)}',this.value)"></div>`}).join('')}if(!missing.length&&!known.length)html+='<div class="mailKnown">Aucun collègue à contacter directement ✅</div>';$('missingMails').innerHTML=html}
+function setAcceptorMail(id,name,mail){const clean=String(mail||'').trim();setSavedMail(id,name,clean);state.basket.forEach(it=>{if(String(it.accepteur_id)===String(id)||normaliseMailName(it.accepteur_nom)===normaliseMailName(name))it.accepteur_email=clean});saveMailDrafts()}
+function renderResponsables(){const list=DATA.responsables||[];if(!state.responsableId&&list[0])state.responsableId=list[0].id;$('respMain').innerHTML=list.map(r=>`<button class="respCard ${state.responsableId===r.id?'active':''}" onclick="state.responsableId='${attr(r.id)}';state.ccIds=state.ccIds.filter(x=>x!==state.responsableId);renderResponsables()"><span><span class="name">${esc(r.nom)}</span><span class="subline">${esc(r.role)}</span></span></button>`).join('');$('respCopies').innerHTML=list.filter(r=>r.id!==state.responsableId).map(r=>`<button class="respCard ${state.ccIds.includes(r.id)?'ccActive':''}" onclick="toggleCc('${attr(r.id)}')"><span><span class="name">${esc(r.nom)}</span><span class="subline">${esc(r.role)}</span></span></button>`).join('')}
+function toggleCc(id){const i=state.ccIds.indexOf(id);if(i>=0)state.ccIds.splice(i,1);else state.ccIds.push(id);renderResponsables()}
+async function submitRequest(){syncMailInputs();hydrateSavedMails();const email=(state.demandeur_email||($('demandeurEmail')?$('demandeurEmail').value:'')||'').trim();if(!email)return msg('submitMsg','err','Ton adresse mail est obligatoire.');if(!state.responsableId)return msg('submitMsg','err','Choisis une personne responsable.');if(!state.noAgent){const mm=uniqueAcceptors().filter(it=>!it.accepteur_email);if(mm.length)return msg('submitMsg','err','Il manque le mail de '+mm[0].accepteur_nom+'.')}const payload={demandeur_id:state.agent.id_agent,demandeur_nom:state.agent.nom_affiche,demandeur_email:email,precision_cadre:$('precision').value||'',sans_agent:!!state.noAgent,items:state.basket,responsable_id:state.responsableId,responsable_cc_ids:state.ccIds};$('submitBtn').disabled=true;msg('submitMsg','warn','Envoi en cours…');try{const res=await api('submit',{payload:JSON.stringify(payload)});$('submitBtn').disabled=false;if(!res||!res.ok)throw new Error(res&&res.error?res.error:'Erreur envoi.');$('successRef').textContent=res.reference_humaine||res.id||'Demande envoyée';$('successText').textContent=(state.noAgent?'Demande envoyée à la personne responsable.':'Mail envoyé au collègue. La demande partira ensuite à la personne responsable après acceptation.');showPage('pSuccess',5)}catch(e){$('submitBtn').disabled=false;msg('submitMsg','err',e.message||String(e))}}
 init();
 </script>
 </body>
