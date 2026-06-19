@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
-<title>Demande de changement planning — V13 session sécurisée</title>
+<title>Demande de changement planning — V14 chargement propre</title>
 <style>
 :root{
   --cream:#fff7df;
@@ -70,14 +70,19 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
 </style>
 </head>
 <body>
-<!-- VISUEL_SITE_V13_SESSION_SECURISÉE_DEMANDEUR_AUTO -->
+<!-- VISUEL_SITE_V14_CHARGEMENT_PROPRE_ORDRE_SHIFT -->
 <div class="app">
   <header class="top"><div class="brand"><strong>Planning GHE<br>Demande de changement</strong><span class="stepPill" id="stepPill">Étape 1</span></div></header>
 
   <section id="pStart" class="page active">
-    <h1>Choisis ton nom</h1>
-    <p>Si tu es connecté, ton planning se charge automatiquement.</p>
-    <div class="card searchWrap"><input id="agentSearch" placeholder="Rechercher mon nom" autocomplete="off"><div id="agentList" class="agentList"></div><div id="startMsg" class="msg"></div></div>
+    <h1 id="startTitle">Chargement de ton planning</h1>
+    <p id="startText">Connexion détectée, on prépare ta demande…</p>
+    <div class="card searchWrap" id="manualSearchBox" style="display:none">
+      <input id="agentSearch" placeholder="Rechercher mon nom" autocomplete="off">
+      <div id="agentList" class="agentList"></div>
+      <div id="startMsg" class="msg"></div>
+    </div>
+    <div id="startMsgAuto" class="msg show warn">Chargement en cours…</div>
   </section>
 
   <section id="pDays" class="page"><h1>Choisis les jours</h1><div id="whoBox" class="card"></div><div class="card"><h2>Mois</h2><div id="monthChips" class="monthChips"></div><div id="dayList" class="dayList"></div></div><div class="bottom"><div class="grid"><div id="basketCount" class="counter">0 jour sélectionné</div><button id="goExchangeBtn" class="btn primary" onclick="goExchange()" disabled>Continuer</button></div></div></section>
@@ -94,7 +99,7 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycby_5_yM6EQlwc0oGJ6P7hBTSPpZYj0B_cUtFe3Q5IJMau8YUNc0sjD8NZYV07e9wDHL/exec";
 const WEEK = {L:"Lundi",M:"Mardi",X:"Mercredi",J:"Jeudi",V:"Vendredi",S:"Samedi",D:"Dimanche"};
-const GOALS = [{code:"M", label:"Matin"},{code:"S", label:"Soir"},{code:"J", label:"Journée"},{code:"J4", label:"J4"},{code:"N", label:"Nuit"},{code:"RH", label:"Repos"}];
+const GOALS = [{code:"M", label:"Matin"},{code:"J", label:"Journée"},{code:"J4", label:"J4"},{code:"S", label:"Soir"},{code:"N", label:"Nuit"},{code:"RH", label:"Repos"}];
 const SHIFT_FALLBACK = {
   "M":{code:"M",icone:"🔵",libelle:"Matin",debut:"06:50",fin:"14:40",affichage:"🔵 Matin · 06:50-14:40",categorie:"TRAVAIL"},
   "J":{code:"J",icone:"🟢",libelle:"Jour",debut:"08:30",fin:"16:20",affichage:"🟢 Jour · 08:30-16:20",categorie:"TRAVAIL"},
@@ -170,7 +175,62 @@ function goalText(code){return shiftPlain(code)}
 function labelLong(label,mois,jour){const s=String(label||'');const m=s.match(/^([A-Z])\s*(\d{1,2})/i);if(m)return(WEEK[m[1].toUpperCase()]||m[1])+' '+Number(m[2])+' '+(mois||'');return(jour?jour+' ':'')+(mois||s)}
 function makeItemId(s){return 'item_'+String(s.mois).replace(/\W/g,'')+'_'+s.jour+'_'+Date.now()+'_'+Math.floor(Math.random()*9999)}
 
-async function init(){if(!isReadyUrl()){msg('startMsg','warn','Il faut coller l’URL /exec du script pont.');$('agentList').innerHTML='';return}msg('startMsg','warn','Chargement des agents…');try{const sessionPromise=lireSessionSecurisee();const initPromise=api('init');const res=await initPromise;SECURE_SESSION=await sessionPromise;if(!res||!res.ok)throw new Error(res&&res.error?res.error:'Chargement impossible.');DATA=res;state.responsableId=(DATA.responsables&&DATA.responsables[0])?DATA.responsables[0].id:'';clearMsg('startMsg');renderAgents();const agentConnecte=trouverAgentConnecte(SECURE_SESSION);if(agentConnecte){$('agentSearch').value=agentConnecte.nom_affiche||'';renderAgents();msg('startMsg','warn','Connexion détectée : chargement de ton planning…');selectAgent(agentConnecte.id_agent);return}}catch(e){msg('startMsg','err',e.message||String(e))}}
+
+function showManualStart(){
+  const box=$('manualSearchBox');
+  const auto=$('startMsgAuto');
+  if($('startTitle')) $('startTitle').textContent='Choisis ton nom';
+  if($('startText')) $('startText').textContent='Recherche ton nom puis ouvre ton aperçu personnel.';
+  if(box) box.style.display='grid';
+  if(auto) auto.className='msg';
+}
+function showAutoLoading(text){
+  const box=$('manualSearchBox');
+  const auto=$('startMsgAuto');
+  if($('startTitle')) $('startTitle').textContent='Chargement de ton planning';
+  if($('startText')) $('startText').textContent='Connexion détectée, on prépare ta demande…';
+  if(box) box.style.display='none';
+  if(auto){ auto.className='msg show warn'; auto.textContent=text || 'Chargement en cours…'; }
+}
+async function init(){
+  if(!isReadyUrl()){
+    showManualStart();
+    msg('startMsg','warn','Il faut coller l’URL /exec du script pont.');
+    $('agentList').innerHTML='';
+    return;
+  }
+
+  showAutoLoading('Chargement de ton planning…');
+
+  try{
+    const sessionPromise=lireSessionSecurisee();
+    const initPromise=api('init');
+
+    const res=await initPromise;
+    SECURE_SESSION=await sessionPromise;
+
+    if(!res||!res.ok) throw new Error(res&&res.error?res.error:'Chargement impossible.');
+
+    DATA=res;
+    state.responsableId=(DATA.responsables&&DATA.responsables[0])?DATA.responsables[0].id:'';
+
+    const agentConnecte=trouverAgentConnecte(SECURE_SESSION);
+
+    if(agentConnecte){
+      showAutoLoading('Planning trouvé : chargement des jours…');
+      selectAgent(agentConnecte.id_agent);
+      return;
+    }
+
+    showManualStart();
+    clearMsg('startMsg');
+    renderAgents();
+
+  }catch(e){
+    showManualStart();
+    msg('startMsg','err',e.message||String(e));
+  }
+}
 function renderAgents(){const q=($('agentSearch').value||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');const list=(DATA.agents||[]).filter(a=>String(a.nom_affiche||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(q)).slice(0,90);$('agentList').innerHTML=list.map(a=>`<button class="agentBtn" onclick="selectAgent('${attr(a.id_agent)}')"><span class="name">${esc(a.nom_affiche)}</span></button>`).join('')||'<p>Aucun agent trouvé.</p>'}
 $('agentSearch').addEventListener('input',renderAgents);
 function todayIso(){const d=new Date();d.setHours(0,0,0,0);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
