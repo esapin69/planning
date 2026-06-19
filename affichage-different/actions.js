@@ -1,6 +1,6 @@
-// Actions de l'affichage différent — v11
+// Actions de l'affichage différent — v12
 // Rôle : personnaliser l'accueil APRÈS connexion Cloudflare.
-// Corrections v11 : Planning officiel direct JOUR/NUIT plus robuste + demande changement directe agent.
+// Corrections v12 : Eddy affiché comme agent normal même si /__ghe/me renvoie role total.
 (function(){
   var PASSERELLE_AVATARS = "https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8HZ_g_ota7tajTKLY3jvLKEF9AvSPjIbVpqcSkSRcl5OdWV9/exec";
   var AVATAR_DEFAUT_ID = "1_B49ks3EwD6g1iABJ9y5A35u8vuegN-g";
@@ -61,6 +61,27 @@
 
   function roleSession(session){
     return clean(droitsSession(session).role || droitsSession(session).ROLE).toLowerCase();
+  }
+
+  function estEddySapin(session){
+    var key = norm(agentKey(session));
+    var nom = norm(agentNom(session));
+    var prenom = norm(agentPrenom(session));
+
+    return key === "SAPIN_EDDY" || (nom === "SAPIN" && prenom === "EDDY");
+  }
+
+  function roleAccueil(session){
+    /*
+      Important :
+      /__ghe/me renvoie Eddy avec role total car il a access_chefs.
+      Mais sur l'accueil, Eddy doit tester comme un agent normal.
+      Le compte démo / démo / GHE garde le rôle total.
+    */
+    if(estDemo(session)) return "total";
+    if(estEddySapin(session)) return "agent";
+
+    return roleSession(session);
   }
 
   function formatPrenom(v){
@@ -137,7 +158,7 @@
   }
 
   function utilisateurConnecteAvecRole(session){
-    var role = roleSession(session);
+    var role = roleAccueil(session);
     return role === "agent" || role === "chef" || role === "total";
   }
 
@@ -229,13 +250,13 @@
   }
 
   async function trouverTypePlanningAgent(session){
-    var role = roleSession(session);
+    var role = roleAccueil(session);
 
     if(role === "chef" || role === "total") return "chef";
     if(role !== "agent") return "";
 
     var key = norm(agentKey(session)) || norm(agentNom(session) + "_" + agentPrenom(session));
-    var cacheKey = "ghe_type_planning_v11_" + key;
+    var cacheKey = "ghe_type_planning_v12_" + key;
 
     try{
       var cached = sessionStorage.getItem(cacheKey);
@@ -315,7 +336,7 @@
 
   async function trouverUrlsAvatar(session){
     var key = norm(agentKey(session)) || norm(agentNom(session) + "_" + agentPrenom(session));
-    var cacheKey = "ghe_avatar_urls_v11_" + key;
+    var cacheKey = "ghe_avatar_urls_v12_" + key;
 
     try{
       var cached = sessionStorage.getItem(cacheKey);
@@ -560,7 +581,7 @@
   }
 
   async function reglerPlanningOfficiel(session){
-    var role = roleSession(session);
+    var role = roleAccueil(session);
     var bloc = document.getElementById("planning-officiel");
     if(!bloc) return;
 
@@ -583,7 +604,7 @@
   }
 
   function rendreMonPlanningDirect(session){
-    if(roleSession(session) !== "agent") return;
+    if(roleAccueil(session) !== "agent") return;
 
     var bloc = document.getElementById("planning-individuel") || document.getElementById("mon-planning-personnel");
     if(!bloc) return;
@@ -650,7 +671,7 @@
   }
 
   function reglerDemandeChangement(session){
-    var role = roleSession(session);
+    var role = roleAccueil(session);
     var bloc = document.getElementById("demander-changement");
     if(!bloc) return;
 
