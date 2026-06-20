@@ -350,6 +350,502 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
   padding:8px;
 }
 
+
+/* =========================================================
+   ÉTAPE 2 — MÊME AFFICHAGE QUE LE PLANNING INDIVIDUEL
+   Cette partie ne change que le rendu des jours.
+   ========================================================= */
+:root{
+  --weekend:#fff0dc;
+  --blue-soft:#eaf3ff;
+  --green-soft:#eaffef;
+  --orange-soft:#fff0d7;
+  --yellow-soft:#fff8d8;
+  --black-soft:#e9e9ee;
+  --rest-soft:#eff8ff;
+  --red-soft:#ffe8e8;
+  --purple-soft:#f2eaff;
+  --planning-card-height:150px;
+}
+
+#pDays > .card:nth-of-type(2){
+  margin:0;
+  padding:0;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+}
+
+#pDays > .card:nth-of-type(2) > h2{
+  display:none;
+}
+
+.monthChips{
+  position:sticky;
+  top:92px;
+  z-index:30;
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  margin:12px 0 16px;
+  padding:7px;
+  border:4px solid var(--navy);
+  border-radius:20px;
+  background:rgba(255,248,222,.94);
+  box-shadow:0 7px 0 rgba(7,24,63,.13);
+  backdrop-filter:blur(9px);
+  scrollbar-width:none;
+}
+
+.monthChips::-webkit-scrollbar{
+  display:none;
+}
+
+.monthChips .chip{
+  flex:1 0 auto;
+  min-width:112px;
+  margin:0;
+  padding:9px 12px 10px;
+  border:3px solid var(--navy);
+  border-radius:15px;
+  background:#fffaf0;
+  color:var(--navy);
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(17px,4.6vw,24px);
+  line-height:.9;
+  text-transform:uppercase;
+  white-space:nowrap;
+  cursor:pointer;
+}
+
+.monthChips .chip.active{
+  background:var(--navy);
+  color:#fff4ce;
+}
+
+.dayList{
+  display:block;
+}
+
+.planning-month-section{
+  scroll-margin-top:160px;
+}
+
+.planning-month-divider{
+  position:relative;
+  isolation:isolate;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:78px;
+  margin:26px 0 12px;
+  padding:12px 78px;
+  overflow:hidden;
+  border:5px solid var(--navy);
+  border-radius:28px 21px 30px 22px;
+  background:
+    radial-gradient(circle at 16% 20%,rgba(255,255,255,.90),transparent 26%),
+    repeating-linear-gradient(-8deg,rgba(7,24,63,.05) 0 2px,transparent 2px 10px),
+    linear-gradient(135deg,#fffdf5 0%,#ffe5a1 58%,#f1b84d 100%);
+  box-shadow:
+    0 8px 0 rgba(7,24,63,.20),
+    inset 0 0 0 3px rgba(255,255,255,.48);
+  color:var(--navy);
+  text-align:center;
+  text-transform:uppercase;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(28px,8vw,52px);
+  line-height:.82;
+  letter-spacing:.4px;
+}
+
+.planning-month-divider::before,
+.planning-month-divider::after{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  width:92px;
+  height:92px;
+  border:5px solid var(--navy);
+  background:#fff8dd;
+  transform:rotate(18deg);
+  opacity:.55;
+}
+
+.planning-month-divider::before{
+  left:-55px;
+  top:-38px;
+}
+
+.planning-month-divider::after{
+  right:-55px;
+  bottom:-42px;
+}
+
+.planning-week-block{
+  margin:0 0 18px;
+}
+
+.planning-week-label{
+  width:max-content;
+  max-width:100%;
+  margin:13px 0 7px 7px;
+  padding:3px 8px 4px;
+  border-left:5px solid #d3a24b;
+  color:rgba(7,24,63,.74);
+  font-size:12px;
+  line-height:1;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  font-weight:1000;
+}
+
+.planning-week-days{
+  display:grid;
+  gap:10px;
+}
+
+.planning-weekend-pair{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-top:10px;
+}
+
+.planning-day-card{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  width:100%;
+  height:var(--planning-card-height);
+  padding:0;
+  overflow:hidden;
+  border:4px solid var(--navy);
+  border-radius:24px 19px 26px 20px;
+  background:#fff;
+  color:var(--navy);
+  text-align:left;
+  cursor:pointer;
+  box-shadow:
+    0 7px 0 rgba(7,24,63,.15),
+    0 10px 0 rgba(0,0,0,.06);
+}
+
+.planning-day-card::before{
+  content:"";
+  position:absolute;
+  right:-22px;
+  bottom:-28px;
+  width:74px;
+  height:74px;
+  border:4px solid rgba(7,24,63,.09);
+  border-radius:21px;
+  transform:rotate(18deg);
+  pointer-events:none;
+}
+
+.planning-day-card.is-weekend{
+  background:
+    radial-gradient(circle at 12% 0%,rgba(255,255,255,.85),transparent 36%),
+    linear-gradient(180deg,#fff9ed 0%,var(--weekend) 100%);
+}
+
+.planning-day-card.is-selected{
+  border-color:#15803d;
+  box-shadow:
+    0 0 0 4px rgba(21,128,61,.13),
+    0 7px 0 rgba(21,128,61,.25);
+}
+
+.planning-day-head{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  min-height:55px;
+  padding:8px 10px 7px;
+  border-bottom:3px solid var(--navy);
+  background:
+    repeating-linear-gradient(-7deg,rgba(7,24,63,.035) 0 2px,transparent 2px 10px),
+    linear-gradient(180deg,#fffdf5,#fff3c8);
+}
+
+.planning-day-card.is-weekend .planning-day-head{
+  background:
+    repeating-linear-gradient(-7deg,rgba(132,73,11,.055) 0 2px,transparent 2px 10px),
+    linear-gradient(180deg,#fff0dc,#f3d4a7);
+}
+
+.planning-date-main{
+  min-width:0;
+  margin:0;
+  overflow:hidden;
+  color:var(--navy);
+  text-overflow:ellipsis;
+  text-transform:uppercase;
+  white-space:nowrap;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(22px,6vw,40px);
+  line-height:.88;
+  letter-spacing:.2px;
+  font-weight:900;
+}
+
+.planning-date-tag{
+  flex:0 0 auto;
+  padding:4px 7px 5px;
+  border:2px solid rgba(7,24,63,.22);
+  border-radius:11px;
+  background:rgba(255,255,255,.66);
+  font-size:9px;
+  text-transform:uppercase;
+  opacity:.82;
+  font-weight:1000;
+}
+
+.planning-event-row{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  flex:1;
+  min-width:0;
+  min-height:0;
+  padding:10px 48px 10px 10px;
+  background:#fff;
+}
+
+.planning-event-row.kind-matin{background:linear-gradient(95deg,var(--blue-soft),#fff)}
+.planning-event-row.kind-journee{background:linear-gradient(95deg,var(--green-soft),#fff)}
+.planning-event-row.kind-j4{background:linear-gradient(95deg,var(--orange-soft),#fff)}
+.planning-event-row.kind-soir{background:linear-gradient(95deg,var(--yellow-soft),#fff)}
+.planning-event-row.kind-nuit{background:linear-gradient(95deg,var(--black-soft),#fff)}
+.planning-event-row.kind-repos{background:linear-gradient(95deg,var(--rest-soft),#fff)}
+.planning-event-row.kind-maladie{background:linear-gradient(95deg,var(--red-soft),#fff)}
+.planning-event-row.kind-special{background:linear-gradient(95deg,var(--purple-soft),#fff)}
+
+.planning-shift-dot{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:37px;
+  height:37px;
+  border:3px solid rgba(7,24,63,.12);
+  border-radius:13px 10px 14px 11px;
+  background:#fff9e8;
+  font-size:25px;
+  line-height:1;
+  transform:rotate(-2deg);
+  box-shadow:0 3px 0 rgba(7,24,63,.10);
+}
+
+.planning-shift-copy{
+  display:grid;
+  gap:3px;
+  width:100%;
+  min-width:0;
+}
+
+.planning-shift-line{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  width:100%;
+  min-width:0;
+  white-space:nowrap;
+}
+
+.planning-shift-title{
+  flex:0 1 auto;
+  min-width:0;
+  margin:0;
+  overflow:hidden;
+  color:var(--navy);
+  text-overflow:ellipsis;
+  text-transform:uppercase;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(22px,6vw,38px);
+  line-height:.86;
+  text-shadow:0 2px 0 rgba(211,162,75,.38);
+}
+
+.planning-shift-sep{
+  flex:0 0 auto;
+  font-size:clamp(16px,4vw,24px);
+  opacity:.7;
+  font-weight:950;
+}
+
+.planning-time{
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:5px 8px 6px;
+  border-radius:12px;
+  background:var(--navy);
+  color:#fff4ce;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(18px,5vw,30px);
+  line-height:.9;
+  box-shadow:0 4px 0 rgba(7,24,63,.16);
+}
+
+.planning-detail{
+  margin:0;
+  overflow:hidden;
+  color:rgba(7,24,63,.72);
+  text-align:left;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:12px;
+  line-height:1.15;
+  font-weight:900;
+}
+
+.planning-selection-mark{
+  position:absolute;
+  right:10px;
+  bottom:10px;
+  z-index:4;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:31px;
+  height:31px;
+  border:3px solid var(--navy);
+  border-radius:999px;
+  background:#fffaf0;
+  color:var(--navy);
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:20px;
+  line-height:1;
+  box-shadow:0 3px 0 rgba(7,24,63,.12);
+}
+
+.planning-day-card.is-selected .planning-selection-mark{
+  border-color:#15803d;
+  background:#15803d;
+  color:#fff;
+}
+
+.planning-weekend-pair .planning-day-card{
+  height:var(--planning-card-height);
+}
+
+.planning-weekend-pair .planning-day-head{
+  min-height:58px;
+  align-items:flex-start;
+}
+
+.planning-weekend-pair .planning-date-main{
+  display:-webkit-box;
+  overflow:hidden;
+  white-space:normal;
+  font-size:clamp(16px,4.4vw,26px);
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+}
+
+.planning-weekend-pair .planning-date-tag{
+  font-size:8px;
+  padding:3px 5px 4px;
+}
+
+.planning-weekend-pair .planning-event-row{
+  gap:6px;
+  padding:8px 42px 8px 7px;
+}
+
+.planning-weekend-pair .planning-shift-dot{
+  width:30px;
+  height:30px;
+  border-width:2px;
+  font-size:20px;
+}
+
+.planning-weekend-pair .planning-shift-line{
+  display:grid;
+  gap:4px;
+  white-space:normal;
+}
+
+.planning-weekend-pair .planning-shift-title{
+  font-size:clamp(17px,4.6vw,25px);
+}
+
+.planning-weekend-pair .planning-shift-sep{
+  display:none;
+}
+
+.planning-weekend-pair .planning-time{
+  width:max-content;
+  max-width:100%;
+  padding:4px 6px 5px;
+  font-size:clamp(14px,3.9vw,20px);
+}
+
+.planning-weekend-pair .planning-detail{
+  font-size:10px;
+}
+
+@media(max-width:560px){
+  :root{
+    --planning-card-height:142px;
+  }
+
+  .monthChips{
+    top:88px;
+    border-width:3px;
+    border-radius:18px;
+    padding:6px;
+  }
+
+  .monthChips .chip{
+    min-width:100px;
+    border-width:2px;
+    padding:8px 10px 9px;
+    font-size:17px;
+  }
+
+  .planning-month-divider{
+    min-height:68px;
+    margin-top:22px;
+    padding:10px 44px;
+    border-width:4px;
+    font-size:clamp(27px,8vw,42px);
+  }
+
+  .planning-day-card{
+    border-width:4px;
+  }
+
+  .planning-day-head{
+    padding:7px 8px 6px;
+    border-bottom-width:3px;
+  }
+
+  .planning-event-row{
+    gap:8px;
+    padding:8px 44px 8px 8px;
+  }
+
+  .planning-shift-dot{
+    width:32px;
+    height:32px;
+    font-size:22px;
+  }
+
+  .planning-shift-line{
+    gap:5px;
+  }
+
+  .planning-time{
+    padding:4px 7px 5px;
+  }
+}
+
 /* ÉCRAN DE CHARGEMENT DIRECT — même esprit que Planning individuel */
 .startLoading{
   margin-top:16px;
@@ -529,6 +1025,8 @@ function shiftSource(code){
 
 let DATA = null;
 let CAL = null;
+let renderedShiftMap = {};
+let monthObserver = null;
 let state = { agent:null, currentMonth:"", basket:[], candidates:{}, noAgent:false, responsableId:"", ccIds:[], demandeur_email:"", mailDrafts:{}, mailDraftsByName:{} };
 
 const $ = id => document.getElementById(id);
@@ -958,44 +1456,339 @@ async function selectAgent(id){
   }
 }
 
+
+function planningParseDateIso(iso){
+  const p=String(iso||'').slice(0,10).split('-').map(Number);
+  if(p.length!==3 || !p[0] || !p[1] || !p[2]) return null;
+  return new Date(p[0],p[1]-1,p[2],0,0,0);
+}
+
+function planningDateFromShift(s){
+  return planningParseDateIso(dateIsoFromShift(s));
+}
+
+function planningIsWeekend(s){
+  const d=planningDateFromShift(s);
+  if(d) return d.getDay()===0 || d.getDay()===6;
+
+  const raw=normaliseMailName(
+    (s && s.label) ||
+    labelLong(s && s.label,s && s.mois,s && s.jour)
+  );
+
+  return raw.includes('SAMEDI') || raw.includes('DIMANCHE');
+}
+
+function planningDateTitle(s){
+  const d=planningDateFromShift(s);
+
+  if(d){
+    return d.toLocaleDateString('fr-FR',{
+      weekday:'long',
+      day:'numeric',
+      month:'long'
+    }).toUpperCase();
+  }
+
+  return labelLong(s.label,s.mois,s.jour).toUpperCase();
+}
+
+function planningIsoWeek(date){
+  const d=new Date(Date.UTC(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate()
+  ));
+
+  const dayNum=d.getUTCDay()||7;
+  d.setUTCDate(d.getUTCDate()+4-dayNum);
+
+  const yearStart=new Date(Date.UTC(d.getUTCFullYear(),0,1));
+
+  return Math.ceil((((d-yearStart)/86400000)+1)/7);
+}
+
+function planningWeekKey(s){
+  const d=planningDateFromShift(s);
+
+  if(!d) return 'jour_'+String(s.jour||'');
+
+  const monday=new Date(d);
+  const day=monday.getDay()||7;
+  monday.setDate(monday.getDate()-day+1);
+
+  return [
+    monday.getFullYear(),
+    String(monday.getMonth()+1).padStart(2,'0'),
+    String(monday.getDate()).padStart(2,'0')
+  ].join('-');
+}
+
+function planningWeekLabel(s){
+  const d=planningDateFromShift(s);
+  return d ? 'Semaine '+planningIsoWeek(d) : 'Semaine';
+}
+
+function planningMonthId(mois){
+  return 'planning_month_'+String(mois||'')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^A-Za-z0-9_-]/g,'_');
+}
+
+function planningMonthTitle(mois,shifts){
+  const first=(shifts||[]).map(planningDateFromShift).find(Boolean);
+  const year=first ? first.getFullYear() : ((CAL && CAL.year) || new Date().getFullYear());
+  return String(mois||'')+' '+year;
+}
+
+function planningCardInfo(code){
+  const key=cleanShiftKey(code);
+  const source=shiftInfo(code);
+  const category=normaliseMailName(source.categorie||'');
+
+  const map={
+    M:{emoji:'🔵',label:'Matin',detail:'',kind:'kind-matin',work:true},
+    J:{emoji:'🟢',label:'Journée',detail:'',kind:'kind-journee',work:true},
+    J4:{emoji:'🟠',label:'J4',detail:'',kind:'kind-j4',work:true},
+    S:{emoji:'🟡',label:'Soir',detail:'',kind:'kind-soir',work:true},
+    N:{emoji:'⚫',label:'Nuit',detail:'',kind:'kind-nuit',work:true},
+    RH:{emoji:'🏝️',label:'RH',detail:'Repos hebdomadaire',kind:'kind-repos',work:false},
+    RTT:{emoji:'🛌',label:'RTT',detail:'RTT',kind:'kind-repos',work:false},
+    RTTA:{emoji:'🛌',label:'RTT',detail:'RTT',kind:'kind-repos',work:false},
+    RC:{emoji:'🔁',label:'RC',detail:'Récupération',kind:'kind-repos',work:false},
+    RF:{emoji:'🎌',label:'RF',detail:'Repos férié / récupération',kind:'kind-repos',work:false},
+    CA:{emoji:'🏖️',label:'CA',detail:'Congé annuel',kind:'kind-repos',work:false},
+    SYR:{emoji:'🪧',label:'Syndicat',detail:'Activité syndicale',kind:'kind-special',work:false},
+    AA:{emoji:'📝',label:'AA',detail:'Absence autorisée',kind:'kind-repos',work:false},
+    MALADIE:{emoji:'🏥',label:'Maladie',detail:'Absence maladie',kind:'kind-maladie',work:false},
+    AM:{emoji:'🏥',label:'Maladie',detail:'Absence maladie',kind:'kind-maladie',work:false},
+    ABS:{emoji:'🚫',label:'Absence',detail:'Absence',kind:'kind-maladie',work:false},
+    FORMATION:{emoji:'🎓',label:'Formation',detail:'Formation',kind:'kind-special',work:false},
+    '-':{emoji:'📴',label:'Non planifié',detail:'',kind:'kind-repos',work:false}
+  };
+
+  if(map[key]){
+    return Object.assign({},map[key],{
+      hours:map[key].work ? source.hours : ''
+    });
+  }
+
+  if(category.includes('MALADIE')){
+    return {emoji:'🏥',label:source.label||key,detail:'Absence maladie',kind:'kind-maladie',work:false,hours:''};
+  }
+
+  if(
+    category.includes('REPOS') ||
+    category.includes('CONGE') ||
+    category.includes('RECUPERATION') ||
+    category.includes('ABSENCE')
+  ){
+    return {emoji:source.icon||'🏝️',label:source.label||key,detail:source.label||'',kind:'kind-repos',work:false,hours:''};
+  }
+
+  return {
+    emoji:source.icon||'📌',
+    label:source.label||key||'Événement',
+    detail:'',
+    kind:'kind-special',
+    work:!!source.hours,
+    hours:source.hours||''
+  };
+}
+
+function planningNormalizeHours(hours){
+  return String(hours||'')
+    .replace(/\s+à\s+/g,'–')
+    .replace(/\s*-\s*/g,'–');
+}
+
+function planningIsSelected(s){
+  return state.basket.some(it=>
+    it.mois_demandeur===s.mois &&
+    Number(it.jour_demandeur)===Number(s.jour) &&
+    String(it.date_iso_demandeur||it.date_iso||'')===String(s.date_iso||'')
+  );
+}
+
+function planningCardHtml(s,key){
+  const info=planningCardInfo(s.code);
+  const weekend=planningIsWeekend(s);
+  const selected=planningIsSelected(s);
+  const hours=info.hours
+    ? `<span class="planning-shift-sep">·</span><span class="planning-time">${esc(planningNormalizeHours(info.hours))}</span>`
+    : '';
+
+  return `<button
+    type="button"
+    class="planning-day-card ${weekend?'is-weekend':''} ${selected?'is-selected':''}"
+    onclick="planningToggleDay('${attr(key)}')"
+    aria-pressed="${selected?'true':'false'}"
+  >
+    <span class="planning-day-head">
+      <span class="planning-date-main">${esc(planningDateTitle(s))}</span>
+      <span class="planning-date-tag">${weekend?'week-end':'semaine'}</span>
+    </span>
+
+    <span class="planning-event-row ${info.kind}">
+      <span class="planning-shift-dot">${esc(info.emoji)}</span>
+
+      <span class="planning-shift-copy">
+        <span class="planning-shift-line">
+          <span class="planning-shift-title">${esc(info.label)}</span>
+          ${hours}
+        </span>
+
+        ${info.detail ? `<span class="planning-detail">${esc(info.detail)}</span>` : ''}
+      </span>
+    </span>
+
+    <span class="planning-selection-mark">${selected?'✓':'+'}</span>
+  </button>`;
+}
+
+function planningObserveMonths(months){
+  if(monthObserver){
+    monthObserver.disconnect();
+    monthObserver=null;
+  }
+
+  if(!('IntersectionObserver' in window)) return;
+
+  const sections=months
+    .map(m=>document.getElementById(planningMonthId(m)))
+    .filter(Boolean);
+
+  monthObserver=new IntersectionObserver(entries=>{
+    const visible=entries
+      .filter(e=>e.isIntersecting)
+      .sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+
+    if(!visible) return;
+
+    const month=visible.target.dataset.month;
+
+    document.querySelectorAll('#monthChips .chip').forEach(btn=>{
+      btn.classList.toggle('active',btn.dataset.month===month);
+    });
+  },{
+    rootMargin:'-20% 0px -65% 0px',
+    threshold:[0,.1,.35]
+  });
+
+  sections.forEach(section=>monthObserver.observe(section));
+}
+
 function renderDaysPage(){
   const a=state.agent;
+
   $('whoBox').innerHTML=`<div class="person">${avatar(a.avatar_image_url,'big')}<div><div class="name">${esc(a.nom_affiche)}</div><div class="subline">Choisis les jours à modifier</div></div></div>`;
 
-  const allFuture=futureShifts()
-    .sort((a,b)=>{
-      const da=dateIsoFromShift(a), db=dateIsoFromShift(b);
-      if(da && db && da!==db) return da.localeCompare(db);
-      return Number(a.jour)-Number(b.jour);
-    });
+  const allFuture=futureShifts().sort((a,b)=>{
+    const da=dateIsoFromShift(a);
+    const db=dateIsoFromShift(b);
+
+    if(da && db && da!==db) return da.localeCompare(db);
+    return Number(a.jour)-Number(b.jour);
+  });
 
   const months=[];
+
   allFuture.forEach(s=>{
     if(s.mois && !months.includes(s.mois)) months.push(s.mois);
   });
 
-  $('monthChips').innerHTML=months.map(m=>`<button class="chip" onclick="jumpToMonth('${attr(m)}')">${esc(m)}</button>`).join('');
+  $('monthChips').innerHTML=months.map((m,index)=>`<button
+    type="button"
+    class="chip ${index===0?'active':''}"
+    data-month="${attr(m)}"
+    onclick="jumpToMonth('${attr(m)}')"
+  >${esc(m)}</button>`).join('');
 
-  let lastMonth='';
+  renderedShiftMap={};
+  let renderIndex=0;
   const html=[];
-  allFuture.forEach(s=>{
-    if(s.mois !== lastMonth){
-      lastMonth=s.mois;
-      html.push(`<div class="monthSeparator" id="month_${attr(String(s.mois).replace(/[^a-zA-Z0-9_-]/g,''))}">${esc(s.mois)}</div>`);
-    }
-    const selected=state.basket.some(it=>it.mois_demandeur===s.mois && Number(it.jour_demandeur)===Number(s.jour) && String(it.date_iso_demandeur||it.date_iso||'')===String(s.date_iso||''));
-    html.push(`<button class="dayBtn ${selected?'selected':''}" onclick='toggleDay(${JSON.stringify(s).replace(/'/g,"&#39;")})'><span><span class="dayTitle">${esc(labelLong(s.label,s.mois,s.jour))}</span><br>${shiftInline(s.code)}</span><span>${selected?'✓':'+'}</span></button>`);
+
+  months.forEach(mois=>{
+    const monthShifts=allFuture.filter(s=>s.mois===mois);
+    const weeks=[];
+
+    monthShifts.forEach(s=>{
+      const key=planningWeekKey(s);
+      let week=weeks.find(w=>w.key===key);
+
+      if(!week){
+        week={key,label:planningWeekLabel(s),shifts:[]};
+        weeks.push(week);
+      }
+
+      week.shifts.push(s);
+    });
+
+    html.push(`<section
+      class="planning-month-section"
+      id="${planningMonthId(mois)}"
+      data-month="${attr(mois)}"
+    >`);
+
+    html.push(`<div class="planning-month-divider">${esc(planningMonthTitle(mois,monthShifts))}</div>`);
+
+    weeks.forEach(week=>{
+      const weekdayCards=[];
+      const weekendCards=[];
+
+      week.shifts.forEach(s=>{
+        const key='planning_shift_'+renderIndex++;
+        renderedShiftMap[key]=s;
+        const card=planningCardHtml(s,key);
+
+        if(planningIsWeekend(s)){
+          weekendCards.push(card);
+        }else{
+          weekdayCards.push(card);
+        }
+      });
+
+      html.push(`<div class="planning-week-block">`);
+      html.push(`<div class="planning-week-label">${esc(week.label)}</div>`);
+
+      if(weekdayCards.length){
+        html.push(`<div class="planning-week-days">${weekdayCards.join('')}</div>`);
+      }
+
+      if(weekendCards.length){
+        html.push(`<div class="planning-weekend-pair">${weekendCards.join('')}</div>`);
+      }
+
+      html.push(`</div>`);
+    });
+
+    html.push(`</section>`);
   });
 
   $('dayList').innerHTML=html.join('') || '<p>Aucun jour futur disponible pour cet agent.</p>';
   updateBasketCount();
+
+  requestAnimationFrame(()=>planningObserveMonths(months));
+}
+
+function planningToggleDay(key){
+  const shift=renderedShiftMap[key];
+  if(shift) toggleDay(shift);
 }
 
 function jumpToMonth(mois){
-  const id='month_'+String(mois||'').replace(/[^a-zA-Z0-9_-]/g,'');
-  const el=document.getElementById(id);
-  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  document.querySelectorAll('#monthChips .chip').forEach(btn=>{
+    btn.classList.toggle('active',btn.dataset.month===mois);
+  });
+
+  const el=document.getElementById(planningMonthId(mois));
+
+  if(el){
+    el.scrollIntoView({behavior:'smooth',block:'start'});
+  }
 }
+
 
 function toggleDay(s){
   const i=state.basket.findIndex(it=>it.mois_demandeur===s.mois && Number(it.jour_demandeur)===Number(s.jour) && String(it.date_iso_demandeur||it.date_iso||'')===String(s.date_iso||''));
