@@ -4,8 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0f172a">
-  <title>Demande de changement planning</title>
-
+  <title>Demande de changement planning — V12 fil chronologique</title>
   <style>
 :root{
   --cream:#fff7df;
@@ -19,1279 +18,407 @@
   --red:#b91c1c;
   --blue:#1d4ed8;
   --orange:#c2410c;
-  --gold:#d3a24b;
-  --weekend:#fff0dc;
-  --blue-soft:#eaf3ff;
-  --green-soft:#eaffef;
-  --orange-soft:#fff0d7;
-  --yellow-soft:#fff8d8;
-  --black-soft:#e9e9ee;
-  --rest-soft:#eff8ff;
-  --red-soft:#ffe8e8;
-  --purple-soft:#f2eaff;
   --radius:24px;
-  --day-card-height:150px;
 }
-
-*,
-*::before,
-*::after{
-  box-sizing:border-box;
-}
-
-html{
-  min-height:100%;
-  scroll-behavior:smooth;
-  scroll-padding-top:160px;
-}
-
-body{
+*{box-sizing:border-box}
+html,body{
   margin:0;
   min-height:100%;
-  overflow-x:hidden;
-  color:var(--ink);
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  color:var(--ink);
   background:
-    radial-gradient(circle at 15% 0%,rgba(255,255,255,.95) 0 9%,transparent 31%),
-    radial-gradient(circle at 88% 4%,rgba(255,218,116,.42) 0 9%,transparent 32%),
-    repeating-linear-gradient(-6deg,rgba(7,24,63,.035) 0 1px,transparent 1px 13px),
-    linear-gradient(180deg,#fff9e8 0%,#f5e8bf 57%,#ead9a5 100%);
+    radial-gradient(circle at 16% 0%,rgba(255,255,255,.88) 0 9%,transparent 30%),
+    radial-gradient(circle at 88% 3%,rgba(255,218,116,.30) 0 9%,transparent 30%),
+    repeating-linear-gradient(-6deg,rgba(7,22,63,.030) 0 1px,transparent 1px 12px),
+    linear-gradient(180deg,var(--cream),var(--cream2));
 }
-
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  z-index:-1;
-  pointer-events:none;
-  opacity:.15;
-  background:
-    repeating-linear-gradient(8deg,rgba(7,24,63,.05) 0 1px,transparent 1px 12px),
-    repeating-linear-gradient(-9deg,rgba(178,116,26,.07) 0 1px,transparent 1px 17px);
-  mix-blend-mode:multiply;
-}
-
-button,
-input,
-textarea{
-  font:inherit;
-}
-
-button{
-  -webkit-tap-highlight-color:transparent;
-}
-
+body{overflow-x:hidden}
 .app{
-  width:min(860px,100%);
+  max-width:760px;
   margin:0 auto;
-  padding:calc(12px + env(safe-area-inset-top)) 10px calc(24px + env(safe-area-inset-bottom));
+  padding:calc(12px + env(safe-area-inset-top)) 12px calc(18px + env(safe-area-inset-bottom));
 }
-
 .top{
   position:sticky;
   top:0;
   z-index:50;
-  margin:-12px 0 14px;
-  padding:10px 12px;
-  border:4px solid var(--navy);
-  border-radius:0 0 24px 24px;
   background:rgba(255,247,223,.96);
-  box-shadow:0 7px 0 rgba(7,24,63,.12);
   backdrop-filter:blur(10px);
+  border:3px solid var(--navy);
+  border-radius:0 0 24px 24px;
+  padding:10px 12px;
+  margin:-12px 0 14px;
 }
-
-.brand{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-}
-
+.brand{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .brand strong{
-  color:var(--navy);
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-family:"Arial Black","Impact",system-ui,sans-serif;
+  text-transform:uppercase;
   font-size:clamp(17px,5vw,25px);
   line-height:.95;
-  letter-spacing:-.03em;
-  text-transform:uppercase;
+  letter-spacing:-.04em;
+  color:var(--navy);
 }
-
 .stepPill{
   flex:0 0 auto;
-  padding:8px 12px;
-  border:3px solid var(--navy);
-  border-radius:999px;
-  background:var(--paper);
-  color:var(--navy);
   font-weight:950;
   font-size:13px;
+  color:var(--navy);
+  background:var(--paper);
+  border:3px solid var(--navy);
+  border-radius:999px;
+  padding:8px 12px;
   white-space:nowrap;
 }
-
-h1,
-h2,
-.dayTitle,
-.agentBtn .name,
-.month-divider,
-.date-main,
-.shift-title{
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-}
-
 h1{
-  margin:18px 0 10px;
-  color:var(--navy);
-  text-align:center;
+  font-family:"Arial Black","Impact",system-ui,sans-serif;
   text-transform:uppercase;
   font-size:clamp(34px,9.2vw,54px);
   line-height:.88;
-  letter-spacing:-.035em;
-  text-shadow:0 4px 0 rgba(225,184,64,.38);
-}
-
-h2{
-  margin:0 0 10px;
+  letter-spacing:-.045em;
+  margin:18px 0 10px;
   color:var(--navy);
   text-align:center;
+  text-shadow:0 4px 0 rgba(225,184,64,.38);
+}
+h2{
+  font-family:"Arial Black","Impact",system-ui,sans-serif;
   text-transform:uppercase;
   font-size:clamp(22px,5.6vw,31px);
   line-height:.95;
-  letter-spacing:-.025em;
-}
-
-p{
-  margin:0 0 12px;
-  color:var(--muted);
+  letter-spacing:-.035em;
+  margin:0 0 10px;
+  color:var(--navy);
   text-align:center;
-  font-size:clamp(16px,4.3vw,21px);
-  line-height:1.35;
-  font-weight:800;
 }
-
-.small{
+p{
+  line-height:1.35;
   color:var(--muted);
-  text-align:left;
-  font-size:14px;
-  line-height:1.35;
-  font-weight:750;
+  margin:0 0 12px;
+  font-size:clamp(16px,4.3vw,21px);
+  font-weight:800;
+  text-align:center;
 }
-
-.page{
-  display:none;
-  animation:fade .16s ease-out;
-}
-
-.page.active{
-  display:block;
-}
-
-@keyframes fade{
-  from{
-    opacity:.25;
-    transform:translateY(5px);
-  }
-  to{
-    opacity:1;
-    transform:none;
-  }
-}
-
+.small{font-size:14px;color:var(--muted);line-height:1.35;text-align:left;font-weight:750}
+.page{display:none;animation:fade .16s ease-out}.page.active{display:block}
+@keyframes fade{from{opacity:.25;transform:translateY(5px)}to{opacity:1;transform:none}}
 .card{
-  margin:14px 0;
-  padding:16px;
-  border:4px solid var(--navy);
-  border-radius:var(--radius);
   background:rgba(255,250,240,.96);
-  box-shadow:0 7px 0 rgba(7,24,63,.12);
-}
-
-.searchWrap{
-  display:grid;
-  gap:12px;
+  border:3px solid var(--navy);
+  border-radius:var(--radius);
   padding:16px;
+  margin:14px 0;
 }
-
-input,
-textarea{
+.searchWrap{display:grid;gap:12px;padding:16px}
+input,textarea{
   width:100%;
-  padding:16px 17px;
   border:3px solid var(--navy);
   border-radius:21px;
-  outline:none;
   background:#fffaf0;
-  color:var(--navy);
+  padding:16px 17px;
+  font:inherit;
   font-size:20px;
   font-weight:850;
+  color:var(--navy);
+  outline:none;
 }
-
-input::placeholder,
-textarea::placeholder{
-  color:rgba(8,19,54,.42);
-  font-weight:900;
-}
-
-textarea{
-  min-height:100px;
-  resize:vertical;
-  font-size:16px;
-  line-height:1.35;
-}
-
-input:focus,
-textarea:focus{
-  background:#fffdf6;
-  box-shadow:0 0 0 4px rgba(225,184,64,.28);
-}
-
-.msg{
-  display:none;
-  margin:10px 0;
-  padding:12px 13px;
-  border-radius:16px;
-  text-align:center;
-  font-size:15px;
-  line-height:1.35;
-  font-weight:850;
-}
-
-.msg.show{display:block}
-.msg.err{background:#fef2f2;color:#991b1b;border:2px solid #fecaca}
-.msg.ok{background:#ecfdf5;color:#065f46;border:2px solid #bbf7d0}
-.msg.warn{background:#fffbeb;color:#92400e;border:2px solid #fde68a}
-
+input::placeholder,textarea::placeholder{color:rgba(8,19,54,.42);font-weight:900}
+textarea{min-height:100px;resize:vertical;font-size:16px;line-height:1.35}
+input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,64,.28)}
+.msg{display:none;margin:10px 0;border-radius:16px;padding:12px 13px;font-size:15px;line-height:1.35;font-weight:850;text-align:center}
+.msg.show{display:block}.msg.err{background:#fef2f2;color:#991b1b;border:2px solid #fecaca}.msg.ok{background:#ecfdf5;color:#065f46;border:2px solid #bbf7d0}.msg.warn{background:#fffbeb;color:#92400e;border:2px solid #fde68a}
 .btn{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:100%;
-  min-height:54px;
-  padding:14px 16px;
   border:3px solid var(--navy);
   border-radius:22px;
-  color:inherit;
-  text-align:center;
-  text-decoration:none;
-  text-transform:uppercase;
-  cursor:pointer;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  min-height:54px;
+  padding:14px 16px;
   font-size:16px;
-  line-height:1;
+  font-family:"Arial Black","Impact",system-ui,sans-serif;
+  text-transform:uppercase;
   letter-spacing:.01em;
   font-weight:950;
+  display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;cursor:pointer;width:100%;
 }
-
-.btn.primary,
-.btn.dark{
-  color:#fff7df;
-  background:var(--navy);
-}
-
-.btn.green{
-  color:#fff7df;
-  background:var(--green);
-}
-
-.btn.red{
-  color:#fff7df;
-  background:var(--red);
-}
-
-.btn.grey{
-  color:#fff7df;
-  background:#2b3038;
-}
-
-.btn:disabled{
-  opacity:.45;
-  cursor:not-allowed;
-  filter:grayscale(.45);
-}
-
-.grid{
-  display:grid;
-  gap:11px;
-}
-
-.two{
-  grid-template-columns:1fr 1fr;
-}
-
-.person{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:12px;
-  text-align:center;
-}
-
-.avatar{
-  width:44px;
-  height:44px;
-  flex:0 0 auto;
-  object-fit:contain;
-  border:2px solid rgba(7,22,63,.15);
-  border-radius:10px;
-  background:#eef2f7;
-}
-
-.avatar.big{
-  width:72px;
-  height:72px;
-}
-
+.btn.primary,.btn.dark{color:#fff7df;background:var(--navy)}
+.btn.green{color:#fff7df;background:var(--green)}
+.btn.red{color:#fff7df;background:var(--red)}
+.btn.grey{color:#fff7df;background:#2b3038}
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.45)}
+.grid{display:grid;gap:11px}.two{grid-template-columns:1fr 1fr}
+.person{display:flex;align-items:center;justify-content:center;gap:12px;text-align:center}
+.avatar{width:44px;height:44px;border-radius:10px;object-fit:contain;background:#eef2f7;border:2px solid rgba(7,22,63,.15);flex:0 0 auto}
+.avatar.big{width:58px;height:58px}
 .name{
-  color:var(--navy);
   font-weight:950;
   line-height:1.05;
   letter-spacing:-.015em;
-}
-
-.agentList{
-  display:grid;
-  gap:12px;
-  max-height:58vh;
-  overflow:auto;
-  padding:2px 0 4px;
-}
-
-.agentBtn,
-.candidateBtn,
-.respCard{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:12px;
-  width:100%;
-  padding:15px;
-  border:3px solid var(--navy);
-  border-radius:22px;
-  background:rgba(255,250,240,.90);
   color:var(--navy);
-  cursor:pointer;
-  text-align:center;
 }
-
+.agentList{display:grid;gap:12px;max-height:58vh;overflow:auto;padding:2px 0 4px}
+.agentBtn,.candidateBtn,.respCard,.dayBtn{
+  border:3px solid var(--navy);
+  background:rgba(255,250,240,.90);
+  border-radius:22px;
+  padding:15px;
+  text-align:center;
+  display:flex;align-items:center;justify-content:center;gap:12px;cursor:pointer;width:100%;color:var(--navy);
+}
 .agentBtn .name{
-  width:100%;
+  font-family:"Arial Black","Impact",system-ui,sans-serif;
   text-transform:uppercase;
   font-size:clamp(23px,6.4vw,34px);
+  width:100%;
 }
-
-.candidateBtn,
-.respCard{
-  justify-content:flex-start;
-  text-align:left;
-}
-
-.candidateBtn .name,
-.respCard .name{
+.candidateBtn,.respCard{text-align:left;justify-content:flex-start}
+.candidateBtn .name,.respCard .name{
   display:block;
   font-size:clamp(18px,4.9vw,23px);
   font-weight:950;
 }
-
-.candidateMain{
-  display:grid;
-  gap:5px;
-}
-
-.subline,
-.mailLine{
-  color:var(--muted);
-  font-size:14px;
-  line-height:1.25;
-  font-weight:800;
-}
-
+.candidateMain{display:grid;gap:5px}
+.subline,.mailLine{font-size:14px;color:var(--muted);font-weight:800;line-height:1.25}
 .mailLine.missing{color:#92400e}
 .mailLine.ok{color:#166534}
-
-.agentBtn:active,
-.candidateBtn:active,
-.respCard:active,
-.btn:active,
-.day-card:active{
-  transform:translateY(2px);
-}
-
-/* ===========================
-   ÃTAPE DES JOURS â VISUEL REPRIS
-   DU PLANNING INDIVIDUEL
-   =========================== */
-
-#whoBox{
-  position:relative;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at 12% 0%,rgba(255,255,255,.75),transparent 34%),
-    linear-gradient(180deg,rgba(255,255,255,.44),transparent 48%),
-    var(--paper);
-  box-shadow:
-    0 8px 0 rgba(7,24,63,.16),
-    inset 0 0 0 3px rgba(255,215,115,.34);
-}
-
-#pDays > .card:nth-of-type(2){
-  padding:10px;
-  background:rgba(255,250,240,.78);
-}
-
-#pDays > .card:nth-of-type(2) > h2{
-  display:none;
-}
-
-.monthChips{
-  position:sticky;
-  top:90px;
-  z-index:30;
-  display:flex;
-  gap:8px;
-  overflow-x:auto;
-  margin:0 0 16px;
-  padding:7px;
-  border:4px solid var(--navy);
-  border-radius:20px;
-  background:rgba(255,248,222,.94);
-  box-shadow:0 7px 0 rgba(7,24,63,.13);
-  backdrop-filter:blur(9px);
-  scrollbar-width:none;
-}
-
-.monthChips::-webkit-scrollbar{
-  display:none;
-}
-
+.agentBtn:active,.candidateBtn:active,.dayBtn:active,.respCard:active,.btn:active{transform:translateY(1px)}
+.monthChips{display:flex;gap:8px;overflow:auto;padding:2px 0 8px;margin:6px -2px 8px}
 .chip{
-  flex:1 0 auto;
-  min-width:112px;
-  padding:9px 12px 10px;
   border:3px solid var(--navy);
-  border-radius:15px;
-  background:#fffaf0;
+  background:rgba(255,250,240,.94);
   color:var(--navy);
-  cursor:pointer;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(17px,4.6vw,24px);
-  line-height:.9;
-  text-transform:uppercase;
-}
-
-.chip.active{
-  background:var(--navy);
-  color:#fff4ce;
-}
-
-.dayList{
-  display:block;
-}
-
-.month-section{
-  scroll-margin-top:160px;
-}
-
-.month-divider{
-  position:relative;
-  isolation:isolate;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:78px;
-  margin:26px 0 12px;
-  padding:12px 70px;
-  overflow:hidden;
-  border:5px solid var(--navy);
-  border-radius:28px 21px 30px 22px;
-  background:
-    radial-gradient(circle at 16% 20%,rgba(255,255,255,.90),transparent 26%),
-    repeating-linear-gradient(-8deg,rgba(7,24,63,.05) 0 2px,transparent 2px 10px),
-    linear-gradient(135deg,#fffdf5 0%,#ffe5a1 58%,#f1b84d 100%);
-  box-shadow:
-    0 8px 0 rgba(7,24,63,.20),
-    inset 0 0 0 3px rgba(255,255,255,.48);
-  color:var(--navy);
-  text-align:center;
-  text-transform:uppercase;
-  font-size:clamp(28px,8vw,52px);
-  line-height:.82;
-  letter-spacing:.4px;
-}
-
-.month-divider::before,
-.month-divider::after{
-  content:"";
-  position:absolute;
-  z-index:-1;
-  width:92px;
-  height:92px;
-  border:5px solid var(--navy);
-  background:#fff8dd;
-  transform:rotate(18deg);
-  opacity:.55;
-}
-
-.month-divider::before{
-  left:-55px;
-  top:-38px;
-}
-
-.month-divider::after{
-  right:-55px;
-  bottom:-42px;
-}
-
-.week-block{
-  margin:0 0 18px;
-}
-
-.week-label{
-  width:max-content;
-  max-width:100%;
-  margin:13px 0 7px 7px;
-  padding:3px 8px 4px;
-  border-left:5px solid var(--gold);
-  color:rgba(7,24,63,.74);
-  font-size:12px;
-  line-height:1;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-  font-weight:1000;
-}
-
-.week-days{
-  display:grid;
-  gap:10px;
-}
-
-.weekend-pair{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px;
-  margin-top:10px;
-}
-
-.day-card{
-  position:relative;
-  display:flex;
-  flex-direction:column;
-  width:100%;
-  height:var(--day-card-height);
-  padding:0;
-  overflow:hidden;
-  border:4px solid var(--navy);
-  border-radius:24px 19px 26px 20px;
-  background:#fff;
-  color:var(--navy);
-  cursor:pointer;
-  text-align:left;
-  box-shadow:
-    0 7px 0 rgba(7,24,63,.15),
-    0 10px 0 rgba(0,0,0,.06);
-}
-
-.day-card::before{
-  content:"";
-  position:absolute;
-  right:-22px;
-  bottom:-28px;
-  width:74px;
-  height:74px;
-  border:4px solid rgba(7,24,63,.09);
-  border-radius:21px;
-  transform:rotate(18deg);
-  pointer-events:none;
-}
-
-.day-card.is-weekend{
-  background:
-    radial-gradient(circle at 12% 0%,rgba(255,255,255,.85),transparent 36%),
-    linear-gradient(180deg,#fff9ed 0%,var(--weekend) 100%);
-}
-
-.day-card.selected{
-  border-color:var(--red);
-  box-shadow:
-    0 0 0 4px rgba(185,28,28,.12),
-    0 7px 0 rgba(185,28,28,.24);
-}
-
-.day-head{
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  min-height:55px;
-  padding:8px 10px 7px;
-  border-bottom:3px solid var(--navy);
-  background:
-    repeating-linear-gradient(-7deg,rgba(7,24,63,.035) 0 2px,transparent 2px 10px),
-    linear-gradient(180deg,#fffdf5,#fff3c8);
-}
-
-.day-card.is-weekend .day-head{
-  background:
-    repeating-linear-gradient(-7deg,rgba(132,73,11,.055) 0 2px,transparent 2px 10px),
-    linear-gradient(180deg,#fff0dc,#f3d4a7);
-}
-
-.date-main{
-  min-width:0;
-  margin:0;
-  overflow:hidden;
-  color:var(--navy);
-  text-overflow:ellipsis;
-  text-transform:uppercase;
-  white-space:nowrap;
-  font-size:clamp(22px,6vw,40px);
-  line-height:.88;
-  letter-spacing:.2px;
-  font-weight:900;
-}
-
-.date-tag{
-  flex:0 0 auto;
-  padding:4px 7px 5px;
-  border:2px solid rgba(7,24,63,.22);
-  border-radius:11px;
-  background:rgba(255,255,255,.66);
-  font-size:9px;
-  text-transform:uppercase;
-  opacity:.82;
-  font-weight:1000;
-}
-
-.select-mark{
-  position:absolute;
-  top:8px;
-  right:8px;
-  z-index:4;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:30px;
-  height:30px;
-  border:3px solid var(--navy);
   border-radius:999px;
-  background:#fffaf0;
-  color:var(--navy);
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:20px;
-  line-height:1;
-  box-shadow:0 3px 0 rgba(7,24,63,.12);
-}
-
-.day-card.selected .select-mark{
-  border-color:var(--red);
-  background:var(--red);
-  color:#fff;
-}
-
-.event-row{
-  display:flex;
-  align-items:center;
-  gap:9px;
-  flex:1;
-  min-width:0;
-  min-height:0;
-  padding:10px;
-  background:#fff;
-}
-
-.event-row.kind-matin{background:linear-gradient(95deg,var(--blue-soft),#fff)}
-.event-row.kind-journee{background:linear-gradient(95deg,var(--green-soft),#fff)}
-.event-row.kind-j4{background:linear-gradient(95deg,var(--orange-soft),#fff)}
-.event-row.kind-soir{background:linear-gradient(95deg,var(--yellow-soft),#fff)}
-.event-row.kind-nuit{background:linear-gradient(95deg,var(--black-soft),#fff)}
-.event-row.kind-repos{background:linear-gradient(95deg,var(--rest-soft),#fff)}
-.event-row.kind-maladie{background:linear-gradient(95deg,var(--red-soft),#fff)}
-.event-row.kind-special{background:linear-gradient(95deg,var(--purple-soft),#fff)}
-
-.shift-dot{
-  flex:0 0 auto;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:37px;
-  height:37px;
-  border:3px solid rgba(7,24,63,.12);
-  border-radius:13px 10px 14px 11px;
-  background:#fff9e8;
-  font-size:25px;
-  line-height:1;
-  transform:rotate(-2deg);
-  box-shadow:0 3px 0 rgba(7,24,63,.10);
-}
-
-.shift-copy{
-  display:grid;
-  gap:3px;
-  width:100%;
-  min-width:0;
-}
-
-.shift-line-card{
-  display:flex;
-  align-items:center;
-  gap:7px;
-  width:100%;
-  min-width:0;
-  white-space:nowrap;
-}
-
-.shift-title{
-  flex:0 1 auto;
-  min-width:0;
-  margin:0;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  color:var(--navy);
-  text-transform:uppercase;
-  font-size:clamp(22px,6vw,38px);
-  line-height:.86;
-  text-shadow:0 2px 0 rgba(211,162,75,.38);
-}
-
-.shift-sep{
-  flex:0 0 auto;
-  font-size:clamp(16px,4vw,24px);
-  opacity:.7;
+  padding:10px 13px;
   font-weight:950;
-}
-
-.time{
-  flex:0 0 auto;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:5px 8px 6px;
-  border-radius:12px;
-  background:var(--navy);
-  color:#fff4ce;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(18px,5vw,30px);
-  line-height:.9;
-  box-shadow:0 4px 0 rgba(7,24,63,.16);
-}
-
-.detail{
-  margin:0;
-  overflow:hidden;
-  color:rgba(7,24,63,.72);
-  text-align:left;
-  text-overflow:ellipsis;
   white-space:nowrap;
-  font-size:12px;
-  line-height:1.15;
-  font-weight:900;
+  cursor:pointer;
 }
-
-.weekend-pair .day-card{
-  height:var(--day-card-height);
-}
-
-.weekend-pair .day-head{
-  min-height:58px;
-  align-items:flex-start;
-  padding-right:42px;
-}
-
-.weekend-pair .date-main{
-  display:-webkit-box;
-  overflow:hidden;
-  white-space:normal;
-  font-size:clamp(16px,4.4vw,26px);
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
-}
-
-.weekend-pair .date-tag{
-  display:none;
-}
-
-.weekend-pair .event-row{
-  gap:6px;
-  padding:8px 7px;
-}
-
-.weekend-pair .shift-dot{
-  width:30px;
-  height:30px;
-  border-width:2px;
-  font-size:20px;
-}
-
-.weekend-pair .shift-line-card{
-  display:grid;
-  gap:4px;
-  white-space:normal;
-}
-
-.weekend-pair .shift-title{
-  font-size:clamp(17px,4.6vw,25px);
-}
-
-.weekend-pair .shift-sep{
-  display:none;
-}
-
-.weekend-pair .time{
-  width:max-content;
-  max-width:100%;
-  padding:4px 6px 5px;
-  font-size:clamp(14px,3.9vw,20px);
-}
-
-.weekend-pair .detail{
-  font-size:10px;
-}
-
-.bottom{
-  position:sticky;
-  bottom:0;
-  z-index:40;
-  margin-top:12px;
-  padding:14px 0 0;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255,247,223,0),
-      rgba(255,247,223,.96) 24%,
-      #fff7df
-    );
-}
-
-.counter{
-  padding:11px;
-  border:3px solid var(--navy);
-  border-radius:20px;
-  background:rgba(255,250,240,.96);
-  color:var(--navy);
-  text-align:center;
-  text-transform:uppercase;
-  font-weight:950;
-}
-
-.exchangeCard{
-  margin:14px 0;
-  padding:15px;
-  border:3px solid var(--navy);
-  border-radius:24px;
-  background:rgba(255,250,240,.96);
-}
-
-.exchangeCard.done{
-  border-color:#15803d;
-  background:#f0fdf4;
-}
-
+.chip.active{background:var(--navy);color:#fff7df}
+.dayList{display:grid;gap:11px}
+.dayBtn{justify-content:space-between;align-items:flex-start;text-align:left}
+.dayBtn.selected{background:#fff1f1;border-color:#b91c1c;box-shadow:0 0 0 4px rgba(185,28,28,.10)}
 .dayTitle{
-  color:var(--navy);
+  font-family:"Arial Black","Impact",system-ui,sans-serif;
   text-transform:uppercase;
   font-size:clamp(23px,6vw,31px);
-  line-height:.95;
-  letter-spacing:-.02em;
   font-weight:950;
+  letter-spacing:-.02em;
+  color:var(--navy);
 }
-
 .shiftLine{
   display:inline-flex;
   align-items:center;
   gap:7px;
-  max-width:100%;
   margin-top:8px;
-  padding:7px 10px;
   border-radius:999px;
   background:var(--navy);
   color:#fff7df;
+  padding:7px 10px;
   font-size:13px;
-  line-height:1.1;
   font-weight:900;
+  line-height:1.1;
+  max-width:100%;
 }
-
-.shiftLine.light{
-  margin-top:0;
-  padding:0;
-  border-radius:0;
-  background:transparent;
-  color:var(--muted);
-  font-size:15px;
-  font-weight:850;
+.shiftLine.light{background:transparent;color:var(--muted);padding:0;margin-top:0;border-radius:0;font-size:15px;font-weight:850}
+.shiftIcon{font-size:16px;line-height:1}
+.bottom{
+  position:sticky;
+  bottom:0;
+  background:linear-gradient(180deg,rgba(255,247,223,0),rgba(255,247,223,.96) 24%,#fff7df);
+  padding:14px 0 0;
+  margin-top:12px;
+  z-index:40;
 }
-
-.shiftIcon{
-  font-size:16px;
-  line-height:1;
-}
-
-.goalGrid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:9px;
-  margin:13px 0;
-}
-
-.goal{
-  padding:12px 8px;
+.counter{
+  background:rgba(255,250,240,.96);
   border:3px solid var(--navy);
-  border-radius:17px;
+  color:var(--navy);
+  border-radius:20px;
+  padding:11px;
+  text-align:center;
+  font-weight:950;
+  text-transform:uppercase;
+}
+.exchangeCard{
+  background:rgba(255,250,240,.96);
+  border:3px solid var(--navy);
+  border-radius:24px;
+  padding:15px;
+  margin:14px 0;
+}
+.exchangeCard.done{border-color:#15803d;background:#f0fdf4}
+.goalGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:13px 0}
+@media(min-width:680px){.goalGrid{grid-template-columns:repeat(6,1fr)}.respGrid{grid-template-columns:1fr 1fr}}
+.goal{
+  border:3px solid var(--navy);
   background:rgba(255,250,240,.95);
   color:var(--navy);
-  cursor:pointer;
+  border-radius:17px;
+  padding:12px 8px;
   font-size:14px;
   font-weight:950;
+  cursor:pointer;
 }
-
-.goal.active{
-  background:var(--navy);
-  color:#fff7df;
-}
-
-.candidateList{
-  display:grid;
-  gap:9px;
-  margin-top:11px;
-}
-
-.candidateBtn.active{
-  border-color:#15803d;
-  background:#ecfdf5;
-}
-
+.goal.active{background:var(--navy);color:#fff7df}
+.candidateList{display:grid;gap:9px;margin-top:11px}
+.candidateBtn.active{border-color:#15803d;background:#ecfdf5}
 .chosen{
   display:grid;
   grid-template-columns:auto 1fr auto;
   align-items:center;
   gap:10px;
-  margin-top:11px;
+  background:#ecfdf5;
+  border:3px solid #15803d;
+  border-radius:20px;
   padding:11px;
-  border:3px solid #15803d;
-  border-radius:20px;
-  background:#ecfdf5;
+  margin-top:11px;
 }
-
-.summaryLine{
-  margin:9px 0;
-  padding:13px;
-  border:3px solid var(--navy);
-  border-radius:20px;
-  background:rgba(255,250,240,.92);
-  line-height:1.4;
-  font-weight:800;
-}
-
-.summaryLine b{
-  color:var(--navy);
-}
-
-.checkline{
-  display:flex;
-  align-items:flex-start;
-  gap:11px;
-  padding:14px;
-  border:3px solid var(--navy);
-  border-radius:22px;
-  background:rgba(255,250,240,.96);
-}
-
-.checkline input{
-  flex:0 0 auto;
-  width:22px;
-  height:22px;
-  margin-top:3px;
-  padding:0;
-  border:0;
-  box-shadow:none;
-}
-
-.respGrid{
-  display:grid;
-  gap:9px;
-}
-
-.respCard.active{
-  border-color:#15803d;
-  background:#ecfdf5;
-}
-
-.respCard.ccActive{
-  border-color:#1d4ed8;
-  background:#eff6ff;
-}
-
-.role{
-  display:block;
-  margin-bottom:3px;
-  color:#1d4ed8;
-  text-transform:uppercase;
-  font-size:12px;
-  letter-spacing:.03em;
-  font-weight:950;
-}
-
-.success{
-  padding:18px;
-  border:3px solid #15803d;
-  border-radius:26px;
-  background:#ecfdf5;
-  color:#065f46;
-  text-align:center;
-}
-
-.success h2{
-  color:#065f46;
-  font-size:31px;
-}
-
-.success p{
-  color:#065f46;
-}
-
-.ref{
-  margin:12px 0;
-  padding:12px;
-  border:3px solid #15803d;
-  border-radius:18px;
-  background:#fff;
-  color:#111827;
-  font-weight:950;
-}
-
+.summaryLine{border:3px solid var(--navy);border-radius:20px;background:rgba(255,250,240,.92);padding:13px;margin:9px 0;line-height:1.4;font-weight:800}
+.summaryLine b{color:var(--navy)}
+.checkline{display:flex;align-items:flex-start;gap:11px;background:rgba(255,250,240,.96);border:3px solid var(--navy);border-radius:22px;padding:14px}
+.checkline input{width:22px;height:22px;flex:0 0 auto;margin-top:3px;border:0;box-shadow:none;padding:0}
+.respGrid{display:grid;gap:9px}
+.respCard.active{border-color:#15803d;background:#ecfdf5}
+.respCard.ccActive{border-color:#1d4ed8;background:#eff6ff}
+.role{font-size:12px;font-weight:950;color:#1d4ed8;text-transform:uppercase;letter-spacing:.03em;display:block;margin-bottom:3px}
+.success{background:#ecfdf5;border:3px solid #15803d;color:#065f46;text-align:center;border-radius:26px;padding:18px}
+.success h2{font-size:31px;color:#065f46}.success p{color:#065f46}
+.ref{background:#fff;border:3px solid #15803d;color:#111827;border-radius:18px;padding:12px;font-weight:950;margin:12px 0}
 .siteModal{
-  position:fixed;
-  inset:0;
-  z-index:200;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:18px;
-  background:rgba(7,22,63,.55);
+  position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;
+  background:rgba(7,22,63,.55);padding:18px;
 }
-
-.siteModal.show{
-  display:flex;
-}
-
+.siteModal.show{display:flex}
 .siteModalBox{
-  width:min(100%,520px);
-  padding:18px;
-  border:3px solid var(--navy);
-  border-radius:24px;
-  background:#fffaf0;
+  width:min(100%,520px);background:#fffaf0;border:3px solid var(--navy);border-radius:24px;padding:18px;
 }
-
-.siteModalTitle{
-  margin-bottom:8px;
-  color:var(--navy);
-  font-size:22px;
-  font-weight:950;
-}
-
-.siteModalText{
-  margin-bottom:14px;
-  color:var(--ink);
-  text-align:left;
-  font-size:17px;
-  line-height:1.35;
-  font-weight:750;
-}
+.siteModalTitle{font-weight:950;color:var(--navy);font-size:22px;margin-bottom:8px}
+.siteModalText{font-size:17px;color:var(--ink);font-weight:750;line-height:1.35;text-align:left;margin-bottom:14px}
 
 .mailKnown{
-  margin:10px 0;
-  padding:12px 13px;
   border:3px solid #15803d;
-  border-radius:20px;
   background:#ecfdf5;
   color:#065f46;
-  line-height:1.35;
+  border-radius:20px;
+  padding:12px 13px;
+  margin:10px 0;
   font-weight:900;
+  line-height:1.35;
 }
-
-.mailKnown b{
-  color:#064e3b;
-}
-
+.mailKnown b{color:#064e3b}
 .mailKnown .mailAddress{
   display:block;
   margin-top:5px;
-  color:#064e3b;
   font-size:15px;
   line-height:1.25;
   word-break:break-word;
+  color:#064e3b;
   font-weight:950;
 }
-
 .mailKnown .mailPerson{
   display:block;
   margin-top:8px;
   padding-top:8px;
   border-top:2px solid rgba(21,128,61,.18);
 }
-
 .mailKnown .mailPerson:first-child{
   margin-top:0;
   padding-top:0;
   border-top:0;
 }
+.mailAsk{display:none;margin-top:10px}
+.mailAsk.show{display:block}
+.mailMissingTitle{margin:14px 0 8px;font-weight:950;color:var(--navy)}
 
-.mailAsk{
-  display:none;
-  margin-top:10px;
-}
-
-.mailAsk.show{
-  display:block;
-}
-
-.mailMissingTitle{
-  margin:14px 0 8px;
+.monthSeparator{
+  margin:18px 0 8px;
+  padding:10px 12px;
+  border:4px solid var(--navy);
+  border-radius:22px;
+  background:rgba(255,255,255,.72);
   color:var(--navy);
+  font-family:"Arial Black","Impact",system-ui,sans-serif;
+  font-size:28px;
+  line-height:.9;
+  text-align:center;
+  text-transform:uppercase;
+}
+.monthChips{
+  position:sticky;
+  top:102px;
+  z-index:15;
+  background:rgba(255,248,222,.92);
+  backdrop-filter:blur(8px);
+  border-radius:20px;
+  padding:8px;
+}
+
+/* ÉCRAN DE CHARGEMENT DIRECT — même esprit que Planning individuel */
+.startLoading{
+  margin-top:16px;
+  padding:22px 12px;
+  border:4px solid var(--navy);
+  border-radius:24px;
+  background:#fff;
+  color:var(--navy);
+  text-align:center;
+  font-family:"Arial Black","Impact",system-ui,sans-serif;
+  font-size:clamp(25px,6.7vw,38px);
+  line-height:1;
   font-weight:950;
+  box-shadow:0 7px 0 rgba(7,24,63,.12);
 }
-
-@media(min-width:680px){
-  .goalGrid{
-    grid-template-columns:repeat(6,1fr);
-  }
-
-  .respGrid{
-    grid-template-columns:1fr 1fr;
-  }
-}
-
-@media(max-width:560px){
-  :root{
-    --day-card-height:142px;
-  }
-
-  .app{
-    padding-left:8px;
-    padding-right:8px;
-  }
-
-  .top{
-    border-width:4px;
-  }
-
-  .card{
-    border-width:4px;
-  }
-
-  .monthChips{
-    top:86px;
-    border-width:3px;
-    border-radius:18px;
-    padding:6px;
-  }
-
-  .chip{
-    min-width:100px;
-    border-width:2px;
-    padding:8px 10px 9px;
-    font-size:17px;
-  }
-
-  .month-divider{
-    min-height:68px;
-    margin-top:22px;
-    padding:10px 44px;
-    border-width:4px;
-    font-size:clamp(27px,8vw,42px);
-  }
-
-  .day-card{
-    border-width:4px;
-  }
-
-  .day-head{
-    padding:7px 8px 6px;
-    border-bottom-width:3px;
-  }
-
-  .event-row{
-    gap:8px;
-    padding:8px;
-  }
-
-  .shift-dot{
-    width:32px;
-    height:32px;
-    font-size:22px;
-  }
-
-  .shift-line-card{
-    gap:5px;
-  }
-
-  .time{
-    padding:4px 7px 5px;
-  }
-}
-
-@media(prefers-reduced-motion:reduce){
-  html{
-    scroll-behavior:auto;
-  }
-
-  .page{
-    animation:none;
-  }
+.startChoice[hidden],
+.startLoading[hidden]{
+  display:none!important;
 }
   </style>
 </head>
-
 <body>
+<!-- VISUEL_SITE_V12_FIL_CHRONOLOGIQUE_MOIS_REPERES -->
   <div class="app">
     <header class="top">
       <div class="brand">
         <strong>Planning GHE<br>Demande de changement</strong>
-        <span class="stepPill" id="stepPill">Ãtape 1</span>
+        <span class="stepPill" id="stepPill">Étape 1</span>
       </div>
     </header>
 
     <section id="pStart" class="page active">
-      <h1>Choisis ton nom</h1>
-      <p>Recherche ton nom puis ouvre ton aperÃ§u personnel.</p>
+      <div id="startLoading" class="startLoading">Chargement...</div>
 
-      <div class="card searchWrap">
-        <input id="agentSearch" placeholder="Rechercher mon nom" autocomplete="off">
-        <div id="agentList" class="agentList"></div>
-        <div id="startMsg" class="msg"></div>
+      <div id="startChoice" class="startChoice" hidden>
+        <h1>Choisis ton nom</h1>
+        <p>Recherche ton nom puis ouvre ton aperçu personnel.</p>
+        <div class="card searchWrap">
+          <input id="agentSearch" placeholder="Rechercher mon nom" autocomplete="off">
+          <div id="agentList" class="agentList"></div>
+          <div id="startMsg" class="msg"></div>
+        </div>
       </div>
     </section>
 
     <section id="pDays" class="page">
       <h1>Choisis les jours</h1>
-
       <div id="whoBox" class="card"></div>
-
       <div class="card">
         <h2>Mois</h2>
         <div id="monthChips" class="monthChips"></div>
         <div id="dayList" class="dayList"></div>
       </div>
-
       <div class="bottom">
         <div class="grid">
-          <div id="basketCount" class="counter">0 jour sÃ©lectionnÃ©</div>
+          <div id="basketCount" class="counter">0 jour sélectionné</div>
           <button id="goExchangeBtn" class="btn primary" onclick="goExchange()" disabled>Continuer</button>
         </div>
       </div>
     </section>
 
     <section id="pExchange" class="page">
-      <h1>Choisis lâhoraire et lâÃ©change</h1>
-      <p>Clique lâhoraire souhaitÃ©, puis choisis le collÃ¨gue avec qui Ã©changer.</p>
-
+      <h1>Choisis l’horaire et l’échange</h1>
+      <p>Clique l’horaire souhaité, puis choisis le collègue avec qui échanger.</p>
       <div class="card checkline">
         <input id="noAgent" type="checkbox" onchange="toggleNoAgent()">
-        <div>
-          <b>Je nâai personne avec qui Ã©changer.</b><br>
-          <span class="small">La demande partira directement Ã  la personne responsable.</span>
-        </div>
+        <div><b>Je n’ai personne avec qui échanger.</b><br><span class="small">La demande partira directement à la personne responsable.</span></div>
       </div>
-
       <div id="exchangeList"></div>
-
       <div class="bottom">
         <div class="grid two">
           <button class="btn grey" onclick="showPage('pDays',2)">Retour</button>
@@ -1301,55 +428,33 @@ textarea:focus{
     </section>
 
     <section id="pSummary" class="page">
-      <h1>DerniÃ¨re vÃ©rification</h1>
-
+      <h1>Dernière vérification</h1>
       <div id="summaryBox"></div>
-
       <div class="card" id="mailCard">
         <h2>Adresses mail</h2>
-        <p class="small">Les adresses connues sont affichÃ©es, mais non modifiables. Le site demande seulement celles qui manquent.</p>
-
+        <p class="small">Les adresses connues sont affichées, mais non modifiables. Le site demande seulement celles qui manquent.</p>
         <div id="demandeurMailKnown"></div>
-
         <div id="demandeurMailAsk" class="mailAsk">
           <label style="font-weight:950">Ton adresse mail</label>
-          <input
-            id="demandeurEmail"
-            name="demandeur_email"
-            placeholder="ton.email@exemple.fr"
-            type="email"
-            inputmode="email"
-            autocomplete="email"
-            autocapitalize="none"
-            autocorrect="off"
-            spellcheck="false"
-            oninput="setDemandeurEmail(this.value)"
-            onblur="setDemandeurEmail(this.value)"
-          >
+          <input id="demandeurEmail" name="demandeur_email" placeholder="ton.email@exemple.fr" type="email" inputmode="email" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" oninput="setDemandeurEmail(this.value)" onblur="setDemandeurEmail(this.value)">
         </div>
-
         <div id="missingMails"></div>
       </div>
-
       <div class="card">
         <h2>Personne responsable</h2>
-        <p class="small">Choisis la personne qui recevra la demande avec les boutons de dÃ©cision.</p>
+        <p class="small">Choisis la personne qui recevra la demande avec les boutons de décision.</p>
         <div id="respMain" class="respGrid"></div>
       </div>
-
       <div class="card">
         <h2>Responsables en copie du mail</h2>
         <p class="small">Ces personnes recevront le mail en copie pour information. Elles ne traiteront pas la demande.</p>
         <div id="respCopies" class="respGrid"></div>
       </div>
-
       <div class="card">
-        <h2>PrÃ©cision optionnelle</h2>
-        <textarea id="precision" placeholder="Message facultatif pour la personne responsableâ¦"></textarea>
+        <h2>Précision optionnelle</h2>
+        <textarea id="precision" placeholder="Message facultatif pour la personne responsable…"></textarea>
       </div>
-
       <div id="submitMsg" class="msg"></div>
-
       <div class="bottom">
         <div class="grid two">
           <button class="btn grey" onclick="showPage('pExchange',3)">Retour</button>
@@ -1360,7 +465,7 @@ textarea:focus{
 
     <section id="pSuccess" class="page">
       <div class="success">
-        <h2>Demande envoyÃ©e</h2>
+        <h2>Demande envoyée</h2>
         <div id="successRef" class="ref"></div>
         <p id="successText"></p>
         <button class="btn green" onclick="location.reload()">Nouvelle demande</button>
@@ -1378,367 +483,79 @@ textarea:focus{
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycby_5_yM6EQlwc0oGJ6P7hBTSPpZYj0B_cUtFe3Q5IJMau8YUNc0sjD8NZYV07e9wDHL/exec";
-
-const WEEK = {
-  L:"Lundi",
-  M:"Mardi",
-  X:"Mercredi",
-  J:"Jeudi",
-  V:"Vendredi",
-  S:"Samedi",
-  D:"Dimanche"
-};
-
+const WEEK = {L:"Lundi",M:"Mardi",X:"Mercredi",J:"Jeudi",V:"Vendredi",S:"Samedi",D:"Dimanche"};
 const GOALS = [
-  {code:"M", label:"Matin"},
-  {code:"S", label:"Soir"},
-  {code:"J", label:"JournÃ©e"},
-  {code:"J4", label:"J4"},
-  {code:"N", label:"Nuit"},
-  {code:"RH", label:"Repos"}
+  {code:"M", label:"Matin"}, {code:"S", label:"Soir"}, {code:"J", label:"Journée"},
+  {code:"J4", label:"J4"}, {code:"N", label:"Nuit"}, {code:"RH", label:"Repos"}
 ];
-
 const SHIFT_FALLBACK = {
-  "M": {
-    code:"M",
-    icone:"ðµ",
-    libelle:"Matin",
-    debut:"06:50",
-    fin:"14:40",
-    affichage:"ðµ Matin Â· 06:50-14:40",
-    categorie:"TRAVAIL"
-  },
-  "J": {
-    code:"J",
-    icone:"ð¢",
-    libelle:"Jour",
-    debut:"08:30",
-    fin:"16:20",
-    affichage:"ð¢ Jour Â· 08:30-16:20",
-    categorie:"TRAVAIL"
-  },
-  "J4": {
-    code:"J4",
-    icone:"ð ",
-    libelle:"J4",
-    debut:"10:10",
-    fin:"18:00",
-    affichage:"ð  J4 Â· 10:10-18:00",
-    categorie:"TRAVAIL"
-  },
-  "S": {
-    code:"S",
-    icone:"ð¡",
-    libelle:"Soir",
-    debut:"13:30",
-    fin:"21:00",
-    affichage:"ð¡ Soir Â· 13:30-21:00",
-    categorie:"TRAVAIL"
-  },
-  "N": {
-    code:"N",
-    icone:"â«",
-    libelle:"Nuit",
-    debut:"20:50",
-    fin:"06:50",
-    affichage:"â« Nuit Â· 20:50-06:50",
-    categorie:"TRAVAIL_NUIT"
-  },
-  "RH": {
-    code:"RH",
-    icone:"ðï¸",
-    libelle:"Repos hebdo",
-    debut:"",
-    fin:"",
-    affichage:"ðï¸ Repos hebdo",
-    categorie:"REPOS"
-  },
-  "RTT": {
-    code:"RTT",
-    icone:"ð",
-    libelle:"RTT",
-    debut:"",
-    fin:"",
-    affichage:"ð RTT",
-    categorie:"RECUPERATION"
-  },
-  "RTTA": {
-    code:"RTTa",
-    icone:"ð",
-    libelle:"RTT",
-    debut:"",
-    fin:"",
-    affichage:"ð RTT",
-    categorie:"RECUPERATION"
-  },
-  "RC": {
-    code:"RC",
-    icone:"ð",
-    libelle:"Repos compensateur",
-    debut:"",
-    fin:"",
-    affichage:"ð Repos compensateur",
-    categorie:"RECUPERATION"
-  },
-  "RF": {
-    code:"RF",
-    icone:"ð",
-    libelle:"Repos fÃ©riÃ©",
-    debut:"",
-    fin:"",
-    affichage:"ð Repos fÃ©riÃ©",
-    categorie:"RECUPERATION"
-  },
-  "CA": {
-    code:"CA",
-    icone:"ðï¸",
-    libelle:"CongÃ© annuel",
-    debut:"",
-    fin:"",
-    affichage:"ðï¸ CongÃ© annuel",
-    categorie:"CONGE"
-  },
-  "SYR": {
-    code:"SYR",
-    icone:"ðª§",
-    libelle:"Syndicat",
-    debut:"",
-    fin:"",
-    affichage:"ðª§ Syndicat",
-    categorie:"SYNDICAT"
-  },
-  "AA": {
-    code:"AA",
-    icone:"ð",
-    libelle:"Absence autorisÃ©e",
-    debut:"",
-    fin:"",
-    affichage:"ð Absence autorisÃ©e",
-    categorie:"ABSENCE"
-  },
-  "MALADIE": {
-    code:"MALADIE",
-    icone:"ð¥",
-    libelle:"Maladie",
-    debut:"",
-    fin:"",
-    affichage:"ð¥ Maladie",
-    categorie:"MALADIE"
-  },
-  "AM": {
-    code:"AM",
-    icone:"ð¥",
-    libelle:"ArrÃªt mÃ©dical",
-    debut:"",
-    fin:"",
-    affichage:"ð¥ ArrÃªt mÃ©dical",
-    categorie:"MALADIE"
-  },
-  "ABS": {
-    code:"ABS",
-    icone:"ð«",
-    libelle:"Absence",
-    debut:"",
-    fin:"",
-    affichage:"ð« Absence",
-    categorie:"ABSENCE"
-  },
-  "FORMATION": {
-    code:"FORMATION",
-    icone:"ð",
-    libelle:"Formation",
-    debut:"",
-    fin:"",
-    affichage:"ð Formation",
-    categorie:"FORMATION"
-  },
-  "-": {
-    code:"-",
-    icone:"ð´",
-    libelle:"Non planifiÃ©",
-    debut:"",
-    fin:"",
-    affichage:"ð´ Non planifiÃ©",
-    categorie:"NON_PLANIFIE"
-  },
-  "M0130": {
-    code:"M0130",
-    icone:"â",
-    libelle:"Ã vÃ©rifier",
-    debut:"",
-    fin:"",
-    affichage:"â Ã vÃ©rifier",
-    categorie:"A_VERIFIER"
-  },
-  "M0131": {
-    code:"M0131",
-    icone:"â",
-    libelle:"Ã vÃ©rifier",
-    debut:"",
-    fin:"",
-    affichage:"â Ã vÃ©rifier",
-    categorie:"A_VERIFIER"
-  },
-  "MA": {
-    code:"MA",
-    icone:"â",
-    libelle:"Ã vÃ©rifier",
-    debut:"",
-    fin:"",
-    affichage:"â Ã vÃ©rifier",
-    categorie:"A_VERIFIER"
-  },
-  "AR": {
-    code:"AR",
-    icone:"â",
-    libelle:"Ã vÃ©rifier",
-    debut:"",
-    fin:"",
-    affichage:"â Ã vÃ©rifier",
-    categorie:"A_VERIFIER"
-  },
-  "FO": {
-    code:"FO",
-    icone:"â",
-    libelle:"Ã vÃ©rifier",
-    debut:"",
-    fin:"",
-    affichage:"â Ã vÃ©rifier",
-    categorie:"A_VERIFIER"
-  }
+  "M": {code:"M", icone:"🔵", libelle:"Matin", debut:"06:50", fin:"14:40", affichage:"🔵 Matin · 06:50-14:40", categorie:"TRAVAIL"},
+  "J": {code:"J", icone:"🟢", libelle:"Jour", debut:"08:30", fin:"16:20", affichage:"🟢 Jour · 08:30-16:20", categorie:"TRAVAIL"},
+  "J4": {code:"J4", icone:"🟠", libelle:"J4", debut:"10:10", fin:"18:00", affichage:"🟠 J4 · 10:10-18:00", categorie:"TRAVAIL"},
+  "S": {code:"S", icone:"🟡", libelle:"Soir", debut:"13:30", fin:"21:00", affichage:"🟡 Soir · 13:30-21:00", categorie:"TRAVAIL"},
+  "N": {code:"N", icone:"⚫", libelle:"Nuit", debut:"20:50", fin:"06:50", affichage:"⚫ Nuit · 20:50-06:50", categorie:"TRAVAIL_NUIT"},
+  "RH": {code:"RH", icone:"💤", libelle:"Repos hebdo", debut:"", fin:"", affichage:"💤 Repos hebdo", categorie:"REPOS"},
+  "RTT": {code:"RTT", icone:"🧘", libelle:"RTT", debut:"", fin:"", affichage:"🧘 RTT", categorie:"RECUPERATION"},
+  "RTTA": {code:"RTTa", icone:"🧘", libelle:"RTT", debut:"", fin:"", affichage:"🧘 RTT", categorie:"RECUPERATION"},
+  "RC": {code:"RC", icone:"🔁", libelle:"Repos compensateur", debut:"", fin:"", affichage:"🔁 Repos compensateur", categorie:"RECUPERATION"},
+  "RF": {code:"RF", icone:"🎌", libelle:"Repos férié", debut:"", fin:"", affichage:"🎌 Repos férié", categorie:"RECUPERATION"},
+  "CA": {code:"CA", icone:"🏝️", libelle:"Congé annuel", debut:"", fin:"", affichage:"🏝️ Congé annuel", categorie:"CONGE"},
+  "SYR": {code:"SYR", icone:"🗣️", libelle:"Syndicat", debut:"", fin:"", affichage:"🗣️ Syndicat", categorie:"SYNDICAT"},
+  "AA": {code:"AA", icone:"📝", libelle:"Absence autorisée", debut:"", fin:"", affichage:"📝 Absence autorisée", categorie:"ABSENCE"},
+  "MALADIE": {code:"MALADIE", icone:"🩺", libelle:"Maladie", debut:"", fin:"", affichage:"🩺 Maladie", categorie:"MALADIE"},
+  "AM": {code:"AM", icone:"🩺", libelle:"Arrêt médical", debut:"", fin:"", affichage:"🩺 Arrêt médical", categorie:"MALADIE"},
+  "ABS": {code:"ABS", icone:"⚠️", libelle:"Absence", debut:"", fin:"", affichage:"⚠️ Absence", categorie:"ABSENCE"},
+  "FORMATION": {code:"FORMATION", icone:"🎓", libelle:"Formation", debut:"", fin:"", affichage:"🎓 Formation", categorie:"FORMATION"},
+  "-": {code:"-", icone:"📴", libelle:"Non planifié", debut:"", fin:"", affichage:"📴 Non planifié", categorie:"NON_PLANIFIE"},
+  "M0130": {code:"M0130", icone:"❓", libelle:"À vérifier", debut:"", fin:"", affichage:"❓ À vérifier", categorie:"A_VERIFIER"},
+  "M0131": {code:"M0131", icone:"❓", libelle:"À vérifier", debut:"", fin:"", affichage:"❓ À vérifier", categorie:"A_VERIFIER"},
+  "MA": {code:"MA", icone:"❓", libelle:"À vérifier", debut:"", fin:"", affichage:"❓ À vérifier", categorie:"A_VERIFIER"},
+  "AR": {code:"AR", icone:"❓", libelle:"À vérifier", debut:"", fin:"", affichage:"❓ À vérifier", categorie:"A_VERIFIER"},
+  "FO": {code:"FO", icone:"❓", libelle:"À vérifier", debut:"", fin:"", affichage:"❓ À vérifier", categorie:"A_VERIFIER"}
 };
+function cleanShiftKey(code){
+  let raw=String(code||'').trim();
+  if(!raw) return '';
+  raw=raw.replace(/[❶❷❸❹❺❻❼❽❾]/g,'').trim();
+  raw=raw.replace(/[^A-Za-z0-9-]/g,'').trim();
+  return raw.toUpperCase();
+}
+function shiftSource(code){
+  const raw=String(code||'').trim();
+  const key=cleanShiftKey(raw);
+  const m=DATA && DATA.shift_map ? DATA.shift_map : {};
+  return m[key] || m[String(raw).toUpperCase()] || SHIFT_FALLBACK[key] || SHIFT_FALLBACK[String(raw).toUpperCase()] || null;
+}
 
 let DATA = null;
 let CAL = null;
-let renderedShiftMap = {};
-let monthObserver = null;
-
-let state = {
-  agent:null,
-  currentMonth:"",
-  basket:[],
-  candidates:{},
-  noAgent:false,
-  responsableId:"",
-  ccIds:[],
-  demandeur_email:"",
-  mailDrafts:{},
-  mailDraftsByName:{}
-};
+let state = { agent:null, currentMonth:"", basket:[], candidates:{}, noAgent:false, responsableId:"", ccIds:[], demandeur_email:"", mailDrafts:{}, mailDraftsByName:{} };
 
 const $ = id => document.getElementById(id);
 
-function clean(v){
-  return String(v === undefined || v === null ? "" : v).trim();
-}
-
-function norm(v){
-  return clean(v)
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")
-    .toUpperCase()
-    .replace(/[^A-Z0-9]+/g,"_")
-    .replace(/^_+|_+$/g,"");
-}
-
-function texte(obj, keys){
-  if(!obj) return "";
-
-  for(let i=0;i<keys.length;i++){
-    const value=obj[keys[i]];
-
-    if(value!==undefined && value!==null && clean(value)!==""){
-      return clean(value);
-    }
-  }
-
-  return "";
-}
-
-function cleanShiftKey(code){
-  let raw=String(code||"").trim();
-
-  if(!raw) return "";
-
-  raw=raw.replace(/[â¶â·â¸â¹âºâ»â¼â½â¾]/g,"").trim();
-  raw=raw.replace(/[^A-Za-z0-9-]/g,"").trim();
-
-  return raw.toUpperCase();
-}
-
-function shiftSource(code){
-  const raw=String(code||"").trim();
-  const key=cleanShiftKey(raw);
-  const m=DATA && DATA.shift_map ? DATA.shift_map : {};
-
-  return (
-    m[key] ||
-    m[String(raw).toUpperCase()] ||
-    SHIFT_FALLBACK[key] ||
-    SHIFT_FALLBACK[String(raw).toUpperCase()] ||
-    null
-  );
-}
-
 function normaliseMailName(name){
-  return String(name||"")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")
-    .toUpperCase()
-    .replace(/[^A-Z0-9]+/g,"_")
-    .replace(/^_+|_+$/g,"");
+  return String(name||'')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/^_+|_+$/g,'');
 }
-
-function globalMailStorageKey(){
-  return "demande_changement_mails_global_v4";
-}
-
+function globalMailStorageKey(){ return "demande_changement_mails_global_v4"; }
 function mailStorageKey(){
-  const id=state.agent && state.agent.id_agent
-    ? state.agent.id_agent
-    : "NO_AGENT";
-
+  const id=state.agent && state.agent.id_agent ? state.agent.id_agent : "NO_AGENT";
   return "demande_changement_mails_agent_v4_"+String(id);
 }
-
 function readJsonStore(key){
-  try{
-    return JSON.parse(localStorage.getItem(key)||"{}") || {};
-  }catch(e){
-    return {};
-  }
+  try{ return JSON.parse(localStorage.getItem(key)||"{}") || {}; }catch(e){ return {}; }
 }
-
 function writeJsonStore(key,data){
-  try{
-    localStorage.setItem(key,JSON.stringify(data||{}));
-  }catch(e){}
+  try{ localStorage.setItem(key, JSON.stringify(data||{})); }catch(e){}
 }
-
 function loadMailDrafts(){
   const global=readJsonStore(globalMailStorageKey());
   const local=readJsonStore(mailStorageKey());
-
-  state.mailDrafts=Object.assign(
-    {},
-    global.mailDrafts||{},
-    local.mailDrafts||{}
-  );
-
-  state.mailDraftsByName=Object.assign(
-    {},
-    global.mailDraftsByName||{},
-    local.mailDraftsByName||{}
-  );
-
-  const agentId=state.agent && state.agent.id_agent
-    ? String(state.agent.id_agent)
-    : "";
-
-  const agentName=state.agent && state.agent.nom_affiche
-    ? normaliseMailName(state.agent.nom_affiche)
-    : "";
-
+  state.mailDrafts=Object.assign({}, global.mailDrafts||{}, local.mailDrafts||{});
+  state.mailDraftsByName=Object.assign({}, global.mailDraftsByName||{}, local.mailDraftsByName||{});
+  const agentId=state.agent && state.agent.id_agent ? String(state.agent.id_agent) : "";
+  const agentName=state.agent && state.agent.nom_affiche ? normaliseMailName(state.agent.nom_affiche) : "";
   state.demandeur_email=String(
     local.demandeur_email ||
     (global.demandeursById && global.demandeursById[agentId]) ||
@@ -1748,2136 +565,570 @@ function loadMailDrafts(){
     ""
   );
 }
-
 function saveMailDrafts(){
-  const agentId=state.agent && state.agent.id_agent
-    ? String(state.agent.id_agent)
-    : "";
-
-  const agentName=state.agent && state.agent.nom_affiche
-    ? normaliseMailName(state.agent.nom_affiche)
-    : "";
-
+  const agentId=state.agent && state.agent.id_agent ? String(state.agent.id_agent) : "";
+  const agentName=state.agent && state.agent.nom_affiche ? normaliseMailName(state.agent.nom_affiche) : "";
   const global=readJsonStore(globalMailStorageKey());
-
-  global.mailDrafts=Object.assign(
-    {},
-    global.mailDrafts||{},
-    state.mailDrafts||{}
-  );
-
-  global.mailDraftsByName=Object.assign(
-    {},
-    global.mailDraftsByName||{},
-    state.mailDraftsByName||{}
-  );
-
+  global.mailDrafts=Object.assign({}, global.mailDrafts||{}, state.mailDrafts||{});
+  global.mailDraftsByName=Object.assign({}, global.mailDraftsByName||{}, state.mailDraftsByName||{});
   global.demandeursById=global.demandeursById||{};
   global.demandeursByName=global.demandeursByName||{};
-
   if(state.demandeur_email){
     global.lastDemandeurEmail=state.demandeur_email;
-
-    if(agentId){
-      global.demandeursById[agentId]=state.demandeur_email;
-    }
-
-    if(agentName){
-      global.demandeursByName[agentName]=state.demandeur_email;
-    }
+    if(agentId) global.demandeursById[agentId]=state.demandeur_email;
+    if(agentName) global.demandeursByName[agentName]=state.demandeur_email;
   }
-
-  writeJsonStore(globalMailStorageKey(),global);
-
-  writeJsonStore(mailStorageKey(),{
-    demandeur_email:state.demandeur_email||"",
-    mailDrafts:state.mailDrafts||{},
-    mailDraftsByName:state.mailDraftsByName||{}
+  writeJsonStore(globalMailStorageKey(), global);
+  writeJsonStore(mailStorageKey(), {
+    demandeur_email: state.demandeur_email || "",
+    mailDrafts: state.mailDrafts || {},
+    mailDraftsByName: state.mailDraftsByName || {}
   });
 }
-
 function getSavedMail(id,name){
   const keyName=normaliseMailName(name);
-
   return String(
     (id && state.mailDrafts[String(id)]) ||
     (keyName && state.mailDraftsByName[keyName]) ||
     ""
   ).trim();
 }
-
 function setSavedMail(id,name,mail){
-  const cleanMail=String(mail||"").trim();
-
-  if(id){
-    state.mailDrafts[String(id)]=cleanMail;
-  }
-
+  const clean=String(mail||"").trim();
+  if(id) state.mailDrafts[String(id)]=clean;
   const keyName=normaliseMailName(name);
-
-  if(keyName){
-    state.mailDraftsByName[keyName]=cleanMail;
-  }
-
+  if(keyName) state.mailDraftsByName[keyName]=clean;
   saveMailDrafts();
 }
-
 function setDemandeurEmail(value){
   state.demandeur_email=String(value||"").trim();
   saveMailDrafts();
 }
-
 function syncMailInputs(){
-  const de=$("demandeurEmail");
-
-  if(de){
-    state.demandeur_email=String(de.value||"").trim();
-  }
-
-  document.querySelectorAll("[data-mail-agent-id]").forEach(inp=>{
-    const id=inp.getAttribute("data-mail-agent-id")||"";
-    const name=inp.getAttribute("data-mail-agent-name")||"";
+  const de=$('demandeurEmail');
+  if(de) state.demandeur_email=String(de.value||"").trim();
+  document.querySelectorAll('[data-mail-agent-id]').forEach(inp=>{
+    const id=inp.getAttribute('data-mail-agent-id') || "";
+    const name=inp.getAttribute('data-mail-agent-name') || "";
     const mail=String(inp.value||"").trim();
-
     setSavedMail(id,name,mail);
-
     state.basket.forEach(it=>{
-      if(
-        String(it.accepteur_id)===String(id) ||
-        normaliseMailName(it.accepteur_nom)===normaliseMailName(name)
-      ){
+      if(String(it.accepteur_id)===String(id) || normaliseMailName(it.accepteur_nom)===normaliseMailName(name)){
         it.accepteur_email=mail;
       }
     });
   });
-
   saveMailDrafts();
 }
-
 function restoreDemandeurMailInput(){
-  const de=$("demandeurEmail");
-
-  if(de){
-    de.value=state.demandeur_email||"";
-  }
+  const de=$('demandeurEmail');
+  if(de) de.value=state.demandeur_email || "";
 }
-
 function hydrateSavedMails(){
   if(!state.demandeur_email){
-    const official=state.agent
-      ? knownMail(state.agent.id_agent)
-      : "";
-
-    if(official){
-      state.demandeur_email=official;
-    }
+    const official=state.agent ? knownMail(state.agent.id_agent) : "";
+    if(official) state.demandeur_email=official;
   }
-
   state.basket.forEach(it=>{
     if(!it.accepteur_email){
-      const saved=getSavedMail(
-        it.accepteur_id,
-        it.accepteur_nom
-      );
-
-      if(saved){
-        it.accepteur_email=saved;
-      }
+      const saved=getSavedMail(it.accepteur_id,it.accepteur_nom);
+      if(saved) it.accepteur_email=saved;
     }
   });
 }
-
-function hasDemandeurMail(){
-  return !!String(state.demandeur_email||"").trim();
-}
-
+function hasDemandeurMail(){ return !!String(state.demandeur_email||"").trim(); }
 function renderDemandeurMail(){
-  const known=$("demandeurMailKnown");
-  const ask=$("demandeurMailAsk");
-
-  if(!known || !ask){
-    return;
-  }
-
+  const known=$('demandeurMailKnown');
+  const ask=$('demandeurMailAsk');
+  if(!known || !ask) return;
   if(hasDemandeurMail()){
-    known.innerHTML=
-      `<div class="mailKnown">
-        Mail demandeur connu â
-        <span class="mailAddress">${esc(state.demandeur_email)}</span>
-      </div>`;
-
-    ask.classList.remove("show");
+    known.innerHTML=`<div class="mailKnown">Mail demandeur connu ✅<span class="mailAddress">${esc(state.demandeur_email)}</span></div>`;
+    ask.classList.remove('show');
   }else{
-    known.innerHTML="";
-    ask.classList.add("show");
+    known.innerHTML='';
+    ask.classList.add('show');
     restoreDemandeurMailInput();
   }
 }
+window.addEventListener('pagehide', syncMailInputs);
+window.addEventListener('beforeunload', syncMailInputs);
 
-window.addEventListener("pagehide",syncMailInputs);
-window.addEventListener("beforeunload",syncMailInputs);
-
-function isReadyUrl(){
-  return (
-    API_URL &&
-    API_URL.indexOf("COLLE_ICI")<0 &&
-    /^https:\/\//.test(API_URL)
-  );
-}
-
-function showPage(id,step){
-  document.querySelectorAll(".page").forEach(p=>{
-    p.classList.remove("active");
-  });
-
-  $(id).classList.add("active");
-  $("stepPill").textContent="Ãtape "+step;
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-}
-
-function msg(id,type,text){
-  const el=$(id);
-  el.className="msg show "+type;
-  el.textContent=text;
-}
-
-function clearMsg(id){
-  const el=$(id);
-  el.className="msg";
-  el.textContent="";
-}
-
-function esc(v){
-  return String(v==null?"":v).replace(
-    /[&<>"']/g,
-    c=>({
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#39;"
-    }[c])
-  );
-}
-
-function attr(v){
-  return esc(v).replace(/`/g,"&#96;");
-}
-
-function avatar(url,cls=""){
-  return `<img
-    class="avatar ${cls}"
-    src="${attr(url||"")}"
-    alt=""
-    onerror="this.style.visibility='hidden'"
-  >`;
-}
-
+function isReadyUrl(){ return API_URL && API_URL.indexOf("COLLE_ICI") < 0 && /^https:\/\//.test(API_URL); }
+function showPage(id, step){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); $(id).classList.add('active'); $('stepPill').textContent='Étape '+step; window.scrollTo({top:0,behavior:'smooth'}); }
+function msg(id,type,text){ const el=$(id); el.className='msg show '+type; el.textContent=text; }
+function clearMsg(id){ const el=$(id); el.className='msg'; el.textContent=''; }
+function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function attr(v){ return esc(v).replace(/`/g,'&#96;'); }
+function avatar(url, cls=''){ return `<img class="avatar ${cls}" src="${attr(url||'')}" alt="" onerror="this.style.visibility='hidden'">`; }
 function shiftText(code){
-  const raw=String(code||"").trim();
-
-  if(!raw){
-    return "Non prÃ©cisÃ©";
-  }
-
+  const raw=String(code||'').trim();
+  if(!raw) return 'Non précisé';
   const v=shiftSource(raw);
-
-  if(!v){
-    return raw;
-  }
-
-  if(typeof v==="string"){
-    return v;
-  }
-
-  const icon=v.icone ? v.icone+" " : "";
+  if(!v) return raw;
+  if(typeof v==='string') return v;
+  const icon=v.icone ? v.icone+' ' : '';
   const label=v.libelle || v.affichage || raw;
-  const hours=(v.debut && v.fin)
-    ? " Â· "+v.debut+" Ã  "+v.fin
-    : "";
-
+  const hours=(v.debut && v.fin) ? ' · '+v.debut+' à '+v.fin : '';
   return icon+label+hours;
 }
-
 function shiftInfo(code){
-  const raw=String(code||"").trim();
+  const raw=String(code||'').trim();
   const key=cleanShiftKey(raw);
   const v=shiftSource(raw);
-
-  if(v && typeof v==="object"){
+  if(v && typeof v==='object'){
     return {
-      code:v.code||raw,
-      icon:v.icone||"",
-      label:v.libelle||v.affichage||raw,
-      hours:(v.debut && v.fin)
-        ? v.debut+" Ã  "+v.fin
-        : "",
-      categorie:v.categorie||""
+      code:v.code || raw,
+      icon:v.icone || '',
+      label:v.libelle || v.affichage || raw,
+      hours:(v.debut && v.fin) ? v.debut+' à '+v.fin : '',
+      categorie:v.categorie || ''
     };
   }
-
-  const text=typeof v==="string"
-    ? v
-    : raw;
-
-  const iconMatch=String(text||"").match(/^\S+/);
-  const maybeIcon=iconMatch ? iconMatch[0] : "";
-  const hasEmoji=/[^\w\sÃ-Ã¿/.-]/.test(maybeIcon);
-
-  let withoutIcon=hasEmoji
-    ? String(text).replace(maybeIcon,"").trim()
-    : String(text||raw).trim();
-
-  let hours=(
-    withoutIcon.match(
-      /\d{1,2}:\d{2}\s*(?:Ã |-|â)\s*\d{1,2}:\d{2}/
-    )||[""]
-  )[0].replace(/\s*(?:-|â)\s*/," Ã  ");
-
-  let label=withoutIcon
-    .replace(
-      /\s*[âÂ·-]\s*\d{1,2}:\d{2}\s*(?:Ã |-|â)\s*\d{1,2}:\d{2}.*/,
-      ""
-    )
-    .trim();
-
-  label=label
-    .replace(
-      new RegExp("^"+key+"\\s*[â-]\\s*","i"),
-      ""
-    )
-    .trim();
-
-  return {
-    code:raw,
-    icon:hasEmoji ? maybeIcon : "",
-    label:label||raw||"Non prÃ©cisÃ©",
-    hours:hours||"",
-    categorie:""
-  };
+  const text=typeof v==='string' ? v : raw;
+  const iconMatch=String(text||'').match(/^\S+/);
+  const maybeIcon=iconMatch ? iconMatch[0] : '';
+  const hasEmoji=/[^\w\sÀ-ÿ/.-]/.test(maybeIcon);
+  let withoutIcon=hasEmoji ? String(text).replace(maybeIcon,'').trim() : String(text||raw).trim();
+  let hours=(withoutIcon.match(/\d{1,2}:\d{2}\s*(?:à|-|—)\s*\d{1,2}:\d{2}/)||[''])[0].replace(/\s*(?:-|—)\s*/,' à ');
+  let label=withoutIcon.replace(/\s*[—·-]\s*\d{1,2}:\d{2}\s*(?:à|-|—)\s*\d{1,2}:\d{2}.*/,'').trim();
+  label=label.replace(new RegExp('^'+key+'\\s*[—-]\\s*','i'),'').trim();
+  return {code:raw, icon:hasEmoji?maybeIcon:'', label:label||raw||'Non précisé', hours:hours||'', categorie:''};
 }
-
-function shiftInline(code,cls=""){
+function shiftInline(code, cls=''){
   const s=shiftInfo(code);
-  const h=s.hours ? " Â· "+s.hours : "";
-  const icon=s.icon
-    ? `<span class="shiftIcon">${esc(s.icon)}</span>`
-    : "";
-
-  return `<span class="shiftLine ${cls}">
-    ${icon}
-    <span>${esc(s.label+h)}</span>
-  </span>`;
+  const h=s.hours ? ' · '+s.hours : '';
+  const icon=s.icon ? `<span class="shiftIcon">${esc(s.icon)}</span>` : '';
+  return `<span class="shiftLine ${cls}">${icon}<span>${esc(s.label+h)}</span></span>`;
 }
-
 function shiftPlain(code){
   const s=shiftInfo(code);
-
-  return `${s.icon ? s.icon+" " : ""}${s.label}${s.hours ? " Â· "+s.hours : ""}`;
+  return `${s.icon ? s.icon+' ' : ''}${s.label}${s.hours?' · '+s.hours:''}`;
 }
-
 function goalText(code){
   const s=shiftInfo(code);
-  return `${s.icon ? s.icon+" " : ""}${s.label}`;
+  return `${s.icon ? s.icon+' ' : ''}${s.label}`;
 }
-
-function siteAlert(text,title="Information"){
-  $("siteModalTitle").textContent=title;
-  $("siteModalText").textContent=text;
-  $("siteModal").classList.add("show");
+function siteAlert(text,title='Information'){
+  $('siteModalTitle').textContent=title;
+  $('siteModalText').textContent=text;
+  $('siteModal').classList.add('show');
 }
-
-function closeSiteModal(){
-  $("siteModal").classList.remove("show");
-}
-
+function closeSiteModal(){ $('siteModal').classList.remove('show'); }
 function knownMail(id){
-  const contacts=DATA && DATA.contacts
-    ? DATA.contacts
-    : {};
-
-  const a=state.agent||{};
-
-  const keys=[
-    id,
-    a.id_agent,
-    a.agent_uid,
-    a.id_source,
-    normaliseMailName(a.nom_affiche)
-  ];
-
+  const contacts=DATA && DATA.contacts ? DATA.contacts : {};
+  const a=state.agent || {};
+  const keys=[id, a.id_agent, a.agent_uid, a.id_source, normaliseMailName(a.nom_affiche)];
   for(const k of keys){
-    if(!k){
-      continue;
-    }
-
+    if(!k) continue;
     const c=contacts[String(k)];
-
-    if(!c){
-      continue;
-    }
-
-    return typeof c==="string"
-      ? c
-      : (c.email||"");
+    if(!c) continue;
+    return typeof c==='string' ? c : (c.email || '');
   }
-
-  return "";
+  return '';
 }
+function labelLong(label, mois, jour){ const s=String(label||''); const m=s.match(/^([A-Z])\s*(\d{1,2})/i); if(m) return (WEEK[m[1].toUpperCase()]||m[1])+' '+Number(m[2])+' '+(mois||''); return (jour?jour+' ':'')+(mois||s); }
+function makeItemId(s){ return 'item_'+String(s.mois).replace(/\W/g,'')+'_'+s.jour+'_'+Date.now()+'_'+Math.floor(Math.random()*9999); }
 
-function labelLong(label,mois,jour){
-  const s=String(label||"");
-  const m=s.match(/^([A-Z])\s*(\d{1,2})/i);
-
-  if(m){
-    return (
-      (WEEK[m[1].toUpperCase()]||m[1])+
-      " "+
-      Number(m[2])+
-      " "+
-      (mois||"")
-    );
-  }
-
-  return (jour ? jour+" " : "")+(mois||s);
-}
-
-function makeItemId(s){
-  return (
-    "item_"+
-    String(s.mois).replace(/\W/g,"")+
-    "_"+
-    s.jour+
-    "_"+
-    Date.now()+
-    "_"+
-    Math.floor(Math.random()*9999)
-  );
-}
-
-function api(action,params={}){
+function api(action, params={}){
   return new Promise((resolve,reject)=>{
-    if(!isReadyUrl()){
-      return reject(
-        new Error(
-          "URL du script pont manquante dans le fichier GitHub."
-        )
-      );
-    }
-
-    const cb=
-      "dc_cb_"+
-      Date.now()+
-      "_"+
-      Math.floor(Math.random()*1000000);
-
-    const url=new URL(API_URL);
-
-    url.searchParams.set("api",action);
-    url.searchParams.set("callback",cb);
-
-    Object.keys(params).forEach(k=>{
-      url.searchParams.set(k,params[k]);
-    });
-
-    const s=document.createElement("script");
+    if(!isReadyUrl()) return reject(new Error('URL du script pont manquante dans le fichier GitHub.'));
+    const cb='dc_cb_'+Date.now()+'_'+Math.floor(Math.random()*1000000);
+    const url = new URL(API_URL);
+    url.searchParams.set('api', action);
+    url.searchParams.set('callback', cb);
+    Object.keys(params).forEach(k=>url.searchParams.set(k, params[k]));
+    const s=document.createElement('script');
     let done=false;
-
-    const timer=setTimeout(()=>{
-      if(!done){
-        cleanup();
-        reject(
-          new Error(
-            "Le script pont ne rÃ©pond pas."
-          )
-        );
-      }
-    },25000);
-
-    function cleanup(){
-      done=true;
-      clearTimeout(timer);
-      delete window[cb];
-
-      if(s.parentNode){
-        s.parentNode.removeChild(s);
-      }
-    }
-
-    window[cb]=res=>{
-      cleanup();
-      resolve(res);
-    };
-
-    s.onerror=()=>{
-      cleanup();
-      reject(
-        new Error(
-          "Impossible de joindre le script pont."
-        )
-      );
-    };
-
+    const timer=setTimeout(()=>{ if(!done){ cleanup(); reject(new Error('Le script pont ne répond pas.')); } }, 25000);
+    function cleanup(){ done=true; clearTimeout(timer); delete window[cb]; if(s.parentNode) s.parentNode.removeChild(s); }
+    window[cb]=res=>{ cleanup(); resolve(res); };
+    s.onerror=()=>{ cleanup(); reject(new Error('Impossible de joindre le script pont.')); };
     s.src=url.toString();
     document.body.appendChild(s);
   });
 }
 
-/* ===========================
-   SESSION CLOUDFLARE
-   =========================== */
-
-function sessionAgent(session){
-  return session && session.agent
-    ? session.agent
-    : {};
+/* SESSION ET OUVERTURE DIRECTE DU DEMANDEUR */
+function cleanSession(v){ return String(v===undefined||v===null?'':v).trim(); }
+function normSession(v){
+  return cleanSession(v)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'')
+    .toUpperCase()
+    .replace(/[^A-Z0-9]+/g,'_')
+    .replace(/^_+|_+$/g,'');
 }
-
-function sessionDroits(session){
-  return session && session.droits
-    ? session.droits
-    : {};
+function texteSession(obj,keys){
+  if(!obj) return '';
+  for(const key of keys){
+    if(obj[key]!==undefined && obj[key]!==null && cleanSession(obj[key])!==''){
+      return cleanSession(obj[key]);
+    }
+  }
+  return '';
 }
-
-function sessionNom(session){
-  return texte(sessionAgent(session),[
-    "nom",
-    "NOM",
-    "lastName",
-    "lastname"
-  ]);
-}
-
-function sessionPrenom(session){
-  return texte(sessionAgent(session),[
-    "prenom",
-    "prÃ©nom",
-    "PRENOM",
-    "PRÃNOM",
-    "firstName",
-    "firstname"
-  ]);
-}
-
-function sessionAgentKey(session){
-  return texte(sessionAgent(session),[
-    "agent_key",
-    "agent",
-    "key",
-    "AGENT_KEY",
-    "AGENT",
-    "agent_uid",
-    "AGENT_UID",
-    "id_agent",
-    "ID_AGENT"
-  ]);
-}
-
-function sessionRole(session){
-  const droits=sessionDroits(session);
-
-  return clean(
-    droits.role||
-    droits.ROLE
-  ).toLowerCase();
-}
-
-function estDemo(session){
-  return (
-    norm(sessionNom(session))==="DEMO" &&
-    norm(sessionPrenom(session))==="DEMO"
-  );
-}
-
+function agentSession(session){ return session && session.agent ? session.agent : {}; }
+function droitsSession(session){ return session && session.droits ? session.droits : {}; }
+function sessionNom(session){ return texteSession(agentSession(session),['nom','NOM','lastName','lastname']); }
+function sessionPrenom(session){ return texteSession(agentSession(session),['prenom','prénom','PRENOM','PRÉNOM','firstName','firstname']); }
+function sessionKey(session){ return texteSession(agentSession(session),['agent_key','agent','key','AGENT_KEY','AGENT','agent_uid','AGENT_UID']); }
+function roleSession(session){ return cleanSession(droitsSession(session).role || droitsSession(session).ROLE).toLowerCase(); }
+function estDemo(session){ return normSession(sessionNom(session))==='DEMO' && normSession(sessionPrenom(session))==='DEMO'; }
 function estEddySapin(session){
-  const key=norm(sessionAgentKey(session));
-  const nom=norm(sessionNom(session));
-  const prenom=norm(sessionPrenom(session));
-
-  return (
-    key==="SAPIN_EDDY" ||
-    (nom==="SAPIN" && prenom==="EDDY")
-  );
+  const key=normSession(sessionKey(session));
+  const nom=normSession(sessionNom(session));
+  const prenom=normSession(sessionPrenom(session));
+  return key==='SAPIN_EDDY' || (nom==='SAPIN' && prenom==='EDDY');
 }
+function peutChoisirTousLesDemandeurs(session){
+  const droits=droitsSession(session);
+  const role=roleSession(session);
 
-function peutChoisirLeDemandeur(session){
-  const droits=sessionDroits(session);
-  const role=sessionRole(session);
-
-  if(estDemo(session)){
-    return true;
-  }
-
-  /*
-    Eddy garde volontairement lâaffichage dâun agent normal,
-    mÃªme si son compte possÃ¨de des droits Ã©levÃ©s pour les tests.
-  */
-  if(estEddySapin(session)){
-    return false;
-  }
+  if(estDemo(session)) return true;
+  if(estEddySapin(session)) return false;
 
   return (
-    role==="chef" ||
-    role==="total" ||
+    role==='chef' ||
+    role==='total' ||
     droits.acces_chefs===true ||
     droits.admin===true ||
     droits.est_admin===true
   );
 }
+async function lireSessionConnectee(){
+  const res=await fetch('/__ghe/me?t='+Date.now(),{
+    credentials:'same-origin',
+    cache:'no-store'
+  });
 
-async function lireSessionCloudflare(){
-  const response=await fetch(
-    "/__ghe/me?t="+Date.now(),
-    {
-      credentials:"same-origin",
-      cache:"no-store"
-    }
-  );
+  if(!res.ok) throw new Error('Session connectée indisponible.');
 
-  if(!response.ok){
-    throw new Error(
-      "Impossible de lire la session connectÃ©e."
-    );
-  }
-
-  const data=await response.json();
+  const data=await res.json();
 
   if(!data || !data.ok || !data.session){
-    throw new Error(
-      "Session connectÃ©e invalide."
-    );
+    throw new Error('Session connectée invalide.');
   }
 
   return data.session;
 }
-
-function trouverAgentConnecteDansData(session){
-  const key=norm(sessionAgentKey(session));
-  const nom=norm(sessionNom(session));
-  const prenom=norm(sessionPrenom(session));
-  const nomPrenom=norm(
-    sessionNom(session)+" "+sessionPrenom(session)
-  );
-  const prenomNom=norm(
-    sessionPrenom(session)+" "+sessionNom(session)
-  );
-
-  const params=new URLSearchParams(window.location.search);
-
-  const urlKey=norm(
-    params.get("agent_key") ||
-    params.get("agent") ||
-    params.get("demandeur_agent") ||
-    params.get("demandeur") ||
-    ""
-  );
+function trouverAgentConnecte(session){
+  const key=normSession(sessionKey(session));
+  const nom=normSession(sessionNom(session));
+  const prenom=normSession(sessionPrenom(session));
+  const nomPrenom=normSession(sessionNom(session)+' '+sessionPrenom(session));
+  const prenomNom=normSession(sessionPrenom(session)+' '+sessionNom(session));
 
   return (DATA.agents||[]).find(a=>{
-    const id=norm(
-      texte(a,[
-        "id_agent",
-        "agent_key",
-        "agent_uid",
-        "agent",
-        "key"
-      ])
-    );
+    const ids=[
+      a.id_agent,
+      a.agent_key,
+      a.agent_uid,
+      a.agent,
+      a.key
+    ].map(normSession).filter(Boolean);
 
-    const display=norm(
-      texte(a,[
-        "nom_affiche",
-        "nomComplet",
-        "nom_complet",
-        "fullName",
-        "agent"
-      ])
-    );
-
-    const anom=norm(
-      texte(a,[
-        "nom",
-        "NOM"
-      ])
-    );
-
-    const aprenom=norm(
-      texte(a,[
-        "prenom",
-        "prÃ©nom",
-        "PRENOM",
-        "PRÃNOM"
-      ])
-    );
+    const affiche=normSession(a.nom_affiche || a.nomComplet || a.nom_complet || a.fullName || '');
+    const aNom=normSession(a.nom || a.NOM || '');
+    const aPrenom=normSession(a.prenom || a['prénom'] || a.PRENOM || a['PRÉNOM'] || '');
 
     return (
-      (key && id && key===id) ||
-      (urlKey && id && urlKey===id) ||
-      (
-        nom &&
-        prenom &&
-        anom===nom &&
-        aprenom===prenom
-      ) ||
-      (
-        nomPrenom &&
-        display===nomPrenom
-      ) ||
-      (
-        prenomNom &&
-        display===prenomNom
-      ) ||
-      (
-        nom &&
-        prenom &&
-        display.includes(nom) &&
-        display.includes(prenom)
-      )
+      (key && ids.includes(key)) ||
+      (nom && prenom && aNom===nom && aPrenom===prenom) ||
+      (nomPrenom && affiche===nomPrenom) ||
+      (prenomNom && affiche===prenomNom) ||
+      (nom && prenom && affiche.includes(nom) && affiche.includes(prenom))
     );
-  })||null;
+  }) || null;
 }
-
-function masquerChoixDemandeur(){
-  $("agentSearch").style.display="none";
-  $("agentList").style.display="none";
-
-  const page=$("pStart");
-  const title=page.querySelector("h1");
-  const text=page.querySelector("p");
-
-  title.textContent="Ouverture de ta demande";
-  text.textContent="Ton planning personnel se charge automatiquement.";
-
-  msg(
-    "startMsg",
-    "warn",
-    "Identification de ton compteâ¦"
-  );
+function afficherChargementDirect(){
+  $('startLoading').hidden=false;
+  $('startChoice').hidden=true;
 }
-
-function afficherChoixDemandeur(){
-  $("agentSearch").style.display="";
-  $("agentList").style.display="";
-
-  const page=$("pStart");
-  const title=page.querySelector("h1");
-  const text=page.querySelector("p");
-
-  title.textContent="Choisis ton nom";
-  text.textContent="Recherche ton nom puis ouvre ton aperÃ§u personnel.";
-
-  clearMsg("startMsg");
+function afficherListeDemandeurs(){
+  $('startLoading').hidden=true;
+  $('startChoice').hidden=false;
+  clearMsg('startMsg');
   renderAgents();
 }
 
-/* ===========================
-   INITIALISATION
-   =========================== */
-
 async function init(){
-  if(!isReadyUrl()){
-    msg(
-      "startMsg",
-      "warn",
-      "Il faut coller lâURL /exec du script pont GitHub dans la constante API_URL."
-    );
+  afficherChargementDirect();
 
-    $("agentList").innerHTML="";
+  if(!isReadyUrl()) {
+    $('startLoading').hidden=true;
+    $('startChoice').hidden=false;
+    msg('startMsg','warn','Il faut coller l’URL /exec du script pont GitHub dans la constante API_URL.');
+    $('agentList').innerHTML='';
     return;
   }
 
-  masquerChoixDemandeur();
-
   try{
     const [res,session]=await Promise.all([
-      api("init"),
-      lireSessionCloudflare()
+      api('init'),
+      lireSessionConnectee()
     ]);
 
     if(!res || !res.ok){
-      throw new Error(
-        res && res.error
-          ? res.error
-          : "Chargement impossible."
-      );
+      throw new Error(res && res.error ? res.error : 'Chargement impossible.');
     }
 
     DATA=res;
+    state.responsableId=(DATA.responsables && DATA.responsables[0]) ? DATA.responsables[0].id : '';
 
-    state.responsableId=
-      (DATA.responsables && DATA.responsables[0])
-        ? DATA.responsables[0].id
-        : "";
-
-    if(peutChoisirLeDemandeur(session)){
-      afficherChoixDemandeur();
+    if(peutChoisirTousLesDemandeurs(session)){
+      afficherListeDemandeurs();
       return;
     }
 
-    const agentConnecte=
-      trouverAgentConnecteDansData(session);
+    const agentConnecte=trouverAgentConnecte(session);
 
     if(!agentConnecte){
-      throw new Error(
-        "Impossible de faire correspondre ton compte avec un agent du planning."
-      );
+      throw new Error('Impossible de retrouver ton nom dans le planning.');
     }
 
-    clearMsg("startMsg");
     await selectAgent(agentConnecte.id_agent);
 
   }catch(e){
-    $("agentSearch").style.display="none";
-    $("agentList").style.display="none";
-
-    msg(
-      "startMsg",
-      "err",
-      (e.message||String(e))+
-      " DÃ©connecte-toi puis reconnecte-toi avec ton propre compte."
-    );
+    $('startLoading').hidden=true;
+    $('startChoice').hidden=false;
+    $('agentSearch').style.display='none';
+    $('agentList').style.display='none';
+    msg('startMsg','err',(e.message||String(e))+' Déconnecte-toi puis reconnecte-toi avec ton propre compte.');
   }
 }
 
 function renderAgents(){
-  const q=($("agentSearch").value||"")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"");
-
-  const list=(DATA.agents||[])
-    .filter(a=>
-      String(a.nom_affiche||"")
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g,"")
-        .includes(q)
-    )
-    .slice(0,90);
-
-  $("agentList").innerHTML=
-    list.map(a=>
-      `<button
-        class="agentBtn"
-        onclick="selectAgent('${attr(a.id_agent)}')"
-      >
-        <span class="name">${esc(a.nom_affiche)}</span>
-      </button>`
-    ).join("") ||
-    "<p>Aucun agent trouvÃ©.</p>";
+  const q=($('agentSearch').value||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  const list=(DATA.agents||[]).filter(a=>String(a.nom_affiche||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').includes(q)).slice(0,90);
+  $('agentList').innerHTML=list.map(a=>`<button class="agentBtn" onclick="selectAgent('${attr(a.id_agent)}')"><span class="name">${esc(a.nom_affiche)}</span></button>`).join('') || '<p>Aucun agent trouvé.</p>';
 }
-
-$("agentSearch").addEventListener(
-  "input",
-  renderAgents
-);
+$('agentSearch').addEventListener('input', renderAgents);
 
 function todayIso(){
   const d=new Date();
   d.setHours(0,0,0,0);
-
   const y=d.getFullYear();
-  const m=String(d.getMonth()+1).padStart(2,"0");
-  const j=String(d.getDate()).padStart(2,"0");
-
+  const m=String(d.getMonth()+1).padStart(2,'0');
+  const j=String(d.getDate()).padStart(2,'0');
   return `${y}-${m}-${j}`;
 }
-
 function monthNum(mois){
-  const map={
-    JANVIER:1,
-    FEVRIER:2,
-    FÃVRIER:2,
-    MARS:3,
-    AVRIL:4,
-    MAI:5,
-    JUIN:6,
-    JUILLET:7,
-    AOUT:8,
-    AOÃT:8,
-    SEPTEMBRE:9,
-    OCTOBRE:10,
-    NOVEMBRE:11,
-    DECEMBRE:12,
-    DÃCEMBRE:12
-  };
-
-  const k=String(mois||"")
-    .toUpperCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"");
-
+  const map={JANVIER:1,FEVRIER:2,FÉVRIER:2,MARS:3,AVRIL:4,MAI:5,JUIN:6,JUILLET:7,AOUT:8,AOÛT:8,SEPTEMBRE:9,OCTOBRE:10,NOVEMBRE:11,DECEMBRE:12,DÉCEMBRE:12};
+  const k=String(mois||'').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   return map[k]||0;
 }
-
 function dateIsoFromShift(s){
-  if(s && s.date_iso){
-    return String(s.date_iso).slice(0,10);
-  }
-
+  if(s && s.date_iso) return String(s.date_iso).slice(0,10);
   const y=(CAL && CAL.year) || new Date().getFullYear();
   const m=monthNum(s && s.mois);
   const j=Number(s && s.jour);
-
-  if(!m || !j){
-    return "";
-  }
-
-  return (
-    `${y}-`+
-    `${String(m).padStart(2,"0")}-`+
-    `${String(j).padStart(2,"0")}`
-  );
+  if(!m||!j) return '';
+  return `${y}-${String(m).padStart(2,'0')}-${String(j).padStart(2,'0')}`;
 }
-
-function parseDateIsoLocal(iso){
-  const p=String(iso||"")
-    .slice(0,10)
-    .split("-")
-    .map(Number);
-
-  if(p.length!==3 || !p[0] || !p[1] || !p[2]){
-    return null;
-  }
-
-  return new Date(
-    p[0],
-    p[1]-1,
-    p[2],
-    0,
-    0,
-    0
-  );
-}
-
-function dateObjFromShift(s){
-  return parseDateIsoLocal(
-    dateIsoFromShift(s)
-  );
-}
-
-function isFutureShift(s){
-  const iso=dateIsoFromShift(s);
-  return !iso || iso>=todayIso();
-}
-
-function futureShifts(){
-  return (
-    CAL.agent &&
-    CAL.agent.shifts
-      ? CAL.agent.shifts
-      : []
-  ).filter(isFutureShift);
-}
-
+function isFutureShift(s){ const iso=dateIsoFromShift(s); return !iso || iso>=todayIso(); }
+function futureShifts(){ return (CAL.agent && CAL.agent.shifts ? CAL.agent.shifts : []).filter(isFutureShift); }
 function firstFutureMonth(res){
-  const shifts=(
-    res.agent &&
-    res.agent.shifts
-      ? res.agent.shifts
-      : []
-  ).filter(isFutureShift);
-
-  const months=res.mois||[];
-
-  return (
-    months.find(m=>
-      shifts.some(s=>s.mois===m)
-    ) ||
-    (shifts[0] && shifts[0].mois) ||
-    ""
-  );
+  const shifts=(res.agent && res.agent.shifts ? res.agent.shifts : []).filter(isFutureShift);
+  const months=res.mois || [];
+  return months.find(m=>shifts.some(s=>s.mois===m)) || (shifts[0] && shifts[0].mois) || '';
 }
 
 async function selectAgent(id){
-  const a=(DATA.agents||[]).find(
-    x=>String(x.id_agent)===String(id)
-  );
-
-  if(!a){
-    return;
-  }
-
+  const a=(DATA.agents||[]).find(x=>String(x.id_agent)===String(id));
+  if(!a) return;
   state.agent=a;
-  msg(
-    "startMsg",
-    "warn",
-    "Chargement du planningâ¦"
-  );
 
   try{
-    const res=await api(
-      "calendar",
-      {
-        agentId:id
-      }
-    );
-
-    if(!res || !res.ok){
-      throw new Error(
-        res && res.error
-          ? res.error
-          : "Planning introuvable."
-      );
-    }
-
+    const res=await api('calendar', {agentId:id});
+    if(!res || !res.ok) throw new Error(res && res.error ? res.error : 'Planning introuvable.');
     CAL=res;
     state.currentMonth=firstFutureMonth(res);
-
     loadMailDrafts();
-
     const officialMail=knownMail(id);
-
-    state.demandeur_email=
-      officialMail ||
-      state.demandeur_email ||
-      "";
-
+    state.demandeur_email=officialMail || state.demandeur_email || '';
     saveMailDrafts();
     renderDaysPage();
-
-    setTimeout(
-      restoreDemandeurMailInput,
-      0
-    );
-
-    showPage(
-      "pDays",
-      2
-    );
-
+    setTimeout(restoreDemandeurMailInput,0);
+    showPage('pDays',2);
   }catch(e){
-    msg(
-      "startMsg",
-      "err",
-      e.message||String(e)
-    );
-
+    $('startLoading').hidden=true;
+    $('startChoice').hidden=false;
+    msg('startMsg','err',e.message||String(e));
     throw e;
   }
 }
 
-/* ===========================
-   AFFICHAGE DES JOURS
-   =========================== */
-
-function formatDateMainFromShift(s){
-  const d=dateObjFromShift(s);
-
-  if(d){
-    return d
-      .toLocaleDateString(
-        "fr-FR",
-        {
-          weekday:"long",
-          day:"numeric",
-          month:"long"
-        }
-      )
-      .toUpperCase();
-  }
-
-  return labelLong(
-    s.label,
-    s.mois,
-    s.jour
-  ).toUpperCase();
-}
-
-function isWeekendShift(s){
-  const d=dateObjFromShift(s);
-
-  if(d){
-    return (
-      d.getDay()===0 ||
-      d.getDay()===6
-    );
-  }
-
-  const label=norm(
-    s.label||
-    labelLong(
-      s.label,
-      s.mois,
-      s.jour
-    )
-  );
-
-  return (
-    label.includes("SAMEDI") ||
-    label.includes("DIMANCHE")
-  );
-}
-
-function getIsoWeekNumber(date){
-  const d=new Date(
-    Date.UTC(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate()
-    )
-  );
-
-  const dayNum=d.getUTCDay()||7;
-
-  d.setUTCDate(
-    d.getUTCDate()+4-dayNum
-  );
-
-  const yearStart=new Date(
-    Date.UTC(
-      d.getUTCFullYear(),
-      0,
-      1
-    )
-  );
-
-  return Math.ceil(
-    (
-      ((d-yearStart)/86400000)+1
-    )/7
-  );
-}
-
-function weekKeyFromShift(s){
-  const d=dateObjFromShift(s);
-
-  if(!d){
-    return "jour_"+String(s.jour||"");
-  }
-
-  const monday=new Date(d);
-  const day=monday.getDay()||7;
-
-  monday.setDate(
-    monday.getDate()-day+1
-  );
-
-  return (
-    monday.getFullYear()+
-    "-"+
-    String(monday.getMonth()+1).padStart(2,"0")+
-    "-"+
-    String(monday.getDate()).padStart(2,"0")
-  );
-}
-
-function weekLabelFromShift(s){
-  const d=dateObjFromShift(s);
-
-  if(!d){
-    return "Semaine";
-  }
-
-  return "Semaine "+getIsoWeekNumber(d);
-}
-
-function monthSectionId(mois){
-  return (
-    "month_"+
-    String(mois||"")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g,"")
-      .replace(/[^a-zA-Z0-9_-]/g,"_")
-  );
-}
-
-function shiftKindClass(code){
-  const key=cleanShiftKey(code);
-  const s=shiftInfo(code);
-  const category=norm(s.categorie);
-
-  if(key==="M"){
-    return "kind-matin";
-  }
-
-  if(key==="J"){
-    return "kind-journee";
-  }
-
-  if(key==="J4"){
-    return "kind-j4";
-  }
-
-  if(key==="S"){
-    return "kind-soir";
-  }
-
-  if(key==="N"){
-    return "kind-nuit";
-  }
-
-  if(
-    key==="MALADIE" ||
-    key==="AM" ||
-    category.includes("MALADIE")
-  ){
-    return "kind-maladie";
-  }
-
-  if(
-    [
-      "RH",
-      "RTT",
-      "RTTA",
-      "RC",
-      "RF",
-      "CA",
-      "AA",
-      "ABS",
-      "-"
-    ].includes(key) ||
-    category.includes("REPOS") ||
-    category.includes("CONGE") ||
-    category.includes("RECUPERATION") ||
-    category.includes("ABSENCE")
-  ){
-    return "kind-repos";
-  }
-
-  return "kind-special";
-}
-
-function shiftRenderKey(index){
-  return "shift_"+index;
-}
-
-function cardShiftHtml(s,selected,key){
-  const info=shiftInfo(s.code);
-  const weekend=isWeekendShift(s);
-  const time=info.hours
-    ? `<span class="shift-sep">Â·</span><span class="time">${esc(info.hours)}</span>`
-    : "";
-
-  return `
-    <button
-      type="button"
-      class="day-card ${weekend ? "is-weekend" : ""} ${selected ? "selected" : ""}"
-      onclick="toggleDayByKey('${attr(key)}')"
-      aria-pressed="${selected ? "true" : "false"}"
-    >
-      <span class="select-mark">${selected ? "â" : "+"}</span>
-
-      <span class="day-head">
-        <span class="date-main">${esc(formatDateMainFromShift(s))}</span>
-        <span class="date-tag">${weekend ? "week-end" : "semaine"}</span>
-      </span>
-
-      <span class="event-row ${shiftKindClass(s.code)}">
-        <span class="shift-dot">${esc(info.icon||"ð")}</span>
-
-        <span class="shift-copy">
-          <span class="shift-line-card">
-            <span class="shift-title">${esc(info.label||s.code||"Non prÃ©cisÃ©")}</span>
-            ${time}
-          </span>
-
-          <span class="detail">
-            ${selected ? "Jour sÃ©lectionnÃ© pour la demande" : "Appuie pour sÃ©lectionner ce jour"}
-          </span>
-        </span>
-      </span>
-    </button>
-  `;
-}
-
-function installerObservationMois(months){
-  if(monthObserver){
-    monthObserver.disconnect();
-    monthObserver=null;
-  }
-
-  if(!("IntersectionObserver" in window)){
-    return;
-  }
-
-  const sections=months
-    .map(month=>document.getElementById(monthSectionId(month)))
-    .filter(Boolean);
-
-  monthObserver=new IntersectionObserver(
-    entries=>{
-      const visible=entries
-        .filter(entry=>entry.isIntersecting)
-        .sort(
-          (a,b)=>
-            b.intersectionRatio-
-            a.intersectionRatio
-        )[0];
-
-      if(!visible){
-        return;
-      }
-
-      const month=visible.target.dataset.month;
-
-      document
-        .querySelectorAll("#monthChips .chip")
-        .forEach(btn=>{
-          btn.classList.toggle(
-            "active",
-            btn.dataset.month===month
-          );
-        });
-    },
-    {
-      rootMargin:"-18% 0px -65% 0px",
-      threshold:[0,.1,.35]
-    }
-  );
-
-  sections.forEach(section=>{
-    monthObserver.observe(section);
-  });
-}
-
 function renderDaysPage(){
   const a=state.agent;
-
-  $("whoBox").innerHTML=
-    `<div class="person">
-      ${avatar(a.avatar_image_url,"big")}
-      <div>
-        <div class="name">${esc(a.nom_affiche)}</div>
-        <div class="subline">Choisis les jours Ã  modifier</div>
-      </div>
-    </div>`;
+  $('whoBox').innerHTML=`<div class="person">${avatar(a.avatar_image_url,'big')}<div><div class="name">${esc(a.nom_affiche)}</div><div class="subline">Choisis les jours à modifier</div></div></div>`;
 
   const allFuture=futureShifts()
     .sort((a,b)=>{
-      const da=dateIsoFromShift(a);
-      const db=dateIsoFromShift(b);
-
-      if(da && db && da!==db){
-        return da.localeCompare(db);
-      }
-
+      const da=dateIsoFromShift(a), db=dateIsoFromShift(b);
+      if(da && db && da!==db) return da.localeCompare(db);
       return Number(a.jour)-Number(b.jour);
     });
 
   const months=[];
-
   allFuture.forEach(s=>{
-    if(s.mois && !months.includes(s.mois)){
-      months.push(s.mois);
-    }
+    if(s.mois && !months.includes(s.mois)) months.push(s.mois);
   });
 
-  $("monthChips").innerHTML=
-    months.map(
-      (m,index)=>
-        `<button
-          class="chip ${index===0 ? "active" : ""}"
-          data-month="${attr(m)}"
-          onclick="jumpToMonth('${attr(m)}')"
-          type="button"
-        >
-          ${esc(m)}
-        </button>`
-    ).join("");
+  $('monthChips').innerHTML=months.map(m=>`<button class="chip" onclick="jumpToMonth('${attr(m)}')">${esc(m)}</button>`).join('');
 
-  renderedShiftMap={};
-
-  const monthGroups=months.map(mois=>({
-    mois,
-    shifts:allFuture.filter(s=>s.mois===mois)
-  }));
-
+  let lastMonth='';
   const html=[];
-
-  let renderIndex=0;
-
-  monthGroups.forEach(monthGroup=>{
-    html.push(
-      `<section
-        class="month-section"
-        id="${monthSectionId(monthGroup.mois)}"
-        data-month="${attr(monthGroup.mois)}"
-      >`
-    );
-
-    html.push(
-      `<div class="month-divider">${esc(monthGroup.mois)}</div>`
-    );
-
-    const weeks=[];
-
-    monthGroup.shifts.forEach(s=>{
-      const wk=weekKeyFromShift(s);
-
-      let week=weeks.find(w=>w.key===wk);
-
-      if(!week){
-        week={
-          key:wk,
-          label:weekLabelFromShift(s),
-          shifts:[]
-        };
-
-        weeks.push(week);
-      }
-
-      week.shifts.push(s);
-    });
-
-    weeks.forEach(week=>{
-      html.push(
-        `<div class="week-block">
-          <div class="week-label">${esc(week.label)}</div>`
-      );
-
-      const weekdays=[];
-      const weekend=[];
-
-      week.shifts.forEach(s=>{
-        const key=shiftRenderKey(renderIndex++);
-        renderedShiftMap[key]=s;
-
-        const selected=state.basket.some(
-          it=>
-            it.mois_demandeur===s.mois &&
-            Number(it.jour_demandeur)===Number(s.jour) &&
-            String(
-              it.date_iso_demandeur||
-              it.date_iso||
-              ""
-            )===
-            String(s.date_iso||"")
-        );
-
-        const card=cardShiftHtml(
-          s,
-          selected,
-          key
-        );
-
-        if(isWeekendShift(s)){
-          weekend.push(card);
-        }else{
-          weekdays.push(card);
-        }
-      });
-
-      if(weekdays.length){
-        html.push(
-          `<div class="week-days">${weekdays.join("")}</div>`
-        );
-      }
-
-      if(weekend.length){
-        html.push(
-          `<div class="weekend-pair">${weekend.join("")}</div>`
-        );
-      }
-
-      html.push("</div>");
-    });
-
-    html.push("</section>");
+  allFuture.forEach(s=>{
+    if(s.mois !== lastMonth){
+      lastMonth=s.mois;
+      html.push(`<div class="monthSeparator" id="month_${attr(String(s.mois).replace(/[^a-zA-Z0-9_-]/g,''))}">${esc(s.mois)}</div>`);
+    }
+    const selected=state.basket.some(it=>it.mois_demandeur===s.mois && Number(it.jour_demandeur)===Number(s.jour) && String(it.date_iso_demandeur||it.date_iso||'')===String(s.date_iso||''));
+    html.push(`<button class="dayBtn ${selected?'selected':''}" onclick='toggleDay(${JSON.stringify(s).replace(/'/g,"&#39;")})'><span><span class="dayTitle">${esc(labelLong(s.label,s.mois,s.jour))}</span><br>${shiftInline(s.code)}</span><span>${selected?'✓':'+'}</span></button>`);
   });
 
-  $("dayList").innerHTML=
-    html.join("") ||
-    "<p>Aucun jour futur disponible pour cet agent.</p>";
-
+  $('dayList').innerHTML=html.join('') || '<p>Aucun jour futur disponible pour cet agent.</p>';
   updateBasketCount();
-
-  requestAnimationFrame(()=>{
-    installerObservationMois(months);
-  });
 }
 
 function jumpToMonth(mois){
-  document
-    .querySelectorAll("#monthChips .chip")
-    .forEach(btn=>{
-      btn.classList.toggle(
-        "active",
-        btn.dataset.month===mois
-      );
-    });
-
-  const el=document.getElementById(
-    monthSectionId(mois)
-  );
-
-  if(el){
-    el.scrollIntoView({
-      behavior:"smooth",
-      block:"start"
-    });
-  }
-}
-
-function toggleDayByKey(key){
-  const s=renderedShiftMap[key];
-
-  if(s){
-    toggleDay(s);
-  }
+  const id='month_'+String(mois||'').replace(/[^a-zA-Z0-9_-]/g,'');
+  const el=document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 function toggleDay(s){
-  const i=state.basket.findIndex(
-    it=>
-      it.mois_demandeur===s.mois &&
-      Number(it.jour_demandeur)===Number(s.jour) &&
-      String(
-        it.date_iso_demandeur||
-        it.date_iso||
-        ""
-      )===
-      String(s.date_iso||"")
-  );
-
-  if(i>=0){
-    state.basket.splice(i,1);
-  }else{
-    state.basket.push({
-      item_id:makeItemId(s),
-      demandeur_id:state.agent.id_agent,
-      demandeur_nom:state.agent.nom_affiche,
-      mois_demandeur:s.mois,
-      jour_demandeur:s.jour,
-      label_demandeur:s.label,
-      shift_demandeur:s.code,
-      date_iso_demandeur:s.date_iso||"",
-      date_iso:s.date_iso||"",
-      demandeur_avatar:state.agent.avatar_image_url||"",
-      objectif:"",
-      objectif_label:"",
-      accepteur_id:"",
-      accepteur_nom:"",
-      accepteur_email:"",
-      accepteur_avatar:"",
-      mois_accepteur:"",
-      jour_accepteur:"",
-      label_accepteur:"",
-      shift_accepteur:""
-    });
-  }
-
+  const i=state.basket.findIndex(it=>it.mois_demandeur===s.mois && Number(it.jour_demandeur)===Number(s.jour) && String(it.date_iso_demandeur||it.date_iso||'')===String(s.date_iso||''));
+  if(i>=0) state.basket.splice(i,1); else state.basket.push({
+    item_id:makeItemId(s), demandeur_id:state.agent.id_agent, demandeur_nom:state.agent.nom_affiche,
+    mois_demandeur:s.mois, jour_demandeur:s.jour, label_demandeur:s.label, shift_demandeur:s.code, date_iso_demandeur:s.date_iso||'', date_iso:s.date_iso||'', demandeur_avatar:state.agent.avatar_image_url||'',
+    objectif:'', objectif_label:'', accepteur_id:'', accepteur_nom:'', accepteur_email:'', accepteur_avatar:'', mois_accepteur:'', jour_accepteur:'', label_accepteur:'', shift_accepteur:''
+  });
   renderDaysPage();
 }
+function updateBasketCount(){ const n=state.basket.length; $('basketCount').textContent=n+' jour'+(n>1?'s':'')+' sélectionné'+(n>1?'s':''); $('goExchangeBtn').disabled=!n; }
+function goExchange(){ if(!state.basket.length) return; renderExchange(); showPage('pExchange',3); }
 
-function updateBasketCount(){
-  const n=state.basket.length;
-
-  $("basketCount").textContent=
-    n+
-    " jour"+
-    (n>1 ? "s" : "")+
-    " sÃ©lectionnÃ©"+
-    (n>1 ? "s" : "");
-
-  $("goExchangeBtn").disabled=!n;
-}
-
-function goExchange(){
-  if(!state.basket.length){
-    return;
-  }
-
-  renderExchange();
-  showPage("pExchange",3);
-}
-
-function toggleNoAgent(){
-  state.noAgent=$("noAgent").checked;
-  renderExchange();
-}
-
+function toggleNoAgent(){ state.noAgent=$('noAgent').checked; renderExchange(); }
 function renderExchange(){
-  $("noAgent").checked=state.noAgent;
-
-  $("exchangeList").innerHTML=
-    state.basket.map(it=>
-      `<div
-        class="exchangeCard ${(state.noAgent||it.accepteur_id)&&it.objectif ? "done" : ""}"
-        id="card_${attr(it.item_id)}"
-      >
-        <div class="dayTitle">
-          ${esc(labelLong(it.label_demandeur,it.mois_demandeur,it.jour_demandeur))}
-        </div>
-
-        <div class="small">Ton horaire actuel :</div>
-        <div>${shiftInline(it.shift_demandeur,"light")}</div>
-
-        <div class="goalGrid">
-          ${GOALS.map(g=>
-            `<button
-              class="goal ${it.objectif===g.code ? "active" : ""}"
-              onclick="chooseGoal('${attr(it.item_id)}','${g.code}')"
-            >
-              ${esc(goalText(g.code))}
-            </button>`
-          ).join("")}
-        </div>
-
-        ${renderChosen(it)}
-
-        <div
-          id="cand_${attr(it.item_id)}"
-          class="candidateList"
-        >
-          ${renderCandidates(it)}
-        </div>
-      </div>`
-    ).join("");
+  $('noAgent').checked=state.noAgent;
+  $('exchangeList').innerHTML=state.basket.map((it,idx)=>`<div class="exchangeCard ${(state.noAgent||it.accepteur_id)&&it.objectif?'done':''}" id="card_${attr(it.item_id)}">
+    <div class="dayTitle">${esc(labelLong(it.label_demandeur,it.mois_demandeur,it.jour_demandeur))}</div>
+    <div class="small">Ton horaire actuel :</div><div>${shiftInline(it.shift_demandeur,'light')}</div>
+    <div class="goalGrid">${GOALS.map(g=>`<button class="goal ${it.objectif===g.code?'active':''}" onclick="chooseGoal('${attr(it.item_id)}','${g.code}')">${esc(goalText(g.code))}</button>`).join('')}</div>
+    ${renderChosen(it)}
+    <div id="cand_${attr(it.item_id)}" class="candidateList">${renderCandidates(it)}</div>
+  </div>`).join('');
 }
-
 function renderChosen(it){
-  if(state.noAgent){
-    return it.objectif
-      ? `<div class="chosen">
-          <b>Souhait :</b>
-          ${esc(it.objectif==="REPOS" ? "Repos" : shiftText(it.objectif))}
-        </div>`
-      : "";
-  }
-
-  if(!it.accepteur_id){
-    return it.objectif
-      ? '<div class="small">Choisis un collÃ¨gue dans la liste.</div>'
-      : "";
-  }
-
-  return `<div class="chosen">
-    ${avatar(it.accepteur_avatar)}
-
-    <div>
-      <div class="name">${esc(it.accepteur_nom)}</div>
-      <div>${shiftInline(it.shift_accepteur,"light")}</div>
-    </div>
-
-    <button
-      class="btn grey"
-      style="width:auto;min-height:42px;padding:9px 12px"
-      onclick="clearAcceptor('${attr(it.item_id)}')"
-    >
-      Changer
-    </button>
-  </div>`;
+  if(state.noAgent) return it.objectif ? `<div class="chosen"><b>Souhait :</b> ${esc(it.objectif==='REPOS'?'Repos':shiftText(it.objectif))}</div>` : '';
+  if(!it.accepteur_id) return it.objectif ? '<div class="small">Choisis un collègue dans la liste.</div>' : '';
+  return `<div class="chosen">${avatar(it.accepteur_avatar)}<div><div class="name">${esc(it.accepteur_nom)}</div><div>${shiftInline(it.shift_accepteur,'light')}</div></div><button class="btn grey" style="width:auto;min-height:42px;padding:9px 12px" onclick="clearAcceptor('${attr(it.item_id)}')">Changer</button></div>`;
 }
-
 function renderCandidates(it){
-  if(
-    state.noAgent ||
-    !it.objectif ||
-    it.accepteur_id
-  ){
-    return "";
-  }
-
+  if(state.noAgent || !it.objectif || it.accepteur_id) return '';
   const list=state.candidates[it.item_id];
-
-  if(!list){
-    return '<div class="small">Clique un horaire pour charger les collÃ¨gues.</div>';
-  }
-
-  if(!list.length){
-    return '<div class="msg show warn">Aucun collÃ¨gue trouvÃ© pour cet horaire.</div>';
-  }
-
-  return list.map(c=>
-    `<button
-      class="candidateBtn"
-      onclick="selectCandidate('${attr(it.item_id)}','${attr(c.id_agent)}')"
-    >
-      ${avatar(c.avatar_image_url)}
-
-      <span class="candidateMain">
-        <span class="name">${esc(c.nom_affiche)}</span>
-        ${shiftInline(c.shift_code,"light")}
-
-        <span class="mailLine ${c.email ? "ok" : "missing"}">
-          ${c.email ? "Mail connu" : "Mail Ã  complÃ©ter"}
-        </span>
-      </span>
-    </button>`
-  ).join("");
+  if(!list) return '<div class="small">Clique un horaire pour charger les collègues.</div>';
+  if(!list.length) return '<div class="msg show warn">Aucun collègue trouvé pour cet horaire.</div>';
+  return list.map(c=>`<button class="candidateBtn" onclick="selectCandidate('${attr(it.item_id)}','${attr(c.id_agent)}')">${avatar(c.avatar_image_url)}<span class="candidateMain"><span class="name">${esc(c.nom_affiche)}</span>${shiftInline(c.shift_code,'light')}<span class="mailLine ${c.email?'ok':'missing'}">${c.email?'Mail connu':'Mail à compléter'}</span></span></button>`).join('');
 }
-
-async function chooseGoal(itemId,goal){
-  const it=state.basket.find(
-    x=>x.item_id===itemId
-  );
-
-  if(!it){
-    return;
-  }
-
-  it.objectif=goal;
-
-  it.objectif_label=
-    goal==="REPOS"
-      ? "Repos / RH / congÃ©"
-      : shiftPlain(goal);
-
-  it.accepteur_id="";
-  it.accepteur_nom="";
-  it.accepteur_email="";
-  it.accepteur_avatar="";
-  it.shift_accepteur="";
-
+async function chooseGoal(itemId, goal){
+  const it=state.basket.find(x=>x.item_id===itemId); if(!it) return;
+  it.objectif=goal; it.objectif_label=(goal==='REPOS'?'Repos / RH / congé':shiftPlain(goal));
+  it.accepteur_id=''; it.accepteur_nom=''; it.accepteur_email=''; it.accepteur_avatar=''; it.shift_accepteur='';
   renderExchange();
-
-  if(state.noAgent){
-    return;
-  }
-
-  const box=$("cand_"+itemId);
-
-  if(box){
-    box.innerHTML=
-      '<div class="small">Chargement des collÃ¨guesâ¦</div>';
-  }
-
+  if(state.noAgent) return;
+  const box=$('cand_'+itemId); if(box) box.innerHTML='<div class="small">Chargement des collègues…</div>';
   try{
-    const res=await api(
-      "candidates",
-      {
-        payload:JSON.stringify({
-          demandeur_id:state.agent.id_agent,
-          mois:it.mois_demandeur,
-          jour:it.jour_demandeur,
-          date_iso:
-            it.date_iso_demandeur||
-            it.date_iso||
-            "",
-          goal:goal
-        })
-      }
-    );
-
-    if(!res || !res.ok){
-      throw new Error(
-        res && res.error
-          ? res.error
-          : "Erreur candidats"
-      );
-    }
-
+    const res=await api('candidates', {payload:JSON.stringify({demandeur_id:state.agent.id_agent, mois:it.mois_demandeur, jour:it.jour_demandeur, date_iso:it.date_iso_demandeur||it.date_iso||'', goal:goal})});
+    if(!res || !res.ok) throw new Error(res && res.error ? res.error : 'Erreur candidats');
     state.candidates[itemId]=res.candidates||[];
-
   }catch(e){
     state.candidates[itemId]=[];
-
-    const box=$("cand_"+itemId);
-
-    if(box){
-      box.innerHTML=
-        `<div class="msg show err">
-          Erreur technique : ${esc(e.message||String(e))}
-        </div>`;
-    }
-
+    const box=$('cand_'+itemId);
+    if(box) box.innerHTML=`<div class="msg show err">Erreur technique : ${esc(e.message||String(e))}</div>`;
     return;
   }
-
   renderExchange();
 }
-
-function selectCandidate(itemId,agentId){
-  const it=state.basket.find(
-    x=>x.item_id===itemId
-  );
-
-  if(!it){
-    return;
-  }
-
-  const c=(state.candidates[itemId]||[])
-    .find(
-      x=>String(x.id_agent)===String(agentId)
-    );
-
-  if(!c){
-    return;
-  }
-
-  it.accepteur_id=c.id_agent;
-  it.accepteur_nom=c.nom_affiche;
-  it.accepteur_email=
-    c.email||
-    state.mailDrafts[c.id_agent]||
-    "";
-  it.accepteur_avatar=c.avatar_image_url||"";
-  it.mois_accepteur=it.mois_demandeur;
-  it.jour_accepteur=it.jour_demandeur;
-  it.label_accepteur=it.label_demandeur;
-  it.shift_accepteur=c.shift_code||"";
-
+function selectCandidate(itemId, agentId){
+  const it=state.basket.find(x=>x.item_id===itemId); if(!it) return;
+  const c=(state.candidates[itemId]||[]).find(x=>String(x.id_agent)===String(agentId)); if(!c) return;
+  it.accepteur_id=c.id_agent; it.accepteur_nom=c.nom_affiche; it.accepteur_email=c.email||state.mailDrafts[c.id_agent]||''; it.accepteur_avatar=c.avatar_image_url||'';
+  it.mois_accepteur=it.mois_demandeur; it.jour_accepteur=it.jour_demandeur; it.label_accepteur=it.label_demandeur; it.shift_accepteur=c.shift_code||'';
   renderExchange();
-
-  const next=state.basket.find(
-    x=>
-      !state.noAgent &&
-      (!x.objectif || !x.accepteur_id)
-  );
-
-  if(next && $("card_"+next.item_id)){
-    $("card_"+next.item_id).scrollIntoView({
-      behavior:"smooth",
-      block:"start"
-    });
-  }
+  const next=state.basket.find(x=>!state.noAgent && (!x.objectif || !x.accepteur_id));
+  if(next && $('card_'+next.item_id)) $('card_'+next.item_id).scrollIntoView({behavior:'smooth', block:'start'});
 }
-
-function clearAcceptor(itemId){
-  const it=state.basket.find(
-    x=>x.item_id===itemId
-  );
-
-  if(!it){
-    return;
-  }
-
-  it.accepteur_id="";
-  it.accepteur_nom="";
-  it.accepteur_email="";
-  it.accepteur_avatar="";
-  it.shift_accepteur="";
-
-  renderExchange();
-}
+function clearAcceptor(itemId){ const it=state.basket.find(x=>x.item_id===itemId); if(!it) return; it.accepteur_id=''; it.accepteur_nom=''; it.accepteur_email=''; it.accepteur_avatar=''; it.shift_accepteur=''; renderExchange(); }
 
 function goSummary(){
   syncMailInputs();
   hydrateSavedMails();
-
-  const missingGoal=state.basket.filter(
-    it=>!it.objectif
-  );
-
-  if(missingGoal.length){
-    return siteAlert(
-      "Il manque un horaire souhaitÃ© sur "+
-      missingGoal.length+
-      " jour(s).",
-      "Ã complÃ©ter"
-    );
-  }
-
-  if(!state.noAgent){
-    const missing=state.basket.filter(
-      it=>!it.accepteur_id
-    );
-
-    if(missing.length){
-      return siteAlert(
-        "Il manque un collÃ¨gue sur "+
-        missing.length+
-        " jour(s).",
-        "Ã complÃ©ter"
-      );
-    }
-  }
-
-  renderSummary();
-  showPage("pSummary",4);
+  const missingGoal=state.basket.filter(it=>!it.objectif);
+  if(missingGoal.length) return siteAlert('Il manque un horaire souhaité sur '+missingGoal.length+' jour(s).','À compléter');
+  if(!state.noAgent){ const missing=state.basket.filter(it=>!it.accepteur_id); if(missing.length) return siteAlert('Il manque un collègue sur '+missing.length+' jour(s).','À compléter'); }
+  renderSummary(); showPage('pSummary',4);
 }
-
 function renderSummary(){
   syncMailInputs();
   hydrateSavedMails();
-
-  $("summaryBox").innerHTML=
-    '<div class="card"><h2>RÃ©sumÃ©</h2>'+
-    state.basket.map(it=>
-      `<div class="summaryLine">
-        <b>
-          ${esc(labelLong(it.label_demandeur,it.mois_demandeur,it.jour_demandeur))}
-        </b>
-        <br>
-        Actuel : ${esc(shiftPlain(it.shift_demandeur))}
-        <br>
-        Souhait : ${esc(it.objectif==="RH" ? shiftPlain("RH") : shiftPlain(it.objectif))}
-        ${it.accepteur_nom
-          ? "<br>Avec : "+
-            esc(it.accepteur_nom)+
-            " â "+
-            esc(shiftPlain(it.shift_accepteur))
-          : ""}
-      </div>`
-    ).join("")+
-    "</div>";
-
-  renderDemandeurMail();
-  renderMissingMails();
-  renderResponsables();
-  restoreDemandeurMailInput();
-
-  setTimeout(()=>{
-    hydrateSavedMails();
-    renderDemandeurMail();
-    renderMissingMails();
-    restoreDemandeurMailInput();
-  },0);
-
-  clearMsg("submitMsg");
+  $('summaryBox').innerHTML='<div class="card"><h2>Résumé</h2>'+state.basket.map(it=>`<div class="summaryLine"><b>${esc(labelLong(it.label_demandeur,it.mois_demandeur,it.jour_demandeur))}</b><br>Actuel : ${esc(shiftPlain(it.shift_demandeur))}<br>Souhait : ${esc(it.objectif==='RH'?shiftPlain('RH'):shiftPlain(it.objectif))}${it.accepteur_nom?'<br>Avec : '+esc(it.accepteur_nom)+' — '+esc(shiftPlain(it.shift_accepteur)):''}</div>`).join('')+'</div>';
+  renderDemandeurMail(); renderMissingMails(); renderResponsables(); restoreDemandeurMailInput(); setTimeout(()=>{ hydrateSavedMails(); renderDemandeurMail(); renderMissingMails(); restoreDemandeurMailInput(); },0); clearMsg('submitMsg');
 }
-
-function uniqueAcceptors(){
-  const m={};
-
-  state.basket.forEach(it=>{
-    if(it.accepteur_id){
-      m[it.accepteur_id]=it;
-    }
-  });
-
-  return Object.values(m);
-}
-
+function uniqueAcceptors(){ const m={}; state.basket.forEach(it=>{ if(it.accepteur_id) m[it.accepteur_id]=it; }); return Object.values(m); }
 function renderMissingMails(){
   hydrateSavedMails();
-
-  const missing=uniqueAcceptors()
-    .filter(it=>!it.accepteur_email);
-
-  const known=uniqueAcceptors()
-    .filter(it=>!!it.accepteur_email);
-
-  let html="";
-
+  const missing=uniqueAcceptors().filter(it=>!it.accepteur_email);
+  const known=uniqueAcceptors().filter(it=>!!it.accepteur_email);
+  let html='';
   if(known.length){
-    html+=
-      '<div class="mailKnown">'+
-      "Mails collÃ¨gues connus â<br>"+
-      known.map(it=>
-        `<span class="mailPerson">
-          <b>${esc(it.accepteur_nom)}</b>
-          <span class="mailAddress">${esc(it.accepteur_email)}</span>
-        </span>`
-      ).join("")+
-      "</div>";
+    html += '<div class="mailKnown">Mails collègues connus ✅<br>'+known.map(it=>`<span class="mailPerson"><b>${esc(it.accepteur_nom)}</b><span class="mailAddress">${esc(it.accepteur_email)}</span></span>`).join('')+'</div>';
   }
-
   if(missing.length){
-    html+='<div class="mailMissingTitle">Mails Ã  complÃ©ter</div>';
-
-    html+=missing.map(it=>{
-      const saved=
-        getSavedMail(
-          it.accepteur_id,
-          it.accepteur_nom
-        ) ||
-        it.accepteur_email ||
-        "";
-
-      return `<div style="margin-top:10px">
-        <label style="font-weight:950">
-          Mail de ${esc(it.accepteur_nom)}
-        </label>
-
-        <input
-          data-mail-agent-id="${attr(it.accepteur_id)}"
-          data-mail-agent-name="${attr(it.accepteur_nom)}"
-          name="mail_${attr(it.accepteur_id)}"
-          type="email"
-          inputmode="email"
-          placeholder="email du collÃ¨gue"
-          value="${attr(saved)}"
-          autocomplete="email"
-          autocapitalize="none"
-          autocorrect="off"
-          spellcheck="false"
-          oninput="setAcceptorMail('${attr(it.accepteur_id)}','${attr(it.accepteur_nom)}',this.value)"
-          onblur="setAcceptorMail('${attr(it.accepteur_id)}','${attr(it.accepteur_nom)}',this.value)"
-        >
-      </div>`;
-    }).join("");
+    html += '<div class="mailMissingTitle">Mails à compléter</div>';
+    html += missing.map(it=>{
+      const saved=getSavedMail(it.accepteur_id,it.accepteur_nom) || it.accepteur_email || '';
+      return `<div style="margin-top:10px"><label style="font-weight:950">Mail de ${esc(it.accepteur_nom)}</label><input data-mail-agent-id="${attr(it.accepteur_id)}" data-mail-agent-name="${attr(it.accepteur_nom)}" name="mail_${attr(it.accepteur_id)}" type="email" inputmode="email" placeholder="email du collègue" value="${attr(saved)}" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" oninput="setAcceptorMail('${attr(it.accepteur_id)}','${attr(it.accepteur_nom)}',this.value)" onblur="setAcceptorMail('${attr(it.accepteur_id)}','${attr(it.accepteur_nom)}',this.value)"></div>`;
+    }).join('');
   }
-
   if(!missing.length && !known.length){
-    html+=
-      '<div class="mailKnown">Aucun collÃ¨gue Ã  contacter directement â</div>';
+    html += '<div class="mailKnown">Aucun collègue à contacter directement ✅</div>';
   }
-
-  $("missingMails").innerHTML=html;
+  $('missingMails').innerHTML=html;
 }
-
 function setAcceptorMail(id,name,mail){
-  const cleanMail=String(mail||"").trim();
-
-  setSavedMail(
-    id,
-    name,
-    cleanMail
-  );
-
+  const clean=String(mail||'').trim();
+  setSavedMail(id,name,clean);
   state.basket.forEach(it=>{
-    if(
-      String(it.accepteur_id)===String(id) ||
-      normaliseMailName(it.accepteur_nom)===
-      normaliseMailName(name)
-    ){
-      it.accepteur_email=cleanMail;
-    }
+    if(String(it.accepteur_id)===String(id) || normaliseMailName(it.accepteur_nom)===normaliseMailName(name)) it.accepteur_email=clean;
   });
-
   saveMailDrafts();
 }
-
 function renderResponsables(){
   const list=DATA.responsables||[];
-
-  if(!state.responsableId && list[0]){
-    state.responsableId=list[0].id;
-  }
-
-  $("respMain").innerHTML=
-    list.map(r=>
-      `<button
-        class="respCard ${state.responsableId===r.id ? "active" : ""}"
-        onclick="
-          state.responsableId='${attr(r.id)}';
-          state.ccIds=state.ccIds.filter(x=>x!==state.responsableId);
-          renderResponsables()
-        "
-      >
-        <span>
-          <span class="name">${esc(r.nom)}</span>
-          <span class="subline">${esc(r.role)}</span>
-        </span>
-      </button>`
-    ).join("");
-
-  $("respCopies").innerHTML=
-    list
-      .filter(r=>r.id!==state.responsableId)
-      .map(r=>
-        `<button
-          class="respCard ${state.ccIds.includes(r.id) ? "ccActive" : ""}"
-          onclick="toggleCc('${attr(r.id)}')"
-        >
-          <span>
-            <span class="name">${esc(r.nom)}</span>
-            <span class="subline">${esc(r.role)}</span>
-          </span>
-        </button>`
-      ).join("");
+  if(!state.responsableId && list[0]) state.responsableId=list[0].id;
+  $('respMain').innerHTML=list.map(r=>`<button class="respCard ${state.responsableId===r.id?'active':''}" onclick="state.responsableId='${attr(r.id)}';state.ccIds=state.ccIds.filter(x=>x!==state.responsableId);renderResponsables()"><span><span class="name">${esc(r.nom)}</span><span class="subline">${esc(r.role)}</span></span></button>`).join('');
+  $('respCopies').innerHTML=list.filter(r=>r.id!==state.responsableId).map(r=>`<button class="respCard ${state.ccIds.includes(r.id)?'ccActive':''}" onclick="toggleCc('${attr(r.id)}')"><span><span class="name">${esc(r.nom)}</span><span class="subline">${esc(r.role)}</span></span></button>`).join('');
 }
-
-function toggleCc(id){
-  const i=state.ccIds.indexOf(id);
-
-  if(i>=0){
-    state.ccIds.splice(i,1);
-  }else{
-    state.ccIds.push(id);
-  }
-
-  renderResponsables();
-}
-
+function toggleCc(id){ const i=state.ccIds.indexOf(id); if(i>=0) state.ccIds.splice(i,1); else state.ccIds.push(id); renderResponsables(); }
 async function submitRequest(){
   syncMailInputs();
   hydrateSavedMails();
-
-  const email=(
-    state.demandeur_email ||
-    (
-      $("demandeurEmail")
-        ? $("demandeurEmail").value
-        : ""
-    ) ||
-    ""
-  ).trim();
-
-  if(!email){
-    return msg(
-      "submitMsg",
-      "err",
-      "Ton adresse mail est obligatoire."
-    );
-  }
-
-  if(!state.responsableId){
-    return msg(
-      "submitMsg",
-      "err",
-      "Choisis une personne responsable."
-    );
-  }
-
-  if(!state.noAgent){
-    const mm=uniqueAcceptors()
-      .filter(it=>!it.accepteur_email);
-
-    if(mm.length){
-      return msg(
-        "submitMsg",
-        "err",
-        "Il manque le mail de "+
-        mm[0].accepteur_nom+
-        "."
-      );
-    }
-  }
-
-  const payload={
-    demandeur_id:state.agent.id_agent,
-    demandeur_nom:state.agent.nom_affiche,
-    demandeur_email:email,
-    precision_cadre:$("precision").value||"",
-    sans_agent:!!state.noAgent,
-    items:state.basket,
-    responsable_id:state.responsableId,
-    responsable_cc_ids:state.ccIds
-  };
-
-  $("submitBtn").disabled=true;
-
-  msg(
-    "submitMsg",
-    "warn",
-    "Envoi en coursâ¦"
-  );
-
+  const email=(state.demandeur_email||($('demandeurEmail')?$('demandeurEmail').value:'')||'').trim();
+  if(!email) return msg('submitMsg','err','Ton adresse mail est obligatoire.');
+  if(!state.responsableId) return msg('submitMsg','err','Choisis une personne responsable.');
+  if(!state.noAgent){ const mm=uniqueAcceptors().filter(it=>!it.accepteur_email); if(mm.length) return msg('submitMsg','err','Il manque le mail de '+mm[0].accepteur_nom+'.'); }
+  const payload={ demandeur_id:state.agent.id_agent, demandeur_nom:state.agent.nom_affiche, demandeur_email:email, precision_cadre:$('precision').value||'', sans_agent:!!state.noAgent, items:state.basket, responsable_id:state.responsableId, responsable_cc_ids:state.ccIds };
+  $('submitBtn').disabled=true; msg('submitMsg','warn','Envoi en cours…');
   try{
-    const res=await api(
-      "submit",
-      {
-        payload:JSON.stringify(payload)
-      }
-    );
-
-    $("submitBtn").disabled=false;
-
-    if(!res || !res.ok){
-      throw new Error(
-        res && res.error
-          ? res.error
-          : "Erreur envoi."
-      );
-    }
-
-    $("successRef").textContent=
-      res.reference_humaine ||
-      res.id ||
-      "Demande envoyÃ©e";
-
-    $("successText").textContent=
-      state.noAgent
-        ? "Demande envoyÃ©e Ã  la personne responsable."
-        : "Mail envoyÃ© au collÃ¨gue. La demande partira ensuite Ã  la personne responsable aprÃ¨s acceptation.";
-
-    showPage("pSuccess",5);
-
-  }catch(e){
-    $("submitBtn").disabled=false;
-
-    msg(
-      "submitMsg",
-      "err",
-      e.message||String(e)
-    );
-  }
+    const res=await api('submit', {payload:JSON.stringify(payload)});
+    $('submitBtn').disabled=false;
+    if(!res || !res.ok) throw new Error(res && res.error ? res.error : 'Erreur envoi.');
+    $('successRef').textContent=res.reference_humaine || res.id || 'Demande envoyée';
+    $('successText').textContent=(state.noAgent?'Demande envoyée à la personne responsable.':'Mail envoyé au collègue. La demande partira ensuite à la personne responsable après acceptation.');
+    showPage('pSuccess',5);
+  }catch(e){ $('submitBtn').disabled=false; msg('submitMsg','err',e.message||String(e)); }
 }
 
 init();
