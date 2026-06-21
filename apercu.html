@@ -61,30 +61,25 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.17;b
 }
 .back:active{transform:translateY(3px);box-shadow:0 4px 0 rgba(7,24,63,.35)}
 
-/* En-tête planning : avatar seul + bouton imprimante */
-.header{position:relative;z-index:2;margin:10px 0 14px;padding:14px;background:radial-gradient(circle at 12% 0%,rgba(255,255,255,.75),transparent 34%),linear-gradient(180deg,rgba(255,255,255,.44),transparent 48%),var(--paper);border:5px solid var(--ink);border-radius:30px 25px 33px 26px;box-shadow:0 10px 0 rgba(7,24,63,.18),0 14px 0 rgba(0,0,0,.10),inset 0 0 0 3px rgba(255,215,115,.38)}
-.identity{display:grid;grid-template-columns:minmax(145px,1fr) minmax(145px,1fr);align-items:center;justify-items:center;gap:18px;min-height:178px}
-.identity.collective-mode{grid-template-columns:1fr}
-.identity-person{display:flex;align-items:center;justify-content:center;min-width:0;text-align:center}
-.avatar-wrap{width:clamp(150px,35vw,205px);height:clamp(150px,35vw,205px);display:flex;align-items:center;justify-content:center;overflow:visible;background:transparent}
-.avatar-wrap img{width:100%;height:100%;object-fit:contain;display:none;filter:drop-shadow(0 9px 0 rgba(7,24,63,.15))}
-.avatar-fallback{width:118px;height:118px;display:flex;align-items:center;justify-content:center;border:5px solid var(--ink);border-radius:26px;background:#fff9e8;font-size:54px;line-height:1;box-shadow:0 7px 0 rgba(7,24,63,.16)}
-.identity-text{width:100%;min-width:0;display:flex;align-items:center;justify-content:center;text-align:center}
-.identity-copy{width:100%;text-align:center}
-.identity-title{color:var(--ink);text-align:center;text-transform:uppercase;font-size:clamp(38px,9vw,64px);line-height:.88;letter-spacing:-.02em;text-shadow:0 4px 0 #f8d67d,3px 7px 0 rgba(7,24,63,.10)}
-.sub{margin:8px 0 0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-weight:950;font-size:clamp(18px,4.7vw,28px);line-height:1.1}
-.quick-actions{width:100%;display:flex;align-items:center;justify-content:center;margin:0}
-.action-btn{display:flex;align-items:center;justify-content:center;min-height:58px;padding:9px 12px;border:4px solid var(--ink);border-radius:20px;color:#fff4ce;text-decoration:none;text-align:center;text-transform:uppercase;font-size:clamp(20px,5.2vw,34px);line-height:.9;background:radial-gradient(circle at 22% 16%,rgba(255,255,255,.30),transparent 28%),repeating-linear-gradient(-7deg,rgba(255,255,255,.08) 0 2px,transparent 2px 10px),linear-gradient(145deg,#ffb43a 0%,#f07c00 58%,#b74d00 100%);box-shadow:0 7px 0 rgba(7,24,63,.28),inset 0 0 0 3px rgba(255,221,132,.25);text-shadow:0 3px 0 rgba(0,0,0,.38)}
-.action-btn:active{transform:translateY(3px)}
-.action-print{width:min(42vw,178px);min-height:0;aspect-ratio:1;padding:0;border-width:5px;border-radius:28px 23px 30px 24px;font-size:clamp(68px,18vw,108px);line-height:1}
-.print-icon{display:block;transform:translateY(-1px);filter:drop-shadow(0 4px 0 rgba(0,0,0,.24))}
 
-/* Chargement statique, sans image et sans animation */
-.loading-screen{position:relative;display:grid;justify-items:center;gap:16px;margin:18px 0 8px;padding:14px 8px 24px;text-align:center}
-.loading-title{margin:4px 0 2px;color:var(--navy);font-size:clamp(44px,12.5vw,78px);line-height:.86;letter-spacing:-.025em;text-transform:uppercase;text-shadow:0 5px 0 #f1ce79,3px 8px 0 rgba(7,24,63,.09)}
-.loading-title span{display:block}
-.loading-state{display:flex;align-items:center;justify-content:center;width:min(100%,660px);min-height:54px;padding:11px 18px 12px;border:4px solid var(--navy);border-radius:999px;background:#fffaf0;color:var(--navy);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:clamp(17px,4.5vw,23px);font-weight:950;line-height:1.15;box-shadow:0 5px 0 rgba(7,24,63,.14)}
-.loading-note{width:min(100%,660px);margin:0;padding:16px 18px 17px;border:3px solid rgba(7,24,63,.18);border-radius:22px;background:rgba(255,250,240,.92);color:rgba(7,24,63,.82);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:clamp(16px,4.2vw,21px);font-weight:850;line-height:1.35;box-shadow:0 5px 0 rgba(7,24,63,.08)}
+.header{position:relative;z-index:2;margin:10px 0 14px;padding:12px 12px 14px;background:radial-gradient(circle at 12% 0%,rgba(255,255,255,.75),transparent 34%),linear-gradient(180deg,rgba(255,255,255,.44),transparent 48%),var(--paper);border:5px solid var(--ink);border-radius:30px 25px 33px 26px;box-shadow:0 10px 0 rgba(7,24,63,.18),0 14px 0 rgba(0,0,0,.10),inset 0 0 0 3px rgba(255,215,115,.38)}
+.identity{display:grid;grid-template-columns:minmax(118px,180px) minmax(0,1fr);align-items:center;gap:18px;min-height:142px}
+.identity-person{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;text-align:center}
+.avatar-wrap{width:128px;height:112px;display:flex;align-items:center;justify-content:center;overflow:visible;background:transparent}
+.avatar-wrap img{width:100%;height:100%;object-fit:contain;display:none;filter:drop-shadow(0 7px 0 rgba(7,24,63,.13))}
+.avatar-fallback{width:92px;height:92px;display:flex;align-items:center;justify-content:center;border:5px solid var(--ink);border-radius:22px;background:#fff9e8;font-size:40px;line-height:1;box-shadow:0 6px 0 rgba(7,24,63,.16)}
+.identity-firstname{width:100%;margin:5px 0 0;padding:0 4px;color:var(--ink);text-align:center;text-transform:uppercase;font-size:clamp(20px,5.7vw,34px);line-height:.9;letter-spacing:.2px;text-shadow:0 2px 0 #f8d67d;overflow-wrap:anywhere}
+.identity-text{min-width:0;display:flex;align-items:center;justify-content:center;text-align:center}
+.sub{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-weight:950;font-size:clamp(22px,5.5vw,38px);line-height:1.08}
+.quick-actions{display:grid;gap:10px;margin:14px 0 0}
+.action-btn{display:flex;align-items:center;justify-content:center;min-height:58px;padding:9px 12px;border:4px solid var(--ink);border-radius:20px;color:#fff4ce;text-decoration:none;text-align:center;text-transform:uppercase;font-size:clamp(20px,5.2vw,34px);line-height:.9;background:radial-gradient(circle at 22% 16%,rgba(255,255,255,.30),transparent 28%),repeating-linear-gradient(-7deg,rgba(255,255,255,.08) 0 2px,transparent 2px 10px),linear-gradient(145deg,#ffb43a 0%,#f07c00 58%,#b74d00 100%);box-shadow:0 7px 0 rgba(7,24,63,.28),inset 0 0 0 3px rgba(255,221,132,.25);text-shadow:0 3px 0 rgba(0,0,0,.38)}
+.action-btn:active{transform:translateY(3px)}.action-print{width:100%}
+
+/* Seule petite animation ajoutée : la barre de chargement */
+.loading-bar{width:min(88%,580px);height:20px;margin:14px auto 0;overflow:hidden;border:3px solid var(--navy);border-radius:999px;background:#fffaf0;box-shadow:0 4px 0 rgba(7,24,63,.12)}
+.loading-bar-fill{display:block;width:34%;height:100%;border-radius:999px;background:linear-gradient(90deg,#e6ad35,#ffcf5c,#e6ad35);animation:loadingBar 1.35s ease-in-out infinite}
+@keyframes loadingBar{0%{transform:translateX(-115%)}100%{transform:translateX(345%)}}
+@media(prefers-reduced-motion:reduce){.loading-bar-fill{animation-duration:2.4s}}
 
 .status{margin-top:16px;text-align:center;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-weight:950;font-size:17px;line-height:1.3;padding:18px 10px;border:4px solid var(--ink);border-radius:24px;background:white}
 .month-tabs-wrap{display:none!important}
@@ -115,32 +110,27 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.17;b
 .shift-meta{min-width:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:5px;text-align:left}.time{font-size:clamp(22px,5.8vw,36px);line-height:.9;color:var(--navy);white-space:nowrap}.detail{margin:0;max-width:100%;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-weight:850;font-size:clamp(12px,3vw,17px);line-height:1.15;color:rgba(7,24,63,.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.empty-row{display:flex;align-items:center;justify-content:center;min-height:100%;padding:14px;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-weight:900;font-size:14px;opacity:.55}
 .weekend-pair .day-card{min-height:260px}.weekend-pair .day-name{background:linear-gradient(180deg,var(--accent),var(--accent-dark));color:var(--accent-text)}.weekend-pair .card-body{display:flex;flex-direction:column}.weekend-pair .date-block{min-height:66px;padding:8px;border-right:0;border-bottom:2px dashed rgba(7,24,63,.13)}.weekend-pair .date-number{font-size:clamp(44px,11vw,66px)}.weekend-pair .date-month{font-size:clamp(16px,4vw,24px)}.weekend-pair .event-row{display:flex;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:10px 7px}.weekend-pair .shift-visual{width:clamp(86px,22vw,122px)}.weekend-pair .shift-code{font-size:clamp(46px,12vw,72px)}.weekend-pair .shift-meta{align-items:center;text-align:center}.weekend-pair .time{font-size:clamp(17px,4.3vw,25px)}.weekend-pair .detail{font-size:clamp(10px,2.7vw,14px);white-space:normal;text-align:center;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .agenda-separator{margin:26px 0 12px;padding:8px 10px 9px;border:3px dashed rgba(7,24,63,.34);border-radius:20px;background:rgba(255,255,255,.50);text-align:center;text-transform:uppercase;color:rgba(7,24,63,.88);font-size:clamp(19px,5vw,31px);line-height:.9}.bottom-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.bottom-actions .action-btn{min-height:70px;font-size:clamp(20px,5.4vw,34px)}.action-apple{background:radial-gradient(circle at 22% 16%,rgba(255,255,255,.30),transparent 28%),repeating-linear-gradient(-7deg,rgba(255,255,255,.08) 0 2px,transparent 2px 10px),linear-gradient(145deg,#3db9ff 0%,#0c6ed5 58%,#083c91 100%)}.action-android{background:radial-gradient(circle at 22% 16%,rgba(255,255,255,.30),transparent 28%),repeating-linear-gradient(-7deg,rgba(255,255,255,.08) 0 2px,transparent 2px 10px),linear-gradient(145deg,#35d864 0%,#12873d 58%,#075324 100%)}
-@media(max-width:560px){.page{padding:10px 8px 42px}.back{border-width:4px;min-height:52px}.header{border-width:4px;padding:10px}.identity{grid-template-columns:minmax(126px,1fr) minmax(126px,1fr);gap:8px;min-height:150px}.avatar-wrap{width:clamp(132px,38vw,170px);height:clamp(132px,38vw,170px)}.avatar-fallback{width:88px;height:88px;font-size:40px;border-width:4px}.action-print{width:min(39vw,158px);border-width:4px;border-radius:24px 20px 26px 21px;font-size:clamp(60px,17vw,91px)}.loading-screen{gap:13px;padding:10px 3px 20px}.loading-title{font-size:clamp(42px,12vw,68px);line-height:.9}.loading-state{min-height:48px;padding:9px 14px 10px;border-width:3px}.loading-note{padding:14px 15px 15px}.month-divider{min-height:92px;margin-top:25px;padding:2px 40px;font-size:clamp(54px,15vw,82px)}.month-divider span::after{bottom:-10px;height:5px}.week-label{margin-top:15px}.day-card{border-width:4px;min-height:154px}.day-name{min-height:32px;font-size:clamp(17px,4.8vw,24px)}.card-body{grid-template-columns:86px minmax(0,1fr)}.date-block{gap:4px;padding:8px 5px;flex-direction:column}.date-number{font-size:clamp(48px,13vw,64px)}.date-month{font-size:clamp(16px,4.4vw,22px)}.event-row{grid-template-columns:78px minmax(0,1fr);gap:8px;padding:8px 10px}.shift-visual{width:78px}.shift-code{font-size:45px}.time{font-size:clamp(18px,5.2vw,26px)}.detail{font-size:11px}.weekend-pair{gap:8px}.weekend-pair .day-card{min-height:238px}.weekend-pair .date-block{flex-direction:row}.weekend-pair .shift-visual{width:82px}.weekend-pair .shift-code{font-size:46px}}
-@media(max-width:390px){.identity{grid-template-columns:118px minmax(0,1fr)}.avatar-wrap{width:126px;height:126px}.action-print{width:132px;font-size:68px}.month-divider{font-size:clamp(48px,14.5vw,70px)}.weekend-pair .day-card{min-height:225px}.weekend-pair .shift-visual{width:76px}.weekend-pair .shift-code{font-size:42px}.weekend-pair .detail{font-size:9.5px}}
+@media(max-width:560px){.page{padding:10px 8px 42px}.back{border-width:4px;min-height:52px}.header{border-width:4px;padding:11px 9px 12px}.identity{grid-template-columns:116px minmax(0,1fr);gap:10px;min-height:128px}.avatar-wrap{width:110px;height:98px}.avatar-fallback{width:76px;height:76px;font-size:34px;border-width:4px}.identity-firstname{font-size:clamp(19px,5.4vw,28px)}.sub{font-size:clamp(20px,5.3vw,31px)}.month-divider{min-height:92px;margin-top:25px;padding:2px 40px;font-size:clamp(54px,15vw,82px)}.month-divider span::after{bottom:-10px;height:5px}.week-label{margin-top:15px}.day-card{border-width:4px;min-height:154px}.day-name{min-height:32px;font-size:clamp(17px,4.8vw,24px)}.card-body{grid-template-columns:86px minmax(0,1fr)}.date-block{gap:4px;padding:8px 5px;flex-direction:column}.date-number{font-size:clamp(48px,13vw,64px)}.date-month{font-size:clamp(16px,4.4vw,22px)}.event-row{grid-template-columns:78px minmax(0,1fr);gap:8px;padding:8px 10px}.shift-visual{width:78px}.shift-code{font-size:45px}.time{font-size:clamp(18px,5.2vw,26px)}.detail{font-size:11px}.weekend-pair{gap:8px}.weekend-pair .day-card{min-height:238px}.weekend-pair .date-block{flex-direction:row}.weekend-pair .shift-visual{width:82px}.weekend-pair .shift-code{font-size:46px}}
+@media(max-width:390px){.identity{grid-template-columns:104px minmax(0,1fr)}.avatar-wrap{width:100px}.month-divider{font-size:clamp(48px,14.5vw,70px)}.weekend-pair .day-card{min-height:225px}.weekend-pair .shift-visual{width:76px}.weekend-pair .shift-code{font-size:42px}.weekend-pair .detail{font-size:9.5px}}
 @media print{.back,.quick-actions,.month-tabs-wrap,.agenda-separator,.bottom-actions{display:none!important}.page{width:100%;padding:0}body{background:#fff}.header,.day-card{box-shadow:none}.month-divider{break-before:page}.month-section:first-of-type .month-divider{break-before:auto}}
 </style>
 </head>
 <body>
 <main class="page">
-  <a class="back" href="index.html">&larr; Retour accueil</a>
+  <a class="back" href="index.html">← Retour accueil</a>
 
-  <section class="header" id="planningHeader" hidden>
-    <div class="identity" id="identity">
-      <div class="identity-person" id="identityPerson">
+  <section class="header">
+    <div class="identity">
+      <div class="identity-person">
         <div class="avatar-wrap" id="avatarWrap"><img id="avatarImg" alt=""><div class="avatar-fallback" id="avatarFallback">👤</div></div>
+        <div class="identity-firstname" id="title">Planning</div>
       </div>
-      <div class="identity-text" id="identityText">
-        <div class="identity-copy" id="identityCopy">
-          <div class="identity-title" id="title">Planning</div>
-          <p class="sub" id="subtitle"></p>
-        </div>
-        <div class="quick-actions" id="topActions"></div>
-      </div>
+      <div class="identity-text"><p class="sub" id="subtitle">Chargement...</p></div>
     </div>
+    <div class="quick-actions" id="topActions"></div>
   </section>
-
   <nav class="month-tabs-wrap" id="monthTabsWrap" aria-hidden="true"><div class="month-tabs" id="monthTabs"></div></nav>
-  <section id="content"></section>
+  <section id="content" class="status">Chargement...<div class="loading-bar" role="progressbar" aria-label="Chargement en cours"><span class="loading-bar-fill"></span></div></section>
   <div class="agenda-separator" id="agendaSeparator" style="display:none;">Ajouter à mon agenda</div>
   <section class="bottom-actions" id="bottomActions"></section>
 </main>
@@ -151,38 +141,14 @@ const type=String(params.get("type")||"").toLowerCase();
 const agent=String(params.get("agent")||"").trim();
 const moisParam=String(params.get("mois")||"").trim();
 const printMode=String(params.get("print")||"")==="1";
-const titleEl=document.getElementById("title"),subtitleEl=document.getElementById("subtitle"),contentEl=document.getElementById("content"),avatarWrap=document.getElementById("avatarWrap"),avatarImg=document.getElementById("avatarImg"),avatarFallback=document.getElementById("avatarFallback"),topActions=document.getElementById("topActions"),bottomActions=document.getElementById("bottomActions"),agendaSeparator=document.getElementById("agendaSeparator"),monthTabsWrap=document.getElementById("monthTabsWrap"),monthTabs=document.getElementById("monthTabs"),planningHeader=document.getElementById("planningHeader"),identityEl=document.getElementById("identity"),identityCopy=document.getElementById("identityCopy");
+const titleEl=document.getElementById("title"),subtitleEl=document.getElementById("subtitle"),contentEl=document.getElementById("content"),avatarWrap=document.getElementById("avatarWrap"),avatarImg=document.getElementById("avatarImg"),avatarFallback=document.getElementById("avatarFallback"),topActions=document.getElementById("topActions"),bottomActions=document.getElementById("bottomActions"),agendaSeparator=document.getElementById("agendaSeparator"),monthTabsWrap=document.getElementById("monthTabsWrap"),monthTabs=document.getElementById("monthTabs");
 
 function apiUrl(mode,extra){const url=new URL(PASSERELLE);url.searchParams.set("mode",mode);url.searchParams.set("t",Date.now());Object.keys(extra||{}).forEach(k=>url.searchParams.set(k,extra[k]));return url.toString()}
-async function fetchWithTimeout(url,options={},timeoutMs=20000){const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),timeoutMs);try{return await fetch(url,Object.assign({},options,{signal:controller.signal}))}catch(e){if(e&&e.name==='AbortError')throw new Error('Le chargement a pris trop de temps.');throw e}finally{clearTimeout(timer)}}
-async function fetchJson(url){const res=await fetchWithTimeout(url,{method:"GET",cache:"no-store"},20000);if(!res.ok)throw new Error("HTTP "+res.status);return await res.json()}
+async function fetchJson(url){const res=await fetch(url,{method:"GET",cache:"no-store"});if(!res.ok)throw new Error("HTTP "+res.status);return await res.json()}
 function webcalUrl(url){return url.replace(/^https:\/\//i,"webcal://")}function androidUrl(url){return "https://calendar.google.com/calendar/render?cid="+encodeURIComponent(url)}function icsAgentUrl(){return apiUrl("ics",{agent})}
 
-function showLoadingScreen(pageTitle,statusText){
-  planningHeader.hidden=true;
-  agendaSeparator.style.display="none";
-  bottomActions.innerHTML="";
-  contentEl.className="loading-screen";
-  contentEl.innerHTML=`
-    <div class="loading-title">${String(pageTitle||"Chargement").split(" ").map(x=>`<span>${x}</span>`).join("")}</div>
-    <div class="loading-state" id="loadingStateText">${statusText||"Chargement"}</div>
-    <p class="loading-note">Il y a beaucoup d’informations à récupérer ici. Cela peut prendre quelques secondes.</p>
-  `;
-}
-function setLoadingState(text){const el=document.getElementById("loadingStateText");if(el)el.textContent=text}
-function showPlanningHeader(){planningHeader.hidden=false}
 
-function afficherActionsAgent(){
-  if(type!=="agent"||!agent)return;
-  const printUrl="mois.html?type=agent&agent="+encodeURIComponent(agent);
-  const ics=icsAgentUrl();
-  identityEl.classList.add("agent-mode");
-  identityEl.classList.remove("collective-mode");
-  identityCopy.style.display="none";
-  topActions.innerHTML=`<a class="action-btn action-print" href="${printUrl}" aria-label="Imprimer mon planning" title="Imprimer mon planning"><span class="print-icon" aria-hidden="true">🖨️</span></a>`;
-  agendaSeparator.style.display="block";
-  bottomActions.innerHTML=`<a class="action-btn action-apple" href="${webcalUrl(ics)}">🍎 Apple</a><a class="action-btn action-android" href="${androidUrl(ics)}" target="_blank" rel="noopener">🤖 Android</a>`;
-}
+function afficherActionsAgent(){if(type!=="agent"||!agent)return;const printUrl="mois.html?type=agent&agent="+encodeURIComponent(agent);const ics=icsAgentUrl();topActions.innerHTML=`<a class="action-btn action-print" href="${printUrl}">🖨️ Imprimer mon planning</a>`;agendaSeparator.style.display="block";bottomActions.innerHTML=`<a class="action-btn action-apple" href="${webcalUrl(ics)}">🍎 Apple</a><a class="action-btn action-android" href="${androidUrl(ics)}" target="_blank" rel="noopener">🤖 Android</a>`}
 function afficherAvatarDepuisSources(sources){avatarWrap.style.display="flex";avatarFallback.style.display="flex";avatarImg.style.display="none";let index=0;function tryNext(){if(index>=sources.length){avatarImg.style.display="none";avatarFallback.style.display="flex";return}avatarImg.onload=()=>{avatarFallback.style.display="none";avatarImg.style.display="block"};avatarImg.onerror=()=>{index++;tryNext()};avatarImg.src=sources[index]}tryNext()}
 function afficherAvatarDepuisData(data){if(type!=="agent"){avatarWrap.style.display="none";return}const avatar=data&&data.avatar?data.avatar:{};const sources=[avatar.avatar_image_url||data.avatar_image_url||"",avatar.avatar_thumb_url||data.avatar_thumb_url||""].filter(Boolean);afficherAvatarDepuisSources(sources)}
 function normalise(v){return String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim()}
@@ -229,58 +195,7 @@ function createDayCard(dayGroup){const first=dayGroup.events[0];const mainShift=
 function renderAgendaEvents(events){const today=new Date();today.setHours(0,0,0,0);let dated=(events||[]).map(e=>Object.assign({},e,{dateObj:parseDateIso(e.date)})).filter(e=>e.dateObj).sort((a,b)=>a.dateObj-b.dateObj);const monthRange=monthRangeFromKey(moisParam);let firstDate,lastDate;if(monthRange&&printMode){firstDate=new Date(monthRange.start);lastDate=new Date(monthRange.end);dated=dated.filter(e=>e.dateObj>=firstDate&&e.dateObj<=lastDate)}else if(monthRange){firstDate=new Date(Math.max(today.getTime(),monthRange.start.getTime()));lastDate=new Date(monthRange.end);dated=dated.filter(e=>e.dateObj>=firstDate&&e.dateObj<=lastDate)}else{dated=dated.filter(e=>e.dateObj>=today);if(!dated.length){contentEl.className="status";contentEl.textContent="Aucun élément à afficher à partir d’aujourd’hui.";return}firstDate=new Date(today);lastDate=new Date(dated[dated.length-1].dateObj)}if(!lastDate||firstDate>lastDate){contentEl.className="status";contentEl.textContent="Aucun élément à afficher pour cette période.";return}const grouped={};dated.forEach(e=>{const key=e.date;if(!grouped[key])grouped[key]={dateObj:e.dateObj,events:[]};grouped[key].events.push(e)});const days=[],cursor=new Date(firstDate);while(cursor<=lastDate){const iso=toIsoLocal(cursor);days.push(grouped[iso]||{dateObj:new Date(cursor),events:[]});cursor.setDate(cursor.getDate()+1)}const months=[];days.forEach(day=>{const key=monthKeyFromDate(day.dateObj);let month=months.find(m=>m.key===key);if(!month){month={key,label:formatMonthTitle(day.dateObj),weeks:[]};months.push(month)}const wk=weekKey(day.dateObj);let week=month.weeks.find(w=>w.key===wk);if(!week){week={key:wk,label:formatWeekLabel(day.dateObj),days:[]};month.weeks.push(week)}week.days.push(day)});contentEl.className="";contentEl.innerHTML="";months.forEach(month=>{const section=document.createElement("section");section.className="month-section";section.id=monthSectionId(month.key);const divider=document.createElement("div");divider.className="month-divider";divider.innerHTML=`<span>${month.label}</span>`;section.appendChild(divider);month.weeks.forEach(week=>{const weekBlock=document.createElement("div");weekBlock.className="week-block";const label=document.createElement("div");label.className="week-label";label.textContent=week.label;weekBlock.appendChild(label);const weekdays=document.createElement("div");weekdays.className="week-days";const weekend=document.createElement("div");weekend.className="weekend-pair";week.days.forEach(day=>{const card=createDayCard(day);(isWeekend(day.dateObj)?weekend:weekdays).appendChild(card)});if(weekdays.children.length)weekBlock.appendChild(weekdays);if(weekend.children.length)weekBlock.appendChild(weekend);section.appendChild(weekBlock)});contentEl.appendChild(section)})}
 function unfoldIcs(text){return String(text||"").replace(/\r?\n[ \t]/g,"")}function getField(block,name){const re=new RegExp("^"+name+"(?:;[^:]*)?:(.*)$","mi"),m=block.match(re);return m?m[1].trim():""}function cleanText(v){return String(v||"").replace(/\\n/g," ").replace(/\\,/g,",").replace(/\\;/g,";").replace(/\s+/g," ").trim()}function parseIcsDate(value){if(!value)return null;value=String(value).trim();if(/^\d{8}$/.test(value))return new Date(Number(value.slice(0,4)),Number(value.slice(4,6))-1,Number(value.slice(6,8)));const m=value.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z?)$/);if(!m)return null;return m[7]==="Z"?new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+m[6])):new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+m[6])}function sameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}function formatTimeRange(start,end){const allDay=start.getHours()===0&&start.getMinutes()===0&&(!end||(end.getHours()===0&&end.getMinutes()===0));if(allDay)return"";const f=new Intl.DateTimeFormat("fr-FR",{hour:"2-digit",minute:"2-digit"});return end&&sameDay(start,end)?f.format(start)+"–"+f.format(end):f.format(start)}function parseEvents(ics){const blocks=unfoldIcs(ics).match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g)||[];return blocks.map(block=>({start:parseIcsDate(getField(block,"DTSTART")),end:parseIcsDate(getField(block,"DTEND")),summary:cleanText(getField(block,"SUMMARY")),description:cleanText(getField(block,"DESCRIPTION"))})).filter(e=>e.start)}function renderIcsEvents(events){const today=new Date();today.setHours(0,0,0,0);renderAgendaEvents(events.filter(e=>e.start>=today).sort((a,b)=>a.start-b.start).map(e=>({date:toIsoLocal(e.start),horaire:formatTimeRange(e.start,e.end),titre:e.summary,description:e.description,shift_code:e.summary,pastille:"",alerte:""})))}
 
-async function init(){
-  if(type==="agent"){
-    showLoadingScreen("MON PLANNING","Connexion à ton espace");
-    afficherActionsAgent();
-  }else{
-    const collectiveTitle=type==="formations"?"FORMATIONS":type==="stagiaires"?"STAGIAIRES":"APERÇU";
-    showLoadingScreen(collectiveTitle,"Récupération des informations");
-    identityEl.classList.add("collective-mode");
-    identityCopy.style.display="block";
-    titleEl.textContent=collectiveTitle;
-    subtitleEl.textContent="";
-    avatarWrap.style.display="none";
-  }
-
-  if(type==="agent"&&agent){
-    try{
-      setLoadingState("Récupération de ton planning");
-      const data=await fetchJson(apiUrl("agenda",{agent}));
-      if(!data||data.ok===false)throw new Error(data&&data.erreur?data.erreur:"Agenda invalide");
-      setLoadingState("Préparation de l’affichage");
-      afficherAvatarDepuisData(data);
-      renderAgendaEvents(data.events||[]);
-      showPlanningHeader();
-      return;
-    }catch(e){
-      console.error(e);
-      planningHeader.hidden=true;
-      contentEl.className="status";
-      contentEl.textContent="Aperçu indisponible. Vérifie que la passerelle Apps Script est bien à jour.";
-      return;
-    }
-  }
-
-  let url="";
-  if(type==="formations")url=apiUrl("ics_collectif",{type:"formation"});
-  else if(type==="stagiaires")url=apiUrl("ics_collectif",{type:"stagiaires"});
-  if(!url){contentEl.className="status";contentEl.textContent="Aperçu impossible : lien manquant.";return}
-
-  try{
-    setLoadingState("Récupération des informations");
-    const res=await fetchWithTimeout(url,{method:"GET",cache:"no-store"},20000),text=await res.text();
-    if(!res.ok||!text.includes("BEGIN:VCALENDAR"))throw new Error("ICS invalide");
-    setLoadingState("Préparation de l’affichage");
-    renderIcsEvents(parseEvents(text));
-    showPlanningHeader();
-  }catch(e){
-    console.error(e);
-    planningHeader.hidden=true;
-    contentEl.className="status";
-    contentEl.textContent="Aperçu indisponible. Vérifie que la passerelle Apps Script est bien à jour.";
-  }
-}
+async function init(){if(type==="agent"){titleEl.textContent=firstNameFrom(agent.replace(/_/g," "),null);subtitleEl.textContent=moisParam?"Mois de "+formatMonthNameFromKey(moisParam):"À partir d’aujourd’hui";afficherActionsAgent()}else{titleEl.textContent=type==="formations"?"Formations":type==="stagiaires"?"Stagiaires":"Aperçu";subtitleEl.textContent="À partir d’aujourd’hui";avatarWrap.style.display="none"}if(type==="agent"&&agent){try{const data=await fetchJson(apiUrl("agenda",{agent}));if(!data||data.ok===false)throw new Error(data&&data.erreur?data.erreur:"Agenda invalide");if(data.nom)titleEl.textContent=firstNameFrom(data.nom,data);afficherAvatarDepuisData(data);renderAgendaEvents(data.events||[]);return}catch(e){console.error(e);contentEl.className="status";contentEl.textContent="Aperçu indisponible. Vérifie que la passerelle Apps Script est bien à jour.";return}}let url="";if(type==="formations")url=apiUrl("ics_collectif",{type:"formation"});else if(type==="stagiaires")url=apiUrl("ics_collectif",{type:"stagiaires"});if(!url){contentEl.textContent="Aperçu impossible : lien manquant.";return}try{const res=await fetch(url,{method:"GET",cache:"no-store"}),text=await res.text();if(!res.ok||!text.includes("BEGIN:VCALENDAR"))throw new Error("ICS invalide");renderIcsEvents(parseEvents(text))}catch(e){console.error(e);contentEl.textContent="Aperçu indisponible. Vérifie que la passerelle Apps Script est bien à jour."}}
 init();
 </script>
 </body>
