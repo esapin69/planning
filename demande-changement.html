@@ -1,165 +1,749 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Aperçu Planning GHE</title>
-<style>
-*,*::before,*::after{box-sizing:border-box}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <title>Demande de changement planning — V12 fil chronologique</title>
+  <style>
 :root{
-  --ink:#07183f;
-  --paper:#fff7dd;
-  --cream:#fff9e8;
-  --gold:#e6ad35;
-  --navy:#07183f;
-  --blue:#2761cb;
-  --green:#2d9a55;
-  --orange:#ef8a19;
-  --yellow:#e4b727;
-  --grey:#4e5872;
-  --purple:#7b57bd;
-  --red:#c94f4f;
+  --font-display:"Avenir Next Condensed","Avenir Next","Arial Narrow",Arial,sans-serif;
+  --font-body:-apple-system,BlinkMacSystemFont,"Avenir Next","Segoe UI",Roboto,Arial,sans-serif;
+  --cream:#fff7df;
+  --cream2:#fff1bf;
+  --paper:#fffaf0;
+  --navy:#07163f;
+  --ink:#081336;
+  --muted:#5d6678;
+  --line:#07163f;
+  --green:#2f7d3f;
+  --red:#b91c1c;
+  --blue:#1d4ed8;
+  --orange:#c2410c;
+  --radius:24px;
 }
-html{scroll-behavior:smooth;scroll-padding-top:24px}
-body{
-  margin:0;min-height:100vh;color:var(--ink);
-  font-family:Impact,"Arial Black",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  min-height:100%;
+  font-family:var(--font-body);
+  color:var(--ink);
   background:
-    radial-gradient(circle at 15% 0%,rgba(255,255,255,.95) 0 9%,transparent 31%),
-    radial-gradient(circle at 88% 4%,rgba(255,218,116,.46) 0 9%,transparent 32%),
-    repeating-linear-gradient(-6deg,rgba(7,24,63,.035) 0 1px,transparent 1px 13px),
-    linear-gradient(180deg,#fff9e8 0%,#f5e8bf 57%,#ead9a5 100%);
+    radial-gradient(circle at 16% 0%,rgba(255,255,255,.88) 0 9%,transparent 30%),
+    radial-gradient(circle at 88% 3%,rgba(255,218,116,.30) 0 9%,transparent 30%),
+    repeating-linear-gradient(-6deg,rgba(7,22,63,.030) 0 1px,transparent 1px 12px),
+    linear-gradient(180deg,var(--cream),var(--cream2));
 }
-body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.17;background:repeating-linear-gradient(8deg,rgba(7,24,63,.05) 0 1px,transparent 1px 12px),repeating-linear-gradient(-9deg,rgba(178,116,26,.07) 0 1px,transparent 1px 17px);mix-blend-mode:multiply}
-.page{width:min(860px,100%);margin:auto;padding:12px 10px 54px}
-.back{position:relative;z-index:3;display:flex;align-items:center;justify-content:center;min-height:54px;margin-bottom:14px;padding:9px 10px;color:#fff4ce;text-decoration:none;text-align:center;text-transform:uppercase;border:5px solid #061738;border-radius:22px;background:radial-gradient(circle at 22% 16%,rgba(255,255,255,.22),transparent 28%),repeating-linear-gradient(-7deg,rgba(255,255,255,.07) 0 2px,transparent 2px 10px),linear-gradient(145deg,#777,#444,#222);box-shadow:0 7px 0 rgba(7,24,63,.35);font-size:clamp(20px,5vw,31px);letter-spacing:.4px}
-.header{position:relative;z-index:2;margin:10px 0 14px;padding:12px 12px 14px;background:radial-gradient(circle at 12% 0%,rgba(255,255,255,.75),transparent 34%),linear-gradient(180deg,rgba(255,255,255,.44),transparent 48%),var(--paper);border:5px solid var(--ink);border-radius:30px 25px 33px 26px;box-shadow:0 10px 0 rgba(7,24,63,.18),0 14px 0 rgba(0,0,0,.10),inset 0 0 0 3px rgba(255,215,115,.38)}
-.identity{display:grid;grid-template-columns:minmax(118px,180px) minmax(0,1fr);align-items:center;gap:18px;min-height:142px}
-.identity-person{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;text-align:center}
-.avatar-wrap{width:128px;height:112px;display:flex;align-items:center;justify-content:center;overflow:visible;background:transparent}
-.avatar-wrap img{width:100%;height:100%;object-fit:contain;display:none;filter:drop-shadow(0 7px 0 rgba(7,24,63,.13))}
-.avatar-fallback{width:92px;height:92px;display:flex;align-items:center;justify-content:center;border:5px solid var(--ink);border-radius:22px;background:#fff9e8;font-size:40px;line-height:1;box-shadow:0 6px 0 rgba(7,24,63,.16)}
-.identity-firstname{width:100%;margin:5px 0 0;padding:0 4px;color:var(--ink);text-align:center;text-transform:uppercase;font-size:clamp(20px,5.7vw,34px);line-height:.9;letter-spacing:.2px;text-shadow:0 2px 0 #f8d67d;overflow-wrap:anywhere}
-.identity-text{min-width:0;display:flex;align-items:center;justify-content:center;text-align:center}
-.sub{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-weight:950;font-size:clamp(22px,5.5vw,38px);line-height:1.08}
-.quick-actions{display:grid;gap:10px;margin:14px 0 0}
-.action-btn{display:flex;align-items:center;justify-content:center;min-height:58px;padding:9px 12px;border:4px solid var(--ink);border-radius:20px;color:#fff4ce;text-decoration:none;text-align:center;text-transform:uppercase;font-size:clamp(20px,5.2vw,34px);line-height:.9;background:radial-gradient(circle at 22% 16%,rgba(255,255,255,.30),transparent 28%),repeating-linear-gradient(-7deg,rgba(255,255,255,.08) 0 2px,transparent 2px 10px),linear-gradient(145deg,#ffb43a 0%,#f07c00 58%,#b74d00 100%);box-shadow:0 7px 0 rgba(7,24,63,.28),inset 0 0 0 3px rgba(255,221,132,.25);text-shadow:0 3px 0 rgba(0,0,0,.38)}
-.action-btn:active{transform:translateY(3px)}.action-print{width:100%}
-.status{margin-top:16px;text-align:center;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-weight:950;font-size:17px;line-height:1.3;padding:18px 10px;border:4px solid var(--ink);border-radius:24px;background:white}
-.month-tabs-wrap{display:none!important}
-.month-section{scroll-margin-top:18px;margin-top:26px}
-.month-divider{position:relative;display:flex;align-items:center;justify-content:center;min-height:110px;margin:30px 0 8px;padding:4px 68px;color:var(--navy);text-align:center;text-transform:uppercase;font-size:clamp(58px,15vw,116px);line-height:.78;letter-spacing:-.02em;text-shadow:0 5px 0 #f1ce79,3px 8px 0 rgba(7,24,63,.08)}
-.month-divider::before,.month-divider::after{content:"";position:absolute;top:50%;width:min(12vw,90px);height:3px;background:linear-gradient(90deg,transparent,var(--gold));transform:translateY(-50%)}
-.month-divider::before{left:4px}.month-divider::after{right:4px;transform:translateY(-50%) rotate(180deg)}
-.month-divider span{position:relative}.month-divider span::after{content:"";position:absolute;left:12%;right:12%;bottom:-14px;height:7px;border-radius:999px;background:linear-gradient(90deg,transparent,var(--gold) 22%,var(--gold) 78%,transparent);transform:rotate(-1deg)}
-.week-block{margin:0 0 23px}
-.week-label{width:max-content;max-width:100%;margin:18px auto 12px;padding:7px 18px 8px;border:3px solid var(--gold);border-radius:999px;background:var(--navy);color:#fff7dd;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:clamp(13px,3.4vw,18px);font-weight:1000;line-height:1;letter-spacing:.06em;text-transform:uppercase;box-shadow:0 4px 0 rgba(7,24,63,.15)}
-.week-days{display:grid;gap:12px}.weekend-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
-.day-card{--accent:#8b95a7;--accent-dark:#5f6876;--accent-text:#fff;--card-from:#f5f6f8;--card-to:#dce1e7;position:relative;width:100%;min-height:172px;overflow:hidden;display:flex;flex-direction:column;border:4px solid var(--navy);border-radius:26px 21px 28px 22px;background:linear-gradient(145deg,var(--card-from),var(--card-to));box-shadow:0 8px 0 rgba(7,24,63,.16),0 12px 0 rgba(0,0,0,.06),inset 0 0 0 2px rgba(255,255,255,.36)}
-.day-card.kind-matin{--accent:#1268ff;--accent-dark:#0648bd;--accent-text:#fff;--card-from:#e3efff;--card-to:#8dbaff}
-.day-card.kind-journee{--accent:#12b76a;--accent-dark:#087443;--accent-text:#fff;--card-from:#ddfaeb;--card-to:#7de2aa}
-.day-card.kind-j4{--accent:#ff7900;--accent-dark:#c94b00;--accent-text:#fff;--card-from:#fff0dc;--card-to:#ffad5c}
-.day-card.kind-soir{--accent:#ffd000;--accent-dark:#c58b00;--accent-text:#07183f;--card-from:#fff8bd;--card-to:#ffd941}
-.day-card.kind-nuit{--accent:#6736d9;--accent-dark:#37137f;--accent-text:#fff;--card-from:#eee8ff;--card-to:#a88aff}
-.day-card.kind-repos,.day-card.kind-maladie,.day-card.kind-special{--accent:#8b95a7;--accent-dark:#5f6876;--accent-text:#fff;--card-from:#f5f6f8;--card-to:#dce1e7}
-.day-name{min-height:36px;display:flex;align-items:center;justify-content:center;padding:5px 10px 6px;background:linear-gradient(180deg,var(--accent),var(--accent-dark));color:var(--accent-text);text-align:center;text-transform:uppercase;font-size:clamp(18px,4.8vw,29px);line-height:.9;letter-spacing:.02em;text-shadow:0 2px 0 rgba(0,0,0,.20)}
-.card-body{display:grid;grid-template-columns:minmax(94px,25%) minmax(0,1fr);align-items:stretch;flex:1;min-height:0}
-.date-block{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 8px;border-right:2px solid rgba(7,24,63,.12);background:linear-gradient(160deg,rgba(255,255,255,.86),rgba(255,255,255,.38));text-align:center}
-.date-number{font-size:clamp(56px,13vw,84px);line-height:.72;color:var(--navy);text-shadow:0 3px 0 rgba(230,173,53,.34)}
-.date-month{font-size:clamp(18px,4.8vw,30px);line-height:.9;text-transform:uppercase;color:var(--navy)}
-.event-list{display:grid;min-width:0}.event-row{display:grid;grid-template-columns:minmax(82px,130px) minmax(0,1fr);align-items:center;gap:12px;min-width:0;padding:10px 14px;border-top:2px solid rgba(7,24,63,.08)}.event-row:first-child{border-top:0}
-.shift-visual{position:relative;width:clamp(78px,19vw,120px);aspect-ratio:1;display:flex;align-items:center;justify-content:center;justify-self:center;border:4px solid var(--accent-dark);border-radius:50%;background:radial-gradient(circle at 32% 22%,rgba(255,255,255,.88),transparent 25%),linear-gradient(145deg,color-mix(in srgb,var(--accent) 78%,white),var(--accent));box-shadow:0 6px 0 rgba(7,24,63,.18),inset 0 0 0 4px rgba(255,255,255,.34);overflow:hidden}
-.shift-image{display:none!important}.shift-code{color:var(--accent-text);font-size:clamp(43px,11vw,72px);line-height:.75;text-transform:uppercase;text-shadow:0 3px 0 rgba(0,0,0,.22)}
-.shift-image+.shift-code{position:absolute;right:-2px;bottom:-2px;min-width:35px;padding:5px 7px;border:3px solid var(--navy);border-radius:999px;background:#fff8dc;color:var(--navy);font-size:16px;text-shadow:none}
-.shift-meta{min-width:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:5px;text-align:left}.time{font-size:clamp(22px,5.8vw,36px);line-height:.9;color:var(--navy);white-space:nowrap}.detail{margin:0;max-width:100%;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-weight:850;font-size:clamp(12px,3vw,17px);line-height:1.15;color:rgba(7,24,63,.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.empty-row{display:flex;align-items:center;justify-content:center;min-height:100%;padding:14px;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-weight:900;font-size:14px;opacity:.55}
-.weekend-pair .day-card{min-height:260px}.weekend-pair .day-name{background:linear-gradient(180deg,var(--accent),var(--accent-dark));color:var(--accent-text)}.weekend-pair .card-body{display:flex;flex-direction:column}.weekend-pair .date-block{min-height:66px;padding:8px;border-right:0;border-bottom:2px dashed rgba(7,24,63,.13)}.weekend-pair .date-number{font-size:clamp(44px,11vw,66px)}.weekend-pair .date-month{font-size:clamp(16px,4vw,24px)}.weekend-pair .event-row{display:flex;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:10px 7px}.weekend-pair .shift-visual{width:clamp(86px,22vw,122px)}.weekend-pair .shift-code{font-size:clamp(46px,12vw,72px)}.weekend-pair .shift-meta{align-items:center;text-align:center}.weekend-pair .time{font-size:clamp(17px,4.3vw,25px)}.weekend-pair .detail{font-size:clamp(10px,2.7vw,14px);white-space:normal;text-align:center;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.agenda-separator{margin:26px 0 12px;padding:8px 10px 9px;border:3px dashed rgba(7,24,63,.34);border-radius:20px;background:rgba(255,255,255,.50);text-align:center;text-transform:uppercase;color:rgba(7,24,63,.88);font-size:clamp(19px,5vw,31px);line-height:.9}.bottom-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.bottom-actions .action-btn{min-height:70px;font-size:clamp(20px,5.4vw,34px)}.action-apple{background:radial-gradient(circle at 22% 16%,rgba(255,255,255,.30),transparent 28%),repeating-linear-gradient(-7deg,rgba(255,255,255,.08) 0 2px,transparent 2px 10px),linear-gradient(145deg,#3db9ff 0%,#0c6ed5 58%,#083c91 100%)}.action-android{background:radial-gradient(circle at 22% 16%,rgba(255,255,255,.30),transparent 28%),repeating-linear-gradient(-7deg,rgba(255,255,255,.08) 0 2px,transparent 2px 10px),linear-gradient(145deg,#35d864 0%,#12873d 58%,#075324 100%)}
-@media(max-width:560px){.page{padding:10px 8px 42px}.back{border-width:4px;min-height:52px}.header{border-width:4px;padding:11px 9px 12px}.identity{grid-template-columns:116px minmax(0,1fr);gap:10px;min-height:128px}.avatar-wrap{width:110px;height:98px}.avatar-fallback{width:76px;height:76px;font-size:34px;border-width:4px}.identity-firstname{font-size:clamp(19px,5.4vw,28px)}.sub{font-size:clamp(20px,5.3vw,31px)}.month-divider{min-height:92px;margin-top:25px;padding:2px 40px;font-size:clamp(54px,15vw,82px)}.month-divider span::after{bottom:-10px;height:5px}.week-label{margin-top:15px}.day-card{border-width:4px;min-height:154px}.day-name{min-height:32px;font-size:clamp(17px,4.8vw,24px)}.card-body{grid-template-columns:86px minmax(0,1fr)}.date-block{gap:4px;padding:8px 5px;flex-direction:column}.date-number{font-size:clamp(48px,13vw,64px)}.date-month{font-size:clamp(16px,4.4vw,22px)}.event-row{grid-template-columns:78px minmax(0,1fr);gap:8px;padding:8px 10px}.shift-visual{width:78px}.shift-code{font-size:45px}.time{font-size:clamp(18px,5.2vw,26px)}.detail{font-size:11px}.weekend-pair{gap:8px}.weekend-pair .day-card{min-height:238px}.weekend-pair .date-block{flex-direction:row}.weekend-pair .shift-visual{width:82px}.weekend-pair .shift-code{font-size:46px}}
-@media(max-width:390px){.identity{grid-template-columns:104px minmax(0,1fr)}.avatar-wrap{width:100px}.month-divider{font-size:clamp(48px,14.5vw,70px)}.weekend-pair .day-card{min-height:225px}.weekend-pair .shift-visual{width:76px}.weekend-pair .shift-code{font-size:42px}.weekend-pair .detail{font-size:9.5px}}
-@media print{.back,.quick-actions,.month-tabs-wrap,.agenda-separator,.bottom-actions{display:none!important}.page{width:100%;padding:0}body{background:#fff}.header,.day-card{box-shadow:none}.month-divider{break-before:page}.month-section:first-of-type .month-divider{break-before:auto}}
-</style>
+body{overflow-x:hidden}
+[hidden]{display:none!important}
+.app{
+  max-width:760px;
+  margin:0 auto;
+  padding:calc(12px + env(safe-area-inset-top)) 12px calc(18px + env(safe-area-inset-bottom));
+}
+
+/* Bouton strictement identique sur les deux pages */
+.back{
+  position:relative;
+  z-index:3;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  min-height:54px;
+  margin-bottom:14px;
+  padding:9px 10px;
+  color:#fff4ce;
+  text-decoration:none;
+  text-align:center;
+  text-transform:uppercase;
+  border:5px solid #061738;
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 16%,rgba(255,255,255,.22),transparent 28%),
+    repeating-linear-gradient(-7deg,rgba(255,255,255,.07) 0 2px,transparent 2px 10px),
+    linear-gradient(145deg,#777,#444,#222);
+  box-shadow:0 7px 0 rgba(7,24,63,.35);
+  font-family:var(--font-display);
+  font-size:clamp(20px,5vw,31px);
+  letter-spacing:.4px;
+}
+.back:active{transform:translateY(3px);box-shadow:0 4px 0 rgba(7,24,63,.35)}
+
+h1{
+  font-family:var(--font-display);
+  text-transform:uppercase;
+  font-size:clamp(34px,9.2vw,54px);
+  line-height:.92;
+  letter-spacing:-.045em;
+  margin:18px 0 10px;
+  color:var(--navy);
+  text-align:center;
+  text-shadow:0 4px 0 rgba(225,184,64,.38);
+}
+h2{
+  font-family:var(--font-display);
+  text-transform:uppercase;
+  font-size:clamp(22px,5.6vw,31px);
+  line-height:.95;
+  letter-spacing:-.035em;
+  margin:0 0 10px;
+  color:var(--navy);
+  text-align:center;
+}
+p{
+  line-height:1.35;
+  color:var(--muted);
+  margin:0 0 12px;
+  font-size:clamp(16px,4.3vw,21px);
+  font-weight:800;
+  text-align:center;
+}
+.small{font-size:14px;color:var(--muted);line-height:1.35;text-align:left;font-weight:750}
+.page{display:none;animation:fade .16s ease-out}.page.active{display:block}
+@keyframes fade{from{opacity:.25;transform:translateY(5px)}to{opacity:1;transform:none}}
+.card{
+  background:rgba(255,250,240,.96);
+  border:3px solid var(--navy);
+  border-radius:var(--radius);
+  padding:16px;
+  margin:14px 0;
+}
+.searchWrap{display:grid;gap:12px;padding:16px}
+input,textarea{
+  width:100%;
+  border:3px solid var(--navy);
+  border-radius:21px;
+  background:#fffaf0;
+  padding:16px 17px;
+  font:inherit;
+  font-size:20px;
+  font-weight:850;
+  color:var(--navy);
+  outline:none;
+}
+input::placeholder,textarea::placeholder{color:rgba(8,19,54,.42);font-weight:900}
+textarea{min-height:100px;resize:vertical;font-size:16px;line-height:1.35}
+input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,64,.28)}
+.msg{display:none;margin:10px 0;border-radius:16px;padding:12px 13px;font-size:15px;line-height:1.35;font-weight:850;text-align:center}
+.msg.show{display:block}.msg.err{background:#fef2f2;color:#991b1b;border:2px solid #fecaca}.msg.ok{background:#ecfdf5;color:#065f46;border:2px solid #bbf7d0}.msg.warn{background:#fffbeb;color:#92400e;border:2px solid #fde68a}
+.btn{
+  border:3px solid var(--navy);
+  border-radius:22px;
+  min-height:54px;
+  padding:14px 16px;
+  font-size:16px;
+  font-family:var(--font-display);
+  text-transform:uppercase;
+  letter-spacing:.01em;
+  font-weight:950;
+  display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;cursor:pointer;width:100%;
+}
+.btn.primary,.btn.dark{color:#fff7df;background:var(--navy)}
+.btn.green{color:#fff7df;background:var(--green)}
+.btn.red{color:#fff7df;background:var(--red)}
+.btn.grey{color:#fff7df;background:#2b3038}
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.45)}
+.grid{display:grid;gap:11px}.two{grid-template-columns:1fr 1fr}
+.person{display:flex;align-items:center;justify-content:center;gap:12px;text-align:center}
+.avatar{width:44px;height:44px;border-radius:10px;object-fit:contain;background:#eef2f7;border:2px solid rgba(7,22,63,.15);flex:0 0 auto}
+.avatar.big{width:58px;height:58px}
+.name{font-weight:950;line-height:1.05;letter-spacing:-.015em;color:var(--navy)}
+.agentList{display:grid;gap:12px;max-height:58vh;overflow:auto;padding:2px 0 4px}
+.agentBtn,.candidateBtn,.respCard,.dayBtn{
+  border:3px solid var(--navy);
+  background:rgba(255,250,240,.90);
+  border-radius:22px;
+  padding:15px;
+  text-align:center;
+  display:flex;align-items:center;justify-content:center;gap:12px;cursor:pointer;width:100%;color:var(--navy);
+}
+.agentBtn .name{
+  font-family:var(--font-display);
+  text-transform:uppercase;
+  font-size:clamp(23px,6.4vw,34px);
+  width:100%;
+}
+.candidateBtn,.respCard{text-align:left;justify-content:flex-start}
+.candidateBtn .name,.respCard .name{display:block;font-size:clamp(18px,4.9vw,23px);font-weight:950}
+.candidateMain{display:grid;gap:5px}
+.subline,.mailLine{font-size:14px;color:var(--muted);font-weight:800;line-height:1.25}
+.mailLine.missing{color:#92400e}.mailLine.ok{color:#166534}
+.agentBtn:active,.candidateBtn:active,.dayBtn:active,.respCard:active,.btn:active{transform:translateY(1px)}
+.monthChips{display:flex;gap:8px;overflow:auto;padding:2px 0 8px;margin:6px -2px 8px}
+.chip{border:3px solid var(--navy);background:rgba(255,250,240,.94);color:var(--navy);border-radius:999px;padding:10px 13px;font-weight:950;white-space:nowrap;cursor:pointer}
+.chip.active{background:var(--navy);color:#fff7df}
+.dayList{display:grid;gap:11px}
+.dayBtn{justify-content:space-between;align-items:flex-start;text-align:left}
+.dayBtn.selected{background:#fff1f1;border-color:#b91c1c;box-shadow:0 0 0 4px rgba(185,28,28,.10)}
+.dayTitle{font-family:var(--font-display);text-transform:uppercase;font-size:clamp(23px,6vw,31px);font-weight:950;letter-spacing:-.02em;color:var(--navy)}
+.shiftLine{display:inline-flex;align-items:center;gap:7px;margin-top:8px;border-radius:999px;background:var(--navy);color:#fff7df;padding:7px 10px;font-size:13px;font-weight:900;line-height:1.1;max-width:100%}
+.shiftLine.light{background:transparent;color:var(--muted);padding:0;margin-top:0;border-radius:0;font-size:15px;font-weight:850}
+.shiftIcon{font-size:16px;line-height:1}
+.bottom{position:sticky;bottom:0;background:linear-gradient(180deg,rgba(255,247,223,0),rgba(255,247,223,.96) 24%,#fff7df);padding:14px 0 0;margin-top:12px;z-index:40}
+.counter{background:rgba(255,250,240,.96);border:3px solid var(--navy);color:var(--navy);border-radius:20px;padding:11px;text-align:center;font-weight:950;text-transform:uppercase}
+.exchangeCard{background:rgba(255,250,240,.96);border:3px solid var(--navy);border-radius:24px;padding:15px;margin:14px 0}
+.exchangeCard.done{border-color:#15803d;background:#f0fdf4}
+.goalGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:13px 0}
+@media(min-width:680px){.goalGrid{grid-template-columns:repeat(6,1fr)}.respGrid{grid-template-columns:1fr 1fr}}
+.goal{border:3px solid var(--navy);background:rgba(255,250,240,.95);color:var(--navy);border-radius:17px;padding:12px 8px;font-size:14px;font-weight:950;cursor:pointer}
+.goal.active{background:var(--navy);color:#fff7df}
+.candidateList{display:grid;gap:9px;margin-top:11px}
+.candidateBtn.active{border-color:#15803d;background:#ecfdf5}
+.chosen{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;background:#ecfdf5;border:3px solid #15803d;border-radius:20px;padding:11px;margin-top:11px}
+.summaryLine{border:3px solid var(--navy);border-radius:20px;background:rgba(255,250,240,.92);padding:13px;margin:9px 0;line-height:1.4;font-weight:800}
+.summaryLine b{color:var(--navy)}
+.checkline{display:flex;align-items:flex-start;gap:11px;background:rgba(255,250,240,.96);border:3px solid var(--navy);border-radius:22px;padding:14px}
+.checkline input{width:22px;height:22px;flex:0 0 auto;margin-top:3px;border:0;box-shadow:none;padding:0}
+.respGrid{display:grid;gap:9px}
+.respCard.active{border-color:#15803d;background:#ecfdf5}.respCard.ccActive{border-color:#1d4ed8;background:#eff6ff}
+.role{font-size:12px;font-weight:950;color:#1d4ed8;text-transform:uppercase;letter-spacing:.03em;display:block;margin-bottom:3px}
+.success{background:#ecfdf5;border:3px solid #15803d;color:#065f46;text-align:center;border-radius:26px;padding:18px}
+.success h2{font-size:31px;color:#065f46}.success p{color:#065f46}
+.ref{background:#fff;border:3px solid #15803d;color:#111827;border-radius:18px;padding:12px;font-weight:950;margin:12px 0}
+.siteModal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;background:rgba(7,22,63,.55);padding:18px}
+.siteModal.show{display:flex}
+.siteModalBox{width:min(100%,520px);background:#fffaf0;border:3px solid var(--navy);border-radius:24px;padding:18px}
+.siteModalTitle{font-weight:950;color:var(--navy);font-size:22px;margin-bottom:8px}
+.siteModalText{font-size:17px;color:var(--ink);font-weight:750;line-height:1.35;text-align:left;margin-bottom:14px}
+.mailKnown{border:3px solid #15803d;background:#ecfdf5;color:#065f46;border-radius:20px;padding:12px 13px;margin:10px 0;font-weight:900;line-height:1.35}
+.mailKnown b{color:#064e3b}.mailKnown .mailAddress{display:block;margin-top:5px;font-size:15px;line-height:1.25;word-break:break-word;color:#064e3b;font-weight:950}
+.mailKnown .mailPerson{display:block;margin-top:8px;padding-top:8px;border-top:2px solid rgba(21,128,61,.18)}
+.mailKnown .mailPerson:first-child{margin-top:0;padding-top:0;border-top:0}
+.mailAsk{display:none;margin-top:10px}.mailAsk.show{display:block}.mailMissingTitle{margin:14px 0 8px;font-weight:950;color:var(--navy)}
+
+/* Titre de page visible pendant le chargement */
+.loadingPageTitle{
+  margin:28px auto 16px;
+  padding:0 8px;
+  color:var(--navy);
+  text-align:center;
+  text-transform:uppercase;
+  font-family:var(--font-display);
+  font-size:clamp(48px,13vw,88px);
+  line-height:.88;
+  letter-spacing:-.02em;
+  text-shadow:
+    0 5px 0 #f1ce79,
+    3px 8px 0 rgba(7,24,63,.09);
+}
+.loadingPageTitle span{display:block}
+.loadingPageTitle.request{
+  font-size:clamp(42px,11.5vw,78px);
+}
+.loadingPageTitle[hidden]{display:none!important}
+
+/* Écran de chargement commun aux deux pages */
+.startLoading{
+  margin-top:16px;
+  padding:22px 12px 24px;
+  border:4px solid var(--navy);
+  border-radius:24px;
+  background:#fff;
+  color:var(--navy);
+  text-align:center;
+  font-family:var(--font-display);
+  font-size:clamp(25px,6.7vw,38px);
+  line-height:1;
+  font-weight:950;
+  box-shadow:0 7px 0 rgba(7,24,63,.12);
+}
+.loading-bar{
+  width:min(88%,580px);
+  height:20px;
+  margin:16px auto 0;
+  overflow:hidden;
+  border:3px solid var(--navy);
+  border-radius:999px;
+  background:#fffaf0;
+  box-shadow:0 4px 0 rgba(7,24,63,.12);
+}
+.loading-bar-fill{
+  display:block;
+  width:34%;
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg,#e6ad35,#ffcf5c,#e6ad35);
+  animation:loadingBar 1.35s ease-in-out infinite;
+}
+@keyframes loadingBar{
+  0%{transform:translateX(-115%)}
+  100%{transform:translateX(345%)}
+}
+@media(prefers-reduced-motion:reduce){
+  .loading-bar-fill{animation-duration:2.4s}
+}
+.startChoice[hidden],
+.startLoading[hidden]{display:none!important}
+
+/* Carte identité : avatar seul + grand titre */
+
+#whoBox{
+  position:relative;
+  z-index:2;
+  margin:10px 0 14px;
+  padding:12px 12px 14px;
+  background:
+    radial-gradient(circle at 12% 0%,rgba(255,255,255,.75),transparent 34%),
+    linear-gradient(180deg,rgba(255,255,255,.44),transparent 48%),
+    var(--paper);
+  border:5px solid var(--ink);
+  border-radius:30px 25px 33px 26px;
+  box-shadow:
+    0 10px 0 rgba(7,24,63,.18),
+    0 14px 0 rgba(0,0,0,.10),
+    inset 0 0 0 3px rgba(255,215,115,.38);
+}
+.request-identity{display:grid;grid-template-columns:minmax(118px,180px) minmax(0,1fr);align-items:center;gap:18px;min-height:142px}
+.request-person{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;text-align:center}
+.request-avatar-wrap{width:128px;height:112px;display:flex;align-items:center;justify-content:center;overflow:visible;background:transparent}
+.request-avatar-img{width:100%;height:100%;object-fit:contain;display:none;border:0;border-radius:0;background:transparent;filter:drop-shadow(0 7px 0 rgba(7,24,63,.13))}
+.request-avatar-fallback{width:92px;height:92px;display:flex;align-items:center;justify-content:center;border:5px solid var(--ink);border-radius:22px;background:#fff9e8;font-size:40px;line-height:1;box-shadow:0 6px 0 rgba(7,24,63,.16)}
+.request-firstname{width:100%;margin:5px 0 0;padding:0 4px;color:var(--ink);text-align:center;text-transform:uppercase;font-family:var(--font-display);font-size:clamp(20px,5.7vw,34px);line-height:.9;letter-spacing:.2px;text-shadow:0 2px 0 #f8d67d;overflow-wrap:anywhere}
+.request-identity-text{display:flex;align-items:center;justify-content:center;text-align:center}
+.request-identity-sub{margin:0;color:var(--ink);font-family:var(--font-body);font-weight:950;font-size:clamp(22px,5.5vw,38px);line-height:1.08;text-align:center}
+
+.monthChips{display:flex!important}
+.planning-month-section{scroll-margin-top:20px;margin-top:25px}
+.planning-month-divider{position:relative;display:flex;align-items:center;justify-content:center;min-height:108px;margin:30px 0 8px;padding:4px 58px;border:0;border-radius:0;background:transparent;box-shadow:none;color:var(--navy);text-align:center;text-transform:uppercase;font-family:var(--font-display);font-size:clamp(58px,15vw,112px);line-height:.78;letter-spacing:-.02em;text-shadow:0 5px 0 #f1ce79,3px 8px 0 rgba(7,24,63,.08);overflow:visible}
+.planning-month-divider::before,.planning-month-divider::after{content:"";position:absolute;top:50%;z-index:0;width:min(12vw,90px);height:3px;border:0;background:linear-gradient(90deg,transparent,#e6ad35);transform:translateY(-50%);opacity:1}
+.planning-month-divider::before{left:4px}.planning-month-divider::after{right:4px;bottom:auto;transform:translateY(-50%) rotate(180deg)}
+.planning-month-divider span{position:relative;z-index:1}.planning-month-divider span::after{content:"";position:absolute;left:12%;right:12%;bottom:-14px;height:7px;border-radius:999px;background:linear-gradient(90deg,transparent,#e6ad35 22%,#e6ad35 78%,transparent);transform:rotate(-1deg)}
+.planning-week-block{margin:0 0 18px}
+.planning-week-label{width:max-content;max-width:100%;margin:18px auto 12px;padding:7px 18px 8px;border:3px solid #e6ad35;border-radius:999px;background:var(--navy);color:#fff7dd;font-size:clamp(13px,3.4vw,18px);line-height:1;letter-spacing:.06em;text-transform:uppercase;font-weight:1000;box-shadow:0 4px 0 rgba(7,24,63,.15)}
+.planning-week-days{display:grid;gap:12px}.planning-weekend-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.planning-day-card{--accent:#8b95a7;--accent-dark:#5f6876;--accent-text:#fff;--card-from:#f5f6f8;--card-to:#dce1e7;position:relative;width:100%;height:auto;min-height:172px;overflow:hidden;display:flex;flex-direction:column;padding:0;border:4px solid var(--navy);border-radius:26px 21px 28px 22px;background:linear-gradient(145deg,var(--card-from),var(--card-to));color:var(--navy);text-align:left;cursor:pointer;box-shadow:0 8px 0 rgba(7,24,63,.16),0 12px 0 rgba(0,0,0,.06),inset 0 0 0 2px rgba(255,255,255,.36)}
+.planning-day-card::before{display:none}
+.planning-day-card.kind-matin{--accent:#1268ff;--accent-dark:#0648bd;--accent-text:#fff;--card-from:#e3efff;--card-to:#8dbaff}
+.planning-day-card.kind-journee{--accent:#12b76a;--accent-dark:#087443;--accent-text:#fff;--card-from:#ddfaeb;--card-to:#7de2aa}
+.planning-day-card.kind-j4{--accent:#ff7900;--accent-dark:#c94b00;--accent-text:#fff;--card-from:#fff0dc;--card-to:#ffad5c}
+.planning-day-card.kind-soir{--accent:#ffd000;--accent-dark:#c58b00;--accent-text:#07183f;--card-from:#fff8bd;--card-to:#ffd941}
+.planning-day-card.kind-nuit{--accent:#6736d9;--accent-dark:#37137f;--accent-text:#fff;--card-from:#eee8ff;--card-to:#a88aff}
+.planning-day-card.kind-repos,.planning-day-card.kind-maladie,.planning-day-card.kind-special{--accent:#8b95a7;--accent-dark:#5f6876;--accent-text:#fff;--card-from:#f5f6f8;--card-to:#dce1e7}
+.planning-day-card.is-selected{border-color:#15803d;box-shadow:0 0 0 4px rgba(21,128,61,.13),0 8px 0 rgba(21,128,61,.25)}
+.planning-day-name{min-height:36px;display:flex;align-items:center;justify-content:center;padding:5px 10px 6px;background:linear-gradient(180deg,var(--accent),var(--accent-dark));color:var(--accent-text);text-align:center;text-transform:uppercase;font-family:var(--font-display);font-size:clamp(18px,4.8vw,29px);line-height:.9;letter-spacing:.02em;text-shadow:0 2px 0 rgba(0,0,0,.20)}
+.planning-card-body{display:grid;grid-template-columns:minmax(94px,25%) minmax(0,1fr);align-items:stretch;flex:1;min-height:0}
+.planning-date-block{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 8px;border-right:2px solid rgba(7,24,63,.12);background:linear-gradient(160deg,rgba(255,255,255,.86),rgba(255,255,255,.38));text-align:center}
+.planning-date-number{font-family:var(--font-display);font-size:clamp(56px,13vw,84px);line-height:.72;color:var(--navy);text-shadow:0 3px 0 rgba(230,173,53,.34)}
+.planning-date-month{font-family:var(--font-display);font-size:clamp(18px,4.8vw,30px);line-height:.9;text-transform:uppercase;color:var(--navy)}
+.planning-event-row{display:grid;grid-template-columns:minmax(82px,130px) minmax(0,1fr);align-items:center;gap:12px;min-width:0;min-height:0;padding:10px 48px 10px 14px;border:0;background:transparent!important}
+.planning-shift-visual{position:relative;width:clamp(78px,19vw,120px);aspect-ratio:1;display:flex;align-items:center;justify-content:center;justify-self:center;border:4px solid var(--accent-dark);border-radius:50%;background:radial-gradient(circle at 32% 22%,rgba(255,255,255,.88),transparent 25%),linear-gradient(145deg,color-mix(in srgb,var(--accent) 78%,white),var(--accent));box-shadow:0 6px 0 rgba(7,24,63,.18),inset 0 0 0 4px rgba(255,255,255,.34);overflow:hidden}
+.planning-shift-image{display:none!important}.planning-shift-code{color:var(--accent-text);font-family:var(--font-display);font-size:clamp(43px,11vw,72px);line-height:.75;text-transform:uppercase;text-shadow:0 3px 0 rgba(0,0,0,.22)}
+.planning-shift-meta{min-width:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:5px;text-align:left}.planning-time{padding:0;border:0;border-radius:0;background:transparent;color:var(--navy);font-family:var(--font-display);font-size:clamp(22px,5.8vw,36px);line-height:.9;white-space:nowrap;box-shadow:none}.planning-detail{margin:0;max-width:100%;font-size:clamp(12px,3vw,17px);line-height:1.15;color:rgba(7,24,63,.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:850}
+.planning-selection-mark{position:absolute;right:10px;bottom:10px;z-index:4;display:flex;align-items:center;justify-content:center;width:34px;height:34px;border:3px solid var(--navy);border-radius:999px;background:#fffaf0;color:var(--navy);font-family:var(--font-display);font-size:21px;line-height:1;box-shadow:0 3px 0 rgba(7,24,63,.12)}
+.planning-day-card.is-selected .planning-selection-mark{border-color:#15803d;background:#15803d;color:#fff}
+.planning-weekend-pair .planning-day-card{height:auto;min-height:260px}.planning-weekend-pair .planning-day-name{background:linear-gradient(180deg,var(--accent),var(--accent-dark));color:var(--accent-text)}.planning-weekend-pair .planning-card-body{display:flex;flex-direction:column}.planning-weekend-pair .planning-date-block{min-height:66px;padding:8px;border-right:0;border-bottom:2px dashed rgba(7,24,63,.13)}.planning-weekend-pair .planning-date-number{font-size:clamp(44px,11vw,66px)}.planning-weekend-pair .planning-date-month{font-size:clamp(16px,4vw,24px)}.planning-weekend-pair .planning-event-row{display:flex;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:10px 7px 42px}.planning-weekend-pair .planning-shift-visual{width:clamp(86px,22vw,122px)}.planning-weekend-pair .planning-shift-code{font-size:clamp(46px,12vw,72px)}.planning-weekend-pair .planning-shift-meta{align-items:center;text-align:center}.planning-weekend-pair .planning-time{font-size:clamp(17px,4.3vw,25px)}.planning-weekend-pair .planning-detail{font-size:clamp(10px,2.7vw,14px);white-space:normal;text-align:center;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+
+@media(max-width:560px){
+  .app{padding:calc(10px + env(safe-area-inset-top)) 8px calc(16px + env(safe-area-inset-bottom))}
+  .back{border-width:4px;min-height:52px}
+  .startLoading{gap:13px;padding:7px 3px 18px}
+  .loading-title{font-size:clamp(48px,15.5vw,78px)}
+  .loading-state{min-height:48px;padding:9px 14px 10px;border-width:3px}
+  .loading-bar{height:20px;border-width:3px}
+  #whoBox{border-width:4px;padding:10px}
+  .request-identity{grid-template-columns:minmax(130px,44%) minmax(0,1fr);gap:7px;min-height:158px}
+  .request-avatar-wrap{width:clamp(138px,40vw,175px);height:clamp(138px,40vw,175px)}
+  .request-avatar-fallback{width:88px;height:88px;border-width:4px;font-size:40px}.request-firstname{font-size:clamp(20px,5.6vw,30px)}
+  .request-identity-title{font-size:clamp(34px,9.5vw,51px);line-height:.76}
+  .planning-month-divider{min-height:92px;margin-top:25px;padding:2px 40px;font-size:clamp(54px,15vw,82px)}
+  .planning-month-divider span::after{bottom:-10px;height:5px}
+  .planning-day-card{min-height:154px;border-width:4px}
+  .planning-day-name{min-height:32px;font-size:clamp(17px,4.8vw,24px)}
+  .planning-card-body{grid-template-columns:86px minmax(0,1fr)}
+  .planning-date-block{gap:4px;padding:8px 5px;flex-direction:column}
+  .planning-date-number{font-size:clamp(48px,13vw,64px)}
+  .planning-date-month{font-size:clamp(16px,4.4vw,22px)}
+  .planning-event-row{grid-template-columns:78px minmax(0,1fr);gap:8px;padding:8px 44px 8px 10px}
+  .planning-shift-visual{width:78px}.planning-shift-code{font-size:45px}.planning-time{font-size:clamp(18px,5.2vw,26px)}.planning-detail{font-size:11px}
+  .planning-weekend-pair{gap:8px}.planning-weekend-pair .planning-day-card{min-height:238px}.planning-weekend-pair .planning-date-block{flex-direction:row}.planning-weekend-pair .planning-shift-visual{width:82px}.planning-weekend-pair .planning-shift-code{font-size:46px}
+}
+@media(max-width:390px){.request-identity{grid-template-columns:122px minmax(0,1fr)}.request-avatar-wrap{width:130px;height:130px}.request-identity-title{font-size:33px}.planning-month-divider{font-size:clamp(48px,14.5vw,70px)}.planning-weekend-pair .planning-day-card{min-height:225px}.planning-weekend-pair .planning-shift-visual{width:76px}.planning-weekend-pair .planning-shift-code{font-size:42px}.planning-weekend-pair .planning-detail{font-size:9.5px}}
+  </style>
 </head>
 <body>
-<main class="page">
-  <a class="back" href="index.html">← Retour accueil</a>
-  <section class="header">
-    <div class="identity">
-      <div class="identity-person">
-        <div class="avatar-wrap" id="avatarWrap"><img id="avatarImg" alt=""><div class="avatar-fallback" id="avatarFallback">👤</div></div>
-        <div class="identity-firstname" id="title">Planning</div>
+<!-- VISUEL_SITE_V12_FIL_CHRONOLOGIQUE_MOIS_REPERES -->
+  <div class="app">
+    <a class="back" href="index.html">← Retour accueil</a>
+
+    <section id="pStart" class="page active">
+      <h1 class="loadingPageTitle request"><span>Demander</span><span>un</span><span>changement</span></h1>
+      <div id="startLoading" class="startLoading">Chargement...<div class="loading-bar" role="progressbar" aria-label="Chargement en cours"><span class="loading-bar-fill"></span></div></div>
+
+      <div id="startChoice" class="startChoice" hidden>
+        <h1>Choisis ton nom</h1>
+        <p>Recherche ton nom puis ouvre ton aperçu personnel.</p>
+        <div class="card searchWrap">
+          <input id="agentSearch" placeholder="Rechercher mon nom" autocomplete="off">
+          <div id="agentList" class="agentList"></div>
+          <div id="startMsg" class="msg"></div>
+        </div>
       </div>
-      <div class="identity-text"><p class="sub" id="subtitle">Chargement...</p></div>
+    </section>
+
+    <section id="pDays" class="page">
+      <h1>Choisis les jours</h1>
+      <div id="whoBox" class="card"></div>
+      <div class="card">
+        <h2>Mois</h2>
+        <div id="monthChips" class="monthChips"></div>
+        <div id="dayList" class="dayList"></div>
+      </div>
+      <div class="bottom">
+        <div class="grid">
+          <div id="basketCount" class="counter">0 jour sélectionné</div>
+          <button id="goExchangeBtn" class="btn primary" onclick="goExchange()" disabled>Continuer</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="pExchange" class="page">
+      <h1>Choisis l’horaire et l’échange</h1>
+      <p>Clique l’horaire souhaité, puis choisis le collègue avec qui échanger.</p>
+      <div class="card checkline">
+        <input id="noAgent" type="checkbox" onchange="toggleNoAgent()">
+        <div><b>Je n’ai personne avec qui échanger.</b><br><span class="small">La demande partira directement à la personne responsable.</span></div>
+      </div>
+      <div id="exchangeList"></div>
+      <div class="bottom">
+        <div class="grid two">
+          <button class="btn grey" onclick="showPage('pDays')">Retour</button>
+          <button class="btn primary" onclick="goSummary()">Continuer</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="pSummary" class="page">
+      <h1>Dernière vérification</h1>
+      <div id="summaryBox"></div>
+      <div class="card" id="mailCard">
+        <h2>Adresses mail</h2>
+        <p class="small">Les adresses connues sont affichées, mais non modifiables. Le site demande seulement celles qui manquent.</p>
+        <div id="demandeurMailKnown"></div>
+        <div id="demandeurMailAsk" class="mailAsk">
+          <label style="font-weight:950">Ton adresse mail</label>
+          <input id="demandeurEmail" name="demandeur_email" placeholder="ton.email@exemple.fr" type="email" inputmode="email" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" oninput="setDemandeurEmail(this.value)" onblur="setDemandeurEmail(this.value)">
+        </div>
+        <div id="missingMails"></div>
+      </div>
+      <div class="card">
+        <h2>Personne responsable</h2>
+        <p class="small">Choisis la personne qui recevra la demande avec les boutons de décision.</p>
+        <div id="respMain" class="respGrid"></div>
+      </div>
+      <div class="card">
+        <h2>Responsables en copie du mail</h2>
+        <p class="small">Ces personnes recevront le mail en copie pour information. Elles ne traiteront pas la demande.</p>
+        <div id="respCopies" class="respGrid"></div>
+      </div>
+      <div class="card">
+        <h2>Précision optionnelle</h2>
+        <textarea id="precision" placeholder="Message facultatif pour la personne responsable…"></textarea>
+      </div>
+      <div id="submitMsg" class="msg"></div>
+      <div class="bottom">
+        <div class="grid two">
+          <button class="btn grey" onclick="showPage('pExchange')">Retour</button>
+          <button id="submitBtn" class="btn green" onclick="submitRequest()">Envoyer la demande</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="pSuccess" class="page">
+      <div class="success">
+        <h2>Demande envoyée</h2>
+        <div id="successRef" class="ref"></div>
+        <p id="successText"></p>
+        <button class="btn green" onclick="location.reload()">Nouvelle demande</button>
+      </div>
+    </section>
+  </div>
+
+  <div id="siteModal" class="siteModal" onclick="if(event.target.id==='siteModal') closeSiteModal()">
+    <div class="siteModalBox">
+      <div class="siteModalTitle" id="siteModalTitle">Information</div>
+      <div class="siteModalText" id="siteModalText"></div>
+      <button class="btn primary" onclick="closeSiteModal()">Compris</button>
     </div>
-    <div class="quick-actions" id="topActions"></div>
-  </section>
-  <nav class="month-tabs-wrap" id="monthTabsWrap" aria-hidden="true"><div class="month-tabs" id="monthTabs"></div></nav>
-  <section id="content" class="status">Chargement...</section>
-  <div class="agenda-separator" id="agendaSeparator" style="display:none;">Ajouter à mon agenda</div>
-  <section class="bottom-actions" id="bottomActions"></section>
-</main>
+  </div>
+
 <script>
-const PASSERELLE = "https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8HZ_g_ota7tajTKLY3jvLKEF9AvSPjIbVpqcSkSRcl5OdWV9/exec";
-const params=new URLSearchParams(window.location.search);
-const type=String(params.get("type")||"").toLowerCase();
-const agent=String(params.get("agent")||"").trim();
-const moisParam=String(params.get("mois")||"").trim();
-const printMode=String(params.get("print")||"")==="1";
-const titleEl=document.getElementById("title"),subtitleEl=document.getElementById("subtitle"),contentEl=document.getElementById("content"),avatarWrap=document.getElementById("avatarWrap"),avatarImg=document.getElementById("avatarImg"),avatarFallback=document.getElementById("avatarFallback"),topActions=document.getElementById("topActions"),bottomActions=document.getElementById("bottomActions"),agendaSeparator=document.getElementById("agendaSeparator"),monthTabsWrap=document.getElementById("monthTabsWrap"),monthTabs=document.getElementById("monthTabs");
-function apiUrl(mode,extra){const url=new URL(PASSERELLE);url.searchParams.set("mode",mode);url.searchParams.set("t",Date.now());Object.keys(extra||{}).forEach(k=>url.searchParams.set(k,extra[k]));return url.toString()}
-async function fetchJson(url){const res=await fetch(url,{method:"GET",cache:"no-store"});if(!res.ok)throw new Error("HTTP "+res.status);return await res.json()}
-function webcalUrl(url){return url.replace(/^https:\/\//i,"webcal://")}function androidUrl(url){return "https://calendar.google.com/calendar/render?cid="+encodeURIComponent(url)}function icsAgentUrl(){return apiUrl("ics",{agent})}
-function afficherActionsAgent(){if(type!=="agent"||!agent)return;const printUrl="mois.html?type=agent&agent="+encodeURIComponent(agent);const ics=icsAgentUrl();topActions.innerHTML=`<a class="action-btn action-print" href="${printUrl}">🖨️ Imprimer mon planning</a>`;agendaSeparator.style.display="block";bottomActions.innerHTML=`<a class="action-btn action-apple" href="${webcalUrl(ics)}">🍎 Apple</a><a class="action-btn action-android" href="${androidUrl(ics)}" target="_blank" rel="noopener">🤖 Android</a>`}
-function afficherAvatarDepuisSources(sources){avatarWrap.style.display="flex";avatarFallback.style.display="flex";avatarImg.style.display="none";let index=0;function tryNext(){if(index>=sources.length){avatarImg.style.display="none";avatarFallback.style.display="flex";return}avatarImg.onload=()=>{avatarFallback.style.display="none";avatarImg.style.display="block"};avatarImg.onerror=()=>{index++;tryNext()};avatarImg.src=sources[index]}tryNext()}
-function afficherAvatarDepuisData(data){if(type!=="agent"){avatarWrap.style.display="none";return}const avatar=data&&data.avatar?data.avatar:{};const sources=[avatar.avatar_image_url||data.avatar_image_url||"",avatar.avatar_thumb_url||data.avatar_thumb_url||""].filter(Boolean);afficherAvatarDepuisSources(sources)}
-function normalise(v){return String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim()}
-function firstNameFrom(value,data){const explicit=data&&(data.prenom||data["prénom"]||data.PRENOM||(data.avatar&&data.avatar.prenom));if(explicit)return String(explicit).trim();const text=String(value||"").replace(/_/g," ").trim();if(!text)return "Planning";const family=data&&(data.nom_famille||data.nomFamille||data.family_name||data.lastName);if(family){const stripped=text.replace(new RegExp("^"+String(family).replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"\\s+","i"),"").trim();if(stripped)return stripped}const parts=text.split(/\s+/).filter(Boolean);return parts.length>1?parts.slice(1).join(" "):parts[0]}
-function parseDateIso(dateIso){const p=String(dateIso||"").split("-").map(Number);if(p.length!==3||!p[0]||!p[1]||!p[2])return null;return new Date(p[0],p[1]-1,p[2])}
-function toIsoLocal(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
-function monthRangeFromKey(key){const m=String(key||"").match(/^(\d{2})\.(\d{4})$/);if(!m)return null;const month=Number(m[1]),year=Number(m[2]);if(!month||!year)return null;return{start:new Date(year,month-1,1),end:new Date(year,month,0)}}
-function formatMonthNameFromKey(key){const range=monthRangeFromKey(key);return range?range.start.toLocaleDateString("fr-FR",{month:"long",year:"numeric"}):""}
-function getIsoWeekNumber(date){const d=new Date(Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()));const dayNum=d.getUTCDay()||7;d.setUTCDate(d.getUTCDate()+4-dayNum);const yearStart=new Date(Date.UTC(d.getUTCFullYear(),0,1));return Math.ceil((((d-yearStart)/86400000)+1)/7)}
-function formatWeekLabel(d){return "Semaine "+getIsoWeekNumber(d)}function weekKey(d){const lundi=new Date(d),day=lundi.getDay()||7;lundi.setDate(lundi.getDate()-day+1);return toIsoLocal(lundi)}function isWeekend(d){return d.getDay()===0||d.getDay()===6}function monthKeyFromDate(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")}function monthSectionId(key){return "month_"+String(key).replace(/[^0-9A-Za-z_-]/g,"_")}function formatMonthTitle(d){return d.toLocaleDateString("fr-FR",{month:"long",year:"numeric"}).toUpperCase()}
-function normalizeRaw(v){return normalise(v).toUpperCase()}
-function imageFromEvent(event){return String(event.shift_image_url||event.image_url||event.icone_url||event.icon_url||(event.shift&&event.shift.image_url)||"").trim()}
-function classifyAgendaEvent(event){
-  const raw=normalizeRaw((event.pastille||"")+" "+(event.titre||"")+" "+(event.type||"")+" "+(event.shift_code||"")+" "+(event.description||""));
-  const exact=normalizeRaw(String(event.shift_code||event.pastille||event.titre||"")).replace(/[❶❷❸❹❺❻❼❽❾]/g,"").replace(/\*/g,"").replace(/[^A-Z0-9-]/g,"");
-  const hours=normalizeHoraire(event.horaire||"");
-  const make=(code,label,detail,repos,kind)=>({code,label,detail,repos,kind,imageUrl:""});
+const API_URL = "https://script.google.com/macros/s/AKfycby_5_yM6EQlwc0oGJ6P7hBTSPpZYj0B_cUtFe3Q5IJMau8YUNc0sjD8NZYV07e9wDHL/exec";
+const WEEK = {L:"Lundi",M:"Mardi",X:"Mercredi",J:"Jeudi",V:"Vendredi",S:"Samedi",D:"Dimanche"};
+const GOALS = [
+  {code:"M", label:"Matin"}, {code:"S", label:"Soir"}, {code:"J", label:"Journée"},
+  {code:"J4", label:"J4"}, {code:"N", label:"Nuit"}, {code:"RH", label:"Repos"}
+];
+const SHIFT_FALLBACK = {
+  "M": {code:"M", icone:"🔵", libelle:"Matin", debut:"06:50", fin:"14:40", affichage:"🔵 Matin · 06:50-14:40", categorie:"TRAVAIL"},
+  "J": {code:"J", icone:"🟢", libelle:"Jour", debut:"08:30", fin:"16:20", affichage:"🟢 Jour · 08:30-16:20", categorie:"TRAVAIL"},
+  "J4": {code:"J4", icone:"🟠", libelle:"J4", debut:"10:10", fin:"18:00", affichage:"🟠 J4 · 10:10-18:00", categorie:"TRAVAIL"},
+  "S": {code:"S", icone:"🟡", libelle:"Soir", debut:"13:30", fin:"21:00", affichage:"🟡 Soir · 13:30-21:00", categorie:"TRAVAIL"},
+  "N": {code:"N", icone:"⚫", libelle:"Nuit", debut:"20:50", fin:"06:50", affichage:"⚫ Nuit · 20:50-06:50", categorie:"TRAVAIL_NUIT"},
+  "RH": {code:"RH", icone:"💤", libelle:"Repos hebdo", debut:"", fin:"", affichage:"💤 Repos hebdo", categorie:"REPOS"},
+  "RTT": {code:"RTT", icone:"🧘", libelle:"RTT", debut:"", fin:"", affichage:"🧘 RTT", categorie:"RECUPERATION"},
+  "RTTA": {code:"RTTa", icone:"🧘", libelle:"RTT", debut:"", fin:"", affichage:"🧘 RTT", categorie:"RECUPERATION"},
+  "RC": {code:"RC", icone:"🔁", libelle:"Repos compensateur", debut:"", fin:"", affichage:"🔁 Repos compensateur", categorie:"RECUPERATION"},
+  "RF": {code:"RF", icone:"🎌", libelle:"Repos férié", debut:"", fin:"", affichage:"🎌 Repos férié", categorie:"RECUPERATION"},
+  "CA": {code:"CA", icone:"🏝️", libelle:"Congé annuel", debut:"", fin:"", affichage:"🏝️ Congé annuel", categorie:"CONGE"},
+  "SYR": {code:"SYR", icone:"🗣️", libelle:"Syndicat", debut:"", fin:"", affichage:"🗣️ Syndicat", categorie:"SYNDICAT"},
+  "AA": {code:"AA", icone:"📝", libelle:"Absence autorisée", debut:"", fin:"", affichage:"📝 Absence autorisée", categorie:"ABSENCE"},
+  "MALADIE": {code:"MALADIE", icone:"🩺", libelle:"Maladie", debut:"", fin:"", affichage:"🩺 Maladie", categorie:"MALADIE"},
+  "AM": {code:"AM", icone:"🩺", libelle:"Arrêt médical", debut:"", fin:"", affichage:"🩺 Arrêt médical", categorie:"MALADIE"},
+  "ABS": {code:"ABS", icone:"⚠️", libelle:"Absence", debut:"", fin:"", affichage:"⚠️ Absence", categorie:"ABSENCE"},
+  "FORMATION": {code:"FORMATION", icone:"🎓", libelle:"Formation", debut:"", fin:"", affichage:"🎓 Formation", categorie:"FORMATION"},
+  "-": {code:"-", icone:"📴", libelle:"Non planifié", debut:"", fin:"", affichage:"📴 Non planifié", categorie:"NON_PLANIFIE"},
+  "M0130": {code:"M0130", icone:"🔵", libelle:"Matin", debut:"", fin:"", affichage:"🔵 Matin", categorie:"TRAVAIL"},
+  "M0131": {code:"M0131", icone:"🔵", libelle:"Matin", debut:"", fin:"", affichage:"🔵 Matin", categorie:"TRAVAIL"},
+  "J0464": {code:"J0464", icone:"🟢", libelle:"Journée", debut:"", fin:"", affichage:"🟢 Journée", categorie:"TRAVAIL"},
+  "S0113": {code:"S0113", icone:"🟡", libelle:"Soir", debut:"", fin:"", affichage:"🟡 Soir", categorie:"TRAVAIL"},
+  "MA": {code:"MA", icone:"❓", libelle:"À vérifier", debut:"", fin:"", affichage:"❓ À vérifier", categorie:"A_VERIFIER"},
+  "AR": {code:"AR", icone:"❓", libelle:"À vérifier", debut:"", fin:"", affichage:"❓ À vérifier", categorie:"A_VERIFIER"},
+  "FO": {code:"FO", icone:"❓", libelle:"À vérifier", debut:"", fin:"", affichage:"❓ À vérifier", categorie:"A_VERIFIER"}
+};
+function cleanShiftKey(code){let raw=String(code||'').trim();if(!raw)return'';raw=raw.replace(/[❶❷❸❹❺❻❼❽❾]/g,'').trim();raw=raw.replace(/[^A-Za-z0-9-]/g,'').trim();return raw.toUpperCase()}
+function shiftSource(code){const raw=String(code||'').trim();const key=cleanShiftKey(raw);const m=DATA&&DATA.shift_map?DATA.shift_map:{};return m[key]||m[String(raw).toUpperCase()]||SHIFT_FALLBACK[key]||SHIFT_FALLBACK[String(raw).toUpperCase()]||null}
 
-  // Shifts travaillés : les variantes chiffrées restent dans leur famille.
-  if(exact==="M"||/^M\d+$/.test(exact)||raw.includes("MATIN")) return make("M","Matin","Matinée",false,"kind-matin");
-  if(exact==="S"||/^S\d+$/.test(exact)||raw.includes("SOIR")) return make("S","Soir","Soir",false,"kind-soir");
-  if(exact==="J4"||/^J4\d+$/.test(exact)||hours.includes("10:10–18:00")||hours.includes("10:10–18:00")) return make("J4","J4","Journée J4",false,"kind-j4");
-  if(exact==="J0464"||exact==="J"||(/^J\d+$/.test(exact)&&hours.includes("08:30–16:20"))||raw.includes("JOURNEE")||raw.includes("JOUR")) return make("J","Journée","Journée",false,"kind-journee");
-  if(exact==="N"||raw.includes("NUIT")) return make("N","Nuit","Nuit",false,"kind-nuit");
+let DATA=null;
+let CAL=null;
+let renderedShiftMap={};
+let monthObserver=null;
+let state={agent:null,currentMonth:"",basket:[],candidates:{},noAgent:false,responsableId:"",ccIds:[],demandeur_email:"",mailDrafts:{},mailDraftsByName:{}};
+const $=id=>document.getElementById(id);
 
-  // Tous les codes non travaillés ou non reconnus restent volontairement gris.
-  if(raw.includes("SYR")||raw.includes("SYN")||raw.includes("SYNDICAT")) return make("SYR","Activité syndicale","Activité syndicale",true,"kind-special");
-  if(raw.includes("FORMATION")) return make("FO","Formation","Formation",true,"kind-special");
-  if(raw.includes("STAGIAIRE")) return make("ST","Stagiaire","Accueil / suivi stagiaire",false,"kind-special");
-  if(raw.includes("CONGE")||/\bCA\b/.test(raw)) return make("CA","Congé annuel","Congé annuel",true,"kind-repos");
-  if(raw.includes("RTTA")||raw.includes("RTA")) return make(exact||"RTA",exact||"RTA",exact||"RTA",true,"kind-repos");
-  if(raw.includes("RTT")) return make("RTT","RTT","RTT",true,"kind-repos");
-  if(raw.includes("RC")||raw.includes("RECUP")) return make("RC","Récupération","Récupération",true,"kind-repos");
-  if(raw.includes("RF")) return make("RF","Repos férié","Repos férié / récupération",true,"kind-repos");
-  if(raw.includes("RH")||raw.includes("REPOS HEBDO")) return make("RH","Repos hebdomadaire","Repos hebdomadaire",true,"kind-repos");
-  if(raw.includes("MALADIE")||exact==="MA") return make(exact||"MA","Maladie","Absence maladie",true,"kind-maladie");
-  if(exact==="AM") return make("AM","Arrêt médical","Arrêt médical",true,"kind-maladie");
-  if(raw.includes("AA")) return make("AA","Absence autorisée","Absence autorisée",true,"kind-repos");
-  if(raw.includes("ABS")) return make("ABS","Absence","Absence",true,"kind-maladie");
-  if(raw.includes("REPOS")||raw.includes("OFF")) return make("RH","Repos","Repos",true,"kind-repos");
+function normaliseMailName(name){return String(name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/^_+|_+$/g,'')}
+function globalMailStorageKey(){return"demande_changement_mails_global_v4"}
+function mailStorageKey(){const id=state.agent&&state.agent.id_agent?state.agent.id_agent:"NO_AGENT";return"demande_changement_mails_agent_v4_"+String(id)}
+function readJsonStore(key){try{return JSON.parse(localStorage.getItem(key)||"{}")||{}}catch(e){return{}}}
+function writeJsonStore(key,data){try{localStorage.setItem(key,JSON.stringify(data||{}))}catch(e){}}
+function loadMailDrafts(){const global=readJsonStore(globalMailStorageKey());const local=readJsonStore(mailStorageKey());state.mailDrafts=Object.assign({},global.mailDrafts||{},local.mailDrafts||{});state.mailDraftsByName=Object.assign({},global.mailDraftsByName||{},local.mailDraftsByName||{});const agentId=state.agent&&state.agent.id_agent?String(state.agent.id_agent):"";const agentName=state.agent&&state.agent.nom_affiche?normaliseMailName(state.agent.nom_affiche):"";state.demandeur_email=String(local.demandeur_email||(global.demandeursById&&global.demandeursById[agentId])||(global.demandeursByName&&global.demandeursByName[agentName])||global.lastDemandeurEmail||state.demandeur_email||"")}
+function saveMailDrafts(){const agentId=state.agent&&state.agent.id_agent?String(state.agent.id_agent):"";const agentName=state.agent&&state.agent.nom_affiche?normaliseMailName(state.agent.nom_affiche):"";const global=readJsonStore(globalMailStorageKey());global.mailDrafts=Object.assign({},global.mailDrafts||{},state.mailDrafts||{});global.mailDraftsByName=Object.assign({},global.mailDraftsByName||{},state.mailDraftsByName||{});global.demandeursById=global.demandeursById||{};global.demandeursByName=global.demandeursByName||{};if(state.demandeur_email){global.lastDemandeurEmail=state.demandeur_email;if(agentId)global.demandeursById[agentId]=state.demandeur_email;if(agentName)global.demandeursByName[agentName]=state.demandeur_email}writeJsonStore(globalMailStorageKey(),global);writeJsonStore(mailStorageKey(),{demandeur_email:state.demandeur_email||"",mailDrafts:state.mailDrafts||{},mailDraftsByName:state.mailDraftsByName||{}})}
+function getSavedMail(id,name){const keyName=normaliseMailName(name);return String((id&&state.mailDrafts[String(id)])||(keyName&&state.mailDraftsByName[keyName])||"").trim()}
+function setSavedMail(id,name,mail){const clean=String(mail||"").trim();if(id)state.mailDrafts[String(id)]=clean;const keyName=normaliseMailName(name);if(keyName)state.mailDraftsByName[keyName]=clean;saveMailDrafts()}
+function setDemandeurEmail(value){state.demandeur_email=String(value||"").trim();saveMailDrafts()}
+function syncMailInputs(){const de=$('demandeurEmail');if(de)state.demandeur_email=String(de.value||"").trim();document.querySelectorAll('[data-mail-agent-id]').forEach(inp=>{const id=inp.getAttribute('data-mail-agent-id')||"";const name=inp.getAttribute('data-mail-agent-name')||"";const mail=String(inp.value||"").trim();setSavedMail(id,name,mail);state.basket.forEach(it=>{if(String(it.accepteur_id)===String(id)||normaliseMailName(it.accepteur_nom)===normaliseMailName(name))it.accepteur_email=mail})});saveMailDrafts()}
+function restoreDemandeurMailInput(){const de=$('demandeurEmail');if(de)de.value=state.demandeur_email||""}
+function hydrateSavedMails(){if(!state.demandeur_email){const official=state.agent?knownMail(state.agent.id_agent):"";if(official)state.demandeur_email=official}state.basket.forEach(it=>{if(!it.accepteur_email){const saved=getSavedMail(it.accepteur_id,it.accepteur_nom);if(saved)it.accepteur_email=saved}})}
+function hasDemandeurMail(){return!!String(state.demandeur_email||"").trim()}
+function renderDemandeurMail(){const known=$('demandeurMailKnown');const ask=$('demandeurMailAsk');if(!known||!ask)return;if(hasDemandeurMail()){known.innerHTML=`<div class="mailKnown">Mail demandeur connu ✅<span class="mailAddress">${esc(state.demandeur_email)}</span></div>`;ask.classList.remove('show')}else{known.innerHTML='';ask.classList.add('show');restoreDemandeurMailInput()}}
+window.addEventListener('pagehide',syncMailInputs);window.addEventListener('beforeunload',syncMailInputs);
 
-  const fallback=String(event.shift_code||event.titre||"EV").trim();
-  return make(fallback.slice(0,6).toUpperCase(),fallback,fallback,false,"kind-special");
+function isReadyUrl(){return API_URL&&API_URL.indexOf("COLLE_ICI")<0&&/^https:\/\//.test(API_URL)}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+function msg(id,type,text){const el=$(id);el.className='msg show '+type;el.textContent=text}
+function clearMsg(id){const el=$(id);el.className='msg';el.textContent=''}
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function attr(v){return esc(v).replace(/`/g,'&#96;')}
+function avatar(url,cls=''){return`<img class="avatar ${cls}" src="${attr(url||'')}" alt="" onerror="this.style.visibility='hidden'">`}
+function shiftText(code){const raw=String(code||'').trim();if(!raw)return'Non précisé';const v=shiftSource(raw);if(!v)return raw;if(typeof v==='string')return v;const icon=v.icone?v.icone+' ':'';const label=v.libelle||v.affichage||raw;const hours=(v.debut&&v.fin)?' · '+v.debut+' à '+v.fin:'';return icon+label+hours}
+function shiftInfo(code){const raw=String(code||'').trim();const key=cleanShiftKey(raw);const v=shiftSource(raw);if(v&&typeof v==='object'){return{code:v.code||raw,icon:v.icone||'',label:v.libelle||v.affichage||raw,hours:(v.debut&&v.fin)?v.debut+' à '+v.fin:'',categorie:v.categorie||''}}const text=typeof v==='string'?v:raw;const iconMatch=String(text||'').match(/^\S+/);const maybeIcon=iconMatch?iconMatch[0]:'';const hasEmoji=/[^\w\sÀ-ÿ/.-]/.test(maybeIcon);let withoutIcon=hasEmoji?String(text).replace(maybeIcon,'').trim():String(text||raw).trim();let hours=(withoutIcon.match(/\d{1,2}:\d{2}\s*(?:à|-|—)\s*\d{1,2}:\d{2}/)||[''])[0].replace(/\s*(?:-|—)\s*/,' à ');let label=withoutIcon.replace(/\s*[—·-]\s*\d{1,2}:\d{2}\s*(?:à|-|—)\s*\d{1,2}:\d{2}.*/,'').trim();label=label.replace(new RegExp('^'+key+'\\s*[—-]\\s*','i'),'').trim();return{code:raw,icon:hasEmoji?maybeIcon:'',label:label||raw||'Non précisé',hours:hours||'',categorie:''}}
+function shiftInline(code,cls=''){const s=shiftInfo(code);const h=s.hours?' · '+s.hours:'';const icon=s.icon?`<span class="shiftIcon">${esc(s.icon)}</span>`:'';return`<span class="shiftLine ${cls}">${icon}<span>${esc(s.label+h)}</span></span>`}
+function shiftPlain(code){const s=shiftInfo(code);return`${s.icon?s.icon+' ':''}${s.label}${s.hours?' · '+s.hours:''}`}
+function goalText(code){const s=shiftInfo(code);return`${s.icon?s.icon+' ':''}${s.label}`}
+function siteAlert(text,title='Information'){$('siteModalTitle').textContent=title;$('siteModalText').textContent=text;$('siteModal').classList.add('show')}
+function closeSiteModal(){$('siteModal').classList.remove('show')}
+function knownMail(id){const contacts=DATA&&DATA.contacts?DATA.contacts:{};const a=state.agent||{};const keys=[id,a.id_agent,a.agent_uid,a.id_source,normaliseMailName(a.nom_affiche)];for(const k of keys){if(!k)continue;const c=contacts[String(k)];if(!c)continue;return typeof c==='string'?c:(c.email||'')}return''}
+function labelLong(label,mois,jour){const s=String(label||'');const m=s.match(/^([A-Z])\s*(\d{1,2})/i);if(m)return(WEEK[m[1].toUpperCase()]||m[1])+' '+Number(m[2])+' '+(mois||'');return(jour?jour+' ':'')+(mois||s)}
+function makeItemId(s){return'item_'+String(s.mois).replace(/\W/g,'')+'_'+s.jour+'_'+Date.now()+'_'+Math.floor(Math.random()*9999)}
+
+function api(action,params={}){return new Promise((resolve,reject)=>{if(!isReadyUrl())return reject(new Error('URL du script pont manquante dans le fichier GitHub.'));const cb='dc_cb_'+Date.now()+'_'+Math.floor(Math.random()*1000000);const url=new URL(API_URL);url.searchParams.set('api',action);url.searchParams.set('callback',cb);Object.keys(params).forEach(k=>url.searchParams.set(k,params[k]));const s=document.createElement('script');let done=false;const timer=setTimeout(()=>{if(!done){cleanup();reject(new Error('Le script pont ne répond pas.'))}},25000);function cleanup(){done=true;clearTimeout(timer);delete window[cb];if(s.parentNode)s.parentNode.removeChild(s)}window[cb]=res=>{cleanup();resolve(res)};s.onerror=()=>{cleanup();reject(new Error('Impossible de joindre le script pont.'))};s.src=url.toString();document.body.appendChild(s)})}
+
+function cleanSession(v){return String(v===undefined||v===null?'':v).trim()}
+function normSession(v){return cleanSession(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/^_+|_+$/g,'')}
+function texteSession(obj,keys){if(!obj)return'';for(const key of keys){if(obj[key]!==undefined&&obj[key]!==null&&cleanSession(obj[key])!=='')return cleanSession(obj[key])}return''}
+function agentSession(session){return session&&session.agent?session.agent:{}}
+function droitsSession(session){return session&&session.droits?session.droits:{}}
+function sessionNom(session){return texteSession(agentSession(session),['nom','NOM','lastName','lastname'])}
+function sessionPrenom(session){return texteSession(agentSession(session),['prenom','prénom','PRENOM','PRÉNOM','firstName','firstname'])}
+function sessionKey(session){return texteSession(agentSession(session),['agent_key','agent','key','AGENT_KEY','AGENT','agent_uid','AGENT_UID'])}
+function roleSession(session){return cleanSession(droitsSession(session).role||droitsSession(session).ROLE).toLowerCase()}
+function estDemo(session){return normSession(sessionNom(session))==='DEMO'&&normSession(sessionPrenom(session))==='DEMO'}
+function estEddySapin(session){const key=normSession(sessionKey(session));const nom=normSession(sessionNom(session));const prenom=normSession(sessionPrenom(session));return key==='SAPIN_EDDY'||(nom==='SAPIN'&&prenom==='EDDY')}
+function peutChoisirTousLesDemandeurs(session){const droits=droitsSession(session);const role=roleSession(session);if(estDemo(session))return true;if(estEddySapin(session))return false;return role==='chef'||role==='total'||droits.acces_chefs===true||droits.admin===true||droits.est_admin===true}
+async function lireSessionConnectee(){const res=await fetch('/__ghe/me?t='+Date.now(),{credentials:'same-origin',cache:'no-store'});if(!res.ok)throw new Error('Session connectée indisponible.');const data=await res.json();if(!data||!data.ok||!data.session)throw new Error('Session connectée invalide.');return data.session}
+function trouverAgentConnecte(session){const key=normSession(sessionKey(session));const nom=normSession(sessionNom(session));const prenom=normSession(sessionPrenom(session));const nomPrenom=normSession(sessionNom(session)+' '+sessionPrenom(session));const prenomNom=normSession(sessionPrenom(session)+' '+sessionNom(session));return(DATA.agents||[]).find(a=>{const ids=[a.id_agent,a.agent_key,a.agent_uid,a.agent,a.key].map(normSession).filter(Boolean);const affiche=normSession(a.nom_affiche||a.nomComplet||a.nom_complet||a.fullName||'');const aNom=normSession(a.nom||a.NOM||'');const aPrenom=normSession(a.prenom||a['prénom']||a.PRENOM||a['PRÉNOM']||'');return(key&&ids.includes(key))||(nom&&prenom&&aNom===nom&&aPrenom===prenom)||(nomPrenom&&affiche===nomPrenom)||(prenomNom&&affiche===prenomNom)||(nom&&prenom&&affiche.includes(nom)&&affiche.includes(prenom))})||null}
+function afficherChargementDirect(){
+  $('startLoading').hidden=false;
+  $('startChoice').hidden=true;
 }
-function normalizeHoraire(v){return String(v||"").replace(/\s+/g,"").replace("->","–").replace("→","–").replace(/-/g,"–")}
-function dateParts(d){return{dayName:d.toLocaleDateString("fr-FR",{weekday:"long"}).toUpperCase(),number:String(d.getDate()),month:d.toLocaleDateString("fr-FR",{month:"long"}).toUpperCase()}}
-function shiftVisual(shift){const wrap=document.createElement("div");wrap.className="shift-visual";const code=document.createElement("span");code.className="shift-code";code.textContent=shift.code||"•";wrap.appendChild(code);return wrap}
-function createDayCard(dayGroup){const first=dayGroup.events[0];const mainShift=first?classifyAgendaEvent(first):{kind:"kind-special"};const p=dateParts(dayGroup.dateObj);const card=document.createElement("article");card.className="day-card "+mainShift.kind+(isWeekend(dayGroup.dateObj)?" is-weekend":"");const dayName=document.createElement("div");dayName.className="day-name";dayName.textContent=p.dayName;const body=document.createElement("div");body.className="card-body";const date=document.createElement("div");date.className="date-block";date.innerHTML=`<span class="date-number">${p.number}</span><span class="date-month">${p.month}</span>`;const list=document.createElement("div");list.className="event-list";if(!dayGroup.events.length){const empty=document.createElement("div");empty.className="empty-row";empty.textContent="Aucun élément renseigné";list.appendChild(empty)}else{dayGroup.events.forEach(e=>{const shift=classifyAgendaEvent(e);const row=document.createElement("div");row.className="event-row";row.appendChild(shiftVisual(shift));const meta=document.createElement("div");meta.className="shift-meta";if(e.horaire&&!shift.repos){const time=document.createElement("div");time.className="time";time.textContent=normalizeHoraire(e.horaire);meta.appendChild(time)}const detail=document.createElement("p");detail.className="detail";detail.textContent=[shift.detail,e.alerte?"⚠️ "+e.alerte:""].filter(Boolean).join(" · ")||shift.label;meta.appendChild(detail);row.appendChild(meta);list.appendChild(row)})}body.append(date,list);card.append(dayName,body);return card}
-function renderAgendaEvents(events){const today=new Date();today.setHours(0,0,0,0);let dated=(events||[]).map(e=>Object.assign({},e,{dateObj:parseDateIso(e.date)})).filter(e=>e.dateObj).sort((a,b)=>a.dateObj-b.dateObj);const monthRange=monthRangeFromKey(moisParam);let firstDate,lastDate;if(monthRange&&printMode){firstDate=new Date(monthRange.start);lastDate=new Date(monthRange.end);dated=dated.filter(e=>e.dateObj>=firstDate&&e.dateObj<=lastDate)}else if(monthRange){firstDate=new Date(Math.max(today.getTime(),monthRange.start.getTime()));lastDate=new Date(monthRange.end);dated=dated.filter(e=>e.dateObj>=firstDate&&e.dateObj<=lastDate)}else{dated=dated.filter(e=>e.dateObj>=today);if(!dated.length){contentEl.className="status";contentEl.textContent="Aucun élément à afficher à partir d’aujourd’hui.";return}firstDate=new Date(today);lastDate=new Date(dated[dated.length-1].dateObj)}if(!lastDate||firstDate>lastDate){contentEl.className="status";contentEl.textContent="Aucun élément à afficher pour cette période.";return}const grouped={};dated.forEach(e=>{const key=e.date;if(!grouped[key])grouped[key]={dateObj:e.dateObj,events:[]};grouped[key].events.push(e)});const days=[],cursor=new Date(firstDate);while(cursor<=lastDate){const iso=toIsoLocal(cursor);days.push(grouped[iso]||{dateObj:new Date(cursor),events:[]});cursor.setDate(cursor.getDate()+1)}const months=[];days.forEach(day=>{const key=monthKeyFromDate(day.dateObj);let month=months.find(m=>m.key===key);if(!month){month={key,label:formatMonthTitle(day.dateObj),weeks:[]};months.push(month)}const wk=weekKey(day.dateObj);let week=month.weeks.find(w=>w.key===wk);if(!week){week={key:wk,label:formatWeekLabel(day.dateObj),days:[]};month.weeks.push(week)}week.days.push(day)});contentEl.className="";contentEl.innerHTML="";months.forEach(month=>{const section=document.createElement("section");section.className="month-section";section.id=monthSectionId(month.key);const divider=document.createElement("div");divider.className="month-divider";divider.innerHTML=`<span>${month.label}</span>`;section.appendChild(divider);month.weeks.forEach(week=>{const weekBlock=document.createElement("div");weekBlock.className="week-block";const label=document.createElement("div");label.className="week-label";label.textContent=week.label;weekBlock.appendChild(label);const weekdays=document.createElement("div");weekdays.className="week-days";const weekend=document.createElement("div");weekend.className="weekend-pair";week.days.forEach(day=>{const card=createDayCard(day);(isWeekend(day.dateObj)?weekend:weekdays).appendChild(card)});if(weekdays.children.length)weekBlock.appendChild(weekdays);if(weekend.children.length)weekBlock.appendChild(weekend);section.appendChild(weekBlock)});contentEl.appendChild(section)})}
-function unfoldIcs(text){return String(text||"").replace(/\r?\n[ \t]/g,"")}function getField(block,name){const re=new RegExp("^"+name+"(?:;[^:]*)?:(.*)$","mi"),m=block.match(re);return m?m[1].trim():""}function cleanText(v){return String(v||"").replace(/\\n/g," ").replace(/\\,/g,",").replace(/\\;/g,";").replace(/\s+/g," ").trim()}function parseIcsDate(value){if(!value)return null;value=String(value).trim();if(/^\d{8}$/.test(value))return new Date(Number(value.slice(0,4)),Number(value.slice(4,6))-1,Number(value.slice(6,8)));const m=value.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z?)$/);if(!m)return null;return m[7]==="Z"?new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+m[6])):new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+m[6])}function sameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}function formatTimeRange(start,end){const allDay=start.getHours()===0&&start.getMinutes()===0&&(!end||(end.getHours()===0&&end.getMinutes()===0));if(allDay)return"";const f=new Intl.DateTimeFormat("fr-FR",{hour:"2-digit",minute:"2-digit"});return end&&sameDay(start,end)?f.format(start)+"–"+f.format(end):f.format(start)}function parseEvents(ics){const blocks=unfoldIcs(ics).match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g)||[];return blocks.map(block=>({start:parseIcsDate(getField(block,"DTSTART")),end:parseIcsDate(getField(block,"DTEND")),summary:cleanText(getField(block,"SUMMARY")),description:cleanText(getField(block,"DESCRIPTION"))})).filter(e=>e.start)}function renderIcsEvents(events){const today=new Date();today.setHours(0,0,0,0);renderAgendaEvents(events.filter(e=>e.start>=today).sort((a,b)=>a.start-b.start).map(e=>({date:toIsoLocal(e.start),horaire:formatTimeRange(e.start,e.end),titre:e.summary,description:e.description,shift_code:e.summary,pastille:"",alerte:""})))}
-async function init(){if(type==="agent"){titleEl.textContent=firstNameFrom(agent.replace(/_/g," "),null);subtitleEl.textContent=moisParam?"Mois de "+formatMonthNameFromKey(moisParam):"À partir d’aujourd’hui";afficherActionsAgent()}else{titleEl.textContent=type==="formations"?"Formations":type==="stagiaires"?"Stagiaires":"Aperçu";subtitleEl.textContent="À partir d’aujourd’hui";avatarWrap.style.display="none"}if(type==="agent"&&agent){try{const data=await fetchJson(apiUrl("agenda",{agent}));if(!data||data.ok===false)throw new Error(data&&data.erreur?data.erreur:"Agenda invalide");if(data.nom)titleEl.textContent=firstNameFrom(data.nom,data);afficherAvatarDepuisData(data);renderAgendaEvents(data.events||[]);return}catch(e){console.error(e);contentEl.className="status";contentEl.textContent="Aperçu indisponible. Vérifie que la passerelle Apps Script est bien à jour.";return}}let url="";if(type==="formations")url=apiUrl("ics_collectif",{type:"formation"});else if(type==="stagiaires")url=apiUrl("ics_collectif",{type:"stagiaires"});if(!url){contentEl.textContent="Aperçu impossible : lien manquant.";return}try{const res=await fetch(url,{method:"GET",cache:"no-store"}),text=await res.text();if(!res.ok||!text.includes("BEGIN:VCALENDAR"))throw new Error("ICS invalide");renderIcsEvents(parseEvents(text))}catch(e){console.error(e);contentEl.textContent="Aperçu indisponible. Vérifie que la passerelle Apps Script est bien à jour."}}
+function afficherListeDemandeurs(){$('startLoading').hidden=true;$('startChoice').hidden=false;clearMsg('startMsg');renderAgents()}
+
+async function init(){
+  afficherChargementDirect();
+
+  if(!isReadyUrl()) {
+    $('startLoading').hidden=true;
+    $('startChoice').hidden=false;
+    msg('startMsg','warn','Il faut coller l’URL /exec du script pont GitHub dans la constante API_URL.');
+    $('agentList').innerHTML='';
+    return;
+  }
+
+  try{
+    const [res,session]=await Promise.all([
+      api('init'),
+      lireSessionConnectee()
+    ]);
+
+    if(!res || !res.ok){
+      throw new Error(res && res.error ? res.error : 'Chargement impossible.');
+    }
+
+    DATA=res;
+    state.responsableId=(DATA.responsables && DATA.responsables[0]) ? DATA.responsables[0].id : '';
+
+    if(peutChoisirTousLesDemandeurs(session)){
+      afficherListeDemandeurs();
+      return;
+    }
+
+    const agentConnecte=trouverAgentConnecte(session);
+
+    if(!agentConnecte){
+      throw new Error('Impossible de retrouver ton nom dans le planning.');
+    }
+
+    await selectAgent(agentConnecte.id_agent);
+
+  }catch(e){
+    $('startLoading').hidden=true;
+    $('startChoice').hidden=false;
+    $('agentSearch').style.display='none';
+    $('agentList').style.display='none';
+    msg('startMsg','err',(e.message||String(e))+' Déconnecte-toi puis reconnecte-toi avec ton propre compte.');
+  }
+}
+
+function renderAgents(){const q=($('agentSearch').value||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');const list=(DATA.agents||[]).filter(a=>String(a.nom_affiche||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').includes(q)).slice(0,90);$('agentList').innerHTML=list.map(a=>`<button class="agentBtn" onclick="selectAgent('${attr(a.id_agent)}')"><span class="name">${esc(a.nom_affiche)}</span></button>`).join('')||'<p>Aucun agent trouvé.</p>'}
+$('agentSearch').addEventListener('input',renderAgents);
+
+function todayIso(){const d=new Date();d.setHours(0,0,0,0);const y=d.getFullYear();const m=String(d.getMonth()+1).padStart(2,'0');const j=String(d.getDate()).padStart(2,'0');return`${y}-${m}-${j}`}
+function monthNum(mois){const map={JANVIER:1,FEVRIER:2,FÉVRIER:2,MARS:3,AVRIL:4,MAI:5,JUIN:6,JUILLET:7,AOUT:8,AOÛT:8,SEPTEMBRE:9,OCTOBRE:10,NOVEMBRE:11,DECEMBRE:12,DÉCEMBRE:12};const k=String(mois||'').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');return map[k]||0}
+function dateIsoFromShift(s){if(s&&s.date_iso)return String(s.date_iso).slice(0,10);const y=(CAL&&CAL.year)||new Date().getFullYear();const m=monthNum(s&&s.mois);const j=Number(s&&s.jour);if(!m||!j)return'';return`${y}-${String(m).padStart(2,'0')}-${String(j).padStart(2,'0')}`}
+function isFutureShift(s){const iso=dateIsoFromShift(s);return!iso||iso>=todayIso()}
+function futureShifts(){return(CAL.agent&&CAL.agent.shifts?CAL.agent.shifts:[]).filter(isFutureShift)}
+function firstFutureMonth(res){const shifts=(res.agent&&res.agent.shifts?res.agent.shifts:[]).filter(isFutureShift);const months=res.mois||[];return months.find(m=>shifts.some(s=>s.mois===m))||(shifts[0]&&shifts[0].mois)||''}
+
+async function selectAgent(id){
+  const a=(DATA.agents||[]).find(x=>String(x.id_agent)===String(id));
+  if(!a) return;
+  state.agent=a;
+
+  try{
+    const res=await api('calendar', {agentId:id});
+    if(!res || !res.ok) throw new Error(res && res.error ? res.error : 'Planning introuvable.');
+    CAL=res;
+    state.currentMonth=firstFutureMonth(res);
+    loadMailDrafts();
+    const officialMail=knownMail(id);
+    state.demandeur_email=officialMail || state.demandeur_email || '';
+    saveMailDrafts();
+    renderDaysPage();
+    setTimeout(restoreDemandeurMailInput,0);
+    showPage('pDays',2);
+  }catch(e){
+    $('startLoading').hidden=true;
+    $('startChoice').hidden=false;
+    msg('startMsg','err',e.message||String(e));
+    throw e;
+  }
+}
+
+function planningParseDateIso(iso){const p=String(iso||'').slice(0,10).split('-').map(Number);if(p.length!==3||!p[0]||!p[1]||!p[2])return null;return new Date(p[0],p[1]-1,p[2],0,0,0)}
+function planningDateFromShift(s){return planningParseDateIso(dateIsoFromShift(s))}
+function planningIsWeekend(s){const d=planningDateFromShift(s);if(d)return d.getDay()===0||d.getDay()===6;const raw=normaliseMailName((s&&s.label)||labelLong(s&&s.label,s&&s.mois,s&&s.jour));return raw.includes('SAMEDI')||raw.includes('DIMANCHE')}
+function planningDateTitle(s){const d=planningDateFromShift(s);if(d)return d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();return labelLong(s.label,s.mois,s.jour).toUpperCase()}
+function planningIsoWeek(date){const d=new Date(Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()));const dayNum=d.getUTCDay()||7;d.setUTCDate(d.getUTCDate()+4-dayNum);const yearStart=new Date(Date.UTC(d.getUTCFullYear(),0,1));return Math.ceil((((d-yearStart)/86400000)+1)/7)}
+function planningWeekKey(s){const d=planningDateFromShift(s);if(!d)return'jour_'+String(s.jour||'');const monday=new Date(d);const day=monday.getDay()||7;monday.setDate(monday.getDate()-day+1);return[monday.getFullYear(),String(monday.getMonth()+1).padStart(2,'0'),String(monday.getDate()).padStart(2,'0')].join('-')}
+function planningWeekLabel(s){const d=planningDateFromShift(s);return d?'Semaine '+planningIsoWeek(d):'Semaine'}
+function planningMonthId(mois){return'planning_month_'+String(mois||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Za-z0-9_-]/g,'_')}
+function planningMonthTitle(mois,shifts){const first=(shifts||[]).map(planningDateFromShift).find(Boolean);const year=first?first.getFullYear():((CAL&&CAL.year)||new Date().getFullYear());return String(mois||'')+' '+year}
+function planningDateParts(s){const d=planningDateFromShift(s);if(d)return{dayName:d.toLocaleDateString('fr-FR',{weekday:'long'}).toUpperCase(),number:String(d.getDate()),month:d.toLocaleDateString('fr-FR',{month:'long'}).toUpperCase()};const raw=planningDateTitle(s).split(/\s+/);return{dayName:raw[0]||'',number:raw[1]||String(s.jour||''),month:raw.slice(2).join(' ')||String(s.mois||'')}}
+function planningVisualHtml(info){return`<span class="planning-shift-visual"><span class="planning-shift-code">${esc(info.code||'•')}</span></span>`}
+function planningCardInfo(code){const key=cleanShiftKey(code);const source=shiftInfo(code);const hours=String(source.hours||'');const compactHours=planningNormalizeHours(hours).replace(/\s+/g,'');const work=(family,label,detail,kind)=>({code:family,label,detail,kind,work:true,hours:hours});if(key==='M'||/^M\d+$/.test(key))return work('M','Matin','Matinée','kind-matin');if(key==='S'||/^S\d+$/.test(key))return work('S','Soir','Soir','kind-soir');if(key==='J4'||/^J4\d+$/.test(key)||compactHours==='10:10–18:00')return work('J4','J4','Journée J4','kind-j4');if(key==='J0464'||key==='J'||(/^J\d+$/.test(key)&&compactHours==='08:30–16:20'))return work('J','Journée','Journée','kind-journee');if(key==='N')return work('N','Nuit','Nuit','kind-nuit');const map={RH:{code:'RH',label:'Repos hebdomadaire',detail:'Repos hebdomadaire'},RTT:{code:'RTT',label:'RTT',detail:'RTT'},RTTA:{code:'RTTA',label:source.label||'RTTA',detail:source.label||'RTTA'},RTA:{code:'RTA',label:source.label||'RTA',detail:source.label||'RTA'},RC:{code:'RC',label:'Récupération',detail:'Récupération'},RF:{code:'RF',label:'Repos férié',detail:'Repos férié / récupération'},CA:{code:'CA',label:'Congé annuel',detail:'Congé annuel'},SYR:{code:'SYR',label:'Activité syndicale',detail:'Activité syndicale'},AA:{code:'AA',label:'Absence autorisée',detail:'Absence autorisée'},MALADIE:{code:'MALADIE',label:'Maladie',detail:'Absence maladie'},MA:{code:'MA',label:source.label||'Maladie',detail:source.label||'Absence maladie'},AM:{code:'AM',label:source.label||'Arrêt médical',detail:source.label||'Arrêt médical'},ABS:{code:'ABS',label:'Absence',detail:'Absence'},FORMATION:{code:'FO',label:'Formation',detail:'Formation'},FO:{code:'FO',label:source.label||'Formation',detail:source.label||'Formation'},'-':{code:'—',label:'Non planifié',detail:'Non planifié'}};if(map[key])return Object.assign({},map[key],{kind:'kind-repos',work:false,hours:''});return{code:key||'EV',label:source.label||key||'Événement',detail:source.label||'',kind:'kind-special',work:!!hours,hours:hours}}
+function planningNormalizeHours(hours){return String(hours||'').replace(/\s+à\s+/g,'–').replace(/\s*-\s*/g,'–')}
+function planningIsSelected(s){return state.basket.some(it=>it.mois_demandeur===s.mois&&Number(it.jour_demandeur)===Number(s.jour)&&String(it.date_iso_demandeur||it.date_iso||'')===String(s.date_iso||''))}
+function planningCardHtml(s,key){const info=planningCardInfo(s.code);const weekend=planningIsWeekend(s);const selected=planningIsSelected(s);const p=planningDateParts(s);const hours=info.hours?`<span class="planning-time">${esc(planningNormalizeHours(info.hours))}</span>`:'';return`<button type="button" class="planning-day-card ${info.kind} ${weekend?'is-weekend':''} ${selected?'is-selected':''}" onclick="planningToggleDay('${attr(key)}')" aria-pressed="${selected?'true':'false'}"><span class="planning-day-name">${esc(p.dayName)}</span><span class="planning-card-body"><span class="planning-date-block"><span class="planning-date-number">${esc(p.number)}</span><span class="planning-date-month">${esc(p.month)}</span></span><span class="planning-event-row">${planningVisualHtml(info)}<span class="planning-shift-meta">${hours}<span class="planning-detail">${esc(info.detail||info.label||'')}</span></span></span></span><span class="planning-selection-mark">${selected?'✓':'+'}</span></button>`}
+function planningObserveMonths(months){if(monthObserver){monthObserver.disconnect();monthObserver=null}if(!('IntersectionObserver'in window))return;const sections=months.map(m=>document.getElementById(planningMonthId(m))).filter(Boolean);monthObserver=new IntersectionObserver(entries=>{const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(!visible)return;const month=visible.target.dataset.month;document.querySelectorAll('#monthChips .chip').forEach(btn=>btn.classList.toggle('active',btn.dataset.month===month))},{rootMargin:'-20% 0px -65% 0px',threshold:[0,.1,.35]});sections.forEach(section=>monthObserver.observe(section))}
+
+function planningFirstName(a){
+  const explicit=a&&(a.prenom||a['prénom']||a.PRENOM||a['PRÉNOM']||a.firstName||a.firstname);
+  if(explicit)return String(explicit).trim();
+  const full=String((a&&a.nom_affiche)||'').trim();
+  const family=String((a&&(a.nom||a.nom_famille||a.nomFamille))||'').trim();
+  if(family){
+    const clean=full.replace(new RegExp('^'+family.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s+','i'),'').trim();
+    if(clean)return clean;
+  }
+  const parts=full.split(/\s+/).filter(Boolean);
+  return parts.length>1?parts.slice(1).join(' '):(parts[0]||'Agent');
+}
+
+function renderDaysPage(){
+  const a=state.agent;
+  const avatarUrl=a.avatar_image_url||a.avatar_thumb_url||'';
+  $('whoBox').innerHTML=`
+    <div class="request-identity">
+      <div class="request-person">
+      <div class="request-avatar-wrap">
+        <img
+          class="request-avatar-img"
+          src="${attr(avatarUrl)}"
+          alt=""
+          onload="
+            this.style.display='block';
+            this.nextElementSibling.style.display='none';
+          "
+          onerror="
+            this.style.display='none';
+            this.nextElementSibling.style.display='flex';
+          "
+        >
+        <div class="request-avatar-fallback">👤</div>
+      </div>
+      <div class="request-firstname">${esc(planningFirstName(a))}</div>
+      </div>
+
+      <div class="request-identity-text">
+        <p class="request-identity-sub">Demander un changement</p>
+      </div>
+    </div>
+  `;
+
+  const allFuture=futureShifts().sort((a,b)=>{const da=dateIsoFromShift(a);const db=dateIsoFromShift(b);if(da&&db&&da!==db)return da.localeCompare(db);return Number(a.jour)-Number(b.jour)});
+  const months=[];allFuture.forEach(s=>{if(s.mois&&!months.includes(s.mois))months.push(s.mois)});$('monthChips').innerHTML=months.map((mois,index)=>`
+    <button
+      type="button"
+      class="chip ${(state.currentMonth===mois||(!state.currentMonth&&index===0))?'active':''}"
+      data-month="${attr(mois)}"
+      onclick="jumpToMonth('${attr(mois)}')"
+    >${esc(mois)}</button>
+  `).join('');
+  renderedShiftMap={};let renderIndex=0;const html=[];
+  months.forEach(mois=>{const monthShifts=allFuture.filter(s=>s.mois===mois);const weeks=[];monthShifts.forEach(s=>{const key=planningWeekKey(s);let week=weeks.find(w=>w.key===key);if(!week){week={key,label:planningWeekLabel(s),shifts:[]};weeks.push(week)}week.shifts.push(s)});html.push(`<section class="planning-month-section" id="${planningMonthId(mois)}" data-month="${attr(mois)}">`);html.push(`<div class="planning-month-divider"><span>${esc(planningMonthTitle(mois,monthShifts))}</span></div>`);weeks.forEach(week=>{const weekdayCards=[];const weekendCards=[];week.shifts.forEach(s=>{const key='planning_shift_'+renderIndex++;renderedShiftMap[key]=s;const card=planningCardHtml(s,key);if(planningIsWeekend(s))weekendCards.push(card);else weekdayCards.push(card)});html.push(`<div class="planning-week-block"><div class="planning-week-label">${esc(week.label)}</div>`);if(weekdayCards.length)html.push(`<div class="planning-week-days">${weekdayCards.join('')}</div>`);if(weekendCards.length)html.push(`<div class="planning-weekend-pair">${weekendCards.join('')}</div>`);html.push(`</div>`)});html.push(`</section>`)});
+  $('dayList').innerHTML=html.join('')||'<p>Aucun jour futur disponible pour cet agent.</p>';updateBasketCount();requestAnimationFrame(()=>planningObserveMonths(months));
+}
+function planningToggleDay(key){const shift=renderedShiftMap[key];if(shift)toggleDay(shift)}
+function jumpToMonth(mois){document.querySelectorAll('#monthChips .chip').forEach(btn=>btn.classList.toggle('active',btn.dataset.month===mois));const el=document.getElementById(planningMonthId(mois));if(el)el.scrollIntoView({behavior:'smooth',block:'start'})}
+function toggleDay(s){const i=state.basket.findIndex(it=>it.mois_demandeur===s.mois&&Number(it.jour_demandeur)===Number(s.jour)&&String(it.date_iso_demandeur||it.date_iso||'')===String(s.date_iso||''));if(i>=0)state.basket.splice(i,1);else state.basket.push({item_id:makeItemId(s),demandeur_id:state.agent.id_agent,demandeur_nom:state.agent.nom_affiche,mois_demandeur:s.mois,jour_demandeur:s.jour,label_demandeur:s.label,shift_demandeur:s.code,date_iso_demandeur:s.date_iso||'',date_iso:s.date_iso||'',demandeur_avatar:state.agent.avatar_image_url||'',objectif:'',objectif_label:'',accepteur_id:'',accepteur_nom:'',accepteur_email:'',accepteur_avatar:'',mois_accepteur:'',jour_accepteur:'',label_accepteur:'',shift_accepteur:''});renderDaysPage()}
+function updateBasketCount(){const n=state.basket.length;$('basketCount').textContent=n+' jour'+(n>1?'s':'')+' sélectionné'+(n>1?'s':'');$('goExchangeBtn').disabled=!n}
+function goExchange(){if(!state.basket.length)return;renderExchange();showPage('pExchange')}
+function toggleNoAgent(){state.noAgent=$('noAgent').checked;renderExchange()}
+function renderExchange(){$('noAgent').checked=state.noAgent;$('exchangeList').innerHTML=state.basket.map(it=>`<div class="exchangeCard ${(state.noAgent||it.accepteur_id)&&it.objectif?'done':''}" id="card_${attr(it.item_id)}"><div class="dayTitle">${esc(labelLong(it.label_demandeur,it.mois_demandeur,it.jour_demandeur))}</div><div class="small">Ton horaire actuel :</div><div>${shiftInline(it.shift_demandeur,'light')}</div><div class="goalGrid">${GOALS.map(g=>`<button class="goal ${it.objectif===g.code?'active':''}" onclick="chooseGoal('${attr(it.item_id)}','${g.code}')">${esc(goalText(g.code))}</button>`).join('')}</div>${renderChosen(it)}<div id="cand_${attr(it.item_id)}" class="candidateList">${renderCandidates(it)}</div></div>`).join('')}
+function renderChosen(it){if(state.noAgent)return it.objectif?`<div class="chosen"><b>Souhait :</b> ${esc(it.objectif==='REPOS'?'Repos':shiftText(it.objectif))}</div>`:'';if(!it.accepteur_id)return it.objectif?'<div class="small">Choisis un collègue dans la liste.</div>':'';return`<div class="chosen">${avatar(it.accepteur_avatar)}<div><div class="name">${esc(it.accepteur_nom)}</div><div>${shiftInline(it.shift_accepteur,'light')}</div></div><button class="btn grey" style="width:auto;min-height:42px;padding:9px 12px" onclick="clearAcceptor('${attr(it.item_id)}')">Changer</button></div>`}
+function renderCandidates(it){if(state.noAgent||!it.objectif||it.accepteur_id)return'';const list=state.candidates[it.item_id];if(!list)return'<div class="small">Clique un horaire pour charger les collègues.</div>';if(!list.length)return'<div class="msg show warn">Aucun collègue trouvé pour cet horaire.</div>';return list.map(c=>`<button class="candidateBtn" onclick="selectCandidate('${attr(it.item_id)}','${attr(c.id_agent)}')">${avatar(c.avatar_image_url)}<span class="candidateMain"><span class="name">${esc(c.nom_affiche)}</span>${shiftInline(c.shift_code,'light')}<span class="mailLine ${c.email?'ok':'missing'}">${c.email?'Mail connu':'Mail à compléter'}</span></span></button>`).join('')}
+async function chooseGoal(itemId,goal){const it=state.basket.find(x=>x.item_id===itemId);if(!it)return;it.objectif=goal;it.objectif_label=(goal==='REPOS'?'Repos / RH / congé':shiftPlain(goal));it.accepteur_id='';it.accepteur_nom='';it.accepteur_email='';it.accepteur_avatar='';it.shift_accepteur='';renderExchange();if(state.noAgent)return;const box=$('cand_'+itemId);if(box)box.innerHTML='<div class="small">Chargement des collègues…</div>';try{const res=await api('candidates',{payload:JSON.stringify({demandeur_id:state.agent.id_agent,mois:it.mois_demandeur,jour:it.jour_demandeur,date_iso:it.date_iso_demandeur||it.date_iso||'',goal:goal})});if(!res||!res.ok)throw new Error(res&&res.error?res.error:'Erreur candidats');state.candidates[itemId]=res.candidates||[]}catch(e){state.candidates[itemId]=[];const box=$('cand_'+itemId);if(box)box.innerHTML=`<div class="msg show err">Erreur technique : ${esc(e.message||String(e))}</div>`;return}renderExchange()}
+function selectCandidate(itemId,agentId){const it=state.basket.find(x=>x.item_id===itemId);if(!it)return;const c=(state.candidates[itemId]||[]).find(x=>String(x.id_agent)===String(agentId));if(!c)return;it.accepteur_id=c.id_agent;it.accepteur_nom=c.nom_affiche;it.accepteur_email=c.email||state.mailDrafts[c.id_agent]||'';it.accepteur_avatar=c.avatar_image_url||'';it.mois_accepteur=it.mois_demandeur;it.jour_accepteur=it.jour_demandeur;it.label_accepteur=it.label_demandeur;it.shift_accepteur=c.shift_code||'';renderExchange();const next=state.basket.find(x=>!state.noAgent&&(!x.objectif||!x.accepteur_id));if(next&&$('card_'+next.item_id))$('card_'+next.item_id).scrollIntoView({behavior:'smooth',block:'start'})}
+function clearAcceptor(itemId){const it=state.basket.find(x=>x.item_id===itemId);if(!it)return;it.accepteur_id='';it.accepteur_nom='';it.accepteur_email='';it.accepteur_avatar='';it.shift_accepteur='';renderExchange()}
+function goSummary(){syncMailInputs();hydrateSavedMails();const missingGoal=state.basket.filter(it=>!it.objectif);if(missingGoal.length)return siteAlert('Il manque un horaire souhaité sur '+missingGoal.length+' jour(s).','À compléter');if(!state.noAgent){const missing=state.basket.filter(it=>!it.accepteur_id);if(missing.length)return siteAlert('Il manque un collègue sur '+missing.length+' jour(s).','À compléter')}renderSummary();showPage('pSummary')}
+function renderSummary(){syncMailInputs();hydrateSavedMails();$('summaryBox').innerHTML='<div class="card"><h2>Résumé</h2>'+state.basket.map(it=>`<div class="summaryLine"><b>${esc(labelLong(it.label_demandeur,it.mois_demandeur,it.jour_demandeur))}</b><br>Actuel : ${esc(shiftPlain(it.shift_demandeur))}<br>Souhait : ${esc(it.objectif==='RH'?shiftPlain('RH'):shiftPlain(it.objectif))}${it.accepteur_nom?'<br>Avec : '+esc(it.accepteur_nom)+' — '+esc(shiftPlain(it.shift_accepteur)):''}</div>`).join('')+'</div>';renderDemandeurMail();renderMissingMails();renderResponsables();restoreDemandeurMailInput();setTimeout(()=>{hydrateSavedMails();renderDemandeurMail();renderMissingMails();restoreDemandeurMailInput()},0);clearMsg('submitMsg')}
+function uniqueAcceptors(){const m={};state.basket.forEach(it=>{if(it.accepteur_id)m[it.accepteur_id]=it});return Object.values(m)}
+function renderMissingMails(){hydrateSavedMails();const missing=uniqueAcceptors().filter(it=>!it.accepteur_email);const known=uniqueAcceptors().filter(it=>!!it.accepteur_email);let html='';if(known.length)html+='<div class="mailKnown">Mails collègues connus ✅<br>'+known.map(it=>`<span class="mailPerson"><b>${esc(it.accepteur_nom)}</b><span class="mailAddress">${esc(it.accepteur_email)}</span></span>`).join('')+'</div>';if(missing.length){html+='<div class="mailMissingTitle">Mails à compléter</div>';html+=missing.map(it=>{const saved=getSavedMail(it.accepteur_id,it.accepteur_nom)||it.accepteur_email||'';return`<div style="margin-top:10px"><label style="font-weight:950">Mail de ${esc(it.accepteur_nom)}</label><input data-mail-agent-id="${attr(it.accepteur_id)}" data-mail-agent-name="${attr(it.accepteur_nom)}" name="mail_${attr(it.accepteur_id)}" type="email" inputmode="email" placeholder="email du collègue" value="${attr(saved)}" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" oninput="setAcceptorMail('${attr(it.accepteur_id)}','${attr(it.accepteur_nom)}',this.value)" onblur="setAcceptorMail('${attr(it.accepteur_id)}','${attr(it.accepteur_nom)}',this.value)"></div>`}).join('')}if(!missing.length&&!known.length)html+='<div class="mailKnown">Aucun collègue à contacter directement ✅</div>';$('missingMails').innerHTML=html}
+function setAcceptorMail(id,name,mail){const clean=String(mail||'').trim();setSavedMail(id,name,clean);state.basket.forEach(it=>{if(String(it.accepteur_id)===String(id)||normaliseMailName(it.accepteur_nom)===normaliseMailName(name))it.accepteur_email=clean});saveMailDrafts()}
+function renderResponsables(){const list=DATA.responsables||[];if(!state.responsableId&&list[0])state.responsableId=list[0].id;$('respMain').innerHTML=list.map(r=>`<button class="respCard ${state.responsableId===r.id?'active':''}" onclick="state.responsableId='${attr(r.id)}';state.ccIds=state.ccIds.filter(x=>x!==state.responsableId);renderResponsables()"><span><span class="name">${esc(r.nom)}</span><span class="subline">${esc(r.role)}</span></span></button>`).join('');$('respCopies').innerHTML=list.filter(r=>r.id!==state.responsableId).map(r=>`<button class="respCard ${state.ccIds.includes(r.id)?'ccActive':''}" onclick="toggleCc('${attr(r.id)}')"><span><span class="name">${esc(r.nom)}</span><span class="subline">${esc(r.role)}</span></span></button>`).join('')}
+function toggleCc(id){const i=state.ccIds.indexOf(id);if(i>=0)state.ccIds.splice(i,1);else state.ccIds.push(id);renderResponsables()}
+async function submitRequest(){syncMailInputs();hydrateSavedMails();const email=(state.demandeur_email||($('demandeurEmail')?$('demandeurEmail').value:'')||'').trim();if(!email)return msg('submitMsg','err','Ton adresse mail est obligatoire.');if(!state.responsableId)return msg('submitMsg','err','Choisis une personne responsable.');if(!state.noAgent){const mm=uniqueAcceptors().filter(it=>!it.accepteur_email);if(mm.length)return msg('submitMsg','err','Il manque le mail de '+mm[0].accepteur_nom+'.')}const payload={demandeur_id:state.agent.id_agent,demandeur_nom:state.agent.nom_affiche,demandeur_email:email,precision_cadre:$('precision').value||'',sans_agent:!!state.noAgent,items:state.basket,responsable_id:state.responsableId,responsable_cc_ids:state.ccIds};$('submitBtn').disabled=true;msg('submitMsg','warn','Envoi en cours…');try{const res=await api('submit',{payload:JSON.stringify(payload)});$('submitBtn').disabled=false;if(!res||!res.ok)throw new Error(res&&res.error?res.error:'Erreur envoi.');$('successRef').textContent=res.reference_humaine||res.id||'Demande envoyée';$('successText').textContent=(state.noAgent?'Demande envoyée à la personne responsable.':'Mail envoyé au collègue. La demande partira ensuite à la personne responsable après acceptation.');showPage('pSuccess')}catch(e){$('submitBtn').disabled=false;msg('submitMsg','err',e.message||String(e))}}
+
 init();
 </script>
 </body>
