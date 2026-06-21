@@ -224,16 +224,16 @@ h1{
 <body>
 
 <header class="hero" id="hero">
-  <img id="banner" alt="BanniÃ¨re choix du mois">
+  <img id="banner" alt="Banni&egrave;re choix du mois">
 </header>
 
 <main class="page">
 
-  <a class="back" href="index.html">â Retour accueil</a>
+  <a class="back" href="index.html">&larr; Retour &agrave; l&rsquo;accueil</a>
 
   <div class="title-box">
     <h1 id="pageTitle">Choisis ton mois</h1>
-    <div class="subtitle" id="subtitle">SÃ©lectionne le mois souhaitÃ©</div>
+    <div class="subtitle" id="subtitle">S&eacute;lectionne le mois souhait&eacute;</div>
   </div>
 
   <div id="loadingBox" class="loading-box"></div>
@@ -250,15 +250,17 @@ const type = params.get("type") || "jour";
 const agent = String(params.get("agent") || "").trim();
 
 const labels = {
-  jour: "Planning Ã©quipe du jour",
-  nuit: "Planning Ã©quipe de nuit",
-  chef: "Planning chefs dâÃ©quipe",
+  jour: "Planning \u00e9quipe du jour",
+  nuit: "Planning \u00e9quipe de nuit",
+  chef: "Planning chefs d\u2019\u00e9quipe",
+  chefs: "Planning chefs d\u2019\u00e9quipe",
+  stagiaire: "Planning stagiaires",
   stagiaires: "Planning stagiaires",
   formations: "Planning formations",
-  pdf: "PDF Ã  imprimer",
+  pdf: "PDF \u00e0 imprimer",
   ics: "Sur ton agenda",
-  "collectif-ics": "TÃ©lÃ©charger le fichier ICS",
-  agent: "Planning personnel Ã  imprimer"
+  "collectif-ics": "T\u00e9l\u00e9charger le fichier ICS",
+  agent: "Planning personnel \u00e0 imprimer"
 };
 
 const pageTitle = document.getElementById("pageTitle");
@@ -271,7 +273,7 @@ if(type === "agent"){
     ? "Planning de " + agent.replace(/_/g, " ")
     : "Agent manquant";
 }else{
-  subtitle.textContent = labels[type] || "SÃ©lectionne le mois souhaitÃ©";
+  subtitle.textContent = labels[type] || "S\u00e9lectionne le mois souhait\u00e9";
 }
 
 function apiUrl(mode, extra){
@@ -442,13 +444,14 @@ const monthImages = [
 ];
 
 /*
-  RÃ¨gle d'affichage des mois :
-  - Du 1 au 4 : mois prÃ©cÃ©dent + mois courant
+  Regle d'affichage des mois :
+  - Du 1 au 4 : mois precedent + mois courant
   - Du 5 au 19 : mois courant seulement
-  - Du 20 Ã  la fin : mois courant + mois suivant
+  - Du 20 a la fin : mois courant + mois suivant
 
   Cette page contient uniquement les mois 2026.
-  Si le mois prÃ©cÃ©dent ou suivant n'existe pas dans monthImages, il est simplement ignorÃ©.
+  Si le mois precedent ou suivant n'existe pas dans monthImages,
+  il est simplement ignore.
 */
 function getVisibleMonths(dateReference = new Date()){
   const jourDuMois = dateReference.getDate();
@@ -499,7 +502,10 @@ async function ouvrirPdfAgentMois(month){
   }catch(err){
     console.error(err);
     hideLoading();
-    alert("PDF indisponible pour " + month.key + ". Le planning est peut-Ãªtre encore en prÃ©paration.");
+    alert(
+      "PDF indisponible pour " + month.key +
+      ". Le planning est peut-\u00eatre encore en pr\u00e9paration."
+    );
   }
 }
 
