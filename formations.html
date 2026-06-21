@@ -3,698 +3,263 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>GHE — Formations</title>
-
 <style>
 *,*::before,*::after{box-sizing:border-box}
-
 :root{
   --ink:#07183f;
-  --ink-soft:#263653;
-
+  --ink-soft:#33415f;
   --cream:#fff7dd;
-  --card:#fffaf0;
-  --card-soft:#fff6dc;
-
-  --line:#132752;
-  --line-soft:rgba(7,24,63,.18);
+  --paper:#fffaf0;
+  --paper-2:#fff2c9;
+  --line:#07183f;
+  --muted-line:rgba(7,24,63,.18);
 
   --danger:#b42318;
-  --danger-line:#c43a2f;
-  --danger-bg:#fff1ed;
-
+  --danger-bg:#fff0ec;
   --warning:#8a4b00;
-  --warning-line:#d2a631;
-  --warning-bg:#fff6d8;
+  --warning-bg:#fff4c7;
+  --ok:#176b39;
+  --ok-bg:#eaf8ef;
 
-  --ok:#166534;
-  --ok-line:#2f8f4e;
-  --ok-bg:#edf9f1;
+  --matin:#1976f3;
+  --matin-soft:#dcebff;
+  --journee:#20a754;
+  --journee-soft:#dff6e8;
+  --j4:#f27617;
+  --j4-soft:#ffead6;
+  --soir:#f0c400;
+  --soir-soft:#fff3a8;
+  --nuit:#6d42d8;
+  --nuit-soft:#e9e0ff;
+  --off:#6b7280;
+  --off-soft:#eceef2;
 
-  --shadow:0 6px 0 rgba(7,24,63,.14);
-
+  --shadow:0 7px 0 rgba(7,24,63,.16);
+  --shadow-small:0 4px 0 rgba(7,24,63,.12);
   --font:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
   --display:Impact,"Arial Black",system-ui,sans-serif;
 }
-
-html,body{
-  margin:0;
-  min-height:100vh;
-}
-
-body{
-  font-family:var(--font);
-  background:var(--cream);
-  color:var(--ink);
-}
-
+html,body{margin:0;min-height:100%;background:var(--cream);color:var(--ink)}
+body{font-family:var(--font)}
+a{color:inherit}
 .page{
   width:min(1080px,100%);
   margin:auto;
   padding:calc(10px + env(safe-area-inset-top)) 8px calc(130px + env(safe-area-inset-bottom));
 }
-
-.topbar{
-  display:flex;
-  gap:10px;
-  margin-bottom:10px;
-}
-
+.topbar{display:flex;gap:10px;margin-bottom:10px}
 .navbtn{
-  min-height:44px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:8px 14px;
-  border:3px solid var(--line);
-  border-radius:18px;
-  background:var(--card);
-  color:var(--ink);
-  text-decoration:none;
-  font-size:20px;
-  font-weight:950;
-  box-shadow:0 4px 0 rgba(7,24,63,.14);
+  min-height:44px;display:inline-flex;align-items:center;justify-content:center;
+  padding:8px 14px;border:3px solid var(--line);border-radius:18px;
+  background:var(--paper);color:var(--ink);text-decoration:none;
+  font-size:19px;font-weight:950;box-shadow:var(--shadow-small)
 }
-
 .hero{
-  border:4px solid var(--line);
-  border-radius:24px;
-  overflow:hidden;
-  background:var(--ink);
-  box-shadow:var(--shadow);
-  margin-bottom:12px;
+  border:4px solid var(--line);border-radius:24px;overflow:hidden;
+  background:var(--ink);box-shadow:var(--shadow);margin-bottom:12px
 }
-
-.hero img{
-  display:block;
-  width:100%;
-  height:clamp(118px,28vw,220px);
-  object-fit:cover;
-}
-
+.hero img{display:block;width:100%;height:clamp(118px,28vw,220px);object-fit:cover}
 .pilot{
-  background:var(--card);
-  border:4px solid var(--line);
-  border-radius:22px;
-  padding:12px;
-  box-shadow:var(--shadow);
-  margin-bottom:10px;
+  background:var(--paper);border:4px solid var(--line);border-radius:22px;
+  padding:12px;box-shadow:var(--shadow);margin-bottom:10px
 }
-
-.pilot-title{
-  font-weight:950;
-  font-size:20px;
-  line-height:1.1;
+.pilot.ok{border-color:var(--ok)}
+.pilot.warning{border-color:#d2a631}
+.pilot.danger{border-color:#c43a2f}
+.pilot-title{font-weight:950;font-size:20px;line-height:1.1}
+.pilot-sub{margin-top:4px;color:var(--ink-soft);font-size:14px;font-weight:850;line-height:1.25}
+.pilot-line{margin-top:10px;display:flex;flex-wrap:wrap;gap:7px}
+.mini-pill,.chip{
+  display:inline-flex;align-items:center;gap:5px;min-height:30px;
+  padding:6px 9px;border-radius:999px;background:var(--paper-2);
+  border:2px solid var(--muted-line);font-size:14px;font-weight:900
 }
-
-.pilot-sub{
-  margin-top:4px;
-  color:var(--ink-soft);
-  font-size:14px;
-  font-weight:850;
-  line-height:1.2;
-}
-
-.pilot-line{
-  margin-top:10px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:7px;
-}
-
-.mini-pill{
-  display:inline-flex;
-  align-items:center;
-  gap:5px;
-  min-height:30px;
-  padding:6px 9px;
-  border-radius:999px;
-  background:var(--card-soft);
-  border:2px solid var(--line-soft);
-  font-size:14px;
-  font-weight:900;
-}
-
-.mini-pill.danger{
-  background:var(--danger-bg);
-  color:var(--danger);
-  border-color:#efb1b1;
-}
-
-.mini-pill.warning{
-  background:var(--warning-bg);
-  color:var(--warning);
-  border-color:#ecd27f;
-}
-
-.mini-pill.ok{
-  background:var(--ok-bg);
-  color:var(--ok);
-  border-color:#b7e0c5;
-}
-
-.tools{
-  display:grid;
-  gap:8px;
-  margin-bottom:14px;
-}
-
+.mini-pill.ok,.chip.ok{background:var(--ok-bg);color:var(--ok);border-color:#9dd5af}
+.mini-pill.warning,.chip.warning{background:var(--warning-bg);color:var(--warning);border-color:#e2c060}
+.mini-pill.danger,.chip.danger{background:var(--danger-bg);color:var(--danger);border-color:#e7a29d}
+.tools{display:grid;gap:8px;margin-bottom:14px}
 .search{
-  width:100%;
-  min-height:46px;
-  border:3px solid var(--line);
-  border-radius:16px;
-  padding:8px 12px;
-  font-size:16px;
-  font-weight:850;
-  background:var(--card);
-  color:var(--ink);
-  outline:none;
-  box-shadow:0 4px 0 rgba(7,24,63,.12);
+  width:100%;min-height:48px;border:3px solid var(--line);border-radius:17px;
+  padding:9px 12px;font-size:16px;font-weight:850;background:var(--paper);
+  color:var(--ink);outline:none;box-shadow:var(--shadow-small)
 }
-
-.search::placeholder{
-  color:rgba(7,24,63,.38);
-}
-
-.filters{
-  display:flex;
-  gap:7px;
-  overflow-x:auto;
-  padding-bottom:4px;
-}
-
+.search::placeholder{color:rgba(7,24,63,.38)}
+.filters{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px}
 .filter-btn{
-  flex:0 0 auto;
-  border:3px solid var(--line);
-  border-radius:999px;
-  background:var(--card);
-  color:var(--ink);
-  padding:8px 11px;
-  font-size:14px;
-  font-weight:950;
-  cursor:pointer;
-  box-shadow:0 3px 0 rgba(7,24,63,.12);
+  flex:0 0 auto;border:3px solid var(--line);border-radius:999px;
+  background:var(--paper);color:var(--ink);padding:8px 12px;
+  font-size:14px;font-weight:950;cursor:pointer;box-shadow:0 3px 0 rgba(7,24,63,.12)
 }
-
-.filter-btn.active{
-  background:var(--ink);
-  color:var(--cream);
-}
-
+.filter-btn.active{background:var(--ink);color:var(--cream)}
 .section-label{
-  margin:18px 4px 8px;
-  color:rgba(7,24,63,.62);
-  text-transform:uppercase;
-  font-size:13px;
-  font-weight:950;
-  letter-spacing:.6px;
+  margin:19px 4px 8px;color:rgba(7,24,63,.62);
+  text-transform:uppercase;font-size:13px;font-weight:950;letter-spacing:.7px
 }
-
-.formation-summary,
-.student-summary{
-  display:grid;
-  gap:8px;
-  margin-bottom:14px;
+.summary-list{display:grid;gap:8px;margin-bottom:14px}
+.summary-row{
+  position:relative;overflow:hidden;background:var(--paper);border:3px solid var(--line);
+  border-radius:20px;padding:11px 12px 11px 17px;box-shadow:var(--shadow-small)
 }
-
-.formation-row,
-.student-row{
-  background:var(--card);
-  border:3px solid var(--line-soft);
-  border-radius:19px;
-  padding:10px 11px;
-  box-shadow:0 4px 0 rgba(7,24,63,.10);
+.summary-row::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--ok)
 }
-
-.formation-row.ok,
-.student-row.ok{
-  border-color:rgba(47,143,78,.28);
+.summary-row.warning::before{background:#d2a631}
+.summary-row.danger::before{background:#c43a2f}
+.summary-title{
+  font-family:var(--display);font-size:clamp(25px,6.4vw,40px);
+  line-height:.92;letter-spacing:-.5px;text-transform:uppercase
 }
-
-.formation-row.warning,
-.student-row.warning{
-  background:#fff8df;
-  border-color:#e2c060;
-}
-
-.formation-row.danger,
-.student-row.danger{
-  background:#fff4f1;
-  border-color:#e7a29d;
-}
-
-.formation-row-title,
-.student-name{
-  font-family:var(--display);
-  font-size:clamp(25px,6.5vw,40px);
-  line-height:.9;
-  letter-spacing:-.5px;
-  text-transform:uppercase;
-}
-
-.formation-row-meta,
-.student-meta{
-  margin-top:5px;
-  color:var(--ink-soft);
-  font-size:14px;
-  line-height:1.2;
-  font-weight:850;
-}
-
-.formation-row-issues,
-.student-issues{
-  margin-top:7px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-}
-
+.summary-meta{margin-top:5px;color:var(--ink-soft);font-size:14px;line-height:1.2;font-weight:850}
+.summary-issues{margin-top:7px;display:flex;flex-wrap:wrap;gap:6px}
 .day-title{
-  margin:24px 4px 10px;
-  font-family:var(--display);
-  font-size:clamp(34px,9vw,62px);
-  line-height:.88;
-  letter-spacing:-1px;
-  text-transform:uppercase;
-  text-shadow:0 3px 0 #f8d67d;
+  margin:25px 4px 10px;font-family:var(--display);
+  font-size:clamp(35px,9vw,62px);line-height:.88;letter-spacing:-1px;
+  text-transform:uppercase;text-shadow:0 3px 0 #f8d67d
 }
-
-.session-card,
-.stagiaire-card{
-  background:var(--card);
-  border:4px solid var(--line);
-  border-radius:24px;
-  padding:12px;
-  margin-bottom:14px;
-  box-shadow:var(--shadow);
+.main-card{
+  background:var(--paper);border:4px solid var(--line);border-radius:26px;
+  padding:12px;margin-bottom:16px;box-shadow:var(--shadow)
 }
-
-.session-card.ok,
-.stagiaire-card.ok{border-color:var(--ok-line)}
-.session-card.warning,
-.stagiaire-card.warning{border-color:var(--warning-line)}
-.session-card.danger,
-.stagiaire-card.danger{border-color:var(--danger-line)}
-
-.session-head{
-  margin-bottom:10px;
-}
-
-.session-title{
-  font-family:var(--display);
-  font-size:clamp(30px,8vw,46px);
-  line-height:.92;
-  letter-spacing:-.8px;
-  text-transform:uppercase;
-}
-
-.session-meta{
-  margin-top:6px;
-  color:var(--ink-soft);
-  font-size:15px;
-  line-height:1.18;
-  font-weight:900;
-}
-
-.session-detail{
-  margin:8px 0 10px;
-  padding:9px 10px;
-  border:2px solid rgba(7,24,63,.16);
-  border-radius:16px;
-  background:var(--card-soft);
-  font-size:15px;
-  line-height:1.22;
-  font-weight:850;
-}
-
-.agent-list{
-  display:grid;
-  gap:8px;
-  margin-top:10px;
-}
-
-.agent-card,
-.person{
-  display:grid;
-  grid-template-columns:68px minmax(0,1fr);
-  gap:10px;
-  align-items:center;
-  min-width:0;
-  background:var(--card-soft);
-  border:2px solid rgba(7,24,63,.16);
-  border-radius:18px;
-  padding:8px;
-}
-
-.agent-card.danger,
-.person.danger{
-  background:#fff4f1;
-  border-color:#e7a29d;
-}
-
-.agent-card.warning,
-.person.warning{
-  background:#fff8df;
-  border-color:#e2c060;
-}
-
-.agent-card.ok,
-.person.ok{
-  border-color:rgba(47,143,78,.22);
-}
-
-.people-box{
-  display:grid;
-  gap:8px;
-  margin-bottom:10px;
-}
-
+.main-card.warning{border-color:#d2a631}
+.main-card.danger{border-color:#c43a2f}
 .avatar{
-  width:62px;
-  height:62px;
-  border-radius:16px;
-  background:#eef3ff;
-  overflow:hidden;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  width:68px;height:68px;border-radius:18px;background:#eaf0ff;
+  overflow:hidden;display:flex;align-items:center;justify-content:center;
+  border:2px solid rgba(7,24,63,.13);flex:0 0 auto
 }
-
-.avatar img{
-  max-width:96%;
-  max-height:96%;
-  width:auto;
-  height:auto;
-  object-fit:contain;
-  display:block;
-}
-
+.avatar img{max-width:97%;max-height:97%;width:auto;height:auto;object-fit:contain;display:block}
 .avatar .initials{
-  width:50px;
-  height:50px;
-  border-radius:14px;
-  border:3px solid var(--line);
-  background:var(--card);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-family:var(--display);
-  font-size:19px;
+  width:54px;height:54px;border-radius:15px;border:3px solid var(--line);
+  background:var(--paper);display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-size:20px
 }
-
-.avatar.has-img .initials{
-  display:none;
-}
-
-.agent-info,
-.person-info{
-  min-width:0;
-}
-
+.avatar.has-img .initials{display:none}
 .role{
-  display:block;
-  margin-bottom:2px;
-  color:rgba(7,24,63,.58);
-  font-size:12px;
-  font-weight:950;
-  letter-spacing:.5px;
-  text-transform:uppercase;
+  display:block;margin-bottom:3px;color:rgba(7,24,63,.58);
+  font-size:12px;font-weight:950;letter-spacing:.65px;text-transform:uppercase
 }
-
-.agent-name,
-.name{
-  display:block;
-  font-size:clamp(22px,5.8vw,33px);
-  line-height:1;
-  font-weight:950;
-  letter-spacing:-.7px;
-  text-transform:uppercase;
-  word-break:normal;
-  overflow-wrap:normal;
-  hyphens:none;
+.person-name{
+  display:block;font-size:clamp(22px,5.7vw,34px);line-height:.98;
+  font-weight:950;letter-spacing:-.7px;text-transform:uppercase;
+  overflow-wrap:anywhere
 }
-
-.agent-card.danger .agent-name,
-.person.danger .name{
-  color:var(--danger);
+.info-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.info-chip{
+  min-height:29px;display:inline-flex;align-items:center;gap:5px;
+  padding:5px 9px;border-radius:999px;border:2px solid var(--muted-line);
+  background:var(--paper);font-size:13px;line-height:1.05;font-weight:900
 }
-
-.agent-card.warning .agent-name,
-.person.warning .name{
-  color:#744000;
+.info-chip a{color:#064ee4;font-weight:950;text-decoration:none}
+.shift-pill{
+  display:inline-flex;align-items:center;gap:6px;min-height:34px;
+  padding:7px 11px;border:3px solid var(--line);border-radius:999px;
+  font-size:14px;line-height:1;font-weight:950;box-shadow:0 3px 0 rgba(7,24,63,.12)
 }
-
-.agent-chips,
-.person-chips{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  margin-top:7px;
-}
-
-.agent-chip,
-.person-chip,
-.chip{
-  min-height:28px;
-  display:inline-flex;
-  align-items:center;
-  gap:5px;
-  padding:5px 8px;
-  border-radius:999px;
-  border:2px solid rgba(7,24,63,.16);
-  background:var(--card);
-  color:var(--ink);
-  font-size:13px;
-  line-height:1.05;
-  font-weight:900;
-}
-
-.chip{
-  min-height:29px;
-  font-size:14px;
-}
-
-.agent-chip a,
-.person-chip a,
-.chip a{
-  color:#064ee4;
-  font-weight:950;
-}
-
-.agent-chip.warning,
-.person-chip.warning,
-.chip.warning{
-  background:var(--warning-bg);
-  color:var(--warning);
-  border-color:#ecd27f;
-}
-
-.agent-chip.danger,
-.person-chip.danger,
-.chip.danger{
-  background:var(--danger-bg);
-  color:var(--danger);
-  border-color:#efb1b1;
-}
-
-.agent-chip.ok,
-.person-chip.ok,
-.chip.ok{
-  background:var(--ok-bg);
-  color:var(--ok);
-  border-color:#b7e0c5;
-}
-
-.alerts{
-  display:grid;
-  gap:6px;
-  margin-top:8px;
-}
-
+.shift-pill.matin{background:var(--matin-soft);border-color:var(--matin);color:#074baf}
+.shift-pill.journee{background:var(--journee-soft);border-color:var(--journee);color:#0b6d31}
+.shift-pill.j4{background:var(--j4-soft);border-color:var(--j4);color:#9b3e00}
+.shift-pill.soir{background:var(--soir-soft);border-color:#d4a900;color:#6f5500}
+.shift-pill.nuit{background:var(--nuit-soft);border-color:var(--nuit);color:#43219d}
+.shift-pill.off,.shift-pill.unknown{background:var(--off-soft);border-color:#9ca3af;color:#4b5563}
+.alerts{display:grid;gap:7px;margin-top:9px}
 .alert{
-  padding:8px 10px;
-  border-radius:15px;
-  border:2px solid transparent;
-  font-size:14px;
-  line-height:1.22;
-  font-weight:850;
+  padding:9px 11px;border-radius:15px;border:2px solid transparent;
+  font-size:14px;line-height:1.25;font-weight:850
 }
-
-.alert.danger{
-  background:var(--danger-bg);
-  color:var(--danger);
-  border-color:#efb1b1;
-}
-
-.alert.warning{
-  background:var(--warning-bg);
-  color:var(--warning);
-  border-color:#ecd27f;
-}
-
-.source{
-  margin-top:9px;
-  color:rgba(7,24,63,.45);
-  font-size:12px;
-  font-weight:850;
-}
-
+.alert.danger{background:var(--danger-bg);color:var(--danger);border-color:#e7a29d}
+.alert.warning{background:var(--warning-bg);color:var(--warning);border-color:#e2c060}
 .empty,.error,.loading{
-  background:var(--card);
-  border:4px solid var(--line);
-  border-radius:20px;
-  padding:14px;
-  font-weight:900;
-  box-shadow:var(--shadow);
+  background:var(--paper);border:4px solid var(--line);border-radius:21px;
+  padding:14px;font-weight:900;box-shadow:var(--shadow)
 }
-
-.error{
-  color:var(--danger);
-}
-
+.error{color:var(--danger)}
 .agenda-box{
-  margin:26px 0 4px;
-  padding:13px;
-  background:var(--card);
-  border:4px solid var(--line);
-  border-radius:24px;
-  box-shadow:var(--shadow);
+  margin:27px 0 4px;padding:13px;background:var(--paper);
+  border:4px solid var(--line);border-radius:25px;box-shadow:var(--shadow)
 }
-
 .agenda-title{
-  margin:0 0 10px;
-  font-family:var(--display);
-  font-size:clamp(25px,7vw,44px);
-  line-height:.92;
-  text-align:center;
-  text-transform:uppercase;
-  letter-spacing:-.8px;
-  text-shadow:0 3px 0 #f8d67d;
+  margin:0 0 10px;font-family:var(--display);font-size:clamp(25px,7vw,44px);
+  line-height:.92;text-align:center;text-transform:uppercase;
+  letter-spacing:-.8px;text-shadow:0 3px 0 #f8d67d
 }
-
-.agenda-buttons{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px;
-}
-
+.agenda-buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .agenda-btn{
-  min-height:62px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:2px;
-  text-decoration:none;
-  color:#fff4ce;
-  border:4px solid #061738;
-  border-radius:20px;
-  font-family:var(--display);
-  font-size:clamp(21px,5.5vw,34px);
-  line-height:.95;
-  text-transform:uppercase;
-  box-shadow:0 6px 0 rgba(7,24,63,.32);
+  min-height:62px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:2px;text-decoration:none;color:#fff4ce;
+  border:4px solid #061738;border-radius:20px;font-family:var(--display);
+  font-size:clamp(21px,5.5vw,34px);line-height:.95;text-transform:uppercase;
+  box-shadow:0 6px 0 rgba(7,24,63,.32)
 }
-
-.agenda-btn.ios{
-  background:linear-gradient(145deg,#3db9ff 0%,#0c6ed5 56%,#083c91 100%);
-}
-
-.agenda-btn.android{
-  background:linear-gradient(145deg,#35d864 0%,#12873d 56%,#075324 100%);
-}
-
-.arrow-line{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:25px;
-  color:var(--ink);
-  font-size:25px;
-  line-height:1;
-  font-weight:950;
-}
-
+.agenda-btn.ios{background:linear-gradient(145deg,#3db9ff 0%,#0c6ed5 56%,#083c91 100%)}
+.agenda-btn.android{background:linear-gradient(145deg,#35d864 0%,#12873d 56%,#075324 100%)}
 @media(min-width:720px){
-  .page{
-    padding-left:14px;
-    padding-right:14px;
-  }
-
-  .pilot,
-  .session-card,
-  .stagiaire-card{
-    padding:14px;
-  }
-
-  .people-box{
-    grid-template-columns:1fr 38px 1fr;
-    align-items:center;
-  }
-
-  .arrow-line{
-    height:auto;
-  }
-
-  .agent-card,
-  .person{
-    grid-template-columns:76px minmax(0,1fr);
-  }
-
-  .avatar{
-    width:70px;
-    height:70px;
-  }
+  .page{padding-left:14px;padding-right:14px}
+  .main-card,.pilot{padding:14px}
+  .avatar{width:76px;height:76px}
+}
+@media(max-width:370px){
+  .avatar{width:58px;height:58px;border-radius:15px}
+  .avatar .initials{width:47px;height:47px;font-size:18px}
+  .person-name{font-size:20px}
+  .shift-pill,.info-chip,.chip{font-size:12px;padding:5px 7px}
 }
 
-@media(max-width:370px){
-  .agent-card,
-  .person{
-    grid-template-columns:60px minmax(0,1fr);
-  }
-
-  .avatar{
-    width:54px;
-    height:54px;
-    border-radius:14px;
-  }
-
-  .agent-name,
-  .name{
-    font-size:20px;
-  }
-
-  .chip,
-  .agent-chip,
-  .person-chip{
-    font-size:13px;
-    padding:5px 7px;
-  }
+.session-card{position:relative;overflow:hidden;padding-top:0}
+.session-banner{
+  margin:0 -12px 12px;padding:11px 12px 12px;
+  border-bottom:4px solid var(--line);background:#dfeaff
+}
+.session-banner.incendie{background:linear-gradient(135deg,#ffdfbf 0%,#ffb36b 100%)}
+.session-banner.identite{background:linear-gradient(135deg,#e8e2ff 0%,#b8a7ff 100%)}
+.session-banner.caces{background:linear-gradient(135deg,#fff1a8 0%,#ffc941 100%)}
+.session-banner.default{background:linear-gradient(135deg,#dce9ff 0%,#9ec4ff 100%)}
+.session-kicker{
+  display:flex;align-items:center;gap:8px;font-size:13px;font-weight:950;
+  letter-spacing:.7px;text-transform:uppercase;color:rgba(7,24,63,.72)
+}
+.session-title{
+  margin-top:3px;font-family:var(--display);font-size:clamp(31px,8vw,48px);
+  line-height:.9;letter-spacing:-.8px;text-transform:uppercase
+}
+.session-meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.session-meta .info-chip{background:rgba(255,250,240,.86)}
+.session-detail{
+  margin:0 0 10px;padding:9px 10px;border:2px solid var(--muted-line);
+  border-radius:16px;background:var(--paper-2);font-size:15px;line-height:1.23;font-weight:850
+}
+.agent-list{display:grid;gap:9px}
+.agent-card{
+  position:relative;display:grid;grid-template-columns:68px minmax(0,1fr);
+  gap:10px;align-items:center;min-width:0;background:var(--paper-2);
+  border:3px solid var(--line);border-radius:21px;padding:10px 10px 10px 16px
+}
+.agent-card::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:8px;
+  border-radius:17px 0 0 17px;background:var(--ok)
+}
+.agent-card.warning::before{background:#d2a631}
+.agent-card.danger::before{background:#c43a2f}
+.agent-card.warning{background:#fff8df}
+.agent-card.danger{background:#fff3ef}
+@media(min-width:720px){
+  .session-banner{margin-left:-14px;margin-right:-14px;padding-left:14px;padding-right:14px}
+  .agent-card{grid-template-columns:76px minmax(0,1fr)}
 }
 </style>
 </head>
-
 <body>
 <main class="page">
-
-  <div class="topbar">
-    <a class="navbtn" href="index.html">← Accueil</a>
-  </div>
+  <div class="topbar"><a class="navbtn" href="index.html">← Accueil</a></div>
 
   <section class="hero">
-    <img
-      src="Image/Bannière/Page Formation.PNG"
-      alt="Formations GHE"
-      onerror="this.onerror=null;this.src='Image/Banni%C3%A8re/Page%20Formation.PNG';"
-    >
+    <img src="Image/Bannière/Page Formation.PNG" alt="Formations GHE"
+      onerror="this.onerror=null;this.src='Image/Banni%C3%A8re/Page%20Formation.PNG';">
   </section>
 
   <section id="pilot" class="pilot ok">
     <div id="pilotTitle" class="pilot-title">Chargement du cockpit…</div>
     <div id="pilotSub" class="pilot-sub">Analyse des sessions de formation à venir</div>
-
     <div class="pilot-line">
       <span id="pilotTypes" class="mini-pill">🎓 0 type</span>
       <span id="pilotSessions" class="mini-pill">📅 0 session</span>
@@ -706,7 +271,6 @@ body{
 
   <section class="tools">
     <input id="search" class="search" type="search" placeholder="Rechercher formation, agent, GHE, téléphone…">
-
     <div class="filters">
       <button class="filter-btn active" data-filter="tous">Tous</button>
       <button class="filter-btn" data-filter="traiter">À traiter</button>
@@ -715,15 +279,10 @@ body{
   </section>
 
   <div class="section-label">Formations concernées</div>
-  <section id="formationSummary" class="formation-summary">
-    <div class="loading">Analyse des formations…</div>
-  </section>
+  <section id="formationSummary" class="summary-list"><div class="loading">Analyse des formations…</div></section>
 
   <div class="section-label">Détail par date</div>
-
-  <section id="content">
-    <div class="loading">Chargement des formations…</div>
-  </section>
+  <section id="content"><div class="loading">Chargement des formations…</div></section>
 
   <section class="agenda-box">
     <h2 class="agenda-title">Ajouter l’agenda formations</h2>
@@ -732,25 +291,190 @@ body{
       <a id="btnAndroid" class="agenda-btn android" href="#"><span>🤖</span><span>Android</span></a>
     </div>
   </section>
-
 </main>
-
 <script>
+function plural(number){ return Number(number) > 1 ? "s" : ""; }
+
+function esc(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function norm(value){
+  return String(value ?? "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .toLowerCase()
+    .trim();
+}
+
+function hasUsefulValue(value){
+  const n = norm(value);
+  return !!n &&
+    n !== "nr" &&
+    n !== "-" &&
+    !n.includes("non renseigne") &&
+    !n.includes("non connu") &&
+    !n.includes("inconnu");
+}
+
+function pushUnique(list,message){
+  const key = norm(message);
+  if (key && !list.some(item => norm(item) === key)) list.push(String(message).trim());
+}
+
+function dedupeList(list){
+  const seen = new Set();
+  return (list || []).filter(item => {
+    const key = norm(item);
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function groupByDate(items){
+  return (items || []).reduce((acc,item) => {
+    const key = item.dateKey || item.dateLabel || "sans-date";
+    (acc[key] ||= []).push(item);
+    return acc;
+  }, {});
+}
+
+function avatarHtml(avatar){
+  avatar = avatar || {};
+  const initials = esc(avatar.initiales || "?");
+  const thumb = String(avatar.thumb || "").trim();
+
+  if (!thumb) {
+    return `<div class="avatar"><div class="initials">${initials}</div></div>`;
+  }
+
+  return `
+    <div class="avatar has-img">
+      <img src="${esc(thumb)}" alt="" loading="lazy"
+        onerror="this.parentElement.classList.remove('has-img');this.remove();">
+      <div class="initials">${initials}</div>
+    </div>
+  `;
+}
+
+function formatGhe(value){
+  if (!hasUsefulValue(value)) return "";
+  const cleaned = String(value).replace(/^(ghe\s*)+/i,"").trim();
+  return cleaned ? "GHE " + cleaned : "";
+}
+
+function issueBlock(issues){
+  const danger = (issues && issues.danger) || [];
+  const warning = (issues && issues.warning) || [];
+  if (!danger.length && !warning.length) return "";
+
+  return `
+    <div class="alerts">
+      ${danger.map(x => `<div class="alert danger">⛔ ${esc(x)}</div>`).join("")}
+      ${warning.map(x => `<div class="alert warning">⚠️ ${esc(x)}</div>`).join("")}
+    </div>
+  `;
+}
+
+function shiftCodeFromAny(value){
+  const parts = typeof value === "object" && value
+    ? [value.code,value.label,value.base,value.horaire]
+    : [value];
+
+  const raw = parts.filter(Boolean).join(" ")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase();
+  const compact = raw.replace(/[^A-Z0-9]/g,"");
+  const tokens = raw.replace(/[^A-Z0-9]+/g," ").trim().split(/\s+/).filter(Boolean);
+
+  if (/^M\d+$/.test(compact) || compact.includes("M0130") || compact.includes("M0131")) return "M";
+  if (/^S\d+$/.test(compact) || compact.includes("S0113")) return "S";
+  if (compact.includes("J0464")) return "J";
+  if (tokens.includes("J4") || compact === "J4") return "J4";
+  if (/^J\d+$/.test(compact)) return "J";
+  if (/^N\d+$/.test(compact)) return "N";
+
+  if (tokens.includes("RTTA") || tokens.includes("RTA") || compact === "RTTA" || compact === "RTA") return "RTTA";
+  if (tokens.includes("RTT") || compact === "RTT") return "RTT";
+
+  const exact = ["RH","CA","RC","RF","SYR","ABS","AM","MA","AA","AR","FO","M","J","S","N"];
+  for (const code of exact) if (tokens.includes(code) || compact === code) return code;
+
+  if (raw.includes("MATIN")) return "M";
+  if (raw.includes("JOURNEE")) return "J";
+  if (raw.includes("SOIR")) return "S";
+  if (raw.includes("NUIT")) return "N";
+  if (raw.includes("SYNDICAT")) return "SYR";
+  if (raw.includes("ABSENCE")) return "ABS";
+  return "";
+}
+
+function shiftMeta(value){
+  const code = shiftCodeFromAny(value);
+  const map = {
+    M:{label:"Matin",icon:"🔵",className:"matin",worked:true,blocking:false},
+    J:{label:"Journée",icon:"🟢",className:"journee",worked:true,blocking:false},
+    J4:{label:"Journée J4",icon:"🟠",className:"j4",worked:true,blocking:false},
+    S:{label:"Soir",icon:"🟡",className:"soir",worked:true,blocking:false},
+    N:{label:"Nuit",icon:"🌙",className:"nuit",worked:true,blocking:false},
+
+    RH:{label:"Repos hebdomadaire",icon:"🛋️",className:"off",worked:false,blocking:true},
+    CA:{label:"Congé payé",icon:"🏝️",className:"off",worked:false,blocking:true},
+    RC:{label:"Repos compensateur",icon:"🔁",className:"off",worked:false,blocking:true},
+    RF:{label:"Repos férié",icon:"🎌",className:"off",worked:false,blocking:true},
+    RTT:{label:"RTT",icon:"🧘",className:"off",worked:false,blocking:true},
+    RTTA:{label:"Récupération du temps de travail",icon:"🧘",className:"off",worked:false,blocking:true},
+    SYR:{label:"Syndicat",icon:"🗣️",className:"off",worked:false,blocking:true},
+    ABS:{label:"Absence",icon:"⚠️",className:"off",worked:false,blocking:true},
+    AM:{label:"Arrêt médical",icon:"🩺",className:"off",worked:false,blocking:true},
+    MA:{label:"Maladie",icon:"🩺",className:"off",worked:false,blocking:true},
+    AA:{label:"Absence autorisée",icon:"📝",className:"off",worked:false,blocking:true},
+    AR:{label:"Absence à régulariser",icon:"⚠️",className:"off",worked:false,blocking:true},
+    FO:{label:"Formation",icon:"🎓",className:"off",worked:false,blocking:true}
+  };
+
+  return code && map[code]
+    ? {...map[code],code,known:true}
+    : {code:"",label:"Shift à vérifier",icon:"⚪",className:"unknown",worked:false,blocking:false,known:false};
+}
+
+function shiftPillHtml(shift, includeTime){
+  const meta = shiftMeta(shift);
+  const time = includeTime && shift && hasUsefulValue(shift.horaire) ? String(shift.horaire).trim() : "";
+  return `
+    <span class="shift-pill ${esc(meta.className)}">
+      <span>${esc(meta.icon)}</span>
+      <span>${esc(meta.label)}${time ? " · " + esc(time) : ""}</span>
+    </span>
+  `;
+}
+
+function missingPhrase(parts){
+  if (parts.length === 1) return parts[0] + " manquant.";
+  if (parts.length === 2) return parts[0] + " et " + parts[1] + " manquants.";
+  const copy = parts.slice();
+  const last = copy.pop();
+  return copy.join(", ") + " et " + last + " manquants.";
+}
 
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOlle3cafAKEAZQ8NAX-peSN6D-yxFO3gX26SnVNUVd5xbwV3CUISg/exec";
-
 const ICS_URL = "https://calendar.google.com/calendar/ical/c5da5df12db0eba65a14410cada08fea4e5a8037ddd256b03e7426cb22cb751b%40group.calendar.google.com/private-4f5072a64d36548137a30abb665ed23f/basic.ics";
 
 let ITEMS = [];
 let CURRENT_FILTER = "tous";
 
-document.getElementById("btnIos").href = ICS_URL.replace(/^https:\/\//i, "webcal://");
-document.getElementById("btnAndroid").href = "https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(ICS_URL);
+document.getElementById("btnIos").href = ICS_URL.replace(/^https:\/\//i,"webcal://");
+document.getElementById("btnAndroid").href =
+  "https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(ICS_URL);
 
-document.getElementById("search").addEventListener("input", refreshView);
-
+document.getElementById("search").addEventListener("input",refreshView);
 document.querySelectorAll(".filter-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
+  btn.addEventListener("click",() => {
     document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     CURRENT_FILTER = btn.dataset.filter;
@@ -764,7 +488,7 @@ function loadJsonp(type){
   const callbackName = "recevoirGhe_" + type + "_" + Date.now();
   const script = document.createElement("script");
 
-  window[callbackName] = function(data){
+  window[callbackName] = data => {
     delete window[callbackName];
     script.remove();
 
@@ -773,12 +497,12 @@ function loadJsonp(type){
       return;
     }
 
-    ITEMS = data.items || [];
+    ITEMS = Array.isArray(data.items) ? data.items : [];
     updatePilot(ITEMS);
     refreshView();
   };
 
-  script.onerror = function(){
+  script.onerror = () => {
     delete window[callbackName];
     script.remove();
     showError("Impossible de charger les données.");
@@ -808,73 +532,246 @@ function filterItems(){
 
     if (CURRENT_FILTER === "traiter" && issueCount === 0) return false;
     if (CURRENT_FILTER === "bloquants" && level !== "danger") return false;
-
     if (!q) return true;
 
     const formation = item.formation || {};
     const agents = item.agents || [];
-    const alertes = item.alertes || {};
+    const alerts = item.alertes || {};
 
-    const txt = [
-      item.titre,
-      item.dateLabel,
-      formation.intitule,
-      formation.typeLabel,
-      formation.horaireAffiche,
-      agents.map(a => [
-        a.nomComplet,
-        a.nom,
-        a.prenom,
-        a.ghe,
-        a.telephone,
-        a.shift && a.shift.code,
-        a.shift && a.shift.label
-      ].join(" ")).join(" "),
-      (alertes.bloquantes || []).join(" "),
-      (alertes.infos || []).join(" ")
-    ].join(" ");
-
-    return norm(txt).includes(q);
+    return norm([
+      item.titre,item.dateLabel,formation.intitule,formation.typeLabel,formation.horaireAffiche,
+      ...agents.flatMap(a => [a.nomComplet,a.nom,a.prenom,a.ghe,a.telephone,a.shift && a.shift.code,a.shift && a.shift.label]),
+      ...(alerts.bloquantes || []),...(alerts.infos || [])
+    ].join(" ")).includes(q);
   });
+}
+
+function compactFormationTitle(item){
+  const f = item.formation || {};
+  const raw = String(item.titre || f.typeLabel || f.intitule || "Formation").trim();
+  return raw.split("|")[0].trim() || "Formation";
+}
+
+function formationKey(item){ return norm(compactFormationTitle(item)); }
+
+function formationVisual(item){
+  const title = norm([
+    compactFormationTitle(item),
+    item.formation && item.formation.intitule,
+    item.formation && item.formation.typeLabel
+  ].join(" "));
+
+  if (title.includes("incendie") || title.includes("feu")) {
+    return {className:"incendie",icon:"🔥",kicker:"Sécurité incendie"};
+  }
+  if (title.includes("identite") || title.includes("vigilance")) {
+    return {className:"identite",icon:"🪪",kicker:"Identité et vigilance"};
+  }
+  if (title.includes("caces") || title.includes("mobilis")) {
+    return {className:"caces",icon:"🏗️",kicker:"Formation technique"};
+  }
+  return {className:"default",icon:"🎓",kicker:"Session de formation"};
+}
+
+function extractHoraire(text){
+  const match = String(text || "").match(/\b\d{1,2}[:h]\d{2}\s*[–-]\s*\d{1,2}[:h]\d{2}\b/i);
+  return match ? match[0].replace(/h/g,":") : "";
+}
+
+function cleanFormationDetail(intitule,title){
+  const value = String(intitule || "").trim();
+  if (!value || norm(value) === norm(title)) return "";
+  return value;
+}
+
+function agentKey(a){
+  return norm(a && (a.nomComplet || [a.nom,a.prenom].filter(Boolean).join(" ") || a.ghe || a.telephone || "agent"));
+}
+
+function agentDisplayName(a){
+  return String(a.nomComplet || [a.nom,a.prenom].filter(Boolean).join(" ") || "Agent").trim();
+}
+
+function messageMentionsAgent(message,a){
+  const msg = norm(message);
+  const names = [
+    a && a.nomComplet,
+    a && a.nom && a.prenom ? a.nom + " " + a.prenom : "",
+    a && a.prenom && a.nom ? a.prenom + " " + a.nom : "",
+    a && a.nom,
+    a && a.prenom
+  ].filter(Boolean).map(norm).filter(x => x.length >= 4);
+
+  return names.some(name => msg.includes(name));
+}
+
+function cleanAgentAlert(message,a){
+  let text = String(message || "").trim();
+  const names = [a.nomComplet,a.nom && a.prenom ? a.nom + " " + a.prenom : "",a.prenom && a.nom ? a.prenom + " " + a.nom : ""].filter(Boolean);
+
+  names.forEach(name => {
+    text = text.replace(new RegExp("^\\s*" + name.replace(/[.*+?^${}()|[\]\\]/g,"\\$&") + "\\s*:\\s*","i"),"");
+  });
+
+  return text
+    .replace(/prévu sur un code non travaillé\s*:\s*/i,"Indisponible : ")
+    .replace(/Code shift non reconnu\s*:\s*/i,"Shift à vérifier : ")
+    .trim();
+}
+
+function agentIssues(a,item){
+  const alerts = item.alertes || {};
+  const danger = [];
+  const warning = [];
+  const meta = shiftMeta(a.shift || {});
+
+  if (meta.blocking) pushUnique(danger,"Indisponible : " + meta.label);
+
+  (alerts.bloquantes || [])
+    .filter(msg => messageMentionsAgent(msg,a))
+    .forEach(msg => pushUnique(danger,cleanAgentAlert(msg,a)));
+
+  (alerts.infos || [])
+    .filter(msg => messageMentionsAgent(msg,a))
+    .forEach(msg => pushUnique(warning,cleanAgentAlert(msg,a)));
+
+  const missing = [];
+  if (!hasUsefulValue(a.ghe)) missing.push("GHE");
+  if (!hasUsefulValue(a.telephone)) missing.push("téléphone");
+  if (missing.length) pushUnique(warning,missingPhrase(missing));
+
+  if (!meta.known) pushUnique(warning,"Shift à vérifier.");
+  if (a.agentTrouve === false) pushUnique(danger,"Agent introuvable dans la source agents.");
+
+  return {danger:dedupeList(danger),warning:dedupeList(warning)};
+}
+
+function formationGeneralAlerts(item){
+  const agents = item.agents || [];
+  const alerts = item.alertes || {};
+
+  return {
+    danger:dedupeList((alerts.bloquantes || []).filter(msg => !agents.some(a => messageMentionsAgent(msg,a)))),
+    warning:dedupeList((alerts.infos || []).filter(msg => !agents.some(a => messageMentionsAgent(msg,a))))
+  };
+}
+
+function issueSignature(item,message,type,agent){
+  return [type,formationKey(item),norm(agent || "general"),norm(message)].join("|");
+}
+
+function countItemIssues(item){
+  const general = formationGeneralAlerts(item);
+  let danger = general.danger.length;
+  let warning = general.warning.length;
+
+  (item.agents || []).forEach(a => {
+    const issues = agentIssues(a,item);
+    danger += issues.danger.length;
+    warning += issues.warning.length;
+  });
+
+  return {danger,warning,total:danger + warning};
+}
+
+function itemLevel(item){
+  const count = countItemIssues(item);
+  if (count.danger || item.niveau === "danger") return "danger";
+  if (count.warning || item.niveau === "warning") return "warning";
+  return "ok";
+}
+
+function uniqueGlobalIssues(items){
+  const danger = new Set();
+  const warning = new Set();
+
+  items.forEach(item => {
+    const general = formationGeneralAlerts(item);
+    general.danger.forEach(msg => danger.add(issueSignature(item,msg,"danger","general")));
+    general.warning.forEach(msg => warning.add(issueSignature(item,msg,"warning","general")));
+
+    (item.agents || []).forEach(a => {
+      const issues = agentIssues(a,item);
+      issues.danger.forEach(msg => danger.add(issueSignature(item,msg,"danger",agentKey(a))));
+      issues.warning.forEach(msg => warning.add(issueSignature(item,msg,"warning",agentKey(a))));
+    });
+  });
+
+  return {danger:danger.size,warning:warning.size,total:danger.size + warning.size};
+}
+
+function formationSummaries(items){
+  const map = new Map();
+
+  items.forEach(item => {
+    const key = formationKey(item);
+    if (!map.has(key)) {
+      map.set(key,{
+        name:compactFormationTitle(item),
+        sessions:0,
+        agents:new Set(),
+        danger:new Set(),
+        warning:new Set()
+      });
+    }
+
+    const row = map.get(key);
+    row.sessions++;
+    (item.agents || []).forEach(a => row.agents.add(agentKey(a)));
+
+    const general = formationGeneralAlerts(item);
+    general.danger.forEach(msg => row.danger.add(issueSignature(item,msg,"danger","general")));
+    general.warning.forEach(msg => row.warning.add(issueSignature(item,msg,"warning","general")));
+
+    (item.agents || []).forEach(a => {
+      const issues = agentIssues(a,item);
+      issues.danger.forEach(msg => row.danger.add(issueSignature(item,msg,"danger",agentKey(a))));
+      issues.warning.forEach(msg => row.warning.add(issueSignature(item,msg,"warning",agentKey(a))));
+    });
+  });
+
+  return Array.from(map.values()).map(row => ({
+    name:row.name,
+    sessions:row.sessions,
+    agentCount:row.agents.size,
+    danger:row.danger.size,
+    warning:row.warning.size
+  })).sort((a,b) => a.name.localeCompare(b.name,"fr"));
+}
+
+function uniqueAgents(items){
+  const set = new Set();
+  items.forEach(item => (item.agents || []).forEach(a => set.add(agentKey(a))));
+  return set;
 }
 
 function updatePilot(items){
   const summaries = formationSummaries(items);
-  const typeCount = summaries.length;
-  const sessionCount = items.length;
-  const agentCount = uniqueAgents(items).size;
-
   const totals = uniqueGlobalIssues(items);
-
+  const agentCount = uniqueAgents(items).size;
   const pilot = document.getElementById("pilot");
-  const title = document.getElementById("pilotTitle");
-  const sub = document.getElementById("pilotSub");
 
   pilot.classList.remove("ok","warning","danger");
+  pilot.classList.add(totals.danger ? "danger" : totals.warning ? "warning" : "ok");
 
-  if (totals.danger > 0) {
-    pilot.classList.add("danger");
-    title.textContent = totals.total + " point" + plural(totals.total) + " à traiter";
-  } else if (totals.warning > 0) {
-    pilot.classList.add("warning");
-    title.textContent = totals.total + " point" + plural(totals.total) + " à vérifier";
-  } else {
-    pilot.classList.add("ok");
-    title.textContent = "Tout est prêt";
-  }
+  document.getElementById("pilotTitle").textContent =
+    totals.total ? totals.total + " point" + plural(totals.total) + " à traiter" : "Tout est prêt";
 
-  sub.textContent =
-    typeCount + " type" + plural(typeCount) + " de formation"
-    + " · "
-    + sessionCount + " session" + plural(sessionCount)
-    + " · "
-    + agentCount + " agent" + plural(agentCount) + " concerné" + plural(agentCount);
+  document.getElementById("pilotSub").textContent =
+    summaries.length + " type" + plural(summaries.length) + " de formation"
+    + " · " + items.length + " session" + plural(items.length)
+    + " · " + agentCount + " agent" + plural(agentCount);
 
-  document.getElementById("pilotTypes").textContent = "🎓 " + typeCount + " type" + plural(typeCount);
-  document.getElementById("pilotSessions").textContent = "📅 " + sessionCount + " session" + plural(sessionCount);
-  document.getElementById("pilotAgents").textContent = "👥 " + agentCount + " agent" + plural(agentCount);
-  document.getElementById("pilotDanger").textContent = "⛔ " + totals.danger + " bloquant" + plural(totals.danger);
-  document.getElementById("pilotWarning").textContent = "⚠️ " + totals.warning + " à vérifier";
+  document.getElementById("pilotTypes").textContent =
+    "🎓 " + summaries.length + " type" + plural(summaries.length);
+  document.getElementById("pilotSessions").textContent =
+    "📅 " + items.length + " session" + plural(items.length);
+  document.getElementById("pilotAgents").textContent =
+    "👥 " + agentCount + " agent" + plural(agentCount);
+  document.getElementById("pilotDanger").textContent =
+    "⛔ " + totals.danger + " bloquant" + plural(totals.danger);
+  document.getElementById("pilotWarning").textContent =
+    "⚠️ " + totals.warning + " à vérifier";
 }
 
 function renderFormationSummary(items){
@@ -887,87 +784,22 @@ function renderFormationSummary(items){
   }
 
   box.innerHTML = summaries.map(s => {
-    const level = s.danger > 0 ? "danger" : (s.warning > 0 ? "warning" : "ok");
+    const level = s.danger ? "danger" : s.warning ? "warning" : "ok";
     const points = s.danger + s.warning;
 
     return `
-      <article class="formation-row ${esc(level)}">
-        <div class="formation-row-title">${esc(s.name)}</div>
-
-        <div class="formation-row-meta">
-          ${esc(s.sessions + " session" + plural(s.sessions))}
-          · ${esc(s.agents.size + " agent" + plural(s.agents.size) + " concerné" + plural(s.agents.size))}
+      <article class="summary-row ${level}">
+        <div class="summary-title">${esc(s.name)}</div>
+        <div class="summary-meta">
+          ${s.sessions} session${plural(s.sessions)} ·
+          ${s.agentCount} agent${plural(s.agentCount)}
         </div>
-
-        <div class="formation-row-issues">
-          ${points ? `<span class="chip ${level === "danger" ? "danger" : "warning"}">${esc(points + " point" + plural(points) + " à traiter")}</span>` : `<span class="chip ok">✅ prêt</span>`}
-          ${s.danger ? `<span class="chip danger">⛔ ${esc(s.danger + " bloquant" + plural(s.danger))}</span>` : ""}
-          ${s.warning ? `<span class="chip warning">⚠️ ${esc(s.warning + " à vérifier")}</span>` : ""}
+        <div class="summary-issues">
+          ${points ? `<span class="chip ${level === "danger" ? "danger" : "warning"}">${points} point${plural(points)} à traiter</span>` : `<span class="chip ok">✅ Prêt</span>`}
         </div>
       </article>
     `;
   }).join("");
-}
-
-function formationSummaries(items){
-  const map = new Map();
-
-  items.forEach(item => {
-    const key = formationKey(item);
-    const name = compactFormationTitle(item);
-    const agents = item.agents || [];
-
-    if (!map.has(key)) {
-      map.set(key, {
-        key,
-        name,
-        sessions:0,
-        agents:new Set(),
-        dangerSet:new Set(),
-        warningSet:new Set()
-      });
-    }
-
-    const s = map.get(key);
-    s.sessions += 1;
-
-    agents.forEach(a => {
-      s.agents.add(agentKey(a));
-    });
-
-    const general = formationGeneralAlerts(item);
-
-    general.danger.forEach(msg => {
-      s.dangerSet.add(issueSignature(item, msg, "danger", "general"));
-    });
-
-    general.warning.forEach(msg => {
-      s.warningSet.add(issueSignature(item, msg, "warning", "general"));
-    });
-
-    agents.forEach(a => {
-      const issues = agentIssues(a, item);
-
-      issues.danger.forEach(msg => {
-        s.dangerSet.add(issueSignature(item, msg, "danger", agentKey(a)));
-      });
-
-      issues.warning.forEach(msg => {
-        s.warningSet.add(issueSignature(item, msg, "warning", agentKey(a)));
-      });
-    });
-  });
-
-  return Array.from(map.values())
-    .map(s => ({
-      key:s.key,
-      name:s.name,
-      sessions:s.sessions,
-      agents:s.agents,
-      danger:s.dangerSet.size,
-      warning:s.warningSet.size
-    }))
-    .sort((a,b) => a.name.localeCompare(b.name, "fr"));
 }
 
 function render(items){
@@ -979,628 +811,86 @@ function render(items){
   }
 
   const groups = groupByDate(items);
-
-  content.innerHTML = Object.keys(groups).map(dateKey => {
-    const list = groups[dateKey];
-    const label = list[0].dateLabel || dateKey;
-
+  content.innerHTML = Object.keys(groups).map(key => {
+    const list = groups[key];
     return `
-      <div class="day-title">${esc(label)}</div>
+      <div class="day-title">${esc(list[0].dateLabel || key)}</div>
       ${list.map(cardFormation).join("")}
     `;
   }).join("");
 }
 
+function contactChipsHtml(agent){
+  const chips = [];
+  const ghe = formatGhe(agent && agent.ghe);
+  const tel = agent && hasUsefulValue(agent.telephone) ? String(agent.telephone).trim() : "";
+
+  if (ghe) chips.push(`<span class="info-chip">${esc(ghe)}</span>`);
+  if (tel) {
+    const href = tel.replace(/[^\d+]/g,"");
+    chips.push(`<span class="info-chip">📞 <a href="tel:${esc(href)}">${esc(tel)}</a></span>`);
+  }
+
+  return chips.join("");
+}
+
+function agentCard(agent,item){
+  const issues = agentIssues(agent,item);
+  const level = issues.danger.length ? "danger" : issues.warning.length ? "warning" : "ok";
+
+  return `
+    <section class="agent-card ${level}">
+      ${avatarHtml(agent.avatar)}
+      <div>
+        <span class="role">Agent</span>
+        <span class="person-name">${esc(agentDisplayName(agent))}</span>
+        <div class="info-chips">
+          ${contactChipsHtml(agent)}
+          ${shiftPillHtml(agent.shift || {},false)}
+        </div>
+        ${issueBlock(issues)}
+      </div>
+    </section>
+  `;
+}
+
 function cardFormation(item){
   const formation = item.formation || {};
   const agents = item.agents || [];
-  const source = "DETAIL_FORMATIONS";
-
   const level = itemLevel(item);
+  const visual = formationVisual(item);
+  const title = compactFormationTitle(item);
+  const detail = cleanFormationDetail(formation.intitule,title);
+  const horaire = hasUsefulValue(formation.horaireAffiche)
+    ? String(formation.horaireAffiche).trim()
+    : extractHoraire(item.titre);
   const general = formationGeneralAlerts(item);
 
-  const title = compactFormationTitle(item);
-  const horaire = formation.horaireAffiche || extractHoraire(item.titre) || "";
-  const detail = cleanFormationDetail(formation.intitule, title);
-
   return `
-    <article class="session-card ${esc(level)}">
-
-      <div class="session-head">
+    <article class="main-card session-card ${level}">
+      <header class="session-banner ${visual.className}">
+        <div class="session-kicker"><span>${visual.icon}</span><span>${esc(visual.kicker)}</span></div>
         <div class="session-title">${esc(title)}</div>
         <div class="session-meta">
-          ${esc([horaire, agents.length + " agent" + plural(agents.length)].filter(Boolean).join(" · "))}
+          ${horaire ? `<span class="info-chip">🕒 ${esc(horaire)}</span>` : `<span class="chip warning">⚠️ Horaire à confirmer</span>`}
+          <span class="info-chip">👥 ${agents.length} agent${plural(agents.length)}</span>
         </div>
-      </div>
+      </header>
 
       ${detail ? `<div class="session-detail">${esc(detail)}</div>` : ""}
-
-      ${general.danger.length || general.warning.length ? issueBlock(general) : ""}
+      ${issueBlock(general)}
 
       <div class="agent-list">
-        ${agents.map(a => agentCard(a, item)).join("")}
+        ${agents.length ? agents.map(a => agentCard(a,item)).join("") : `<div class="empty">Aucun agent inscrit.</div>`}
       </div>
-
-      <div class="source">Source : ${esc(source)}</div>
     </article>
   `;
-}
-
-function agentCard(a, item){
-  const shift = a.shift || {};
-  const issues = agentIssues(a, item);
-  const level = issues.danger.length ? "danger" : (issues.warning.length ? "warning" : "ok");
-
-  const telRaw = String(a.telephone || "").trim();
-  const telOk = hasUsefulValue(telRaw);
-  const telHref = telRaw.replace(/[^\d+]/g, "");
-
-  const gheOk = hasUsefulValue(a.ghe);
-
-  const shiftText = formatShift(shift);
-  const shiftOk = shiftKnown(shiftText);
-
-  const contactHtml = [
-    esc(formatGhe(a.ghe)),
-    telOk ? `📞 <a href="tel:${esc(telHref)}">${esc(telRaw)}</a>` : "📞 non renseigné"
-  ].join(" · ");
-
-  return `
-    <div class="agent-card ${esc(level)}">
-      ${avatarHtml(a.avatar)}
-
-      <div class="agent-info">
-        <span class="role">Agent</span>
-        <span class="agent-name">${esc(agentDisplayName(a))}</span>
-
-        <div class="agent-chips">
-          <span class="agent-chip ${gheOk && telOk ? "" : "warning"}">
-            ${contactHtml}
-          </span>
-
-          <span class="agent-chip ${shiftOk ? "" : "warning"}">
-            ${shiftDot(shift)} ${esc(shiftText)}
-          </span>
-        </div>
-
-        ${issueBlock(issues)}
-      </div>
-    </div>
-  `;
-}
-
-function uniqueGlobalIssues(items){
-  const dangerSet = new Set();
-  const warningSet = new Set();
-
-  items.forEach(item => {
-    const general = formationGeneralAlerts(item);
-
-    general.danger.forEach(msg => {
-      dangerSet.add(issueSignature(item, msg, "danger", "general"));
-    });
-
-    general.warning.forEach(msg => {
-      warningSet.add(issueSignature(item, msg, "warning", "general"));
-    });
-
-    (item.agents || []).forEach(a => {
-      const issues = agentIssues(a, item);
-
-      issues.danger.forEach(msg => {
-        dangerSet.add(issueSignature(item, msg, "danger", agentKey(a)));
-      });
-
-      issues.warning.forEach(msg => {
-        warningSet.add(issueSignature(item, msg, "warning", agentKey(a)));
-      });
-    });
-  });
-
-  return {
-    danger:dangerSet.size,
-    warning:warningSet.size,
-    total:dangerSet.size + warningSet.size
-  };
-}
-
-function countItemIssues(item){
-  const general = formationGeneralAlerts(item);
-  let danger = general.danger.length;
-  let warning = general.warning.length;
-
-  (item.agents || []).forEach(a => {
-    const issues = agentIssues(a, item);
-    danger += issues.danger.length;
-    warning += issues.warning.length;
-  });
-
-  return {
-    danger,
-    warning,
-    total:danger + warning
-  };
-}
-
-function itemLevel(item){
-  const c = countItemIssues(item);
-
-  if (c.danger > 0 || item.niveau === "danger") return "danger";
-  if (c.warning > 0 || item.niveau === "warning") return "warning";
-  return "ok";
-}
-
-function formationGeneralAlerts(item){
-  const agents = item.agents || [];
-  const alertes = item.alertes || {};
-  const bloquantes = alertes.bloquantes || [];
-  const infos = alertes.infos || [];
-
-  return {
-    danger:dedupeList(bloquantes.filter(msg => !agents.some(a => messageMentionsAgent(msg, a))).map(simplifyFormationAlert)),
-    warning:dedupeList(infos.filter(msg => !agents.some(a => messageMentionsAgent(msg, a))).map(simplifyFormationAlert))
-  };
-}
-
-function simplifyFormationAlert(message){
-  return String(message || "").trim();
-}
-
-function messageMentionsAgent(message, a){
-  const msg = norm(message);
-  if (!msg || !a) return false;
-
-  const candidates = [];
-
-  if (a.nomComplet) candidates.push(norm(a.nomComplet));
-
-  if (a.nom && a.prenom) {
-    candidates.push(norm(a.nom + " " + a.prenom));
-    candidates.push(norm(a.prenom + " " + a.nom));
-  }
-
-  if (a.nom && norm(a.nom).length >= 4) candidates.push(norm(a.nom));
-  if (a.prenom && norm(a.prenom).length >= 4) candidates.push(norm(a.prenom));
-
-  return candidates.filter(Boolean).some(candidate => msg.includes(candidate));
-}
-
-function issueSignature(item, message, type, agent){
-  const formation = formationKey(item);
-  const msg = norm(message);
-  const person = norm(agent || "general");
-
-  return [type, formation, person, msg].join("|");
-}
-
-function compactFormationTitle(item){
-  const formation = item.formation || {};
-  const raw = String(item.titre || formation.typeLabel || formation.intitule || "Formation").trim();
-
-  const first = raw.split("|")[0].trim();
-  return first || "Formation";
-}
-
-function cleanFormationDetail(intitule, title){
-  const value = String(intitule || "").trim();
-  if (!value) return "";
-
-  const a = norm(value);
-  const b = norm(title).replace(/[^\w\s]/g,"").trim();
-
-  if (a === b) return "";
-  return value;
-}
-
-function extractHoraire(text){
-  const match = String(text || "").match(/\b\d{1,2}[:h]\d{2}\s*[–-]\s*\d{1,2}[:h]\d{2}\b/i);
-  return match ? match[0].replace(/h/g,":") : "";
-}
-
-function formationKey(item){
-  return norm(compactFormationTitle(item));
-}
-
-function agentKey(a){
-  return norm(a && (a.nomComplet || [a.nom, a.prenom].filter(Boolean).join(" ") || a.ghe || a.telephone || "agent"));
-}
-
-function agentDisplayName(a){
-  return String(a.nomComplet || [a.nom, a.prenom].filter(Boolean).join(" ") || "Agent sans nom").trim();
-}
-
-function uniqueAgents(items){
-  const set = new Set();
-
-  items.forEach(item => {
-    (item.agents || []).forEach(a => set.add(agentKey(a)));
-  });
-
-  return set;
 }
 
 function showError(message){
   document.getElementById("content").innerHTML = `<div class="error">Problème : ${esc(message)}</div>`;
   document.getElementById("formationSummary").innerHTML = `<div class="error">Résumé indisponible.</div>`;
 }
-
-
-function plural(number){
-  return Number(number) > 1 ? "s" : "";
-}
-
-function esc(value){
-  return String(value || "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-}
-
-function norm(value){
-  return String(value || "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")
-    .toLowerCase()
-    .trim();
-}
-
-function escapeRegExp(value){
-  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function hasUsefulValue(value){
-  const n = norm(value);
-
-  if (!n) return false;
-  if (n === "non renseigne") return false;
-  if (n === "non renseignee") return false;
-  if (n.includes("non renseigne")) return false;
-  if (n === "nr") return false;
-  if (n === "-") return false;
-
-  return true;
-}
-
-function pushUnique(list, message){
-  const n = norm(message);
-  if (!list.some(x => norm(x) === n)) list.push(message);
-}
-
-function dedupeList(list){
-  const seen = new Set();
-  const out = [];
-
-  list.forEach(x => {
-    const key = norm(x);
-    if (!seen.has(key)) {
-      seen.add(key);
-      out.push(x);
-    }
-  });
-
-  return out;
-}
-
-function missingPhrase(parts){
-  if (parts.length === 1) return parts[0] + " manquant.";
-  if (parts.length === 2) return parts[0] + " et " + parts[1] + " manquants.";
-
-  const copy = parts.slice();
-  const last = copy.pop();
-  return copy.join(", ") + " et " + last + " manquants.";
-}
-
-function groupByDate(items){
-  return items.reduce((acc,item) => {
-    const key = item.dateKey || "sans-date";
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(item);
-    return acc;
-  }, {});
-}
-
-function avatarHtml(avatar){
-  avatar = avatar || {};
-  const initials = esc(avatar.initiales || "?");
-  const thumb = avatar.thumb || "";
-
-  if (!thumb) {
-    return `<div class="avatar"><div class="initials">${initials}</div></div>`;
-  }
-
-  return `
-    <div class="avatar has-img">
-      <img src="${esc(thumb)}" alt="" loading="lazy" onerror="this.parentElement.classList.remove('has-img');this.remove();">
-      <div class="initials">${initials}</div>
-    </div>
-  `;
-}
-
-function formatGhe(value){
-  const raw = String(value || "").trim();
-
-  if (!hasUsefulValue(raw)) return "GHE non renseigné";
-
-  const cleaned = raw
-    .replace(/^(ghe\s*)+/i, "")
-    .trim();
-
-  return "GHE " + cleaned;
-}
-
-function issueBlock(issues){
-  const danger = issues.danger || [];
-  const warning = issues.warning || [];
-
-  if (!danger.length && !warning.length) return "";
-
-  return `
-    <div class="alerts">
-      ${danger.map(x => `<div class="alert danger">⛔ ${esc(x)}</div>`).join("")}
-      ${warning.map(x => `<div class="alert warning">⚠️ ${esc(x)}</div>`).join("")}
-    </div>
-  `;
-}
-
-
-
-
-
-/* =========================================================
-   PATCH INTÉGRÉ — SHIFTS INTELLIGENTS FORMATIONS
-   But :
-   - RH / CA / RTT / RTa / RC / RF / SYR / ABS / AM / MA / AA / AR / FO
-     sont reconnus, mais restent BLOQUANTS en rouge.
-   - M / S / J / J4 / N / M0130 / M0131 sont reconnus comme shifts travaillés.
-   ========================================================= */
-
-function GHE_shiftCodeFromText(value){
-  const raw = String(value || "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toUpperCase();
-
-  const compact = raw.replace(/[^A-Z0-9]/g, "");
-  const spaced = raw.replace(/[^A-Z0-9]+/g, " ").trim();
-  const tokens = spaced ? spaced.split(/\s+/) : [];
-
-  if (compact.includes("M0130")) return "M0130";
-  if (compact.includes("M0131")) return "M0131";
-
-  if (tokens.includes("RTTA") || tokens.includes("RTA") || compact.includes("RTTA") || compact.includes("RTA")) return "RTTA";
-  if (tokens.includes("RTT") || compact.includes("RTT")) return "RTT";
-
-  if (tokens.includes("J4") || compact.includes("J4")) return "J4";
-
-  if (tokens.includes("RH")) return "RH";
-  if (tokens.includes("CA")) return "CA";
-  if (tokens.includes("RC")) return "RC";
-  if (tokens.includes("RF")) return "RF";
-  if (tokens.includes("SYR") || tokens.includes("SYN") || raw.includes("SYNDICAT")) return "SYR";
-  if (tokens.includes("ABS") || raw.includes("ABSENCE")) return "ABS";
-
-  if (tokens.includes("AM")) return "AM";
-  if (tokens.includes("MA")) return "MA";
-  if (tokens.includes("AA")) return "AA";
-  if (tokens.includes("AR")) return "AR";
-  if (tokens.includes("FO")) return "FO";
-
-  if (raw.includes("MATIN") || tokens.includes("M")) return "M";
-  if (raw.includes("SOIR") || tokens.includes("S")) return "S";
-  if (raw.includes("NUIT") || tokens.includes("N")) return "N";
-  if (raw.includes("JOURNEE") || raw.includes("JOURNÉE") || tokens.includes("J")) return "J";
-
-  return "";
-}
-
-function GHE_shiftMetaFromCode(code){
-  const c = String(code || "").toUpperCase();
-
-  const map = {
-    M:     {code:"M",     icon:"🔵", label:"Matin", worked:true,  blocking:false, family:"matin"},
-    M0130: {code:"M0130", icon:"🌅", label:"Matin référence M0130", worked:true, blocking:false, family:"matin"},
-    M0131: {code:"M0131", icon:"🌅", label:"Matin référence M0131", worked:true, blocking:false, family:"matin"},
-    S:     {code:"S",     icon:"🟡", label:"Soir", worked:true,   blocking:false, family:"soir"},
-    J:     {code:"J",     icon:"🟢", label:"Journée", worked:true, blocking:false, family:"journee"},
-    J4:    {code:"J4",    icon:"🟠", label:"Journée J4", worked:true, blocking:false, family:"journee"},
-    N:     {code:"N",     icon:"🌙", label:"Nuit", worked:true,   blocking:false, family:"nuit"},
-
-    RH:    {code:"RH",    icon:"🛋️", label:"Repos hebdomadaire", worked:false, blocking:true, family:"repos"},
-    CA:    {code:"CA",    icon:"🏝️", label:"Congé payé", worked:false, blocking:true, family:"conge"},
-    RC:    {code:"RC",    icon:"🔁", label:"Repos compensateur", worked:false, blocking:true, family:"recuperation"},
-    RF:    {code:"RF",    icon:"🎌", label:"Repos férié / récupération", worked:false, blocking:true, family:"recuperation"},
-    RTT:   {code:"RTT",   icon:"🧘", label:"RTT", worked:false, blocking:true, family:"recuperation"},
-    RTTA:  {code:"RTTA",  icon:"🧘", label:"Récupération temps de travail", worked:false, blocking:true, family:"recuperation"},
-    SYR:   {code:"SYR",   icon:"🗣️", label:"Syndicat", worked:false, blocking:true, family:"syndicat"},
-
-    ABS:   {code:"ABS",   icon:"⚠️", label:"Absence", worked:false, blocking:true, family:"absence"},
-    AM:    {code:"AM",    icon:"⚪", label:"Statut spécial AM à vérifier", worked:false, blocking:true, family:"special"},
-    MA:    {code:"MA",    icon:"⚪", label:"Statut spécial MA à vérifier", worked:false, blocking:true, family:"special"},
-    AA:    {code:"AA",    icon:"⚪", label:"Statut spécial AA à vérifier", worked:false, blocking:true, family:"special"},
-    AR:    {code:"AR",    icon:"⚪", label:"Statut spécial AR à vérifier", worked:false, blocking:true, family:"special"},
-    FO:    {code:"FO",    icon:"⚪", label:"Statut spécial FO à vérifier", worked:false, blocking:true, family:"special"}
-  };
-
-  return map[c] || {code:c, icon:"⚪", label:c || "Shift inconnu", worked:false, blocking:false, family:"unknown", known:false};
-}
-
-function GHE_shiftMetaFromAny(value){
-  if (typeof value === "object" && value) {
-    const code = GHE_shiftCodeFromText([
-      value.code,
-      value.label,
-      value.base,
-      value.horaire
-    ].join(" "));
-
-    const meta = GHE_shiftMetaFromCode(code);
-    meta.known = !!code;
-    return meta;
-  }
-
-  const code = GHE_shiftCodeFromText(value);
-  const meta = GHE_shiftMetaFromCode(code);
-  meta.known = !!code;
-  return meta;
-}
-
-function GHE_smartShiftMessage(message){
-  const meta = GHE_shiftMetaFromAny(message);
-
-  if (meta.known && meta.blocking) {
-    return "Indisponible : " + meta.code + " — " + meta.label;
-  }
-
-  if (meta.known && meta.worked) {
-    return "Shift reconnu : " + meta.code + " — " + meta.label + ". Vérifier la compatibilité avec le créneau prévu.";
-  }
-
-  return String(message || "").trim();
-}
-
-function GHE_messageIsShiftProblem(message){
-  const n = norm(message);
-  return (
-    n.includes("code shift") ||
-    n.includes("shift non reconnu") ||
-    n.includes("code non travaille") ||
-    n.includes("non travaille")
-  );
-}
-
-function GHE_messageIsBlockingShift(message){
-  const meta = GHE_shiftMetaFromAny(message);
-  return meta.known && meta.blocking;
-}
-
-function cleanShiftText(value){
-  return String(value || "")
-    .replace(/[🔵🟢🟡🟠🌙🌅🛋️🏝️🔁🎌🧘🗣️⚪✅⛔⚠️]/g,"")
-    .replace(/\s+/g," ")
-    .trim();
-}
-
-function formatShift(shift){
-  shift = shift || {};
-
-  const meta = GHE_shiftMetaFromAny(shift);
-  const rawLabel = cleanShiftText(shift.label);
-  const rawCode = cleanShiftText(shift.code);
-
-  if (meta.known) {
-    return meta.label + " · " + meta.code;
-  }
-
-  if (rawLabel && rawCode) return rawLabel + " · " + rawCode;
-  if (rawLabel) return rawLabel;
-  if (rawCode) return rawCode;
-
-  return "inconnu";
-}
-
-function shiftKnown(text){
-  const meta = GHE_shiftMetaFromAny(text);
-  if (meta.known) return true;
-
-  const n = norm(text);
-  return !!n && !n.includes("non connu") && !n.includes("inconnu") && !n.includes("non renseigne");
-}
-
-function shiftDot(shift){
-  const meta = GHE_shiftMetaFromAny(shift);
-  if (meta.known) return meta.icon;
-  return "⚪";
-}
-
-function simplifyAgentAlert(message, a){
-  let s = String(message || "").trim();
-
-  const names = [
-    a.nomComplet,
-    a.nom && a.prenom ? a.nom + " " + a.prenom : "",
-    a.nom && a.prenom ? a.prenom + " " + a.nom : "",
-    a.nom,
-    a.prenom
-  ].filter(Boolean);
-
-  names.forEach(name => {
-    s = s.replace(new RegExp("^\\s*" + escapeRegExp(name) + "\\s*:\\s*", "i"), "");
-  });
-
-  if (GHE_messageIsShiftProblem(s)) {
-    return GHE_smartShiftMessage(s);
-  }
-
-  s = s.replace(/prévu sur un code non travaillé\s*:\s*/i, "Code non travaillé : ");
-  s = s.replace(/Code shift non reconnu\s*:\s*/i, "Code shift non reconnu : ");
-  s = s.replace(/Téléphone manquant\.?/i, "Téléphone manquant.");
-  s = s.replace(/GHE manquant\.?/i, "GHE manquant.");
-
-  return s.trim();
-}
-
-function agentIssues(a, item){
-  const alertes = item.alertes || {};
-  const danger = [];
-  const warning = [];
-
-  const shift = a.shift || {};
-  const shiftText = formatShift(shift);
-  const meta = GHE_shiftMetaFromAny(shift);
-
-  if (meta.known && meta.blocking) {
-    pushUnique(danger, "Indisponible : " + meta.code + " — " + meta.label);
-  }
-
-  (alertes.bloquantes || [])
-    .filter(msg => messageMentionsAgent(msg, a))
-    .forEach(msg => pushUnique(danger, simplifyAgentAlert(msg, a)));
-
-  const missing = [];
-  if (!hasUsefulValue(a.ghe)) missing.push("GHE");
-  if (!hasUsefulValue(a.telephone)) missing.push("téléphone");
-
-  if (missing.length) {
-    warning.push(missingPhrase(missing));
-  }
-
-  const hasShiftAlert = (alertes.infos || []).concat(alertes.bloquantes || [])
-    .some(msg => {
-      const n = norm(msg);
-      return n.includes("code shift") || n.includes("shift non reconnu") || n.includes("code non travaille");
-    });
-
-  (alertes.infos || [])
-    .filter(msg => messageMentionsAgent(msg, a))
-    .forEach(msg => {
-      const n = norm(msg);
-
-      if (missing.length && (n.includes("ghe") || n.includes("telephone"))) return;
-
-      if (GHE_messageIsBlockingShift(msg)) {
-        pushUnique(danger, simplifyAgentAlert(msg, a));
-        return;
-      }
-
-      pushUnique(warning, simplifyAgentAlert(msg, a));
-    });
-
-  if (!shiftKnown(shiftText) && !hasShiftAlert) {
-    pushUnique(warning, "Shift à vérifier.");
-  }
-
-  if (a.agentTrouve === false) {
-    pushUnique(danger, "Agent introuvable dans la source agents.");
-  }
-
-  return {
-    danger:dedupeList(danger),
-    warning:dedupeList(warning)
-  };
-}
-
 </script>
 </body>
 </html>
