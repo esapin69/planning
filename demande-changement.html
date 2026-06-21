@@ -98,8 +98,7 @@ p{
   text-align:center;
 }
 .small{font-size:14px;color:var(--muted);line-height:1.35;text-align:left;font-weight:750}
-.page{display:none;animation:fade .16s ease-out}.page.active{display:block}
-@keyframes fade{from{opacity:.25;transform:translateY(5px)}to{opacity:1;transform:none}}
+.page{display:none}.page.active{display:block}
 .card{
   background:rgba(255,250,240,.96);
   border:3px solid var(--navy);
@@ -210,21 +209,12 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
 .mailKnown .mailPerson:first-child{margin-top:0;padding-top:0;border-top:0}
 .mailAsk{display:none;margin-top:10px}.mailAsk.show{display:block}.mailMissingTitle{margin:14px 0 8px;font-weight:950;color:var(--navy)}
 
-/* Chargement harmonisÃ© */
-.startLoading{position:relative;display:grid;justify-items:center;gap:15px;margin:16px 0 8px;padding:10px 8px 22px;text-align:center;overflow:hidden}
-.loading-title{margin:4px 0 0;color:var(--navy);font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:clamp(52px,15vw,98px);line-height:.75;letter-spacing:-.035em;text-transform:uppercase;text-shadow:0 5px 0 #f1ce79,3px 8px 0 rgba(7,24,63,.09)}
+/* Chargement statique, sans image et sans animation */
+.startLoading{position:relative;display:grid;justify-items:center;gap:16px;margin:18px 0 8px;padding:14px 6px 24px;text-align:center}
+.loading-title{display:grid;gap:2px;margin:4px 0 2px;color:var(--navy);font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:clamp(44px,12.5vw,78px);line-height:.86;letter-spacing:-.025em;text-transform:uppercase;text-shadow:0 5px 0 #f1ce79,3px 8px 0 rgba(7,24,63,.09)}
 .loading-title span{display:block}
-.loading-state{display:flex;align-items:center;justify-content:center;min-height:52px;max-width:660px;padding:10px 18px 11px;border:4px solid var(--navy);border-radius:999px;background:#fffaf0;color:var(--navy);font-size:clamp(16px,4.5vw,23px);font-weight:950;line-height:1.15;box-shadow:0 5px 0 rgba(7,24,63,.14)}
-.loading-dots{display:inline-flex;width:30px;justify-content:flex-start;margin-left:4px}
-.loading-dots::after{content:"";animation:loadingDots 1.25s steps(4,end) infinite}
-@keyframes loadingDots{0%{content:""}25%{content:"."}50%{content:".."}75%,100%{content:"..."}}
-.loading-note{max-width:650px;margin:0;color:rgba(7,24,63,.76);font-size:clamp(17px,4.5vw,23px);font-weight:850;line-height:1.35}
-.loading-visual{position:relative;width:min(100%,610px);min-height:220px;display:flex;align-items:center;justify-content:center;margin-top:2px}
-.loading-visual::after{content:"";position:absolute;left:16%;right:16%;bottom:7%;height:24px;border-radius:50%;background:rgba(7,24,63,.16);filter:blur(11px);animation:loadingShadow 2.7s ease-in-out infinite}
-.loading-visual img{position:relative;z-index:1;display:block;width:100%;max-height:410px;object-fit:contain;filter:drop-shadow(0 9px 0 rgba(7,24,63,.12));animation:loadingFloat 2.7s ease-in-out infinite;transform-origin:center bottom}
-@keyframes loadingFloat{0%,100%{transform:translateY(0) rotate(-.25deg)}50%{transform:translateY(-10px) rotate(.25deg)}}
-@keyframes loadingShadow{0%,100%{transform:scaleX(1);opacity:.55}50%{transform:scaleX(.88);opacity:.35}}
-@media(prefers-reduced-motion:reduce){.loading-visual img,.loading-visual::after,.loading-dots::after{animation:none!important}}
+.loading-state{display:flex;align-items:center;justify-content:center;width:min(100%,660px);min-height:54px;padding:11px 18px 12px;border:4px solid var(--navy);border-radius:999px;background:#fffaf0;color:var(--navy);font-size:clamp(17px,4.5vw,23px);font-weight:950;line-height:1.15;box-shadow:0 5px 0 rgba(7,24,63,.14)}
+.loading-note{width:min(100%,660px);margin:0;padding:16px 18px 17px;border:3px solid rgba(7,24,63,.18);border-radius:22px;background:rgba(255,250,240,.92);color:rgba(7,24,63,.82);font-size:clamp(16px,4.2vw,21px);font-weight:850;line-height:1.35;box-shadow:0 5px 0 rgba(7,24,63,.08)}
 .startChoice[hidden],.startLoading[hidden]{display:none!important}
 
 /* Carte identitÃ© : avatar seul + grand titre */
@@ -271,10 +261,10 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
 @media(max-width:560px){
   .app{padding:calc(10px + env(safe-area-inset-top)) 8px calc(16px + env(safe-area-inset-bottom))}
   .back{border-width:4px;min-height:52px}
-  .startLoading{gap:13px;padding:7px 3px 18px}
-  .loading-title{font-size:clamp(48px,15.5vw,78px)}
+  .startLoading{gap:13px;padding:10px 3px 20px}
+  .loading-title{font-size:clamp(42px,12vw,68px);line-height:.9}
   .loading-state{min-height:48px;padding:9px 14px 10px;border-width:3px}
-  .loading-visual{min-height:190px}.loading-visual img{max-height:350px}
+  .loading-note{padding:14px 15px 15px}
   #whoBox{border-width:4px;padding:10px}
   .request-identity{grid-template-columns:minmax(130px,44%) minmax(0,1fr);gap:7px;min-height:158px}
   .request-avatar-wrap{width:clamp(138px,40vw,175px);height:clamp(138px,40vw,175px)}
@@ -298,14 +288,13 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
 <body>
 <!-- VISUEL_SITE_V12_FIL_CHRONOLOGIQUE_MOIS_REPERES -->
   <div class="app">
-    <a class="back" href="index.html">â Retour accueil</a>
+    <a class="back" href="index.html">&larr; Retour accueil</a>
 
     <section id="pStart" class="page active">
       <div id="startLoading" class="startLoading">
         <div class="loading-title"><span>Demander</span><span>un</span><span>changement</span></div>
-        <div class="loading-state"><span id="loadingStateText">Connexion Ã  ton espace</span><span class="loading-dots" aria-hidden="true"></span></div>
-        <p class="loading-note">Il y a beaucoup dâinformations Ã  rÃ©cupÃ©rer ici. Cela peut prendre quelques secondes.</p>
-        <div class="loading-visual"><img src="Image/Chargement/Ãchange.PNG" alt="Deux personnes Ã©changent leur shift"></div>
+        <div class="loading-state" id="loadingStateText">Connexion &agrave; ton espace</div>
+        <p class="loading-note">Il y a beaucoup d&rsquo;informations &agrave; r&eacute;cup&eacute;rer ici. Cela peut prendre quelques secondes.</p>
       </div>
 
       <div id="startChoice" class="startChoice" hidden>
@@ -499,7 +488,7 @@ function roleSession(session){return cleanSession(droitsSession(session).role||d
 function estDemo(session){return normSession(sessionNom(session))==='DEMO'&&normSession(sessionPrenom(session))==='DEMO'}
 function estEddySapin(session){const key=normSession(sessionKey(session));const nom=normSession(sessionNom(session));const prenom=normSession(sessionPrenom(session));return key==='SAPIN_EDDY'||(nom==='SAPIN'&&prenom==='EDDY')}
 function peutChoisirTousLesDemandeurs(session){const droits=droitsSession(session);const role=roleSession(session);if(estDemo(session))return true;if(estEddySapin(session))return false;return role==='chef'||role==='total'||droits.acces_chefs===true||droits.admin===true||droits.est_admin===true}
-async function lireSessionConnectee(){const res=await fetch('/__ghe/me?t='+Date.now(),{credentials:'same-origin',cache:'no-store'});if(!res.ok)throw new Error('Session connectÃ©e indisponible.');const data=await res.json();if(!data||!data.ok||!data.session)throw new Error('Session connectÃ©e invalide.');return data.session}
+async function lireSessionConnectee(){const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),15000);try{const res=await fetch('/__ghe/me?t='+Date.now(),{credentials:'same-origin',cache:'no-store',signal:controller.signal});if(!res.ok)throw new Error('Session connectÃ©e indisponible.');const data=await res.json();if(!data||!data.ok||!data.session)throw new Error('Session connectÃ©e invalide.');return data.session}catch(e){if(e&&e.name==='AbortError')throw new Error('La connexion automatique a pris trop de temps.');throw e}finally{clearTimeout(timer)}}
 function trouverAgentConnecte(session){const key=normSession(sessionKey(session));const nom=normSession(sessionNom(session));const prenom=normSession(sessionPrenom(session));const nomPrenom=normSession(sessionNom(session)+' '+sessionPrenom(session));const prenomNom=normSession(sessionPrenom(session)+' '+sessionNom(session));return(DATA.agents||[]).find(a=>{const ids=[a.id_agent,a.agent_key,a.agent_uid,a.agent,a.key].map(normSession).filter(Boolean);const affiche=normSession(a.nom_affiche||a.nomComplet||a.nom_complet||a.fullName||'');const aNom=normSession(a.nom||a.NOM||'');const aPrenom=normSession(a.prenom||a['prÃ©nom']||a.PRENOM||a['PRÃNOM']||'');return(key&&ids.includes(key))||(nom&&prenom&&aNom===nom&&aPrenom===prenom)||(nomPrenom&&affiche===nomPrenom)||(prenomNom&&affiche===prenomNom)||(nom&&prenom&&affiche.includes(nom)&&affiche.includes(prenom))})||null}
 function afficherChargementDirect(){setLoadingStatus('Connexion Ã  ton espace');$('startLoading').hidden=false;$('startChoice').hidden=true}
 function afficherListeDemandeurs(){$('startLoading').hidden=true;$('startChoice').hidden=false;clearMsg('startMsg');renderAgents()}
@@ -509,16 +498,19 @@ async function init(){
   if(!isReadyUrl()){$('startLoading').hidden=true;$('startChoice').hidden=false;msg('startMsg','warn','Il faut coller lâURL /exec du script pont GitHub dans la constante API_URL.');$('agentList').innerHTML='';return}
   try{
     setLoadingStatus('RÃ©cupÃ©ration des informations');
-    const [res,session]=await Promise.all([api('init'),lireSessionConnectee()]);
+    const res=await api('init');
     if(!res||!res.ok)throw new Error(res&&res.error?res.error:'Chargement impossible.');
     DATA=res;
     state.responsableId=(DATA.responsables&&DATA.responsables[0])?DATA.responsables[0].id:'';
+    let session;
+    try{setLoadingStatus('Connexion Ã  ton espace');session=await lireSessionConnectee()}
+    catch(sessionError){afficherListeDemandeurs();msg('startMsg','warn','La connexion automatique nâa pas rÃ©pondu. Recherche ton nom pour continuer.');return}
     if(peutChoisirTousLesDemandeurs(session)){afficherListeDemandeurs();return}
     const agentConnecte=trouverAgentConnecte(session);
     if(!agentConnecte)throw new Error('Impossible de retrouver ton nom dans le planning.');
-    setLoadingStatus('Recherche de ton planning');
+    setLoadingStatus('RÃ©cupÃ©ration de ton planning');
     await selectAgent(agentConnecte.id_agent);
-  }catch(e){$('startLoading').hidden=true;$('startChoice').hidden=false;$('agentSearch').style.display='none';$('agentList').style.display='none';msg('startMsg','err',(e.message||String(e))+' DÃ©connecte-toi puis reconnecte-toi avec ton propre compte.')}
+  }catch(e){$('startLoading').hidden=true;$('startChoice').hidden=false;$('agentSearch').style.display='none';$('agentList').style.display='none';msg('startMsg','err',(e.message||String(e))+' Recharge la page ou reconnecte-toi.')}
 }
 
 function renderAgents(){const q=($('agentSearch').value||'').toLowerCase().normalize('NFD').replace(/[Ì-Í¯]/g,'');const list=(DATA.agents||[]).filter(a=>String(a.nom_affiche||'').toLowerCase().normalize('NFD').replace(/[Ì-Í¯]/g,'').includes(q)).slice(0,90);$('agentList').innerHTML=list.map(a=>`<button class="agentBtn" onclick="selectAgent('${attr(a.id_agent)}')"><span class="name">${esc(a.nom_affiche)}</span></button>`).join('')||'<p>Aucun agent trouvÃ©.</p>'}
@@ -532,17 +524,18 @@ function futureShifts(){return(CAL.agent&&CAL.agent.shifts?CAL.agent.shifts:[]).
 function firstFutureMonth(res){const shifts=(res.agent&&res.agent.shifts?res.agent.shifts:[]).filter(isFutureShift);const months=res.mois||[];return months.find(m=>shifts.some(s=>s.mois===m))||(shifts[0]&&shifts[0].mois)||''}
 
 async function selectAgent(id){
-  const a=(DATA.agents||[]).find(x=>String(x.id_agent)===String(id));if(!a)return;state.agent=a;
+  const a=(DATA.agents||[]).find(x=>String(x.id_agent)===String(id));
+  if(!a)return;
+  state.agent=a;
   $('startChoice').hidden=true;
   $('startLoading').hidden=false;
+  setLoadingStatus('RÃ©cupÃ©ration de ton planning');
   try{
-    setLoadingStatus('RÃ©cupÃ©ration des jours disponibles');
     const res=await api('calendar',{agentId:id});
     if(!res||!res.ok)throw new Error(res&&res.error?res.error:'Planning introuvable.');
     CAL=res;state.currentMonth=firstFutureMonth(res);loadMailDrafts();const officialMail=knownMail(id);state.demandeur_email=officialMail||state.demandeur_email||'';saveMailDrafts();
-    setLoadingStatus('PrÃ©paration de la demande');
     renderDaysPage();setTimeout(restoreDemandeurMailInput,0);showPage('pDays');
-  }catch(e){$('startLoading').hidden=true;$('startChoice').hidden=false;msg('startMsg','err',e.message||String(e));throw e}
+  }catch(e){$('startLoading').hidden=true;$('startChoice').hidden=false;msg('startMsg','err',e.message||String(e))}
 }
 
 function planningParseDateIso(iso){const p=String(iso||'').slice(0,10).split('-').map(Number);if(p.length!==3||!p[0]||!p[1]||!p[2])return null;return new Date(p[0],p[1]-1,p[2],0,0,0)}
