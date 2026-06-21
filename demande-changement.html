@@ -210,10 +210,31 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
 .mailKnown .mailPerson:first-child{margin-top:0;padding-top:0;border-top:0}
 .mailAsk{display:none;margin-top:10px}.mailAsk.show{display:block}.mailMissingTitle{margin:14px 0 8px;font-weight:950;color:var(--navy)}
 
-/* ÉCRAN DE CHARGEMENT : fonctionnement inchangé, simple barre ajoutée */
+/* Titre de page visible pendant le chargement */
+.loadingPageTitle{
+  margin:28px auto 16px;
+  padding:0 8px;
+  color:var(--navy);
+  text-align:center;
+  text-transform:uppercase;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(48px,13vw,88px);
+  line-height:.78;
+  letter-spacing:-.035em;
+  text-shadow:
+    0 5px 0 #f1ce79,
+    3px 8px 0 rgba(7,24,63,.09);
+}
+.loadingPageTitle span{display:block}
+.loadingPageTitle.request{
+  font-size:clamp(42px,11.5vw,78px);
+}
+.loadingPageTitle[hidden]{display:none!important}
+
+/* Écran de chargement commun aux deux pages */
 .startLoading{
   margin-top:16px;
-  padding:22px 12px;
+  padding:22px 12px 24px;
   border:4px solid var(--navy);
   border-radius:24px;
   background:#fff;
@@ -225,10 +246,31 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
   font-weight:950;
   box-shadow:0 7px 0 rgba(7,24,63,.12);
 }
-.loading-bar{width:min(88%,580px);height:20px;margin:16px auto 0;overflow:hidden;border:3px solid var(--navy);border-radius:999px;background:#fffaf0;box-shadow:0 4px 0 rgba(7,24,63,.12)}
-.loading-bar-fill{display:block;width:34%;height:100%;border-radius:999px;background:linear-gradient(90deg,#e6ad35,#ffcf5c,#e6ad35);animation:loadingBar 1.35s ease-in-out infinite}
-@keyframes loadingBar{0%{transform:translateX(-115%)}100%{transform:translateX(345%)}}
-@media(prefers-reduced-motion:reduce){.loading-bar-fill{animation-duration:2.4s}}
+.loading-bar{
+  width:min(88%,580px);
+  height:20px;
+  margin:16px auto 0;
+  overflow:hidden;
+  border:3px solid var(--navy);
+  border-radius:999px;
+  background:#fffaf0;
+  box-shadow:0 4px 0 rgba(7,24,63,.12);
+}
+.loading-bar-fill{
+  display:block;
+  width:34%;
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg,#e6ad35,#ffcf5c,#e6ad35);
+  animation:loadingBar 1.35s ease-in-out infinite;
+}
+@keyframes loadingBar{
+  0%{transform:translateX(-115%)}
+  100%{transform:translateX(345%)}
+}
+@media(prefers-reduced-motion:reduce){
+  .loading-bar-fill{animation-duration:2.4s}
+}
 .startChoice[hidden],
 .startLoading[hidden]{display:none!important}
 
@@ -259,7 +301,7 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
 .request-identity-text{display:flex;align-items:center;justify-content:center;text-align:center}
 .request-identity-sub{margin:0;color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-weight:950;font-size:clamp(22px,5.5vw,38px);line-height:1.08;text-align:center}
 
-.monthChips{display:none!important}
+.monthChips{display:flex!important}
 .planning-month-section{scroll-margin-top:20px;margin-top:25px}
 .planning-month-divider{position:relative;display:flex;align-items:center;justify-content:center;min-height:108px;margin:30px 0 8px;padding:4px 58px;border:0;border-radius:0;background:transparent;box-shadow:none;color:var(--navy);text-align:center;text-transform:uppercase;font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:clamp(58px,15vw,112px);line-height:.78;letter-spacing:-.02em;text-shadow:0 5px 0 #f1ce79,3px 8px 0 rgba(7,24,63,.08);overflow:visible}
 .planning-month-divider::before,.planning-month-divider::after{content:"";position:absolute;top:50%;z-index:0;width:min(12vw,90px);height:3px;border:0;background:linear-gradient(90deg,transparent,#e6ad35);transform:translateY(-50%);opacity:1}
@@ -323,6 +365,7 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
     <a class="back" href="index.html">← Retour accueil</a>
 
     <section id="pStart" class="page active">
+      <h1 class="loadingPageTitle request"><span>Demander</span><span>un</span><span>changement</span></h1>
       <div id="startLoading" class="startLoading">Chargement...<div class="loading-bar" role="progressbar" aria-label="Chargement en cours"><span class="loading-bar-fill"></span></div></div>
 
       <div id="startChoice" class="startChoice" hidden>
@@ -666,7 +709,15 @@ function renderDaysPage(){
   `;
 
   const allFuture=futureShifts().sort((a,b)=>{const da=dateIsoFromShift(a);const db=dateIsoFromShift(b);if(da&&db&&da!==db)return da.localeCompare(db);return Number(a.jour)-Number(b.jour)});
-  const months=[];allFuture.forEach(s=>{if(s.mois&&!months.includes(s.mois))months.push(s.mois)});$('monthChips').innerHTML='';renderedShiftMap={};let renderIndex=0;const html=[];
+  const months=[];allFuture.forEach(s=>{if(s.mois&&!months.includes(s.mois))months.push(s.mois)});$('monthChips').innerHTML=months.map((mois,index)=>`
+    <button
+      type="button"
+      class="chip ${(state.currentMonth===mois||(!state.currentMonth&&index===0))?'active':''}"
+      data-month="${attr(mois)}"
+      onclick="jumpToMonth('${attr(mois)}')"
+    >${esc(mois)}</button>
+  `).join('');
+  renderedShiftMap={};let renderIndex=0;const html=[];
   months.forEach(mois=>{const monthShifts=allFuture.filter(s=>s.mois===mois);const weeks=[];monthShifts.forEach(s=>{const key=planningWeekKey(s);let week=weeks.find(w=>w.key===key);if(!week){week={key,label:planningWeekLabel(s),shifts:[]};weeks.push(week)}week.shifts.push(s)});html.push(`<section class="planning-month-section" id="${planningMonthId(mois)}" data-month="${attr(mois)}">`);html.push(`<div class="planning-month-divider"><span>${esc(planningMonthTitle(mois,monthShifts))}</span></div>`);weeks.forEach(week=>{const weekdayCards=[];const weekendCards=[];week.shifts.forEach(s=>{const key='planning_shift_'+renderIndex++;renderedShiftMap[key]=s;const card=planningCardHtml(s,key);if(planningIsWeekend(s))weekendCards.push(card);else weekdayCards.push(card)});html.push(`<div class="planning-week-block"><div class="planning-week-label">${esc(week.label)}</div>`);if(weekdayCards.length)html.push(`<div class="planning-week-days">${weekdayCards.join('')}</div>`);if(weekendCards.length)html.push(`<div class="planning-weekend-pair">${weekendCards.join('')}</div>`);html.push(`</div>`)});html.push(`</section>`)});
   $('dayList').innerHTML=html.join('')||'<p>Aucun jour futur disponible pour cet agent.</p>';updateBasketCount();requestAnimationFrame(()=>planningObserveMonths(months));
 }
