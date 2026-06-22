@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Aperçu Planning GHE</title>
-<link rel="preload" as="image" href="Image/Chargement/Consulte.PNG" fetchpriority="high">
 <style>
 *,*::before,*::after{box-sizing:border-box}
 :root{
@@ -91,15 +90,41 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.17;b
   box-shadow:none;
 }
 
-.planning-scene{
-  display:block;
+.avatar-stage{
+  position:relative;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
   width:100%;
   max-width:820px;
-  max-height:min(53vh,470px);
+  height:min(53vh,470px);
+  min-height:340px;
   margin:0 auto;
+  overflow:hidden;
+  border-radius:26px;
+  background:#fff;
+}
+
+.planning-avatar{
+  display:none;
+  width:100%;
+  height:100%;
+  max-width:100%;
+  max-height:100%;
   object-fit:contain;
-  object-position:center;
-  filter:drop-shadow(0 11px 0 rgba(7,24,63,.13));
+  object-position:center bottom;
+  background:transparent;
+}
+
+.avatar-stage-fallback{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:100%;
+  color:rgba(7,24,63,.28);
+  font-size:92px;
+  line-height:1;
 }
 
 .compatibility-data{
@@ -223,8 +248,9 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.17;b
     border:0;
   }
 
-  .planning-scene{
-    max-height:410px;
+  .avatar-stage{
+    height:min(52vh,430px);
+    min-height:315px;
   }
 
   .loading-screen{
@@ -259,17 +285,18 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.17;b
 <main class="page">
   <a class="back" href="index.html">← Retour accueil</a>
   <section class="header">
-    <img
-      class="planning-scene"
-      src="Image/Chargement/Consulte.PNG"
-      alt="Agent consultant son planning personnel"
-      fetchpriority="high"
-      decoding="async"
-    >
+    <div class="avatar-stage" id="avatarWrap">
+      <img
+        class="planning-avatar"
+        id="avatarImg"
+        alt="Avatar de l’agent"
+        decoding="async"
+      >
+      <div class="avatar-stage-fallback" id="avatarFallback">👤</div>
+    </div>
 
-    <!-- Éléments conservés uniquement pour la compatibilité du JavaScript. -->
+    <!-- Conservé uniquement pour la compatibilité du JavaScript. -->
     <div class="compatibility-data" aria-hidden="true">
-      <div id="avatarWrap"><img id="avatarImg" alt=""><div id="avatarFallback"></div></div>
       <span id="title">Planning</span>
       <span id="subtitle">Chargement...</span>
     </div>
@@ -457,6 +484,8 @@ async function init(){
       if(data.nom){
         titleEl.textContent=firstNameFrom(data.nom,data);
       }
+
+      afficherAvatarDepuisData(data);
 
       setLoadingProgress(88,"Création de l’affichage…");
 
