@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Aperçu Planning GHE</title>
+<link rel="preload" as="image" href="Image/Chargement/Consulte.PNG" fetchpriority="high">
 <style>
 *,*::before,*::after{box-sizing:border-box}
 :root{
@@ -77,23 +78,228 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.17;b
 @media(max-width:560px){.page{padding:10px 8px 42px}.back{border-width:4px;min-height:52px}.header{border-width:4px;padding:11px 9px 12px}.identity{grid-template-columns:116px minmax(0,1fr);gap:10px;min-height:128px}.avatar-wrap{width:110px;height:98px}.avatar-fallback{width:76px;height:76px;font-size:34px;border-width:4px}.identity-firstname{font-size:clamp(19px,5.4vw,28px)}.sub{font-size:clamp(20px,5.3vw,31px)}.month-divider{min-height:92px;margin-top:25px;padding:2px 40px;font-size:clamp(54px,15vw,82px)}.month-divider span::after{bottom:-10px;height:5px}.week-label{margin-top:15px}.day-card{border-width:4px;min-height:154px}.day-name{min-height:32px;font-size:clamp(17px,4.8vw,24px)}.card-body{grid-template-columns:86px minmax(0,1fr)}.date-block{gap:4px;padding:8px 5px;flex-direction:column}.date-number{font-size:clamp(48px,13vw,64px)}.date-month{font-size:clamp(16px,4.4vw,22px)}.event-row{grid-template-columns:78px minmax(0,1fr);gap:8px;padding:8px 10px}.shift-visual{width:78px}.shift-code{font-size:45px}.time{font-size:clamp(18px,5.2vw,26px)}.detail{font-size:11px}.weekend-pair{gap:8px}.weekend-pair .day-card{min-height:238px}.weekend-pair .date-block{flex-direction:row}.weekend-pair .shift-visual{width:82px}.weekend-pair .shift-code{font-size:46px}}
 @media(max-width:390px){.identity{grid-template-columns:104px minmax(0,1fr)}.avatar-wrap{width:100px}.month-divider{font-size:clamp(48px,14.5vw,70px)}.weekend-pair .day-card{min-height:225px}.weekend-pair .shift-visual{width:76px}.weekend-pair .shift-code{font-size:42px}.weekend-pair .detail{font-size:9.5px}}
 @media print{.back,.quick-actions,.month-tabs-wrap,.agenda-separator,.bottom-actions{display:none!important}.page{width:100%;padding:0}body{background:#fff}.header,.day-card{box-shadow:none}.month-divider{break-before:page}.month-section:first-of-type .month-divider{break-before:auto}}
+
+/* =========================================================
+   PHOTO PRINCIPALE + CHARGEMENT COMMUN
+   ========================================================= */
+.header{
+  margin:8px 0 14px;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+
+.planning-scene{
+  display:block;
+  width:100%;
+  max-width:820px;
+  max-height:min(53vh,470px);
+  margin:0 auto;
+  object-fit:contain;
+  object-position:center;
+  filter:drop-shadow(0 11px 0 rgba(7,24,63,.13));
+}
+
+.compatibility-data{
+  display:none!important;
+}
+
+.quick-actions{
+  margin:15px 0 0;
+}
+
+.loading-screen{
+  display:grid;
+  gap:14px;
+  margin-top:14px;
+}
+
+.loading-panel{
+  position:relative;
+  overflow:hidden;
+  padding:19px 18px 18px;
+  border:4px solid var(--navy);
+  border-radius:28px 22px 30px 24px;
+  background:
+    radial-gradient(circle at 14% 0%,rgba(255,255,255,.95),transparent 36%),
+    repeating-linear-gradient(-7deg,rgba(7,24,63,.025) 0 2px,transparent 2px 11px),
+    #fffdf7;
+  box-shadow:
+    0 8px 0 rgba(7,24,63,.15),
+    0 12px 0 rgba(0,0,0,.055),
+    inset 0 0 0 3px rgba(255,215,115,.28);
+  text-align:center;
+}
+
+.loading-title{
+  color:var(--navy);
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(38px,10vw,64px);
+  line-height:.86;
+  letter-spacing:.015em;
+  text-transform:uppercase;
+  text-shadow:
+    0 4px 0 #f1ce79,
+    3px 7px 0 rgba(7,24,63,.09);
+}
+
+.loading-dots::after{
+  content:"";
+  display:inline-block;
+  width:1.05em;
+  text-align:left;
+  animation:loadingDots 1.15s steps(4,end) infinite;
+}
+
+@keyframes loadingDots{
+  0%{content:""}
+  25%{content:"."}
+  50%{content:".."}
+  75%,100%{content:"..."}
+}
+
+.loading-track{
+  position:relative;
+  height:21px;
+  margin:17px 0 9px;
+  overflow:hidden;
+  border:3px solid var(--navy);
+  border-radius:999px;
+  background:#e6e9ef;
+  box-shadow:
+    inset 0 3px 5px rgba(7,24,63,.17),
+    0 3px 0 rgba(7,24,63,.09);
+}
+
+.loading-fill{
+  position:absolute;
+  inset:0 auto 0 0;
+  width:8%;
+  min-width:18px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#f2b632 0%,#ffcf4a 42%,#ff8a00 100%);
+  transition:width .38s cubic-bezier(.2,.75,.25,1);
+  box-shadow:inset 0 3px 0 rgba(255,255,255,.42);
+}
+
+.loading-fill::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  width:42%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.72),transparent);
+  transform:translateX(-150%);
+  animation:loadingShine 1.25s linear infinite;
+}
+
+@keyframes loadingShine{
+  to{transform:translateX(360%)}
+}
+
+.loading-text{
+  min-height:18px;
+  margin:0;
+  color:rgba(7,24,63,.68);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:13px;
+  line-height:1.25;
+  font-weight:900;
+  text-align:center;
+}
+
+.status.loading-screen{
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  font-family:inherit;
+}
+
+@media(max-width:560px){
+  .header{
+    padding:0;
+    border:0;
+  }
+
+  .planning-scene{
+    max-height:410px;
+  }
+
+  .loading-screen{
+    gap:12px;
+  }
+
+  .loading-panel{
+    padding:17px 14px 16px;
+    border-width:4px;
+  }
+
+  .loading-track{
+    height:19px;
+    margin-top:15px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .loading-dots::after,
+  .loading-fill::after{
+    animation:none;
+  }
+
+  .loading-fill{
+    transition:none;
+  }
+}
+
 </style>
 </head>
 <body>
 <main class="page">
   <a class="back" href="index.html">← Retour accueil</a>
   <section class="header">
-    <div class="identity">
-      <div class="identity-person">
-        <div class="avatar-wrap" id="avatarWrap"><img id="avatarImg" alt=""><div class="avatar-fallback" id="avatarFallback">👤</div></div>
-        <div class="identity-firstname" id="title">Planning</div>
-      </div>
-      <div class="identity-text"><p class="sub" id="subtitle">Chargement...</p></div>
+    <img
+      class="planning-scene"
+      src="Image/Chargement/Consulte.PNG"
+      alt="Agent consultant son planning personnel"
+      fetchpriority="high"
+      decoding="async"
+    >
+
+    <!-- Éléments conservés uniquement pour la compatibilité du JavaScript. -->
+    <div class="compatibility-data" aria-hidden="true">
+      <div id="avatarWrap"><img id="avatarImg" alt=""><div id="avatarFallback"></div></div>
+      <span id="title">Planning</span>
+      <span id="subtitle">Chargement...</span>
     </div>
+
     <div class="quick-actions" id="topActions"></div>
   </section>
   <nav class="month-tabs-wrap" id="monthTabsWrap" aria-hidden="true"><div class="month-tabs" id="monthTabs"></div></nav>
-  <section id="content" class="status">Chargement...</section>
+  <section id="content" class="status loading-screen" role="status" aria-live="polite">
+    <div class="loading-panel">
+      <div class="loading-title">
+        Chargement<span class="loading-dots" aria-hidden="true"></span>
+      </div>
+
+      <div
+        id="loadingTrack"
+        class="loading-track"
+        role="progressbar"
+        aria-label="Progression du chargement"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="8"
+      >
+        <div id="loadingFill" class="loading-fill"></div>
+      </div>
+
+      <div id="loadingText" class="loading-text">
+        Connexion au planning…
+      </div>
+    </div>
+  </section>
   <div class="agenda-separator" id="agendaSeparator" style="display:none;">Ajouter à mon agenda</div>
   <section class="bottom-actions" id="bottomActions"></section>
 </main>
@@ -105,6 +311,58 @@ const agent=String(params.get("agent")||"").trim();
 const moisParam=String(params.get("mois")||"").trim();
 const printMode=String(params.get("print")||"")==="1";
 const titleEl=document.getElementById("title"),subtitleEl=document.getElementById("subtitle"),contentEl=document.getElementById("content"),avatarWrap=document.getElementById("avatarWrap"),avatarImg=document.getElementById("avatarImg"),avatarFallback=document.getElementById("avatarFallback"),topActions=document.getElementById("topActions"),bottomActions=document.getElementById("bottomActions"),agendaSeparator=document.getElementById("agendaSeparator"),monthTabsWrap=document.getElementById("monthTabsWrap"),monthTabs=document.getElementById("monthTabs");
+
+let loadingProgress=8;
+let loadingTimer=null;
+
+function setLoadingProgress(value,label){
+  const fill=document.getElementById("loadingFill");
+  const track=document.getElementById("loadingTrack");
+  const text=document.getElementById("loadingText");
+  const next=Math.max(loadingProgress,Math.min(100,Math.round(Number(value)||0)));
+
+  loadingProgress=next;
+
+  if(fill) fill.style.width=next+"%";
+  if(track) track.setAttribute("aria-valuenow",String(next));
+  if(text&&label) text.textContent=label;
+}
+
+function startLoadingProgress(){
+  loadingProgress=0;
+  setLoadingProgress(8,"Connexion au planning…");
+
+  if(loadingTimer) clearInterval(loadingTimer);
+
+  loadingTimer=setInterval(()=>{
+    if(loadingProgress<31){
+      setLoadingProgress(loadingProgress+1);
+    }
+  },420);
+}
+
+function stopLoadingProgress(){
+  if(loadingTimer){
+    clearInterval(loadingTimer);
+    loadingTimer=null;
+  }
+}
+
+function finishLoadingProgress(label,callback){
+  stopLoadingProgress();
+  setLoadingProgress(100,label||"Planning prêt");
+
+  setTimeout(()=>{
+    if(typeof callback==="function") callback();
+  },230);
+}
+
+function showLoadingError(message){
+  stopLoadingProgress();
+  contentEl.className="status";
+  contentEl.textContent=message;
+}
+
 function apiUrl(mode,extra){const url=new URL(PASSERELLE);url.searchParams.set("mode",mode);url.searchParams.set("t",Date.now());Object.keys(extra||{}).forEach(k=>url.searchParams.set(k,extra[k]));return url.toString()}
 async function fetchJson(url){const res=await fetch(url,{method:"GET",cache:"no-store"});if(!res.ok)throw new Error("HTTP "+res.status);return await res.json()}
 function webcalUrl(url){return url.replace(/^https:\/\//i,"webcal://")}function androidUrl(url){return "https://calendar.google.com/calendar/render?cid="+encodeURIComponent(url)}function icsAgentUrl(){return apiUrl("ics",{agent})}
@@ -159,7 +417,105 @@ function shiftVisual(shift){const wrap=document.createElement("div");wrap.classN
 function createDayCard(dayGroup){const first=dayGroup.events[0];const mainShift=first?classifyAgendaEvent(first):{kind:"kind-special"};const p=dateParts(dayGroup.dateObj);const card=document.createElement("article");card.className="day-card "+mainShift.kind+(isWeekend(dayGroup.dateObj)?" is-weekend":"");const dayName=document.createElement("div");dayName.className="day-name";dayName.textContent=p.dayName;const body=document.createElement("div");body.className="card-body";const date=document.createElement("div");date.className="date-block";date.innerHTML=`<span class="date-number">${p.number}</span><span class="date-month">${p.month}</span>`;const list=document.createElement("div");list.className="event-list";if(!dayGroup.events.length){const empty=document.createElement("div");empty.className="empty-row";empty.textContent="Aucun élément renseigné";list.appendChild(empty)}else{dayGroup.events.forEach(e=>{const shift=classifyAgendaEvent(e);const row=document.createElement("div");row.className="event-row";row.appendChild(shiftVisual(shift));const meta=document.createElement("div");meta.className="shift-meta";if(e.horaire&&!shift.repos){const time=document.createElement("div");time.className="time";time.textContent=normalizeHoraire(e.horaire);meta.appendChild(time)}const detail=document.createElement("p");detail.className="detail";detail.textContent=[shift.detail,e.alerte?"⚠️ "+e.alerte:""].filter(Boolean).join(" · ")||shift.label;meta.appendChild(detail);row.appendChild(meta);list.appendChild(row)})}body.append(date,list);card.append(dayName,body);return card}
 function renderAgendaEvents(events){const today=new Date();today.setHours(0,0,0,0);let dated=(events||[]).map(e=>Object.assign({},e,{dateObj:parseDateIso(e.date)})).filter(e=>e.dateObj).sort((a,b)=>a.dateObj-b.dateObj);const monthRange=monthRangeFromKey(moisParam);let firstDate,lastDate;if(monthRange&&printMode){firstDate=new Date(monthRange.start);lastDate=new Date(monthRange.end);dated=dated.filter(e=>e.dateObj>=firstDate&&e.dateObj<=lastDate)}else if(monthRange){firstDate=new Date(Math.max(today.getTime(),monthRange.start.getTime()));lastDate=new Date(monthRange.end);dated=dated.filter(e=>e.dateObj>=firstDate&&e.dateObj<=lastDate)}else{dated=dated.filter(e=>e.dateObj>=today);if(!dated.length){contentEl.className="status";contentEl.textContent="Aucun élément à afficher à partir d’aujourd’hui.";return}firstDate=new Date(today);lastDate=new Date(dated[dated.length-1].dateObj)}if(!lastDate||firstDate>lastDate){contentEl.className="status";contentEl.textContent="Aucun élément à afficher pour cette période.";return}const grouped={};dated.forEach(e=>{const key=e.date;if(!grouped[key])grouped[key]={dateObj:e.dateObj,events:[]};grouped[key].events.push(e)});const days=[],cursor=new Date(firstDate);while(cursor<=lastDate){const iso=toIsoLocal(cursor);days.push(grouped[iso]||{dateObj:new Date(cursor),events:[]});cursor.setDate(cursor.getDate()+1)}const months=[];days.forEach(day=>{const key=monthKeyFromDate(day.dateObj);let month=months.find(m=>m.key===key);if(!month){month={key,label:formatMonthTitle(day.dateObj),weeks:[]};months.push(month)}const wk=weekKey(day.dateObj);let week=month.weeks.find(w=>w.key===wk);if(!week){week={key:wk,label:formatWeekLabel(day.dateObj),days:[]};month.weeks.push(week)}week.days.push(day)});contentEl.className="";contentEl.innerHTML="";months.forEach(month=>{const section=document.createElement("section");section.className="month-section";section.id=monthSectionId(month.key);const divider=document.createElement("div");divider.className="month-divider";divider.innerHTML=`<span>${month.label}</span>`;section.appendChild(divider);month.weeks.forEach(week=>{const weekBlock=document.createElement("div");weekBlock.className="week-block";const label=document.createElement("div");label.className="week-label";label.textContent=week.label;weekBlock.appendChild(label);const weekdays=document.createElement("div");weekdays.className="week-days";const weekend=document.createElement("div");weekend.className="weekend-pair";week.days.forEach(day=>{const card=createDayCard(day);(isWeekend(day.dateObj)?weekend:weekdays).appendChild(card)});if(weekdays.children.length)weekBlock.appendChild(weekdays);if(weekend.children.length)weekBlock.appendChild(weekend);section.appendChild(weekBlock)});contentEl.appendChild(section)})}
 function unfoldIcs(text){return String(text||"").replace(/\r?\n[ \t]/g,"")}function getField(block,name){const re=new RegExp("^"+name+"(?:;[^:]*)?:(.*)$","mi"),m=block.match(re);return m?m[1].trim():""}function cleanText(v){return String(v||"").replace(/\\n/g," ").replace(/\\,/g,",").replace(/\\;/g,";").replace(/\s+/g," ").trim()}function parseIcsDate(value){if(!value)return null;value=String(value).trim();if(/^\d{8}$/.test(value))return new Date(Number(value.slice(0,4)),Number(value.slice(4,6))-1,Number(value.slice(6,8)));const m=value.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z?)$/);if(!m)return null;return m[7]==="Z"?new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+m[6])):new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+m[6])}function sameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}function formatTimeRange(start,end){const allDay=start.getHours()===0&&start.getMinutes()===0&&(!end||(end.getHours()===0&&end.getMinutes()===0));if(allDay)return"";const f=new Intl.DateTimeFormat("fr-FR",{hour:"2-digit",minute:"2-digit"});return end&&sameDay(start,end)?f.format(start)+"–"+f.format(end):f.format(start)}function parseEvents(ics){const blocks=unfoldIcs(ics).match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g)||[];return blocks.map(block=>({start:parseIcsDate(getField(block,"DTSTART")),end:parseIcsDate(getField(block,"DTEND")),summary:cleanText(getField(block,"SUMMARY")),description:cleanText(getField(block,"DESCRIPTION"))})).filter(e=>e.start)}function renderIcsEvents(events){const today=new Date();today.setHours(0,0,0,0);renderAgendaEvents(events.filter(e=>e.start>=today).sort((a,b)=>a.start-b.start).map(e=>({date:toIsoLocal(e.start),horaire:formatTimeRange(e.start,e.end),titre:e.summary,description:e.description,shift_code:e.summary,pastille:"",alerte:""})))}
-async function init(){if(type==="agent"){titleEl.textContent=firstNameFrom(agent.replace(/_/g," "),null);subtitleEl.textContent=moisParam?"Mois de "+formatMonthNameFromKey(moisParam):"À partir d’aujourd’hui";afficherActionsAgent()}else{titleEl.textContent=type==="formations"?"Formations":type==="stagiaires"?"Stagiaires":"Aperçu";subtitleEl.textContent="À partir d’aujourd’hui";avatarWrap.style.display="none"}if(type==="agent"&&agent){try{const data=await fetchJson(apiUrl("agenda",{agent}));if(!data||data.ok===false)throw new Error(data&&data.erreur?data.erreur:"Agenda invalide");if(data.nom)titleEl.textContent=firstNameFrom(data.nom,data);afficherAvatarDepuisData(data);renderAgendaEvents(data.events||[]);return}catch(e){console.error(e);contentEl.className="status";contentEl.textContent="Aperçu indisponible. Vérifie que la passerelle Apps Script est bien à jour.";return}}let url="";if(type==="formations")url=apiUrl("ics_collectif",{type:"formation"});else if(type==="stagiaires")url=apiUrl("ics_collectif",{type:"stagiaires"});if(!url){contentEl.textContent="Aperçu impossible : lien manquant.";return}try{const res=await fetch(url,{method:"GET",cache:"no-store"}),text=await res.text();if(!res.ok||!text.includes("BEGIN:VCALENDAR"))throw new Error("ICS invalide");renderIcsEvents(parseEvents(text))}catch(e){console.error(e);contentEl.textContent="Aperçu indisponible. Vérifie que la passerelle Apps Script est bien à jour."}}
+async function init(){
+  startLoadingProgress();
+
+  if(type==="agent"){
+    titleEl.textContent=firstNameFrom(agent.replace(/_/g," "),null);
+    subtitleEl.textContent=moisParam
+      ?"Mois de "+formatMonthNameFromKey(moisParam)
+      :"À partir d’aujourd’hui";
+    afficherActionsAgent();
+    setLoadingProgress(22,"Préparation de ton espace…");
+  }else{
+    titleEl.textContent=type==="formations"
+      ?"Formations"
+      :type==="stagiaires"
+        ?"Stagiaires"
+        :"Aperçu";
+    subtitleEl.textContent="À partir d’aujourd’hui";
+    avatarWrap.style.display="none";
+    setLoadingProgress(22,"Préparation de l’aperçu…");
+  }
+
+  if(type==="agent"&&agent){
+    try{
+      setLoadingProgress(36,"Récupération de ton planning…");
+
+      const data=await fetchJson(apiUrl("agenda",{agent}));
+
+      setLoadingProgress(76,"Planning reçu…");
+
+      if(!data||data.ok===false){
+        throw new Error(
+          data&&data.erreur
+            ?data.erreur
+            :"Agenda invalide"
+        );
+      }
+
+      if(data.nom){
+        titleEl.textContent=firstNameFrom(data.nom,data);
+      }
+
+      setLoadingProgress(88,"Création de l’affichage…");
+
+      renderAgendaEvents(data.events||[]);
+
+      finishLoadingProgress("Planning prêt");
+      return;
+
+    }catch(e){
+      console.error(e);
+      showLoadingError(
+        "Aperçu indisponible. Vérifie que la passerelle Apps Script est bien à jour."
+      );
+      return;
+    }
+  }
+
+  let url="";
+
+  if(type==="formations"){
+    url=apiUrl("ics_collectif",{type:"formation"});
+  }else if(type==="stagiaires"){
+    url=apiUrl("ics_collectif",{type:"stagiaires"});
+  }
+
+  if(!url){
+    showLoadingError("Aperçu impossible : lien manquant.");
+    return;
+  }
+
+  try{
+    setLoadingProgress(38,"Récupération de l’agenda…");
+
+    const res=await fetch(url,{
+      method:"GET",
+      cache:"no-store"
+    });
+
+    setLoadingProgress(68,"Agenda reçu…");
+
+    const text=await res.text();
+
+    if(!res.ok||!text.includes("BEGIN:VCALENDAR")){
+      throw new Error("ICS invalide");
+    }
+
+    setLoadingProgress(88,"Création de l’affichage…");
+
+    renderIcsEvents(parseEvents(text));
+
+    finishLoadingProgress("Agenda prêt");
+
+  }catch(e){
+    console.error(e);
+    showLoadingError(
+      "Aperçu indisponible. Vérifie que la passerelle Apps Script est bien à jour."
+    );
+  }
+}
 init();
 </script>
 </body>
