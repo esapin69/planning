@@ -128,20 +128,34 @@ h1{
   margin:18px 0 12px;
 }
 
-.stats-headline{
-  display:flex;
+.agents-separator{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
   align-items:center;
-  gap:10px;
-  margin:0 5px 14px;
+  gap:12px;
+  margin:22px 5px 18px;
   color:var(--ink);
   font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(37px,8.3vw,60px);
-  line-height:.9;
+  font-size:clamp(28px,6.7vw,46px);
+  line-height:.92;
   letter-spacing:.01em;
   text-transform:uppercase;
+  text-align:center;
   text-shadow:
     0 3px 0 #efc96d,
     2px 5px 0 rgba(7,24,63,.08);
+}
+
+.agents-separator::before,
+.agents-separator::after{
+  content:"";
+  height:4px;
+  border-radius:999px;
+  background:linear-gradient(90deg,transparent,#07183f);
+}
+
+.agents-separator::after{
+  background:linear-gradient(90deg,#07183f,transparent);
 }
 
 .stats-grid{
@@ -367,9 +381,6 @@ h1{
     font-size:clamp(25px,6.4vw,36px);
   }
 
-  .stats-headline{
-    margin-bottom:13px;
-  }
 
   .card{
     border-width:3px;
@@ -418,7 +429,7 @@ h1{
 }
 
 .organisation-photo-block{
-  margin:18px 0 10px;
+  margin:4px 0 22px;
 }
 
 .planning-day-label{
@@ -594,6 +605,16 @@ h1{
   <div class="top-actions">
     <a class="back-btn" href="./index.html">← Retour accueil</a>
   </div>
+
+  <section class="organisation-photo-block">
+    <img
+      class="organisation-scene"
+      src="/Image/Chargement/Organisation.PNG"
+      alt="Organisation du planning collectif GHE"
+      fetchpriority="high"
+      decoding="async"
+    >
+  </section>
 
   <div class="loader" id="loader" role="status" aria-live="polite">
     <div class="loading-title">
@@ -846,8 +867,6 @@ function renderPage(data){
 
   content.innerHTML = `
     <section class="stats-wrap">
-      <div class="stats-headline">👥 Total : ${total} agents</div>
-
       <div class="stats-grid">
         <div class="stat">🟦 Matin : ${count(M)}</div>
         <div class="stat">🟩 Jour : ${count(J)}</div>
@@ -857,15 +876,7 @@ function renderPage(data){
       </div>
     </section>
 
-    <section class="organisation-photo-block">
-      <img
-        class="organisation-scene"
-        src="/Image/Chargement/Organisation.PNG"
-        alt="Organisation du planning collectif GHE"
-        fetchpriority="high"
-        decoding="async"
-      >
-    </section>
+    <div class="agents-separator">👥 ${total} agents</div>
 
     ${renderImportant(jour)}
 
