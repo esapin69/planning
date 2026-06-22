@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0f172a">
   <title>Demande de changement planning — V12 fil chronologique</title>
-  <link rel="preload" as="image" href="Image/Chargement/%C3%89change.PNG" fetchpriority="high">
+  <link rel="preload" as="image" href="/Image/Chargement/Echange.PNG" fetchpriority="high">
   <style>
 :root{
   --cream:#fff7df;
@@ -1315,7 +1315,7 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
       >
         <img
           class="loadingScene"
-          src="Image/Chargement/%C3%89change.PNG"
+          src="/Image/Chargement/Echange.PNG"
           alt="Deux agents échangent leur shift"
           fetchpriority="high"
           decoding="async"
@@ -1362,7 +1362,7 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
       <div id="whoBox" class="requestScene">
         <img
           class="requestSceneImage"
-          src="Image/Chargement/%C3%89change.PNG"
+          src="/Image/Chargement/Echange.PNG"
           alt="Deux agents échangent leur shift"
           decoding="async"
         >
@@ -1459,8 +1459,14 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
 const API_URL = "https://script.google.com/macros/s/AKfycby_5_yM6EQlwc0oGJ6P7hBTSPpZYj0B_cUtFe3Q5IJMau8YUNc0sjD8NZYV07e9wDHL/exec";
 const WEEK = {L:"Lundi",M:"Mardi",X:"Mercredi",J:"Jeudi",V:"Vendredi",S:"Samedi",D:"Dimanche"};
 const GOALS = [
-  {code:"M", label:"Matin"}, {code:"S", label:"Soir"}, {code:"J", label:"Journée"},
-  {code:"J4", label:"J4"}, {code:"N", label:"Nuit"}, {code:"RH", label:"Repos"}
+  {code:"M", label:"Matin"},
+  {code:"J", label:"Journée"},
+  {code:"J4", label:"J4"},
+  {code:"S", label:"Soir"},
+  {code:"RH", label:"Repos"}
+];
+const NIGHT_GOALS = [
+  {code:"N", label:"Nuit"}
 ];
 const SHIFT_FALLBACK = {
   "M": {code:"M", icone:"🔵", libelle:"Matin", debut:"06:50", fin:"14:40", affichage:"🔵 Matin · 06:50-14:40", categorie:"TRAVAIL"},
@@ -1689,6 +1695,28 @@ function shiftPlain(code){
 function goalText(code){
   const s=shiftInfo(code);
   return `${s.icon ? s.icon+' ' : ''}${s.label}`;
+}
+function goalFamily(code){
+  const key=cleanShiftKey(code);
+
+  if(key==='M'||/^M\d+$/.test(key)) return 'M';
+  if(key==='J4'||/^J4\d+$/.test(key)) return 'J4';
+  if(key==='J'||key==='J0464'||(/^J\d+$/.test(key)&&!/^J4\d+$/.test(key))) return 'J';
+  if(key==='S'||/^S\d+$/.test(key)) return 'S';
+  if(key==='N') return 'N';
+
+  if(['RH','RTT','RTTA','RTA','RC','RF','CA'].includes(key)) return 'RH';
+
+  return key;
+}
+function goalsForItem(it){
+  const currentFamily=goalFamily(it.shift_demandeur);
+
+  if(currentFamily==='N'){
+    return NIGHT_GOALS;
+  }
+
+  return GOALS.filter(g=>goalFamily(g.code)!==currentFamily);
 }
 function siteAlert(text,title='Information'){
   $('siteModalTitle').textContent=title;
@@ -2336,7 +2364,7 @@ function renderDaysPage(){
   $('whoBox').innerHTML=`
     <img
       class="requestSceneImage"
-      src="Image/Chargement/%C3%89change.PNG"
+      src="/Image/Chargement/Echange.PNG"
       alt="Deux agents échangent leur shift"
       decoding="async"
     >
@@ -2487,7 +2515,7 @@ function renderExchange(){
   $('exchangeList').innerHTML=state.basket.map((it,idx)=>`<div class="exchangeCard ${(state.noAgent||it.accepteur_id)&&it.objectif?'done':''}" id="card_${attr(it.item_id)}">
     <div class="dayTitle">${esc(labelLong(it.label_demandeur,it.mois_demandeur,it.jour_demandeur))}</div>
     <div class="small">Ton horaire actuel :</div><div>${shiftInline(it.shift_demandeur,'light')}</div>
-    <div class="goalGrid">${GOALS.map(g=>`<button class="goal ${it.objectif===g.code?'active':''}" onclick="chooseGoal('${attr(it.item_id)}','${g.code}')">${esc(goalText(g.code))}</button>`).join('')}</div>
+    <div class="goalGrid">${goalsForItem(it).map(g=>`<button class="goal ${it.objectif===g.code?'active':''}" onclick="chooseGoal('${attr(it.item_id)}','${g.code}')">${esc(goalText(g.code))}</button>`).join('')}</div>
     ${renderChosen(it)}
     <div id="cand_${attr(it.item_id)}" class="candidateList">${renderCandidates(it)}</div>
   </div>`).join('');
@@ -2607,5 +2635,3 @@ async function submitRequest(){
 
 init();
 </script>
-</body>
-</html>
