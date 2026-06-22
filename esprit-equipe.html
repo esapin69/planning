@@ -345,6 +345,10 @@ h1{
   filter:drop-shadow(0 11px 0 rgba(7,24,63,.13));
 }
 
+.organisation-photo-block{
+  margin:18px 0 10px;
+}
+
 .organisation-info{
   margin:14px 0 0;
   padding:10px 14px 11px;
@@ -494,13 +498,6 @@ h1{
 <main class="page">
 
   <section class="hero">
-    <img
-      class="organisation-scene"
-      src="/Image/Chargement/Organisation.PNG"
-      alt="Organisation du planning collectif GHE"
-      fetchpriority="high"
-      decoding="async"
-    >
     <p class="organisation-info" id="subtitle">
       Chargement du planning collectif…
     </p>
@@ -759,6 +756,16 @@ function renderPage(data){
       <div class="stat">🟧 J4 : ${count(J4)}</div>
       <div class="stat">🟨 Soir : ${count(S)}</div>
       <div class="stat">⬛ Nuit : ${count(N)}</div>
+    </section>
+
+    <section class="organisation-photo-block">
+      <img
+        class="organisation-scene"
+        src="/Image/Chargement/Organisation.PNG"
+        alt="Organisation du planning collectif GHE"
+        fetchpriority="high"
+        decoding="async"
+      >
     </section>
 
     ${renderImportant(jour)}
