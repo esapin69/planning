@@ -115,17 +115,89 @@ details.control summary::-webkit-details-marker{display:none}
 .modal-btn.primary{background:#176b39;color:#fff}
 .modal-btn.hidden-call{background:#07183f;color:#fff7dd}
 @media(min-width:720px){.modal{align-items:center}}
+
+.card.important{position:relative;overflow:hidden}
+.card.formation-card{
+  border-left:10px solid #7c3aed;
+  background:linear-gradient(145deg,#fff9ff 0%,#f5ebff 100%);
+}
+.card.stagiaire-card{
+  border-left:10px solid #c026d3;
+  background:linear-gradient(145deg,#fff9fe 0%,#fde9f8 100%);
+}
+.shift-medal{
+  --medal:#64748b;--medal-dark:#334155;--medal-light:#cbd5e1;
+  width:58px;height:58px;flex:0 0 58px;border-radius:50%;
+  display:grid;place-items:center;color:#fff;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:28px;line-height:1;
+  background:
+    radial-gradient(circle at 35% 25%,rgba(255,255,255,.95) 0 6%,transparent 7%),
+    radial-gradient(circle at 40% 35%,var(--medal-light) 0 18%,var(--medal) 45%,var(--medal-dark) 100%);
+  border:5px solid var(--medal-dark);
+  box-shadow:inset 0 0 0 4px rgba(255,255,255,.32),0 6px 0 rgba(7,24,63,.17);
+}
+.shift-medal.small{width:48px;height:48px;flex-basis:48px;font-size:23px;border-width:4px}
+.shift-medal.m{--medal:#2f7df4;--medal-dark:#0b4cc4;--medal-light:#9cc9ff}
+.shift-medal.j{--medal:#20b96b;--medal-dark:#08763f;--medal-light:#a5f0c5}
+.shift-medal.j4{--medal:#ff8f27;--medal-dark:#c24c00;--medal-light:#ffd0a1}
+.shift-medal.s{--medal:#ffd119;--medal-dark:#b97900;--medal-light:#fff2a1;color:#07183f}
+.shift-medal.n{--medal:#171717;--medal-dark:#000;--medal-light:#777}
+.shift-head{display:flex;align-items:center;gap:12px;margin-bottom:11px}
+.stat{gap:11px}
+.stat-label{display:block}
+.important-heading{
+  display:flex;align-items:center;flex-wrap:wrap;gap:7px;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(24px,5.6vw,38px);line-height:.95;text-transform:uppercase;
+}
+.important-dot{opacity:.42}
+.important-time{white-space:nowrap}
+.important-name{
+  margin:9px 0 6px;color:#4b5568;font-weight:950;
+  font-size:clamp(17px,4.4vw,23px);line-height:1.15
+}
+.stagiaire-main{
+  margin:10px 0 2px;padding:10px 0;border-top:2px dashed rgba(7,24,63,.20);
+  font-size:19px;font-weight:1000
+}
+.stagiaire-hours{color:#6b7280;font-weight:900}
+.mini-alert{
+  width:100%;margin-top:10px;padding:8px 10px;border:0;border-top:2px dashed rgba(7,24,63,.18);
+  background:transparent;display:flex;align-items:center;justify-content:space-between;gap:8px;
+  text-align:left;color:#8a4b00;font-size:13px;font-weight:950;cursor:pointer;
+}
+.mini-alert.danger{color:#b42318}
+.mini-alert .mini-arrow{font-size:20px;line-height:1}
+.info-list{display:grid;gap:10px;margin-top:12px}
+.info-item{
+  padding:13px;border:2px solid rgba(7,24,63,.15);border-radius:16px;background:#fff;
+  font-weight:850;line-height:1.35
+}
+.info-item.warning{background:#fff8d9;border-color:#e2bd4f;color:#74420a}
+.info-item.danger{background:#fff0ec;border-color:#e1a09a;color:#9f291e}
+.info-item-title{font-weight:1000;margin-bottom:5px}
+.control{
+  background:var(--cream);border:4px solid var(--ink);border-radius:22px;
+  margin-top:14px;box-shadow:var(--shadow);overflow:hidden
+}
+.control-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(24px,6vw,38px);text-transform:uppercase
+}
+
 </style>
 </head>
 <body>
 <main class="page">
+  <div class="top-actions"><a class="back-btn" href="index.html">← Accueil</a></div>
+
   <section class="hero-photo">
     <img src="Image/Chargement/Organisation.PNG"
          alt="Organisation du jour"
          fetchpriority="high"
          onerror="this.onerror=null;this.src='/Image/Chargement/Organisation.PNG';">
   </section>
-  <div class="top-actions"><a class="back-btn" href="index.html">← Accueil</a></div>
 
   <section id="loader" class="loader">
     <div id="loadingText">Connexion au planning collectif…</div>
@@ -136,6 +208,16 @@ details.control summary::-webkit-details-marker{display:none}
   <section id="errorBox" class="error"></section>
   <section id="content" style="display:none"></section>
 </main>
+
+<div class="modal" id="infoModal" aria-hidden="true">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="infoModalTitle">
+    <h2 class="modal-title" id="infoModalTitle">Information</h2>
+    <div class="info-list" id="infoModalBody"></div>
+    <div class="modal-actions">
+      <button class="modal-btn" id="infoModalClose" type="button">Fermer</button>
+    </div>
+  </div>
+</div>
 
 <div class="modal" id="phoneNumberModal" aria-hidden="true">
   <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="phoneNumberTitle">
@@ -181,6 +263,10 @@ const loadingTrack = document.getElementById("loadingTrack");
 const loadingFill = document.getElementById("loadingFill");
 const planningDayLabel = document.getElementById("planningDayLabel");
 const subtitle = document.getElementById("subtitle");
+const infoModal = document.getElementById("infoModal");
+const infoModalTitle = document.getElementById("infoModalTitle");
+const infoModalBody = document.getElementById("infoModalBody");
+const infoModalClose = document.getElementById("infoModalClose");
 const phoneNumberModal = document.getElementById("phoneNumberModal");
 const phoneChoiceModal = document.getElementById("phoneChoiceModal");
 const phoneNumberButton = document.getElementById("phoneNumberButton");
@@ -233,87 +319,214 @@ function agentLine(agent){
   const gheHtml=ghe?` <span class="ghe ghe-phone-trigger" role="button" tabindex="0" data-agent="${esc(agentComplet)}" data-ghe="${esc(ghe)}">· ${esc(ghe)}</span>`:"";
   return `<div class="agent">${esc(prenom)}${gheHtml}</div>`;
 }
-function renderShift(emoji,title,agents){
+function medal(code,small=false){
+  const raw=String(code||"").toUpperCase();
+  const key=raw==="J4"?"j4":raw.toLowerCase();
+  return `<span class="shift-medal ${key}${small?" small":""}" aria-hidden="true">${esc(raw)}</span>`;
+}
+function statCard(code,label,count,total=false){
+  return `<div class="stat${total?" total":""}">${
+    total
+      ? `<span aria-hidden="true">👥</span><span class="stat-label">${count} agents</span>`
+      : `${medal(code,true)}<span class="stat-label">${esc(label)} : ${count}</span>`
+  }</div>`;
+}
+function renderShift(code,title,agents){
   const list=asArray(agents);
-  return `<div class="card"><div class="shift-title">${emoji} ${esc(title)}</div>${
+  return `<div class="card"><div class="shift-head">${medal(code)}<div class="shift-title">${esc(title)}</div></div>${
     list.length?list.map(agentLine).join(""):'<div class="empty">Aucun agent détecté</div>'
   }</div>`;
+}
+function normalizeHour(value){
+  const txt=String(value||"").trim();
+  const m=txt.match(/(\d{1,2})[:h](\d{2})/i);
+  return m?`${String(m[1]).padStart(2,"0")}h${m[2]}`:"";
+}
+function formatRange(value){
+  const txt=String(value||"").trim();
+  const matches=[...txt.matchAll(/(\d{1,2})[:h](\d{2})/gi)];
+  if(matches.length>=2){
+    const a=`${String(matches[0][1]).padStart(2,"0")}h${matches[0][2]}`;
+    const b=`${String(matches[1][1]).padStart(2,"0")}h${matches[1][2]}`;
+    return `${a} ⟶ ${b}`;
+  }
+  return txt;
+}
+function cleanFormationTitle(value){
+  let txt=String(value||"Formation").replace(/\bformation\b/gi," ").replace(/\s+/g," ").trim();
+  const words=txt.split(" ").filter(Boolean);
+  if(words.length%2===0){
+    const half=words.length/2;
+    if(words.slice(0,half).join(" ").toLowerCase()===words.slice(half).join(" ").toLowerCase()){
+      txt=words.slice(0,half).join(" ");
+    }
+  }
+  return txt||"Formation";
+}
+function normalizeAlerts(value){
+  const out=[];
+  const push=v=>{
+    if(v===null||v===undefined)return;
+    if(Array.isArray(v)){v.forEach(push);return;}
+    if(typeof v==="object"){
+      const title=v.titre||v.title||v.resume||v.message||v.detail||"";
+      const detail=v.detail||v.message||v.resume||title;
+      const level=String(v.niveau||v.level||"warning").toLowerCase().includes("danger")?"danger":"warning";
+      if(detail)out.push({title:String(title||"Point à vérifier"),detail:String(detail),level});
+      return;
+    }
+    const txt=String(v||"").trim();
+    if(txt)out.push({title:"Point à vérifier",detail:txt,level:/bloquant|danger|indisponible/i.test(txt)?"danger":"warning"});
+  };
+  push(value);
+  const seen=new Set();
+  return out.filter(a=>{
+    const key=(a.title+"|"+a.detail).toLowerCase();
+    if(seen.has(key))return false;
+    seen.add(key);
+    return true;
+  });
+}
+function renderMiniAlert(alerts,key){
+  const list=normalizeAlerts(alerts);
+  if(!list.length)return "";
+  const danger=list.some(a=>a.level==="danger");
+  return `<button class="mini-alert${danger?" danger":""}" type="button" data-info-key="${esc(key)}">
+    <span>${danger?"🚨 Alerte":"⚠️ À vérifier"} · ${list.length} information${list.length>1?"s":""}</span>
+    <span class="mini-arrow">›</span>
+  </button>`;
+}
+let infoStore={};
+function collectImportantAlerts(jour){
+  const result=[];
+  asArray(jour.formations).forEach(f=>{
+    normalizeAlerts(f.alertes).forEach(a=>result.push({...a,context:`Formation · ${cleanFormationTitle(f.titre)}`}));
+    asArray(f.agents).forEach(agent=>{
+      normalizeAlerts(agent.alertes).forEach(a=>result.push({...a,context:`${agent.prenom||agent.agent||"Agent"} · formation`}));
+    });
+  });
+  asArray(jour.stagiaires).forEach(s=>{
+    normalizeAlerts(s.alertes).forEach(a=>result.push({...a,context:`Stagiaire · ${s.stagiaire||""}`}));
+    asArray(s.referents).forEach(ref=>{
+      normalizeAlerts(ref.alertes).forEach(a=>result.push({...a,context:`Référent · ${ref.prenom||ref.agent||""}`}));
+    });
+  });
+  return result;
 }
 function renderImportant(jour){
   const formations=asArray(jour.formations);
   const stagiaires=asArray(jour.stagiaires);
-
   if(!formations.length&&!stagiaires.length)return "";
 
+  infoStore={};
   let html='<div class="section-title">À ne pas rater</div>';
 
-  formations.forEach(f=>{
+  formations.forEach((f,index)=>{
     const liste=asArray(f.agents);
+    const key=`formation-${index}`;
+    const alerts=[...normalizeAlerts(f.alertes)];
+    liste.forEach(agent=>alerts.push(...normalizeAlerts(agent.alertes)));
+    infoStore[key]=alerts;
+
     html+=`
-      <div class="card important">
-        <div class="shift-title">🎓 ${esc(f.titre||"Formation")}</div>
-        <div>${esc(f.horaire||"Horaire à confirmer")}</div>
-        ${
-          liste.length
-            ? liste.map(agentLine).join("")
-            : '<div class="empty">Aucun agent indiqué</div>'
-        }
+      <div class="card important formation-card">
+        <div class="important-heading">
+          <span>🎓</span><span class="important-dot">·</span><span>Formation</span>
+          ${f.horaire?`<span class="important-dot">·</span><span class="important-time">${esc(formatRange(f.horaire))}</span>`:""}
+        </div>
+        <div class="important-name">${esc(cleanFormationTitle(f.titre))}</div>
+        ${liste.length?liste.map(agentLine).join(""):'<div class="empty">Aucun agent indiqué</div>'}
+        ${renderMiniAlert(alerts,key)}
       </div>
     `;
   });
 
-  stagiaires.forEach(s=>{
+  stagiaires.forEach((s,index)=>{
     const refs=asArray(s.referents);
+    const key=`stagiaire-${index}`;
+    const alerts=[...normalizeAlerts(s.alertes)];
+    refs.forEach(ref=>alerts.push(...normalizeAlerts(ref.alertes)));
+    infoStore[key]=alerts;
+
+    const horaire=s.horaire||s.shiftHoraire||(
+      s.heureDebut&&s.heureFin
+        ? `${normalizeHour(s.heureDebut)} ⟶ ${normalizeHour(s.heureFin)}`
+        : ""
+    );
+    const shift=s.shiftLabel||"";
 
     html+=`
-      <div class="card important">
-        <div class="shift-title">👶 ${esc(s.stagiaire||"Stagiaire")}</div>
-        <div>${esc(s.shiftLabel||"Affectation")}</div>
-        ${
-          refs.length
-            ? refs.map(ref=>agentLine({
-                agent:ref.agent||ref.prenom||"",
-                prenom:ref.prenom||ref.agent||"",
-                ghe:ref.ghe||""
-              })).join("")
-            : '<div class="agent">Référent à attribuer</div>'
-        }
+      <div class="card important stagiaire-card">
+        <div class="important-heading"><span>👶</span><span>Stagiaire</span></div>
+        <div class="stagiaire-main">
+          ${esc(s.stagiaire||"Stagiaire")}
+          ${(shift||horaire)?` <span class="stagiaire-hours">· ${esc([shift,horaire].filter(Boolean).join(" · "))}</span>`:""}
+        </div>
+        ${refs.length?refs.map(ref=>agentLine({
+          agent:ref.agent||ref.prenom||"",
+          prenom:ref.prenom||ref.agent||"",
+          ghe:ref.ghe||""
+        })).join(""):'<div class="agent">Référent à attribuer</div>'}
+        ${renderMiniAlert(alerts,key)}
       </div>
     `;
   });
 
   return html;
 }
+function issuePresentation(value){
+  const txt=String(value||"").trim();
+  if(!txt)return null;
+  if(/code shift inconnu\s*:\s*am/i.test(txt))return null;
+  if(/ghe manquant/i.test(txt))return {title:"Numéro GHE manquant",detail:txt,level:"warning"};
+  if(/code shift inconnu/i.test(txt))return {title:"Code de planning à identifier",detail:txt,level:"warning"};
+  return {title:"Information à vérifier",detail:txt,level:/danger|bloquant/i.test(txt)?"danger":"warning"};
+}
 function renderControl(jour){
-  const issues=unique([].concat(asArray(jour.gheManquants),asArray(jour.codesInconnus),asArray(jour.alertesSource)));
-  if(!issues.length)return "";
-  return `<details class="control"><summary><span>À vérifier</span><span>${issues.length}</span></summary><div class="control-body"><div class="alert-list">${
-    issues.map(x=>`<div class="alert-line"><strong>${esc(x)}</strong><span>Vérifier uniquement la donnée concernée dans la source interne.</span></div>`).join("")
-  }</div></div></details>`;
+  const globalIssues=unique([].concat(asArray(jour.gheManquants),asArray(jour.codesInconnus),asArray(jour.alertesSource)))
+    .map(issuePresentation).filter(Boolean);
+  const cardIssues=collectImportantAlerts(jour);
+  const issues=[...globalIssues,...cardIssues];
+  const seen=new Set();
+  const clean=issues.filter(item=>{
+    const key=((item.context||"")+"|"+item.title+"|"+item.detail).toLowerCase();
+    if(seen.has(key))return false;
+    seen.add(key);
+    return true;
+  });
+  if(!clean.length)return "";
+
+  return `<section class="control">
+    <div class="control-head"><span>À vérifier</span><span>${clean.length}</span></div>
+    <div class="control-body"><div class="alert-list">${
+      clean.map(item=>`<div class="alert-line">
+        <strong>${esc(item.context?item.context+" · "+item.title:item.title)}</strong>
+        <span>${esc(item.detail)}</span>
+      </div>`).join("")
+    }</div></div>
+  </section>`;
 }
 function renderPage(data){
   const jour=data.jour||data;
   const g=jour.groupes||{};
   const M=asArray(g.M),J=asArray(g.J),J4=asArray(g.J4),S=asArray(g.S),N=asArray(g.N);
   const total=M.length+J.length+J4.length+S.length+N.length;
-  if(planningDayLabel) planningDayLabel.textContent=jour.label||jour.dateIso||"Planning du jour";
-  if(subtitle) subtitle.textContent=jour.sync?`Mise à jour le : ${jour.sync}`:"Mise à jour en attente";
   content.innerHTML=`
     <section class="stats-grid">
-      <div class="stat">🟦 Matin : ${M.length}</div>
-      <div class="stat">🟩 Jour : ${J.length}</div>
-      <div class="stat">🟧 J4 : ${J4.length}</div>
-      <div class="stat">🟨 Soir : ${S.length}</div>
-      <div class="stat">⬛ Nuit : ${N.length}</div>
-      <div class="stat total">👥 ${total} agents</div>
+      ${statCard("M","Matin",M.length)}
+      ${statCard("J","Jour",J.length)}
+      ${statCard("J4","J4",J4.length)}
+      ${statCard("S","Soir",S.length)}
+      ${statCard("N","Nuit",N.length)}
+      ${statCard("","",total,true)}
     </section>
     ${renderImportant(jour)}
     <div class="section-title">Planning</div>
-    ${renderShift("🟦","MATIN",M)}
-    ${renderShift("🟩","JOUR",J)}
-    ${renderShift("🟧","J4",J4)}
-    ${renderShift("🟨","SOIR",S)}
-    ${renderShift("⬛","NUIT",N)}
+    ${renderShift("M","MATIN",M)}
+    ${renderShift("J","JOUR",J)}
+    ${renderShift("J4","J4",J4)}
+    ${renderShift("S","SOIR",S)}
+    ${renderShift("N","NUIT",N)}
     ${renderControl(jour)}
   `;
   finishLoadingProgress();
@@ -434,15 +647,34 @@ function demanderTelephone(agent,ghe){
     }
   },8000);
 }
-content.addEventListener("click",event=>{const el=event.target.closest(".ghe-phone-trigger");if(el)demanderTelephone(el.dataset.agent||"",el.dataset.ghe||"")});
+content.addEventListener("click",event=>{
+  const alertTarget=event.target.closest("[data-info-key]");
+  if(alertTarget){
+    const key=alertTarget.dataset.infoKey||"";
+    const list=normalizeAlerts(infoStore[key]||[]);
+    infoModalTitle.textContent=list.some(a=>a.level==="danger")?"Pourquoi cette alerte ?":"Pourquoi vérifier ?";
+    infoModalBody.innerHTML=list.length
+      ? list.map(item=>`<div class="info-item ${esc(item.level)}">
+          <div class="info-item-title">${esc(item.title)}</div>
+          <div>${esc(item.detail)}</div>
+        </div>`).join("")
+      : '<div class="info-item">Aucune information supplémentaire.</div>';
+    openModal(infoModal);
+    return;
+  }
+  const el=event.target.closest(".ghe-phone-trigger");
+  if(el)demanderTelephone(el.dataset.agent||"",el.dataset.ghe||"");
+});
 content.addEventListener("keydown",event=>{const el=event.target.closest(".ghe-phone-trigger");if(el&&(event.key==="Enter"||event.key===" ")){event.preventDefault();demanderTelephone(el.dataset.agent||"",el.dataset.ghe||"")}});
 phoneNumberButton.addEventListener("click",()=>{if(activePhoneDial){closeModal(phoneNumberModal);openModal(phoneChoiceModal)}});
+infoModalClose.addEventListener("click",()=>closeModal(infoModal));
+infoModal.addEventListener("click",event=>{if(event.target===infoModal)closeModal(infoModal)});
 phoneNumberClose.addEventListener("click",()=>closeModal(phoneNumberModal));
 phoneCallCancel.addEventListener("click",()=>closeModal(phoneChoiceModal));
 phoneCallNormal.addEventListener("click",()=>{if(activePhoneDial){closeAllPhoneModals();location.href="tel:"+activePhoneDial}});
 phoneCallHidden.addEventListener("click",()=>{if(activePhoneDial){closeAllPhoneModals();location.href="tel:%2331%23"+activePhoneDial}});
 [phoneNumberModal,phoneChoiceModal].forEach(modal=>modal.addEventListener("click",event=>{if(event.target===modal)closeModal(modal)}));
-document.addEventListener("keydown",event=>{if(event.key==="Escape")closeAllPhoneModals()});
+document.addEventListener("keydown",event=>{if(event.key==="Escape"){closeAllPhoneModals();closeModal(infoModal)}});
 
 window.recevoirEspritEquipeGhe=function(data){
   try{setLoadingProgress(76,"Données reçues…");if(!data||data.ok===false)throw new Error(data&&data.erreur?data.erreur:"Données invalides.");renderPage(data)}
