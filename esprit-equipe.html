@@ -2,26 +2,19 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07183f">
 <title>Esprit d’équipe — GHE</title>
 <link rel="preload" as="image" href="/Image/Chargement/Organisation.PNG" fetchpriority="high">
-
 <style>
 *,*::before,*::after{box-sizing:border-box}
-
 :root{
-  --ink:#07183f;
-  --paper:#fff7dd;
-  --cream:#fff9e8;
+  --ink:#07183f;--paper:#fff7dd;--cream:#fff9e8;--line:#07183f;
+  --danger:#b42318;--danger-bg:#fff0ec;--warning:#8a4b00;--warning-bg:#fff4c7;
+  --ok:#176b39;--ok-bg:#eaf8ef;--shadow:0 7px 0 rgba(7,24,63,.16);
 }
-
-html,body{
-  margin:0;
-  min-height:100vh;
-}
-
+html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink)}
 body{
-  color:var(--ink);
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
   background:
     radial-gradient(circle at 15% 0%,rgba(255,255,255,.95) 0 9%,transparent 31%),
@@ -29,647 +22,112 @@ body{
     repeating-linear-gradient(-6deg,rgba(7,24,63,.035) 0 1px,transparent 1px 13px),
     linear-gradient(180deg,#fff9e8 0%,#f5e8bf 57%,#ead9a5 100%);
 }
-
-.page{
-  width:min(920px,100%);
-  margin:auto;
-  padding:14px 12px 34px;
-}
-
+body.modal-open{overflow:hidden}
+button,a{font:inherit;color:inherit}
+.page{width:min(920px,100%);margin:auto;padding:calc(10px + env(safe-area-inset-top)) 10px calc(34px + env(safe-area-inset-bottom))}
 .hero{
-  background:
-    radial-gradient(circle at 18% 10%,rgba(255,255,255,.13),transparent 30%),
-    linear-gradient(135deg,#07183f 0%,#101f46 58%,#020817 100%);
-  color:#fff7dd;
-  border-radius:30px;
-  padding:22px 18px;
-  border:5px solid #07183f;
-  box-shadow:
-    0 10px 0 rgba(7,24,63,.20),
-    0 15px 0 rgba(0,0,0,.12);
-  margin-bottom:16px;
+  background:radial-gradient(circle at 18% 10%,rgba(255,255,255,.13),transparent 30%),
+             linear-gradient(135deg,#07183f 0%,#101f46 58%,#020817 100%);
+  color:#fff7dd;border:5px solid var(--ink);border-radius:30px;padding:22px 18px;
+  box-shadow:0 10px 0 rgba(7,24,63,.20),0 15px 0 rgba(0,0,0,.12);margin-bottom:14px;
 }
-
-.badge{
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-  padding:7px 13px;
-  margin-bottom:14px;
-  border-radius:999px;
-  background:rgba(255,255,255,.13);
-  border:2px solid rgba(255,255,255,.20);
-  font-weight:900;
-  font-size:14px;
-}
-
-h1{
-  margin:0;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(44px,11vw,86px);
-  line-height:.86;
-  letter-spacing:.3px;
-  text-shadow:
-    0 4px 0 rgba(211,162,75,.35),
-    4px 7px 0 rgba(0,0,0,.20);
-}
-
-.subtitle{
-  margin:12px 0 0;
-  color:rgba(255,247,221,.88);
-  font-size:16px;
-  font-weight:900;
-}
-
-.top-actions{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:10px;
-  margin:8px 0 20px;
-}
-
+.badge{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;margin-bottom:13px;border-radius:999px;background:rgba(255,255,255,.13);border:2px solid rgba(255,255,255,.20);font-size:14px;font-weight:900}
+h1{margin:0;font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:clamp(44px,11vw,86px);line-height:.86;letter-spacing:.3px;text-shadow:0 4px 0 rgba(211,162,75,.35),4px 7px 0 rgba(0,0,0,.20)}
+.subtitle{margin:12px 0 0;color:rgba(255,247,221,.88);font-weight:900;line-height:1.3}
+.top-actions{display:grid;gap:9px;margin:8px 0 17px}
 .back-btn{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:84px;
-  padding:14px 18px;
-  border:6px solid #07183f;
-  border-radius:28px;
-  background:
-    radial-gradient(circle at 16% 4%,rgba(255,255,255,.13),transparent 30%),
-    repeating-linear-gradient(-7deg,rgba(255,255,255,.045) 0 2px,transparent 2px 15px),
-    linear-gradient(145deg,#4a4d52 0%,#2d3035 48%,#181a1e 100%);
-  color:#fff5d7;
-  text-decoration:none;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(28px,6.4vw,46px);
-  line-height:.95;
-  letter-spacing:.025em;
-  text-transform:uppercase;
-  text-shadow:
-    0 3px 0 rgba(0,0,0,.55),
-    0 6px 0 rgba(210,162,69,.22);
-  box-shadow:
-    0 10px 0 rgba(7,24,63,.24),
-    0 15px 0 rgba(0,0,0,.10),
-    inset 0 0 0 3px rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:center;min-height:62px;padding:12px 16px;
+  border:5px solid var(--ink);border-radius:23px;text-decoration:none;
+  background:linear-gradient(145deg,#4a4d52 0%,#2d3035 48%,#181a1e 100%);
+  color:#fff5d7;font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(24px,6vw,38px);text-transform:uppercase;box-shadow:0 8px 0 rgba(7,24,63,.24);
 }
-
-.back-btn:active{
-  transform:translateY(4px);
-  box-shadow:
-    0 6px 0 rgba(7,24,63,.24),
-    0 10px 0 rgba(0,0,0,.10),
-    inset 0 0 0 3px rgba(255,255,255,.06);
-}
-
-.stats-wrap{
-  margin:18px 0 12px;
-}
-
-.agents-separator{
-  display:grid;
-  grid-template-columns:1fr auto 1fr;
-  align-items:center;
-  gap:12px;
-  margin:22px 5px 18px;
-  color:var(--ink);
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(28px,6.7vw,46px);
-  line-height:.92;
-  letter-spacing:.01em;
-  text-transform:uppercase;
-  text-align:center;
-  text-shadow:
-    0 3px 0 #efc96d,
-    2px 5px 0 rgba(7,24,63,.08);
-}
-
-.agents-separator::before,
-.agents-separator::after{
-  content:"";
-  height:4px;
-  border-radius:999px;
-  background:linear-gradient(90deg,transparent,#07183f);
-}
-
-.agents-separator::after{
-  background:linear-gradient(90deg,#07183f,transparent);
-}
-
-.stats-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
-}
-
+.stats-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:18px 0}
 .stat{
-  position:relative;
-  min-height:88px;
-  display:flex;
-  align-items:center;
-  padding:14px 17px;
-  overflow:hidden;
-  border:4px solid var(--ink);
-  border-radius:18px;
-  background:
-    linear-gradient(180deg,rgba(255,255,255,.82),rgba(255,249,232,.96)),
-    #fff9e8;
-  color:var(--ink);
-  font-weight:1000;
-  font-size:clamp(20px,4.8vw,31px);
-  line-height:1.08;
-  box-shadow:
-    0 7px 0 rgba(7,24,63,.16),
-    0 11px 0 rgba(0,0,0,.05),
-    inset 0 3px 0 rgba(255,255,255,.92);
+  min-height:84px;display:flex;align-items:center;padding:13px 14px;border:4px solid var(--ink);
+  border-radius:19px;background:linear-gradient(180deg,#fff,#fff9e8);font-weight:1000;
+  font-size:clamp(18px,4.7vw,29px);line-height:1.05;box-shadow:var(--shadow);
 }
-
-.stat::after{
-  content:"";
-  position:absolute;
-  inset:auto -34px -42px auto;
-  width:100px;
-  height:100px;
-  border-radius:50%;
-  background:rgba(7,24,63,.035);
-}
-
-.section-title{
-  margin:24px 4px 12px;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(28px,7vw,50px);
-  line-height:.9;
-  text-transform:uppercase;
-  text-shadow:0 3px 0 #f8d67d;
-}
-
-.card{
-  background:#fff9e8;
-  border:4px solid var(--ink);
-  border-radius:22px;
-  padding:15px 14px;
-  margin-bottom:12px;
-  box-shadow:
-    0 6px 0 rgba(7,24,63,.17),
-    inset 0 0 0 3px rgba(255,215,115,.30);
-}
-
+.stat.total{background:linear-gradient(145deg,#353941,#171a20);color:#fff6d8;border-color:#07183f}
+.section-title{margin:24px 4px 12px;font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:clamp(28px,7vw,50px);line-height:.9;text-transform:uppercase;text-shadow:0 3px 0 #f8d67d}
+.card{background:var(--cream);border:4px solid var(--ink);border-radius:22px;padding:15px 14px;margin-bottom:12px;box-shadow:var(--shadow)}
 .card.important{border-left:10px solid #f07c00}
 .card.warning{border-left:10px solid #dc0917}
-.card.ok{border-left:10px solid #12873d}
-
-.shift-title{
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(24px,5.6vw,38px);
-  line-height:.9;
-  margin-bottom:11px;
-  text-transform:uppercase;
-}
-
-.agent{
-  padding:10px 0;
-  border-top:2px dashed rgba(7,24,63,.22);
-  font-size:17px;
-  font-weight:900;
-}
-
+.shift-title{font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:clamp(24px,5.6vw,38px);line-height:.9;margin-bottom:11px;text-transform:uppercase}
+.agent{padding:10px 0;border-top:2px dashed rgba(7,24,63,.22);font-size:17px;font-weight:900}
 .agent:first-of-type{border-top:0}
-
-.ghe{
-  color:rgba(7,24,63,.58);
-  font-weight:900;
+.ghe{color:rgba(7,24,63,.60);font-weight:900}
+.ghe-phone-trigger{cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.ghe-phone-trigger:focus-visible{outline:3px solid #1769e0;outline-offset:3px;border-radius:6px}
+.empty{color:rgba(7,24,63,.55);font-weight:900;font-style:italic}
+.alert-list{display:grid;gap:8px}
+.alert-line{padding:10px;border:2px solid rgba(7,24,63,.16);border-radius:14px;background:#fff}
+.alert-line strong{display:block}
+.alert-line span{display:block;margin-top:4px;color:#46516b;font-size:13px;font-weight:750;line-height:1.3}
+details.control{background:var(--cream);border:4px solid var(--ink);border-radius:22px;margin-top:14px;box-shadow:var(--shadow);overflow:hidden}
+details.control summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;cursor:pointer;list-style:none;font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:clamp(24px,6vw,38px);text-transform:uppercase}
+details.control summary::-webkit-details-marker{display:none}
+.control-body{padding:0 14px 14px}
+.loader,.error{background:var(--cream);border:4px solid var(--ink);border-radius:22px;padding:16px;font-weight:900;box-shadow:var(--shadow)}
+.loader-track{height:14px;border:3px solid var(--ink);border-radius:999px;overflow:hidden;background:#fff;margin-top:10px}
+.loader-fill{height:100%;width:8%;background:#f0c400;transition:width .2s ease}
+.error{color:var(--danger);display:none}
+.modal{
+  position:fixed;inset:0;z-index:1000;display:none;align-items:flex-end;justify-content:center;
+  padding:12px;background:rgba(2,8,23,.66);backdrop-filter:blur(5px)
 }
-
-.empty{
-  color:rgba(7,24,63,.55);
-  font-weight:900;
-  font-style:italic;
-}
-
-.agenda-box{
-  margin:28px 0 4px;
-  padding:18px 14px;
-  background:#fff9e8;
-  border:5px solid #07183f;
-  border-radius:26px;
-  box-shadow:
-    0 8px 0 rgba(7,24,63,.17),
-    inset 0 0 0 3px rgba(255,215,115,.30);
-}
-
-.agenda-title{
-  margin:0 0 14px;
-  text-align:center;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(28px,6.5vw,52px);
-  line-height:.9;
-  text-transform:uppercase;
-  text-shadow:0 3px 0 #f8d67d;
-}
-
-.agenda-buttons{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-
-.agenda-btn{
-  min-height:78px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  gap:4px;
-  text-decoration:none;
-  color:#fff4ce;
-  border:5px solid #061738;
-  border-radius:23px 19px 27px 20px;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(22px,5vw,36px);
-  text-transform:uppercase;
-  box-shadow:
-    0 8px 0 rgba(7,24,63,.35),
-    0 12px 0 rgba(0,0,0,.13),
-    inset 0 -10px 16px rgba(0,0,0,.22),
-    inset 0 7px 14px rgba(255,255,255,.16);
-  text-shadow:
-    0 3px 0 rgba(0,0,0,.48),
-    2px 5px 0 rgba(94,56,12,.34);
-}
-
-.agenda-btn:active{transform:translateY(4px)}
-
-.agenda-btn.ios{
-  background:
-    radial-gradient(circle at 22% 16%,rgba(255,255,255,.34),transparent 28%),
-    linear-gradient(145deg,#3db9ff 0%,#0c6ed5 56%,#083c91 100%);
-}
-
-.agenda-btn.android{
-  background:
-    radial-gradient(circle at 22% 16%,rgba(255,255,255,.34),transparent 28%),
-    linear-gradient(145deg,#35d864 0%,#12873d 56%,#075324 100%);
-}
-
-.note{
-  margin:13px 4px 0;
-  text-align:center;
-  color:rgba(7,24,63,.65);
-  font-weight:800;
-  font-size:13px;
-  line-height:1.35;
-}
-
-.error{
-  display:none;
-  background:#fff1ed;
-  color:#b42318;
-  border:4px solid rgba(180,35,24,.25);
-  border-radius:22px;
-  padding:16px;
-  font-weight:900;
-  line-height:1.35;
-}
-
-.loader{
-  background:#fff9e8;
-  border:4px solid #07183f;
-  border-radius:22px;
-  padding:18px;
-  font-weight:1000;
-  text-align:center;
-  box-shadow:0 5px 0 rgba(7,24,63,.16);
-}
-
-.footer{
-  margin:22px 4px 0;
-  color:rgba(7,24,63,.55);
-  font-weight:800;
-  font-size:13px;
-  line-height:1.45;
-  text-align:right;
-}
-
-@media(max-width:620px){
-  .page{padding:10px 8px 28px}
-
-  .hero{
-    border-radius:24px;
-    padding:18px 15px;
-    border-width:4px;
-  }
-
-  .stats-grid{
-    grid-template-columns:1fr 1fr;
-    gap:9px;
-  }
-
-  .stat{
-    min-height:82px;
-    border-width:3px;
-    border-radius:16px;
-    padding:12px 13px;
-    font-size:clamp(18px,4.75vw,26px);
-  }
-
-  .back-btn{
-    min-height:76px;
-    border-width:4px;
-    border-radius:24px;
-    font-size:clamp(25px,6.4vw,36px);
-  }
-
-
-  .card{
-    border-width:3px;
-    border-radius:20px;
-    padding:13px 12px;
-  }
-
-  .agenda-box{
-    border-width:4px;
-    border-radius:22px;
-    padding:15px 11px;
-  }
-
-  .agenda-buttons{
-    gap:8px;
-  }
-
-  .agenda-btn{
-    min-height:74px;
-    border-width:4px;
-  }
-}
-
-/* =========================================================
-   ORGANISATION — PHOTO PRINCIPALE + CHARGEMENT COMMUN
-   ========================================================= */
-.hero{
-  margin:0 0 14px;
-  padding:0;
-  border:0;
-  border-radius:0;
-  background:transparent;
-  box-shadow:none;
-  color:var(--ink);
-}
-
-.organisation-scene{
-  display:block;
-  width:100%;
-  max-width:880px;
-  max-height:min(55vh,500px);
-  margin:0 auto;
-  object-fit:contain;
-  object-position:center;
-  filter:drop-shadow(0 11px 0 rgba(7,24,63,.13));
-}
-
-.organisation-photo-block{
-  margin:4px 0 22px;
-}
-
-.planning-day-label{
-  margin:6px 4px 1px;
-  color:var(--ink);
-  text-align:center;
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(27px,6.6vw,46px);
-  line-height:.95;
-  letter-spacing:.015em;
-  text-transform:uppercase;
-  text-shadow:0 3px 0 #efcf7d;
-}
-
-.organisation-info{
-  margin:5px 4px 12px;
-  padding:0;
-  border:0;
-  border-radius:0;
-  background:transparent;
-  color:rgba(7,24,63,.69);
-  text-align:center;
-  font-size:15px;
-  line-height:1.35;
-  font-weight:950;
-  box-shadow:none;
-  backdrop-filter:none;
-}
-
-.loader{
-  display:grid;
-  gap:0;
-  margin:16px 0 18px;
-  padding:19px 18px 18px;
-  overflow:hidden;
-  border:4px solid var(--ink);
-  border-radius:28px 22px 30px 24px;
-  background:
-    radial-gradient(circle at 14% 0%,rgba(255,255,255,.95),transparent 36%),
-    repeating-linear-gradient(-7deg,rgba(7,24,63,.025) 0 2px,transparent 2px 11px),
-    #fffdf7;
-  box-shadow:
-    0 8px 0 rgba(7,24,63,.15),
-    0 12px 0 rgba(0,0,0,.055),
-    inset 0 0 0 3px rgba(255,215,115,.28);
-  text-align:center;
-}
-
-.loading-title{
-  color:var(--ink);
-  font-family:Impact,"Arial Black",system-ui,sans-serif;
-  font-size:clamp(38px,10vw,64px);
-  line-height:.86;
-  letter-spacing:.015em;
-  text-transform:uppercase;
-  text-shadow:
-    0 4px 0 #f1ce79,
-    3px 7px 0 rgba(7,24,63,.09);
-}
-
-.loading-dots::after{
-  content:"";
-  display:inline-block;
-  width:1.05em;
-  text-align:left;
-  animation:loadingDots 1.15s steps(4,end) infinite;
-}
-
-@keyframes loadingDots{
-  0%{content:""}
-  25%{content:"."}
-  50%{content:".."}
-  75%,100%{content:"..."}
-}
-
-.loading-track{
-  position:relative;
-  height:21px;
-  margin:17px 0 9px;
-  overflow:hidden;
-  border:3px solid var(--ink);
-  border-radius:999px;
-  background:#e6e9ef;
-  box-shadow:
-    inset 0 3px 5px rgba(7,24,63,.17),
-    0 3px 0 rgba(7,24,63,.09);
-}
-
-.loading-fill{
-  position:absolute;
-  inset:0 auto 0 0;
-  width:8%;
-  min-width:18px;
-  border-radius:999px;
-  background:linear-gradient(90deg,#f2b632 0%,#ffcf4a 42%,#ff8a00 100%);
-  transition:width .38s cubic-bezier(.2,.75,.25,1);
-  box-shadow:inset 0 3px 0 rgba(255,255,255,.42);
-}
-
-.loading-fill::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  width:42%;
-  background:linear-gradient(105deg,transparent,rgba(255,255,255,.72),transparent);
-  transform:translateX(-150%);
-  animation:loadingShine 1.25s linear infinite;
-}
-
-@keyframes loadingShine{
-  to{transform:translateX(360%)}
-}
-
-.loading-text{
-  min-height:18px;
-  margin:0;
-  color:rgba(7,24,63,.68);
-  font-size:13px;
-  line-height:1.25;
-  font-weight:900;
-  text-align:center;
-}
-
-@media(max-width:620px){
-  .hero{
-    padding:0;
-    border:0;
-    border-radius:0;
-  }
-
-  .organisation-scene{
-    max-height:430px;
-  }
-
-  .loader{
-    padding:17px 14px 16px;
-    border-width:4px;
-  }
-
-  .loading-track{
-    height:19px;
-    margin-top:15px;
-  }
-}
-
-@media(prefers-reduced-motion:reduce){
-  .loading-dots::after,
-  .loading-fill::after{
-    animation:none;
-  }
-
-  .loading-fill{
-    transition:none;
-  }
-}
-
+.modal.open{display:flex}
+.modal-panel{width:min(520px,100%);background:var(--cream);border:5px solid var(--ink);border-radius:26px;padding:16px;box-shadow:0 14px 0 rgba(0,0,0,.28)}
+.modal-title{margin:0;font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:clamp(30px,8vw,48px);line-height:.92;text-transform:uppercase}
+.modal-text{margin:8px 0 14px;color:#42506c;font-weight:800;line-height:1.35}
+.phone-number{width:100%;min-height:62px;border:4px solid var(--ink);border-radius:18px;background:#fff;font-size:25px;font-weight:1000}
+.modal-actions{display:grid;gap:9px;margin-top:10px}
+.modal-btn{width:100%;min-height:54px;border:4px solid var(--ink);border-radius:17px;font-weight:1000;background:#fff}
+.modal-btn.primary{background:#176b39;color:#fff}
+.modal-btn.hidden-call{background:#07183f;color:#fff7dd}
+@media(min-width:720px){.modal{align-items:center}}
 </style>
 </head>
-
 <body>
-
 <main class="page">
-
   <section class="hero">
-    <div class="planning-day-label" id="planningDayLabel">
-      Planning du jour
-    </div>
-    <p class="organisation-info" id="subtitle">
-      Mise à jour en cours…
-    </p>
+    <div class="badge">👑 Organisation du jour</div>
+    <h1>Esprit d’équipe</h1>
+    <p class="subtitle"><span id="planningDayLabel">Chargement du planning…</span><br><span id="subtitle">Connexion à la source GHE…</span></p>
   </section>
 
-  <div class="top-actions">
-    <a class="back-btn" href="./index.html">← Retour accueil</a>
-  </div>
+  <div class="top-actions"><a class="back-btn" href="index.html">← Accueil</a></div>
 
-  <section class="organisation-photo-block">
-    <img
-      class="organisation-scene"
-      src="/Image/Chargement/Organisation.PNG"
-      alt="Organisation du planning collectif GHE"
-      fetchpriority="high"
-      decoding="async"
-    >
-  </section>
-
-  <div class="loader" id="loader" role="status" aria-live="polite">
-    <div class="loading-title">
-      Chargement<span class="loading-dots" aria-hidden="true"></span>
-    </div>
-
-    <div
-      id="loadingTrack"
-      class="loading-track"
-      role="progressbar"
-      aria-label="Progression du chargement"
-      aria-valuemin="0"
-      aria-valuemax="100"
-      aria-valuenow="8"
-    >
-      <div id="loadingFill" class="loading-fill"></div>
-    </div>
-
-    <div id="loadingText" class="loading-text">
-      Connexion au planning collectif…
-    </div>
-  </div>
-  <div class="error" id="errorBox">Impossible de charger les données.</div>
-
-  <div id="content" style="display:none;"></div>
-
-  <section class="agenda-box">
-    <h2 class="agenda-title">Ajouter le planning collectif à mon agenda</h2>
-
-    <div class="agenda-buttons">
-      <a
-        class="agenda-btn ios"
-        href="webcal://calendar.google.com/calendar/ical/ca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%40group.calendar.google.com/private-5a1892e376d3c9b3cc82c5f0ad61c333/basic.ics">
-        <span>🍎</span>
-        <span>iOS</span>
-      </a>
-
-      <a
-        class="agenda-btn android"
-        href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fical%2Fca4fd5e66513b5e783fba86f6df8e1f73dbd237fc1f83749f3cabb97d273d969%2540group.calendar.google.com%2Fprivate-5a1892e376d3c9b3cc82c5f0ad61c333%2Fbasic.ics">
-        <span>🤖</span>
-        <span>Android</span>
-      </a>
-    </div>
-
-    <div class="note">
-      iOS ajoute le calendrier via abonnement. Android ouvre Google Agenda pour l’ajouter.
+  <section id="loader" class="loader">
+    <div id="loadingText">Connexion au planning collectif…</div>
+    <div class="loader-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="8" id="loadingTrack">
+      <div class="loader-fill" id="loadingFill"></div>
     </div>
   </section>
-
-  <div class="footer">
-    Page GitHub — données synchronisées depuis la base GHE.
-  </div>
-
+  <section id="errorBox" class="error"></section>
+  <section id="content" style="display:none"></section>
 </main>
+
+<div class="modal" id="phoneNumberModal" aria-hidden="true">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="phoneNumberTitle">
+    <h2 class="modal-title" id="phoneNumberTitle">Numéro GHE</h2>
+    <p class="modal-text">Le numéro est chargé uniquement après ton clic.</p>
+    <button class="phone-number" id="phoneNumberButton" type="button" disabled>…</button>
+    <div class="modal-actions"><button class="modal-btn" id="phoneNumberClose" type="button">Fermer</button></div>
+  </div>
+</div>
+
+<div class="modal" id="phoneChoiceModal" aria-hidden="true">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="phoneChoiceTitle">
+    <h2 class="modal-title" id="phoneChoiceTitle">Appeler</h2>
+    <p class="modal-text">Choisis le type d’appel.</p>
+    <div class="modal-actions">
+      <button class="modal-btn primary" id="phoneCallNormal" type="button">Appeler</button>
+      <button class="modal-btn hidden-call" id="phoneCallHidden" type="button">Appeler en masqué · #31#</button>
+      <button class="modal-btn" id="phoneCallCancel" type="button">Annuler</button>
+    </div>
+  </div>
+</div>
 
 <script>
 const API_ESPRIT_EQUIPE = "https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOlle3cafAKEAZQ8NAX-peSN6D-yxFO3gX26SnVNUVd5xbwV3CUISg/exec";
@@ -677,283 +135,166 @@ const API_ESPRIT_EQUIPE = "https://script.google.com/macros/s/AKfycbzmelNrBU583V
 const loader = document.getElementById("loader");
 const errorBox = document.getElementById("errorBox");
 const content = document.getElementById("content");
-const subtitle = document.getElementById("subtitle");
-const planningDayLabel = document.getElementById("planningDayLabel");
-const loadingFill = document.getElementById("loadingFill");
-const loadingTrack = document.getElementById("loadingTrack");
 const loadingText = document.getElementById("loadingText");
+const loadingTrack = document.getElementById("loadingTrack");
+const loadingFill = document.getElementById("loadingFill");
+const planningDayLabel = document.getElementById("planningDayLabel");
+const subtitle = document.getElementById("subtitle");
+const phoneNumberModal = document.getElementById("phoneNumberModal");
+const phoneChoiceModal = document.getElementById("phoneChoiceModal");
+const phoneNumberButton = document.getElementById("phoneNumberButton");
+const phoneNumberClose = document.getElementById("phoneNumberClose");
+const phoneCallNormal = document.getElementById("phoneCallNormal");
+const phoneCallHidden = document.getElementById("phoneCallHidden");
+const phoneCallCancel = document.getElementById("phoneCallCancel");
 
 let loadingProgress = 8;
 let loadingTimer = null;
 let loadingFinished = false;
-
-function setLoadingProgress(value,label){
-  const next = Math.max(
-    loadingProgress,
-    Math.min(100,Math.round(Number(value)||0))
-  );
-
-  loadingProgress = next;
-
-  if(loadingFill){
-    loadingFill.style.width = next + "%";
-  }
-
-  if(loadingTrack){
-    loadingTrack.setAttribute("aria-valuenow",String(next));
-  }
-
-  if(loadingText && label){
-    loadingText.textContent = label;
-  }
-}
-
-function startLoadingProgress(){
-  loadingProgress = 0;
-  setLoadingProgress(8,"Connexion au planning collectif…");
-
-  if(loadingTimer){
-    clearInterval(loadingTimer);
-  }
-
-  loadingTimer = setInterval(function(){
-    if(loadingProgress < 33){
-      setLoadingProgress(loadingProgress + 1);
-    }
-  },420);
-}
-
-function stopLoadingProgress(){
-  if(loadingTimer){
-    clearInterval(loadingTimer);
-    loadingTimer = null;
-  }
-}
-
-function finishLoadingProgress(label,callback){
-  stopLoadingProgress();
-  setLoadingProgress(100,label || "Planning collectif prêt");
-
-  setTimeout(function(){
-    loadingFinished = true;
-    if(typeof callback === "function"){
-      callback();
-    }
-  },230);
-}
+let activePhoneDial = "";
+let activePhoneRequest = 0;
 
 function esc(value){
   return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#039;");
 }
-
-function asArray(v){
-  return Array.isArray(v) ? v : [];
+function asArray(value){return Array.isArray(value)?value:[]}
+function unique(values){
+  const seen=new Set();
+  return asArray(values).map(v=>String(v||"").trim()).filter(v=>{
+    const k=v.toLowerCase(); if(!v||seen.has(k)) return false; seen.add(k); return true;
+  });
 }
-
-function count(g){
-  return asArray(g).length;
+function setLoadingProgress(value,label){
+  loadingProgress=Math.max(loadingProgress,Math.min(100,Math.round(Number(value)||0)));
+  loadingFill.style.width=loadingProgress+"%";
+  loadingTrack.setAttribute("aria-valuenow",String(loadingProgress));
+  if(label) loadingText.textContent=label;
 }
-
+function startLoadingProgress(){
+  loadingProgress=0;setLoadingProgress(8,"Connexion au planning collectif…");
+  clearInterval(loadingTimer);
+  loadingTimer=setInterval(()=>{if(loadingProgress<35)setLoadingProgress(loadingProgress+1)},420);
+}
+function finishLoadingProgress(){
+  clearInterval(loadingTimer);setLoadingProgress(100,"Planning collectif prêt");
+  setTimeout(()=>{loadingFinished=true;loader.style.display="none";errorBox.style.display="none";content.style.display="block"},220);
+}
 function agentLine(agent){
-  const prenom = agent.prenom || agent.agent || agent.nom || "";
-  const ghe = agent.ghe ? ` <span class="ghe">· ${esc(agent.ghe)}</span>` : "";
-  return `<div class="agent">${esc(prenom)}${ghe}</div>`;
+  const prenom=agent.prenom||agent.agent||agent.nom||"";
+  const agentComplet=agent.agent||[agent.nom,agent.prenom].filter(Boolean).join(" ").trim()||prenom;
+  const ghe=String(agent.ghe||"").trim();
+  const gheHtml=ghe?` <span class="ghe ghe-phone-trigger" role="button" tabindex="0" data-agent="${esc(agentComplet)}" data-ghe="${esc(ghe)}">· ${esc(ghe)}</span>`:"";
+  return `<div class="agent">${esc(prenom)}${gheHtml}</div>`;
 }
-
-function renderShift(emoji, titre, agents){
-  agents = asArray(agents);
-  let html = `
-    <div class="card">
-      <div class="shift-title">${emoji} ${esc(titre)}</div>
-  `;
-
-  if(!agents.length){
-    html += `<div class="empty">Aucun agent détecté</div>`;
-  }else{
-    html += agents.map(agentLine).join("");
-  }
-
-  html += `</div>`;
-  return html;
+function renderShift(emoji,title,agents){
+  const list=asArray(agents);
+  return `<div class="card"><div class="shift-title">${emoji} ${esc(title)}</div>${
+    list.length?list.map(agentLine).join(""):'<div class="empty">Aucun agent détecté</div>'
+  }</div>`;
 }
-
 function renderImportant(jour){
-  const formations = asArray(jour.formations);
-  const stagiaires = asArray(jour.stagiaires);
-
-  if(!formations.length && !stagiaires.length){
-    return "";
-  }
-
-  let html = `<div class="section-title">📌 À ne pas rater</div>`;
-
-  formations.forEach(f => {
-    html += `
-      <div class="card important">
-        <div class="shift-title">🎓 Formation · ${esc(f.horaire || "")}</div>
-        <div class="agent">${esc(f.titre || f.formationIntitule || "")}</div>
-        ${asArray(f.agents).map(agentLine).join("")}
-      </div>
-    `;
+  const formations=asArray(jour.formations);
+  const stagiaires=asArray(jour.stagiaires);
+  if(!formations.length&&!stagiaires.length)return "";
+  let html='<div class="section-title">À ne pas rater</div>';
+  formations.forEach(f=>{
+    const agents=asArray(f.agents).map(a=>a.prenom||"").filter(Boolean).join(", ");
+    html+=`<div class="card important"><div class="shift-title">🎓 ${esc(f.titre||"Formation")}</div><div>${esc(f.horaire||"Horaire à confirmer")}</div>${agents?`<div class="agent">${esc(agents)}</div>`:""}</div>`;
   });
-
-  stagiaires.forEach(s => {
-    html += `
-      <div class="card important">
-        <div class="shift-title">👶 Stagiaire · ${esc(String(s.shiftLabel || "").toUpperCase())}</div>
-        <div class="agent">${esc(s.stagiaire || "")}</div>
-        ${
-          asArray(s.referents).length
-            ? asArray(s.referents).map(r => `<div class="agent">Référent : ${esc(r.prenom || r.agent || "")}${r.ghe ? ` <span class="ghe">· ${esc(r.ghe)}</span>` : ""}</div>`).join("")
-            : `<div class="agent">Référent : à vérifier</div>`
-        }
-      </div>
-    `;
+  stagiaires.forEach(s=>{
+    const refs=asArray(s.referents).map(r=>[r.prenom,r.ghe].filter(Boolean).join(" · ")).filter(Boolean).join(", ");
+    html+=`<div class="card important"><div class="shift-title">👶 ${esc(s.stagiaire||"Stagiaire")}</div><div>${esc(s.shiftLabel||"Affectation")}</div><div class="agent">${refs?`Référent : ${esc(refs)}`:"Référent à attribuer"}</div></div>`;
   });
-
   return html;
 }
-
-function renderControle(jour){
-  const alertes = [];
-
-  asArray(jour.gheManquants).forEach(a => alertes.push("GHE manquant : " + a));
-  asArray(jour.codesInconnus).forEach(a => alertes.push("Code shift à vérifier : " + a));
-  asArray(jour.alertesSource).forEach(a => alertes.push(a));
-
-  if(!alertes.length){
-    return `
-      <div class="section-title">Contrôle final</div>
-      <div class="card ok">
-        <div class="agent">✅ Rien de particulier détecté.</div>
-      </div>
-    `;
-  }
-
-  return `
-    <div class="section-title">Contrôle final</div>
-    <div class="card warning">
-      <div class="shift-title">⚠️ À vérifier</div>
-      ${alertes.map(a => `<div class="agent">${esc(a)}</div>`).join("")}
-    </div>
-  `;
+function renderControl(jour){
+  const issues=unique([].concat(asArray(jour.gheManquants),asArray(jour.codesInconnus),asArray(jour.alertesSource)));
+  if(!issues.length)return "";
+  return `<details class="control"><summary><span>À vérifier</span><span>${issues.length}</span></summary><div class="control-body"><div class="alert-list">${
+    issues.map(x=>`<div class="alert-line"><strong>${esc(x)}</strong><span>Vérifier uniquement la donnée concernée dans la source interne.</span></div>`).join("")
+  }</div></div></details>`;
 }
-
 function renderPage(data){
-  const jour = data.jour || data;
-
-  const groupes = jour.groupes || {};
-  const M = asArray(groupes.M);
-  const J = asArray(groupes.J);
-  const J4 = asArray(groupes.J4);
-  const S = asArray(groupes.S);
-  const N = asArray(groupes.N);
-
-  const total = count(M) + count(J) + count(J4) + count(S) + count(N);
-
-  const planningLabel = jour.label || jour.dateIso || "Planning du jour";
-  const syncLabel = jour.sync || "";
-
-  planningDayLabel.textContent = planningLabel;
-
-  subtitle.textContent = syncLabel
-    ? `Mise à jour le : ${syncLabel}`
-    : "Mise à jour en attente";
-
-  content.innerHTML = `
-    <section class="stats-wrap">
-      <div class="stats-grid">
-        <div class="stat">🟦 Matin : ${count(M)}</div>
-        <div class="stat">🟩 Jour : ${count(J)}</div>
-        <div class="stat">🟧 J4 : ${count(J4)}</div>
-        <div class="stat">🟨 Soir : ${count(S)}</div>
-        <div class="stat">⬛ Nuit : ${count(N)}</div>
-      </div>
+  const jour=data.jour||data;
+  const g=jour.groupes||{};
+  const M=asArray(g.M),J=asArray(g.J),J4=asArray(g.J4),S=asArray(g.S),N=asArray(g.N);
+  const total=M.length+J.length+J4.length+S.length+N.length;
+  planningDayLabel.textContent=jour.label||jour.dateIso||"Planning du jour";
+  subtitle.textContent=jour.sync?`Mise à jour le : ${jour.sync}`:"Mise à jour en attente";
+  content.innerHTML=`
+    <section class="stats-grid">
+      <div class="stat">🟦 Matin : ${M.length}</div>
+      <div class="stat">🟩 Jour : ${J.length}</div>
+      <div class="stat">🟧 J4 : ${J4.length}</div>
+      <div class="stat">🟨 Soir : ${S.length}</div>
+      <div class="stat">⬛ Nuit : ${N.length}</div>
+      <div class="stat total">👥 ${total} agents</div>
     </section>
-
-    <div class="agents-separator">👥 ${total} agents</div>
-
     ${renderImportant(jour)}
-
     <div class="section-title">Planning</div>
-
-    ${renderShift("🟦", "MATIN", M)}
-    ${renderShift("🟩", "JOUR", J)}
-    ${renderShift("🟧", "J4", J4)}
-    ${renderShift("🟨", "SOIR", S)}
-    ${renderShift("⬛", "NUIT", N)}
-
-    ${renderControle(jour)}
+    ${renderShift("🟦","MATIN",M)}
+    ${renderShift("🟩","JOUR",J)}
+    ${renderShift("🟧","J4",J4)}
+    ${renderShift("🟨","SOIR",S)}
+    ${renderShift("⬛","NUIT",N)}
+    ${renderControl(jour)}
   `;
-
-  setLoadingProgress(91,"Création de l’affichage…");
-
-  finishLoadingProgress("Planning collectif prêt",function(){
-    loader.style.display = "none";
-    errorBox.style.display = "none";
-    content.style.display = "block";
-  });
+  finishLoadingProgress();
 }
-
-function showError(msg){
-  stopLoadingProgress();
-  loadingFinished = true;
-  loader.style.display = "none";
-  errorBox.style.display = "block";
-  errorBox.textContent = msg || "Impossible de charger les données.";
+function showError(message){
+  clearInterval(loadingTimer);loadingFinished=true;loader.style.display="none";
+  errorBox.style.display="block";errorBox.textContent=message||"Impossible de charger les données.";
 }
-
-window.recevoirEspritEquipeGhe = function(data){
-  try{
-    setLoadingProgress(76,"Données du planning reçues…");
-    if(!data || data.ok === false){
-      showError(data && data.erreur ? data.erreur : "Données invalides.");
-      return;
-    }
-
-    renderPage(data);
-  }catch(err){
-    showError("Erreur d’affichage : " + String(err.message || err));
-  }
-};
-
-(function loadJsonp(){
-  startLoadingProgress();
-  setLoadingProgress(20,"Ouverture de la passerelle GHE…");
-
-  const script = document.createElement("script");
-
-  script.src =
-    API_ESPRIT_EQUIPE +
-    "?mode=jsonp&callback=recevoirEspritEquipeGhe&t=" +
-    Date.now();
-
-  script.onload = function(){
-    if(!loadingFinished){
-      setLoadingProgress(48,"Passerelle connectée…");
-    }
+function openModal(modal){modal.classList.add("open");modal.setAttribute("aria-hidden","false");document.body.classList.add("modal-open")}
+function closeModal(modal){
+  modal.classList.remove("open");modal.setAttribute("aria-hidden","true");
+  if(!phoneNumberModal.classList.contains("open")&&!phoneChoiceModal.classList.contains("open"))document.body.classList.remove("modal-open");
+}
+function closeAllPhoneModals(){closeModal(phoneNumberModal);closeModal(phoneChoiceModal)}
+function demanderTelephone(agent,ghe){
+  const requestId=++activePhoneRequest;activePhoneDial="";
+  phoneNumberButton.textContent="…";phoneNumberButton.disabled=true;
+  closeModal(phoneChoiceModal);openModal(phoneNumberModal);
+  const callbackName="recevoirTelephoneGhe_"+Date.now()+"_"+Math.floor(Math.random()*100000);
+  const script=document.createElement("script");let done=false;
+  function cleanup(){if(done)return;done=true;delete window[callbackName];script.remove()}
+  window[callbackName]=function(data){
+    if(requestId!==activePhoneRequest){cleanup();return}
+    if(data&&data.ok&&data.telephone&&data.telephoneDial){
+      activePhoneDial=String(data.telephoneDial);phoneNumberButton.textContent=String(data.telephone);phoneNumberButton.disabled=false;
+    }else{phoneNumberButton.textContent="INDISPONIBLE";phoneNumberButton.disabled=true}
+    cleanup();
   };
-
-  script.onerror = function(){
-    showError("Impossible de charger les données depuis Apps Script.");
-  };
-
+  script.onerror=function(){if(requestId===activePhoneRequest){phoneNumberButton.textContent="INDISPONIBLE";phoneNumberButton.disabled=true}cleanup()};
+  script.src=API_ESPRIT_EQUIPE+"?mode=telephone&agent="+encodeURIComponent(agent||"")+"&ghe="+encodeURIComponent(ghe||"")+"&callback="+encodeURIComponent(callbackName)+"&t="+Date.now();
   document.body.appendChild(script);
+  setTimeout(()=>{if(!done){if(requestId===activePhoneRequest){phoneNumberButton.textContent="INDISPONIBLE";phoneNumberButton.disabled=true}cleanup()}},8000);
+}
+content.addEventListener("click",event=>{const el=event.target.closest(".ghe-phone-trigger");if(el)demanderTelephone(el.dataset.agent||"",el.dataset.ghe||"")});
+content.addEventListener("keydown",event=>{const el=event.target.closest(".ghe-phone-trigger");if(el&&(event.key==="Enter"||event.key===" ")){event.preventDefault();demanderTelephone(el.dataset.agent||"",el.dataset.ghe||"")}});
+phoneNumberButton.addEventListener("click",()=>{if(activePhoneDial){closeModal(phoneNumberModal);openModal(phoneChoiceModal)}});
+phoneNumberClose.addEventListener("click",()=>closeModal(phoneNumberModal));
+phoneCallCancel.addEventListener("click",()=>closeModal(phoneChoiceModal));
+phoneCallNormal.addEventListener("click",()=>{if(activePhoneDial){closeAllPhoneModals();location.href="tel:"+activePhoneDial}});
+phoneCallHidden.addEventListener("click",()=>{if(activePhoneDial){closeAllPhoneModals();location.href="tel:%2331%23"+activePhoneDial}});
+[phoneNumberModal,phoneChoiceModal].forEach(modal=>modal.addEventListener("click",event=>{if(event.target===modal)closeModal(modal)}));
+document.addEventListener("keydown",event=>{if(event.key==="Escape")closeAllPhoneModals()});
 
-  setTimeout(function(){
-    if(!loadingFinished && content.style.display !== "block"){
-      showError(
-        "Temps de chargement dépassé. Le script Apps Script doit renvoyer le mode JSONP."
-      );
-    }
-  },9000);
+window.recevoirEspritEquipeGhe=function(data){
+  try{setLoadingProgress(76,"Données reçues…");if(!data||data.ok===false)throw new Error(data&&data.erreur?data.erreur:"Données invalides.");renderPage(data)}
+  catch(err){showError("Erreur d’affichage : "+String(err.message||err))}
+};
+(function loadJsonp(){
+  startLoadingProgress();setLoadingProgress(20,"Ouverture de la passerelle GHE…");
+  const script=document.createElement("script");
+  script.src=API_ESPRIT_EQUIPE+"?mode=jsonp&callback=recevoirEspritEquipeGhe&t="+Date.now();
+  script.onload=()=>{if(!loadingFinished)setLoadingProgress(48,"Passerelle connectée…")};
+  script.onerror=()=>showError("Impossible de charger les données depuis Apps Script.");
+  document.body.appendChild(script);
+  setTimeout(()=>{if(!loadingFinished&&content.style.display!=="block")showError("Temps de chargement dépassé.")},10000);
 })();
 </script>
-
 </body>
 </html>
