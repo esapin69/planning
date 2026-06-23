@@ -1753,7 +1753,7 @@ function traineeItemShift(item){
     (
       code==="M"?"Matin":
       code==="J"?"Journée":
-      code==="J4"?"Journée J4":
+      code==="J4"?"J4":
       code==="S"?"Soir":
       code==="N"?"Nuit":
       "Shift"
@@ -1862,6 +1862,25 @@ function traineeBestReferentInterval(traineeInterval,referentInterval){
   return candidates[0];
 }
 
+function traineeFormatClock(minutes){
+  const normalized=((minutes%1440)+1440)%1440;
+  const h=Math.floor(normalized/60);
+  const m=normalized%60;
+
+  return String(h).padStart(2,"0")+":"+
+    String(m).padStart(2,"0");
+}
+
+function traineeFormatDuration(minutes){
+  const total=Math.max(0,Math.round(Number(minutes)||0));
+  const h=Math.floor(total/60);
+  const m=total%60;
+
+  if(h&&m)return`${h} h ${String(m).padStart(2,"0")}`;
+  if(h)return`${h} h`;
+  return`${m} min`;
+}
+
 function traineeCoverageIssue(item){
   const pair=traineeShiftPair(item);
   const traineeInterval=traineeShiftInterval(pair.trainee);
@@ -1904,23 +1923,42 @@ function traineeCoverageIssue(item){
     )
   ).toUpperCase();
 
+  const beforeGap=Math.max(
+    0,
+    referentInterval.start-traineeInterval.start
+  );
+
+  const afterGap=Math.max(
+    0,
+    traineeInterval.end-referentInterval.end
+  );
+
+  const totalGap=beforeGap+afterGap;
+
+  const overlap=
+    Math.min(traineeInterval.end,referentInterval.end)-
+    Math.max(traineeInterval.start,referentInterval.start);
+
+  const noOverlap=overlap<=0;
   const problems=[];
 
-  if(referentInterval.start>traineeInterval.start){
+  if(beforeGap>0){
     problems.push(
-      `${traineeName} commence avant l’arrivée de ${referentName}.`
+      `${traineeName} est présent de `+
+      `${traineeFormatClock(traineeInterval.start)} à `+
+      `${traineeFormatClock(referentInterval.start)} avant l’arrivée de `+
+      `${referentName} (${traineeFormatDuration(beforeGap)} sans référent).`
     );
   }
 
-  if(referentInterval.end<traineeInterval.end){
+  if(afterGap>0){
     problems.push(
-      `${traineeName} reste présent après le départ de ${referentName}.`
+      `${traineeName} reste présent de `+
+      `${traineeFormatClock(referentInterval.end)} à `+
+      `${traineeFormatClock(traineeInterval.end)} après le départ de `+
+      `${referentName} (${traineeFormatDuration(afterGap)} sans référent).`
     );
   }
-
-  const noOverlap=
-    referentInterval.end<=traineeInterval.start||
-    referentInterval.start>=traineeInterval.end;
 
   return {
     title:noOverlap
@@ -1929,7 +1967,9 @@ function traineeCoverageIssue(item){
     detail:problems.join(" ")||
       "Le référent ne couvre pas toute la présence du stagiaire.",
     action:"Vérifier l’affectation ou choisir un référent présent pendant tout le créneau du stagiaire.",
-    label:noOverlap?"Référent absent":"Créneau incomplet",
+    label:noOverlap
+      ?"Référent absent"
+      :`${traineeFormatDuration(totalGap)} sans référent`,
     level:noOverlap?"danger":"warning"
   };
 }
@@ -1961,9 +2001,39 @@ function isGenericTraineeMismatchAlert(alert){
   );
 }
 
+function isTechnicalTraineeAlert(alert){
+  const text=String(
+    [
+      alert&&alert.title,
+      alert&&alert.titre,
+      alert&&alert.detail,
+      alert&&alert.resume,
+      alert&&alert.message,
+      alert&&alert.action
+    ].filter(Boolean).join(" ")
+  )
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .toUpperCase();
+
+  return (
+    text.includes("HORAIRE STAGIAIRE RECUPERE DEPUIS LIGNE")||
+    text.includes("RECUPERE DEPUIS LIGNE")||
+    text.includes("SOURCE INTERNE")||
+    text.includes("PHOTOCOPIE INTELLIGENTE")||
+    text.includes("SORTIE_MAILS")||
+    text.includes("MAIL PERSONNEL")||
+    text.includes("ADRESSE MAIL PERSONNELLE")||
+    text.includes("DONNEE TECHNIQUE")||
+    text.includes("RATTACHEMENT TECHNIQUE")
+  );
+}
+
 function filterTraineeCoverageAlerts(alerts,item){
   const clean=normalizeAlerts(alerts).filter(
-    alert=>!isGenericTraineeMismatchAlert(alert)
+    alert=>
+      !isGenericTraineeMismatchAlert(alert)&&
+      !isTechnicalTraineeAlert(alert)
   );
 
   const coverage=traineeCoverageIssue(item);
