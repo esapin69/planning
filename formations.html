@@ -144,7 +144,65 @@ function arr(v){return Array.isArray(v)?v:[]}
 function initials(v){const p=String(v||"").trim().split(/\s+/).filter(Boolean);return p.length?((p[0][0]||"")+(p[1]?.[0]||p[0][1]||"")).toUpperCase():"?"}
 function avatar(agent){const a=agent&&agent.avatar||{},t=a.thumb||"";return `<div class="avatar ${t?"has-img":""}">${t?`<img src="${esc(t)}" alt="" loading="lazy" onerror="this.parentElement.classList.remove('has-img');this.remove()">`:""}<span class="initials">${esc(a.initiales||initials(agent&&agent.nomComplet))}</span></div>`}
 function chip(text){return text?`<span class="chip">${esc(text)}</span>`:""}
-function shiftText(shift){shift=shift||{};const left=[shift.icone,shift.label||shift.code].filter(Boolean).join(" ");return [left,shift.horaire].filter(Boolean).join(" · ")}
+function shiftBasePublic(shift){
+  shift=shift||{};
+
+  const code=norm(
+    shift.code||
+    shift.base||
+    shift.label||
+    ""
+  ).replace(/[^A-Z0-9]/g,"");
+
+  if(code.includes("J4"))return"J4";
+  if(code==="M"||code.includes("MATIN"))return"M";
+  if(code==="J"||code==="JOUR"||code.includes("JOURNEE"))return"J";
+  if(code==="S"||code.includes("SOIR"))return"S";
+  if(code==="N"||code.includes("NUIT"))return"N";
+
+  return code;
+}
+
+function shiftText(shift){
+  shift=shift||{};
+
+  const base=shiftBasePublic(shift);
+
+  const labels={
+    M:"Matin",
+    J:"Journée",
+    J4:"J4",
+    S:"Soir",
+    N:"Nuit"
+  };
+
+  const icons={
+    M:"🔵",
+    J:"🟢",
+    J4:"🟠",
+    S:"🟡",
+    N:"⚫"
+  };
+
+  const label=
+    labels[base]||
+    shift.label||
+    shift.code||
+    "";
+
+  const icon=
+    icons[base]||
+    shift.icone||
+    "";
+
+  const left=[icon,label]
+    .filter(Boolean)
+    .join(" ");
+
+  return [left,shift.horaire]
+    .filter(Boolean)
+    .join(" · ");
+}
 function typeClass(item){const n=norm(item&&item.formation&&((item.formation.typeLabel||"")+" "+(item.formation.intitule||"")));return n.includes("INCENDIE")?"incendie":n.includes("CACES")?"caces":(n.includes("IDENTITE")||n.includes("VIGILANCE"))?"identite":"default"}
 function issuesOfAgent(agent){return arr(agent&&agent.anomalies)}
 function issuesOfSession(item){return arr(item&&item.anomalies)}
