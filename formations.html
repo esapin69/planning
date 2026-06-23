@@ -35,6 +35,62 @@ button,input,a{font:inherit;color:inherit}
 .agenda{margin:25px 0 4px;padding:13px;background:var(--paper);border:4px solid var(--line);border-radius:25px;box-shadow:var(--shadow)}.agenda-title{margin:0 0 10px;font-family:var(--display);font-size:clamp(25px,7vw,44px);line-height:.92;text-align:center;text-transform:uppercase;text-shadow:0 3px 0 #f8d67d}.agenda-buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px}.agenda-btn{min-height:62px;display:flex;align-items:center;justify-content:center;text-decoration:none;color:#fff4ce;border:4px solid #061738;border-radius:20px;font-family:var(--display);font-size:clamp(21px,5.5vw,34px);text-transform:uppercase;box-shadow:0 6px 0 rgba(7,24,63,.32)}.agenda-btn.ios{background:linear-gradient(145deg,#3db9ff,#0c6ed5 56%,#083c91)}.agenda-btn.android{background:linear-gradient(145deg,#35d864,#12873d 56%,#075324)}
 .modal{position:fixed;inset:0;z-index:1000;display:none;align-items:flex-end;justify-content:center;padding:10px;background:rgba(2,8,23,.68);backdrop-filter:blur(5px)}.modal.open{display:flex}.sheet{width:min(680px,100%);max-height:88vh;overflow:auto;background:var(--cream);border:5px solid var(--line);border-radius:27px 27px 18px 18px;padding:14px;box-shadow:0 15px 0 rgba(0,0,0,.24)}.sheet h2{margin:0;font-family:var(--display);font-size:clamp(30px,8vw,49px);line-height:.9;text-transform:uppercase}.sheet-sub{margin:7px 0 12px;color:var(--soft);font-weight:850;line-height:1.3}.issue{margin-top:8px;border:2px solid transparent;border-radius:15px;padding:10px}.issue.warning{background:var(--warningBg);color:var(--warning);border-color:#e2c060}.issue.danger{background:var(--dangerBg);color:var(--danger);border-color:#e7a29d}.issue-title{font-size:15px;font-weight:950}.issue-detail{margin-top:4px;font-size:13px;font-weight:800;line-height:1.32}.issue-action{margin-top:7px;padding-top:7px;border-top:1px solid currentColor;font-size:13px;font-weight:850;line-height:1.32}.close{width:100%;min-height:50px;margin-top:12px;border:4px solid var(--line);border-radius:17px;background:var(--ink);color:var(--cream);font-weight:950;cursor:pointer}
 @media(min-width:720px){.page{padding-left:14px;padding-right:14px}.agent{grid-template-columns:76px minmax(0,1fr)}.avatar{width:76px;height:76px}.modal{align-items:center}.sheet{border-radius:27px}}
+
+/* GHE cliquable partout dans la page Formations */
+.ghe-chip{
+  display:inline-flex;
+  align-items:center;
+  min-height:30px;
+  padding:6px 9px;
+  border:2px solid var(--muted);
+  border-radius:999px;
+  background:var(--paper2);
+  color:var(--ink);
+  font-size:13px;
+  font-weight:950;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.ghe-chip:active{
+  transform:translateY(1px);
+}
+.call-number{
+  margin:16px 0 12px;
+  padding:14px;
+  border:3px solid var(--line);
+  border-radius:18px;
+  background:#f7f9ff;
+  text-align:center;
+  font-size:24px;
+  font-weight:1000;
+  letter-spacing:.8px;
+}
+.call-actions{
+  display:grid;
+  gap:9px;
+}
+.call-action{
+  min-height:52px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:4px solid var(--line);
+  border-radius:17px;
+  text-decoration:none;
+  font-weight:1000;
+}
+.call-action.primary{
+  background:var(--ink);
+  color:var(--cream);
+}
+.call-action.secondary{
+  background:var(--paper);
+}
+.call-action.is-disabled{
+  pointer-events:none;
+  opacity:.45;
+}
+
 </style>
 </head>
 <body>
@@ -50,13 +106,37 @@ button,input,a{font:inherit;color:inherit}
   <section class="agenda"><h2 class="agenda-title">S’abonner aux formations</h2><div class="agenda-buttons"><a id="btnIos" class="agenda-btn ios" href="#">iPhone</a><a id="btnAndroid" class="agenda-btn android" href="#">Android</a></div></section>
 </main>
 
+<div id="callModal" class="modal" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="callTitle">
+    <h2 id="callTitle">Contacter l’agent</h2>
+    <div id="callSub" class="sheet-sub"></div>
+    <div id="callNumber" class="call-number"></div>
+
+    <div class="call-actions">
+      <a id="callNormal" class="call-action primary" href="#">Appeler</a>
+      <a id="callHidden" class="call-action secondary" href="#">Appeler en numéro masqué</a>
+      <button id="callClose" class="close" type="button">Annuler</button>
+    </div>
+  </div>
+</div>
+
 <div id="issueModal" class="modal" aria-hidden="true"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><h2 id="modalTitle">Détail de l’alerte</h2><div id="modalSub" class="sheet-sub"></div><div id="modalBody"></div><button id="modalClose" class="close" type="button">Fermer</button></div></div>
 
 <script>
 const WEB_APP_URL="https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOlle3cafAKEAZQ8NAX-peSN6D-yxFO3gX26SnVNUVd5xbwV3CUISg/exec";
 const ICS_URL="https://calendar.google.com/calendar/ical/c5da5df12db0eba65a14410cada08fea4e5a8037ddd256b03e7426cb22cb751b%40group.calendar.google.com/private-4f5072a64d36548137a30abb665ed23f/basic.ics";
 let ITEMS=[];let FILTER="tous";
-const pilot=document.getElementById("pilot"),content=document.getElementById("content"),search=document.getElementById("search"),modal=document.getElementById("issueModal"),modalSub=document.getElementById("modalSub"),modalBody=document.getElementById("modalBody");
+const pilot=document.getElementById("pilot"),
+content=document.getElementById("content"),
+search=document.getElementById("search"),
+modal=document.getElementById("issueModal"),
+modalSub=document.getElementById("modalSub"),
+modalBody=document.getElementById("modalBody"),
+callModal=document.getElementById("callModal"),
+callSub=document.getElementById("callSub"),
+callNumber=document.getElementById("callNumber"),
+callNormal=document.getElementById("callNormal"),
+callHidden=document.getElementById("callHidden");
 document.getElementById("btnIos").href=ICS_URL.replace(/^https:\/\//i,"webcal://");document.getElementById("btnAndroid").href="https://calendar.google.com/calendar/render?cid="+encodeURIComponent(ICS_URL);
 function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
 function norm(v){return String(v??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().replace(/\s+/g," ").trim()}
@@ -72,16 +152,253 @@ function allIssues(item){return[...issuesOfSession(item),...arr(item&&item.agent
 function itemLevel(item){if(item&&item.niveau==="danger"||allIssues(item).some(x=>x.niveau==="danger"))return"danger";return allIssues(item).length?"warning":"ok"}
 function agentLevel(agent){const list=issuesOfAgent(agent);if(list.some(x=>x.niveau==="danger"))return"danger";return list.length?"warning":"ok"}
 function stateLabel(lvl){return lvl==="danger"?"Alerte bloquante":lvl==="warning"?"Attention":"Conforme"}
-function alertSummary(list,scope,itemIndex,agentIndex,okText){list=arr(list);if(!list.length)return `<div class="${scope==="session"?"session-alert":"agent-alert"} ok"><div><div class="alert-title">✅ Conforme</div><div class="alert-text">${esc(okText||"Aucun point bloquant détecté.")}</div></div></div>`;const lvl=list.some(x=>x.niveau==="danger")?"danger":"warning",first=list.find(x=>x.niveau==="danger")||list[0],attr=scope==="session"?`data-session-alert="${itemIndex}"`:`data-agent-alert="${itemIndex}:${agentIndex}"`;return `<button class="${scope==="session"?"session-alert":"agent-alert"} ${lvl}" type="button" ${attr}><div><div class="alert-title">${lvl==="danger"?"⛔ Alerte bloquante":"⚠️ Attention"}</div><div class="alert-text">${esc(first.resume||first.detail||"Un point doit être vérifié.")}</div><div class="alert-count">${list.length} raison${list.length>1?"s":""} détaillée${list.length>1?"s":""} · toucher pour comprendre</div></div><span class="alert-more">›</span></button>`}
-function agentCard(agent,itemIndex,agentIndex){const lvl=agentLevel(agent);return `<article class="agent ${lvl}">${avatar(agent)}<div><span class="role">Agent en formation</span><span class="name">${esc(agent.nomComplet||"Agent")}</span><div class="info">${chip(agent.ghe)}${chip(shiftText(agent.shift))}</div>${alertSummary(issuesOfAgent(agent),"agent",itemIndex,agentIndex,"Aucun conflit détecté pour cet agent.")}</div></article>`}
-function sessionCard(item,index){const f=item.formation||{},agents=arr(item.agents),lvl=itemLevel(item);return `<article class="session ${lvl} ${typeClass(item)}"><header class="session-head"><div class="session-kicker">${esc(f.typeIcone||"🎓")} ${esc(f.typeLabel||"Formation")}</div><div class="session-title">${esc(f.intitule||"Formation")}</div><div class="session-meta">${chip(item.semaineLabel)}${chip(item.dateLabel)}${chip(f.horaireAffiche||"Journée")}${chip(agents.length+" agent"+(agents.length>1?"s":""))}</div></header>${alertSummary(issuesOfSession(item),"session",index,null,"Les informations de la session sont cohérentes.")}<div class="agent-list">${agents.map((a,i)=>agentCard(a,index,i)).join("")||'<div class="empty">Aucun agent détecté.</div>'}</div></article>`}
+function alertSummary(list,scope,itemIndex,agentIndex){list=arr(list);if(!list.length)return "";const lvl=list.some(x=>x.niveau==="danger")?"danger":"warning",first=list.find(x=>x.niveau==="danger")||list[0],attr=scope==="session"?`data-session-alert="${itemIndex}"`:`data-agent-alert="${itemIndex}:${agentIndex}"`;return `<button class="${scope==="session"?"session-alert":"agent-alert"} ${lvl}" type="button" ${attr}><div><div class="alert-title">${lvl==="danger"?"⛔ Alerte bloquante":"⚠️ Attention"}</div><div class="alert-text">${esc(first.resume||first.detail||"Un point doit être vérifié.")}</div><div class="alert-count">Toucher pour voir la raison précise</div></div><span class="alert-more">›</span></button>`}
+function gheButton(agent){
+  const ghe=String(agent&&agent.ghe||"").trim();
+  if(!ghe)return "";
+
+  const name=String(agent&&agent.nomComplet||"Agent").trim();
+  const phone=String(agent&&agent.telephone||"").trim();
+
+  return `<button
+    class="ghe-chip"
+    type="button"
+    data-call-ghe="${esc(ghe)}"
+    data-call-name="${esc(name)}"
+    data-call-phone="${esc(phone)}">${esc(ghe)}</button>`;
+}
+
+function agentCard(agent,itemIndex,agentIndex){
+  const lvl=agentLevel(agent);
+
+  return `<article class="agent ${lvl}">
+    ${avatar(agent)}
+
+    <div>
+      <span class="role">Agent en formation</span>
+      <span class="name">${esc(agent.nomComplet||"Agent")}</span>
+
+      <div class="info">
+        ${gheButton(agent)}
+        ${chip(shiftText(agent.shift))}
+      </div>
+
+      ${alertSummary(
+        issuesOfAgent(agent),
+        "agent",
+        itemIndex,
+        agentIndex
+      )}
+    </div>
+  </article>`;
+}
+function sessionCard(item,index){const f=item.formation||{},agents=arr(item.agents),lvl=itemLevel(item);return `<article class="session ${lvl} ${typeClass(item)}"><header class="session-head"><div class="session-kicker">${esc(f.typeIcone||"🎓")} ${esc(f.typeLabel||"Formation")}</div><div class="session-title">${esc(f.intitule||"Formation")}</div><div class="session-meta">${chip(item.semaineLabel)}${chip(item.dateLabel)}${chip(f.horaireAffiche||"Journée")}${chip(agents.length+" agent"+(agents.length>1?"s":""))}</div></header>${alertSummary(issuesOfSession(item),"session",index,null)}<div class="agent-list">${agents.map((a,i)=>agentCard(a,index,i)).join("")||'<div class="empty">Aucun agent détecté.</div>'}</div></article>`}
 function issueHtml(x){const lvl=x&&x.niveau==="danger"?"danger":"warning";return `<div class="issue ${lvl}"><div class="issue-title">${lvl==="danger"?"⛔":"⚠️"} ${esc(x&&x.titre||"Point à vérifier")}</div><div class="issue-detail">${esc(x&&x.detail||x&&x.resume||"")}</div><div class="issue-action"><strong>À faire :</strong> ${esc(x&&x.action||"Vérifier l’information concernée.")}</div></div>`}
 function openModal(title,sub,list){list=arr(list);document.getElementById("modalTitle").textContent=title;modalSub.textContent=sub||"";modalBody.innerHTML=list.length?list.map(issueHtml).join(""):'<div class="empty">Aucun point à vérifier.</div>';modal.classList.add("open");modal.setAttribute("aria-hidden","false");document.body.classList.add("modal-open")}
 function closeModal(){modal.classList.remove("open");modal.setAttribute("aria-hidden","true");document.body.classList.remove("modal-open")}
+
+function phoneDigits(value){
+  let digits=String(value||"").replace(/\D/g,"");
+
+  if(digits.startsWith("33")&&digits.length===11){
+    digits="0"+digits.slice(2);
+  }
+
+  if(
+    (digits.startsWith("6")||digits.startsWith("7"))&&
+    digits.length===9
+  ){
+    digits="0"+digits;
+  }
+
+  return digits;
+}
+
+function phoneDisplay(value){
+  const digits=phoneDigits(value);
+  return digits.replace(/(\d{2})(?=\d)/g,"$1 ").trim();
+}
+
+function setCallUnavailable(){
+  callNumber.textContent="Numéro indisponible";
+  callNormal.href="#";
+  callHidden.href="#";
+  callNormal.classList.add("is-disabled");
+  callHidden.classList.add("is-disabled");
+  callNormal.setAttribute("aria-disabled","true");
+  callHidden.setAttribute("aria-disabled","true");
+}
+
+function setCallReady(digits){
+  callNumber.textContent=phoneDisplay(digits);
+  callNormal.href="tel:"+digits;
+  callHidden.href="tel:%2331%23"+digits;
+  callNormal.classList.remove("is-disabled");
+  callHidden.classList.remove("is-disabled");
+  callNormal.removeAttribute("aria-disabled");
+  callHidden.removeAttribute("aria-disabled");
+}
+
+function openCall(button){
+  const name=button.dataset.callName||"Agent";
+  const ghe=button.dataset.callGhe||"";
+  const provided=phoneDigits(
+    button.dataset.callPhone||""
+  );
+
+  callSub.textContent=[name,ghe]
+    .filter(Boolean)
+    .join(" · ");
+
+  callNumber.textContent=provided
+    ? phoneDisplay(provided)
+    : "Chargement…";
+
+  callModal.classList.add("open");
+  callModal.setAttribute("aria-hidden","false");
+  document.body.classList.add("modal-open");
+
+  if(provided){
+    setCallReady(provided);
+    return;
+  }
+
+  callNormal.classList.add("is-disabled");
+  callHidden.classList.add("is-disabled");
+  callNormal.setAttribute("aria-disabled","true");
+  callHidden.setAttribute("aria-disabled","true");
+
+  const callback=
+    "recevoirTelephoneFormation_"+
+    Date.now()+"_"+
+    Math.floor(Math.random()*100000);
+
+  const script=document.createElement("script");
+  let finished=false;
+
+  function cleanup(){
+    if(finished)return;
+    finished=true;
+    delete window[callback];
+    if(script.isConnected)script.remove();
+  }
+
+  window[callback]=data=>{
+    const digits=phoneDigits(
+      data&&(
+        data.telephoneDial||
+        data.telephone
+      )||
+      ""
+    );
+
+    if(data&&data.ok&&digits){
+      button.dataset.callPhone=digits;
+      setCallReady(digits);
+    }else{
+      setCallUnavailable();
+    }
+
+    cleanup();
+  };
+
+  script.onerror=()=>{
+    setCallUnavailable();
+    cleanup();
+  };
+
+  script.src=
+    WEB_APP_URL+
+    "?mode=telephone"+
+    "&agent="+encodeURIComponent(name)+
+    "&ghe="+encodeURIComponent(ghe)+
+    "&callback="+encodeURIComponent(callback)+
+    "&v="+Date.now();
+
+  document.body.appendChild(script);
+
+  setTimeout(()=>{
+    if(!finished){
+      setCallUnavailable();
+      cleanup();
+    }
+  },8000);
+}
+
+function closeCallModal(){
+  callModal.classList.remove("open");
+  callModal.setAttribute("aria-hidden","true");
+  document.body.classList.remove("modal-open");
+}
+
+
 function filtered(){const q=norm(search.value);return ITEMS.map((item,index)=>({item,index})).filter(({item})=>{const lvl=itemLevel(item),issues=allIssues(item);if(FILTER==="traiter"&&!issues.length)return false;if(FILTER==="bloquants"&&lvl!=="danger")return false;if(!q)return true;const f=item.formation||{};const text=[item.dateLabel,item.semaineLabel,f.intitule,f.typeLabel,f.horaireAffiche,...arr(item.agents).flatMap(a=>[a.nomComplet,a.ghe,shiftText(a.shift),...issuesOfAgent(a).flatMap(x=>[x.titre,x.resume,x.detail])]),...issuesOfSession(item).flatMap(x=>[x.titre,x.resume,x.detail])].join(" ");return norm(text).includes(q)})}
 function render(){const list=filtered();if(!list.length){content.innerHTML='<div class="empty">Aucune formation à afficher avec ce filtre.</div>';return}const byDate={};list.forEach(x=>{const k=x.item.dateKey||"date";(byDate[k]||(byDate[k]=[])).push(x)});content.innerHTML=Object.keys(byDate).sort().map(k=>`<section><h2 class="day-title">${esc(byDate[k][0].item.dateLabel||k)}</h2>${byDate[k].map(x=>sessionCard(x.item,x.index)).join("")}</section>`).join("")}
-function updatePilot(){const total=ITEMS.length,d=ITEMS.filter(x=>itemLevel(x)==="danger").length,w=ITEMS.filter(x=>itemLevel(x)==="warning").length,l=d?"danger":w?"warning":"ok",agents=ITEMS.reduce((n,x)=>n+arr(x.agents).length,0);pilot.className="pilot "+l;pilot.innerHTML=`<div class="pilot-title">${total} formation${total>1?"s":""} · ${agents} agent${agents>1?"s":""}</div><div class="pilot-sub">Fais simplement défiler : session, date, horaires, avatars, noms, GHE, shifts et états sont visibles sans ouvrir les cartes.</div><div class="pilot-pills"><span class="pill ok">✅ ${total-d-w} conformes</span><span class="pill warning">⚠️ ${w} à vérifier</span><span class="pill danger">⛔ ${d} bloquantes</span></div>`}
-content.addEventListener("click",e=>{const s=e.target.closest("[data-session-alert]");if(s){const item=ITEMS[Number(s.dataset.sessionAlert)],f=item&&item.formation||{};openModal("Alerte de la session",(item.dateLabel||"")+" · "+(f.intitule||"Formation"),issuesOfSession(item))}const a=e.target.closest("[data-agent-alert]");if(a){const [ii,ai]=a.dataset.agentAlert.split(":").map(Number),item=ITEMS[ii],agent=arr(item&&item.agents)[ai];openModal("Alerte de l’agent",(agent&&agent.nomComplet)||"Agent",issuesOfAgent(agent))}});search.addEventListener("input",render);document.querySelectorAll(".filter-btn").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".filter-btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");FILTER=b.dataset.filter;render()}));document.getElementById("modalClose").addEventListener("click",closeModal);modal.addEventListener("click",e=>{if(e.target===modal)closeModal()});document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+function updatePilot(){const total=ITEMS.length,agents=ITEMS.reduce((n,x)=>n+arr(x.agents).length,0);pilot.className="pilot";pilot.innerHTML=`<div class="pilot-title">${total} formation${total>1?"s":""} · ${agents} agent${agents>1?"s":""}</div><div class="pilot-sub">Toutes les informations utiles sont visibles directement. Une alerte n’apparaît que lorsqu’un vrai point doit être contrôlé.</div>`}
+content.addEventListener("click",e=>{
+  const callButton=e.target.closest("[data-call-ghe]");
+
+  if(callButton){
+    e.preventDefault();
+    e.stopPropagation();
+    openCall(callButton);
+    return;
+  }
+
+  const sessionAlert=e.target.closest("[data-session-alert]");
+
+  if(sessionAlert){
+    const item=ITEMS[
+      Number(sessionAlert.dataset.sessionAlert)
+    ];
+    const formation=item&&item.formation||{};
+
+    openModal(
+      "Alerte de la session",
+      (item.dateLabel||"")+" · "+
+      (formation.intitule||"Formation"),
+      issuesOfSession(item)
+    );
+
+    return;
+  }
+
+  const agentAlert=e.target.closest("[data-agent-alert]");
+
+  if(agentAlert){
+    const indexes=agentAlert.dataset.agentAlert
+      .split(":")
+      .map(Number);
+
+    const item=ITEMS[indexes[0]];
+    const agent=arr(item&&item.agents)[indexes[1]];
+
+    openModal(
+      "Alerte de l’agent",
+      (agent&&agent.nomComplet)||"Agent",
+      issuesOfAgent(agent)
+    );
+  }
+});search.addEventListener("input",render);document.querySelectorAll(".filter-btn").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".filter-btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");FILTER=b.dataset.filter;render()}));document.getElementById("modalClose")
+  .addEventListener("click",closeModal);
+
+modal.addEventListener("click",e=>{
+  if(e.target===modal)closeModal();
+});
+
+document.getElementById("callClose")
+  .addEventListener("click",closeCallModal);
+
+callModal.addEventListener("click",e=>{
+  if(e.target===callModal)closeCallModal();
+});
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){
+    closeModal();
+    closeCallModal();
+  }
+});
 (function load(){const cb="recevoirFormations_"+Date.now(),s=document.createElement("script");window[cb]=data=>{delete window[cb];s.remove();if(!data||!data.ok){content.innerHTML=`<div class="error">${esc(data&&data.erreur||"Données invalides.")}</div>`;return}ITEMS=arr(data.items);updatePilot();render()};s.onerror=()=>{delete window[cb];s.remove();content.innerHTML='<div class="error">Impossible de charger les données.</div>'};s.src=WEB_APP_URL+"?mode=site_stagiaires_formations&type=formations&callback="+encodeURIComponent(cb)+"&v="+Date.now();document.body.appendChild(s)})();
 </script>
 </body>
