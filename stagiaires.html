@@ -235,7 +235,7 @@ function shiftLetter(shift){
 }
 
 function shiftText(shift){return shift&&(shift.label||shift.code)||"Shift à vérifier"}
-function shiftHours(shift){return shift&&shift.horaire||"Horaire à vérifier"}
+function shiftHours(shift){return shift&&shift.horaire||"Horaire non renseigné"}
 
 function mainShift(item){
   const s=item&&item.stagiaireShift||{};
@@ -264,7 +264,7 @@ function person(personData,role,shift){
   personData=personData||{};
   const name=personData.nomPrenom||personData.nomComplet||(role==="Référent"?"Référent à attribuer":"Stagiaire");
   const hasShift=!!(shift&&(shift.code||shift.label||shift.horaire));
-  const detail=hasShift?[shiftText(shift),shiftHours(shift)].filter(Boolean).join(" · "):"Horaire à vérifier";
+  const detail=hasShift?[shiftText(shift),shiftHours(shift)].filter(Boolean).join(" · "):"Horaire non renseigné";
   return `<section class="person">${avatarBlock(personData,role)}<span class="person-name">${esc(name)}</span><div class="person-shift"><span class="person-shift-dot"></span><span class="person-shift-text">${esc(detail)}</span></div></section>`;
 }
 
