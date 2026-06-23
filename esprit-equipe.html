@@ -337,6 +337,424 @@ details.control summary::-webkit-details-marker{display:none}
   .formation-head-time{font-size:17px}
 }
 
+
+/* V6 FINAL — structure formation pensée pour plusieurs formations */
+.formation-head-line{
+  display:block;
+  width:100%;
+  overflow:visible;
+}
+.formation-head-label{
+  display:block;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(28px,7vw,42px);
+  line-height:.92;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.formation-detail-line{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  margin:12px 0 4px;
+}
+.formation-detail-title{
+  min-width:0;
+  color:#586174;
+  font-size:clamp(18px,4.8vw,25px);
+  font-weight:950;
+  line-height:1.05;
+}
+.formation-detail-time{
+  color:var(--ink);
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(19px,5vw,27px);
+  line-height:1;
+  white-space:nowrap;
+  letter-spacing:-.25px;
+}
+.formation-agent-block{
+  position:static;
+  padding:0;
+  border-top:2px dashed rgba(7,24,63,.22);
+}
+.formation-agent-block:first-of-type{
+  border-top:2px dashed rgba(7,24,63,.22);
+}
+.formation-agent-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  min-height:64px;
+}
+.formation-agent-row .agent{
+  flex:1 1 auto;
+  min-width:0;
+  margin:0;
+  padding:12px 0;
+  border-top:0;
+}
+.formation-agent-alert{
+  position:static;
+  flex:0 0 auto;
+  width:auto;
+  min-width:108px;
+  height:38px;
+  padding:0 12px;
+  border:2px solid #d59b21;
+  border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  background:#fff6d9;
+  color:#7d4900;
+  font-size:12px;
+  font-weight:1000;
+  line-height:1;
+  text-transform:uppercase;
+  white-space:nowrap;
+  cursor:pointer;
+  box-shadow:0 4px 0 rgba(7,24,63,.14);
+}
+.formation-agent-alert.danger{
+  min-width:104px;
+  border-color:#dc6e64;
+  background:#ffe9e5;
+  color:#ad2e22;
+}
+.formation-agent-alert:active{
+  transform:translateY(2px);
+  box-shadow:0 2px 0 rgba(7,24,63,.14);
+}
+@media(max-width:390px){
+  .formation-detail-line{gap:8px}
+  .formation-detail-title{font-size:18px}
+  .formation-detail-time{font-size:18px}
+  .formation-agent-row{gap:8px}
+  .formation-agent-alert{
+    min-width:96px;
+    height:36px;
+    padding:0 10px;
+    font-size:11px;
+  }
+}
+
+
+/* V7 — Alertes rattachées à la bonne ligne, sans doublon en bas */
+.planning-agent-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  min-height:58px;
+  border-top:2px dashed rgba(7,24,63,.22);
+}
+.planning-agent-row:first-of-type{border-top:0}
+.planning-agent-row .agent{
+  flex:1 1 auto;
+  min-width:0;
+  padding:10px 0;
+  border-top:0;
+}
+.agent-inline-alert{
+  flex:0 0 auto;
+  min-width:112px;
+  min-height:36px;
+  padding:7px 11px;
+  border:2px solid #d59b21;
+  border-radius:999px;
+  background:#fff6d9;
+  color:#7d4900;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  font-size:11.5px;
+  font-weight:1000;
+  line-height:1;
+  text-transform:uppercase;
+  white-space:nowrap;
+  cursor:pointer;
+  box-shadow:0 4px 0 rgba(7,24,63,.14);
+}
+.agent-inline-alert.danger{
+  border-color:#dc6e64;
+  background:#ffe9e5;
+  color:#ad2e22;
+}
+.agent-inline-alert:active{
+  transform:translateY(2px);
+  box-shadow:0 2px 0 rgba(7,24,63,.14);
+}
+.info-item-action{
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid currentColor;
+  font-weight:1000;
+}
+@media(max-width:390px){
+  .planning-agent-row{gap:7px}
+  .agent-inline-alert{
+    min-width:98px;
+    padding:7px 9px;
+    font-size:10.5px;
+  }
+}
+
+
+/* V8 — Groupes uniques + navigation rapide */
+.stat-nav{
+  width:100%;
+  margin:0;
+  appearance:none;
+  -webkit-appearance:none;
+  font:inherit;
+  color:inherit;
+  text-align:left;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.stat-nav:active{
+  transform:translate(2px,2px);
+  box-shadow:4px 4px 0 var(--card-accent);
+}
+.scroll-anchor{
+  scroll-margin-top:18px;
+}
+.scroll-focus{
+  animation:scrollFocusPulse 1.05s ease;
+}
+@keyframes scrollFocusPulse{
+  0%,100%{filter:none;transform:none}
+  35%{filter:brightness(1.04);transform:scale(1.012)}
+  65%{filter:brightness(1.02);transform:scale(1.006)}
+}
+
+/* Conteneur unique d’une famille */
+.important-group{
+  --group-accent:#6d28d9;
+  margin:14px 0 18px;
+  padding:14px;
+  border:4px solid var(--ink);
+  border-radius:28px;
+  background:var(--cream);
+  box-shadow:8px 8px 0 var(--group-accent);
+}
+.important-group.formations-group{--group-accent:#6d28d9}
+.important-group.stagiaires-group{--group-accent:#8c1d40}
+
+.important-group-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:2px 2px 12px;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(27px,7vw,44px);
+  line-height:.95;
+  text-transform:uppercase;
+}
+.important-group-count{
+  min-width:42px;
+  height:42px;
+  padding:0 12px;
+  border:3px solid var(--ink);
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+  background:#fff;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  font-size:18px;
+  font-weight:1000;
+}
+.important-group-list{
+  display:grid;
+  gap:12px;
+}
+
+/* Mini-cartes internes */
+.important-mini-card{
+  border:3px solid var(--ink);
+  border-radius:21px;
+  background:#fffdf5;
+  padding:13px 14px;
+  box-shadow:0 5px 0 rgba(7,24,63,.14);
+  overflow:hidden;
+}
+.formations-group .important-mini-card{
+  border-left:7px solid #6d28d9;
+}
+.stagiaires-group .important-mini-card{
+  border-left:7px solid #8c1d40;
+}
+
+/* Formation interne */
+.mini-formation-head{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:10px;
+  padding-bottom:10px;
+  border-bottom:2px dashed rgba(7,24,63,.22);
+}
+.mini-formation-title{
+  min-width:0;
+  color:var(--ink);
+  font-size:clamp(18px,4.8vw,25px);
+  font-weight:1000;
+  line-height:1.06;
+}
+.mini-formation-time{
+  color:var(--ink);
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(18px,4.7vw,25px);
+  line-height:1;
+  white-space:nowrap;
+  letter-spacing:-.25px;
+}
+.formation-agent-block{
+  border-top:2px dashed rgba(7,24,63,.20);
+}
+.formation-agent-block:first-of-type{border-top:0}
+.formation-agent-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  min-height:58px;
+}
+.formation-agent-row .agent{
+  flex:1 1 auto;
+  min-width:0;
+  border-top:0;
+  padding:11px 0;
+}
+.formation-agent-alert{
+  position:static;
+  flex:0 0 auto;
+  width:auto;
+  min-width:102px;
+  height:36px;
+  padding:0 11px;
+  border:2px solid #d59b21;
+  border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  background:#fff6d9;
+  color:#7d4900;
+  font-size:11px;
+  font-weight:1000;
+  line-height:1;
+  text-transform:uppercase;
+  white-space:nowrap;
+  cursor:pointer;
+  box-shadow:0 4px 0 rgba(7,24,63,.13);
+}
+.formation-agent-alert.danger{
+  border-color:#dc6e64;
+  background:#ffe9e5;
+  color:#ad2e22;
+}
+
+/* Binôme stagiaire / référent */
+.trainee-pair-card{
+  display:grid;
+  gap:9px;
+}
+.person-role{
+  display:inline-flex;
+  align-items:center;
+  width:max-content;
+  min-height:28px;
+  padding:4px 10px;
+  border:2px solid var(--ink);
+  border-radius:999px;
+  background:#fff;
+  color:var(--ink);
+  font-size:11px;
+  font-weight:1000;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.person-role.referent{
+  background:#eef8f0;
+}
+.pair-person-line{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  min-height:42px;
+  padding:0 2px;
+}
+.pair-person-main{
+  min-width:0;
+  color:var(--ink);
+  font-size:clamp(18px,4.8vw,24px);
+  font-weight:1000;
+  line-height:1.08;
+  text-transform:uppercase;
+}
+.pair-person-meta{
+  color:#707889;
+  font-size:.82em;
+  font-weight:950;
+  text-transform:none;
+}
+.pair-link{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:8px;
+  color:#7c8494;
+  font-size:11px;
+  font-weight:1000;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+.pair-link::before,
+.pair-link::after{
+  content:"";
+  height:2px;
+  background:rgba(7,24,63,.18);
+}
+.referents-list{
+  display:grid;
+  gap:2px;
+}
+.referents-list .agent{
+  border-top:2px dashed rgba(7,24,63,.18);
+  padding:10px 2px;
+}
+.referents-list .agent:first-child{
+  border-top:0;
+}
+.pair-alert{
+  margin-top:3px;
+}
+
+/* Responsive étroit */
+@media(max-width:390px){
+  .important-group{padding:11px}
+  .important-group-head{font-size:29px}
+  .important-group-count{min-width:38px;height:38px;font-size:16px}
+  .mini-formation-head{gap:7px}
+  .mini-formation-title{font-size:18px}
+  .mini-formation-time{font-size:18px}
+  .formation-agent-row{gap:7px}
+  .formation-agent-alert{
+    min-width:94px;
+    padding:0 9px;
+    font-size:10px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -629,29 +1047,265 @@ function loadPlanningDate(dateIso,{initial=false}={}){
 
 function agentLine(agent){
   const prenom=agent.prenom||agent.agent||agent.nom||"";
-  const agentComplet=agent.agent||[agent.nom,agent.prenom].filter(Boolean).join(" ").trim()||prenom;
+  const agentComplet=
+    agent.agent||
+    [agent.nom,agent.prenom].filter(Boolean).join(" ").trim()||
+    prenom;
+
   const ghe=String(agent.ghe||"").trim();
   const gheAffiche=ghe.replace(/^GHE\s*/i,"ghe ");
-  const gheHtml=ghe?` <span class="ghe ghe-phone-trigger" role="button" tabindex="0" data-agent="${esc(agentComplet)}" data-ghe="${esc(ghe)}">· ${esc(gheAffiche)}</span>`:"";
-  return `<div class="agent"><span class="agent-name">${esc(String(prenom).toUpperCase())}</span>${gheHtml}</div>`;
+
+  const gheHtml=ghe
+    ? ` <span
+          class="ghe ghe-phone-trigger"
+          role="button"
+          tabindex="0"
+          data-agent="${esc(agentComplet)}"
+          data-ghe="${esc(ghe)}">· ${esc(gheAffiche)}</span>`
+    : "";
+
+  return `<div class="agent">
+    <span class="agent-name">${esc(String(prenom).toUpperCase())}</span>${gheHtml}
+  </div>`;
 }
+
 function medal(code,small=false){
   const raw=String(code||"").toUpperCase();
   const key=raw==="J4"?"j4":raw.toLowerCase();
-  return `<span class="shift-medal ${key}${small?" small":""}" aria-hidden="true">${esc(raw)}</span>`;
+
+  return `<span
+    class="shift-medal ${key}${small?" small":""}"
+    aria-hidden="true">${esc(raw)}</span>`;
 }
+
 function statCard(code,label,count,total=false){
-  return `<div class="stat${total?" total":` stat-${String(code).toLowerCase()}`}">${
-    total
-      ? `<span aria-hidden="true">👥</span><span class="stat-label">${count} agents</span>`
-      : `${medal(code,true)}<span class="stat-label">${esc(label)} : ${count}</span>`
-  }</div>`;
+  const target=total
+    ? "planning-section"
+    : `shift-${String(code).toUpperCase()}`;
+
+  return `<button
+    class="stat stat-nav${total?" total":` stat-${String(code).toLowerCase()}`}"
+    type="button"
+    data-scroll-target="${esc(target)}"
+    aria-label="${esc(total?`Voir les ${count} agents`:`Aller au bloc ${label}`)}">
+    ${
+      total
+        ? `<span aria-hidden="true">👥</span><span class="stat-label">${count} agents</span>`
+        : `${medal(code,true)}<span class="stat-label">${esc(label)} : ${count}</span>`
+    }
+  </button>`;
 }
+
+let planningAlertStore={};
+let planningUnmatchedIssues=[];
+
+function normaliseAgent(value){
+  return String(value||"")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g,"")
+    .trim();
+}
+
+function agentIdentity(agent){
+  const complet=
+    agent.agent||
+    [agent.nom,agent.prenom].filter(Boolean).join(" ").trim()||
+    agent.prenom||
+    agent.nom||
+    "";
+
+  return {
+    complet:String(complet),
+    completNorm:normaliseAgent(complet),
+    prenomNorm:normaliseAgent(agent.prenom||agent.agent||agent.nom||""),
+    gheNorm:normaliseAgent(agent.ghe||"")
+  };
+}
+
+function issueAgentCible(texte,agents){
+  const normalise=normaliseAgent(texte);
+  let meilleur=null;
+  let scoreMax=0;
+
+  agents.forEach(agent=>{
+    const identite=agentIdentity(agent);
+    let score=0;
+
+    if(identite.completNorm&&normalise.includes(identite.completNorm)){
+      score=Math.max(score,1000+identite.completNorm.length);
+    }
+
+    if(identite.prenomNorm&&normalise.includes(identite.prenomNorm)){
+      score=Math.max(score,500+identite.prenomNorm.length);
+    }
+
+    if(identite.gheNorm&&normalise.includes(identite.gheNorm)){
+      score=Math.max(score,300+identite.gheNorm.length);
+    }
+
+    if(score>scoreMax){
+      scoreMax=score;
+      meilleur=agent;
+    }
+  });
+
+  return meilleur;
+}
+
+function makeAgentKey(agent){
+  const id=agentIdentity(agent);
+  return `${id.completNorm}|${id.gheNorm}`;
+}
+
+function addPlanningAlert(agent,alerte){
+  const key=makeAgentKey(agent);
+  if(!planningAlertStore[key])planningAlertStore[key]=[];
+
+  const deja=planningAlertStore[key].some(item=>{
+    return normaliseAgent(item.title+"|"+item.detail)===
+      normaliseAgent(alerte.title+"|"+alerte.detail);
+  });
+
+  if(!deja)planningAlertStore[key].push(alerte);
+}
+
+function construireAlertesPlanning(jour,agents){
+  planningAlertStore={};
+  planningUnmatchedIssues=[];
+
+  asArray(jour.gheManquants).forEach(value=>{
+    const texte=String(value||"").trim();
+    if(!texte)return;
+
+    const cible=issueAgentCible(texte,agents);
+
+    if(cible){
+      const nom=String(
+        cible.prenom||
+        cible.agent||
+        cible.nom||
+        "Cet agent"
+      ).toUpperCase();
+
+      addPlanningAlert(cible,{
+        title:"Numéro GHE manquant",
+        label:"GHE manquant",
+        detail:`${nom} est bien présent dans le planning, mais son numéro GHE professionnel n’est pas renseigné.`,
+        action:"À faire : compléter son numéro GHE professionnel dans la base agents.",
+        level:"warning",
+        agentCible:nom
+      });
+    }else{
+      planningUnmatchedIssues.push({
+        title:"Numéro GHE manquant",
+        detail:texte,
+        action:"À faire : identifier l’agent concerné puis compléter son numéro GHE professionnel.",
+        level:"warning"
+      });
+    }
+  });
+
+  asArray(jour.codesInconnus).forEach(value=>{
+    const texte=String(value||"").trim();
+    if(!texte||/code shift inconnu\s*:\s*am/i.test(texte))return;
+
+    const cible=issueAgentCible(texte,agents);
+
+    if(cible){
+      const nom=String(
+        cible.prenom||
+        cible.agent||
+        cible.nom||
+        "Cet agent"
+      ).toUpperCase();
+
+      addPlanningAlert(cible,{
+        title:"Code de planning à identifier",
+        label:"Shift à vérifier",
+        detail:`Le code de planning associé à ${nom} n’est pas reconnu correctement.`,
+        action:"À faire : vérifier et définir ce code une seule fois dans la base centrale intelligente.",
+        level:"warning",
+        agentCible:nom
+      });
+    }else{
+      planningUnmatchedIssues.push({
+        title:"Code de planning à identifier",
+        detail:texte,
+        action:"À faire : définir ce code dans la base centrale intelligente.",
+        level:"warning"
+      });
+    }
+  });
+
+  asArray(jour.alertesSource).forEach(value=>{
+    const texte=String(value||"").trim();
+    if(!texte)return;
+
+    const cible=issueAgentCible(texte,agents);
+
+    const alerte={
+      title:"Information à vérifier",
+      label:"À vérifier",
+      detail:texte,
+      action:"À faire : contrôler uniquement l’information indiquée.",
+      level:/danger|bloquant|indisponible/i.test(texte)
+        ? "danger"
+        : "warning"
+    };
+
+    if(cible)addPlanningAlert(cible,alerte);
+    else planningUnmatchedIssues.push(alerte);
+  });
+}
+
+function planningAgentRow(agent,index,shiftCode){
+  const keyAgent=makeAgentKey(agent);
+  const alerts=normalizeAlerts(planningAlertStore[keyAgent]||[]);
+  const infoKey=`planning-${shiftCode}-${index}-${keyAgent}`;
+
+  infoStore[infoKey]=alerts;
+
+  const danger=alerts.some(item=>item.level==="danger");
+  const first=alerts.find(item=>item.level==="danger")||alerts[0];
+
+  const bouton=alerts.length
+    ? `<button
+        class="agent-inline-alert${danger?" danger":""}"
+        type="button"
+        data-info-key="${esc(infoKey)}"
+        aria-label="Voir le point à vérifier concernant ${esc(agent.prenom||agent.agent||"cet agent")}">
+        <span>${danger?"🚨":"⚠️"}</span>
+        <span>${esc(first.label||first.title||"À vérifier")}</span>
+      </button>`
+    : "";
+
+  return `<div class="planning-agent-row">
+    ${agentLine(agent)}
+    ${bouton}
+  </div>`;
+}
+
 function renderShift(code,title,agents){
   const list=asArray(agents);
-  return `<div class="card shift-${String(code).toLowerCase()}"><div class="shift-head">${medal(code)}<div class="shift-title">${esc(title)}</div></div>${
-    list.length?list.map(agentLine).join(""):'<div class="empty">Aucun agent détecté</div>'
-  }</div>`;
+  const id=`shift-${String(code).toUpperCase()}`;
+
+  return `<div
+    class="card shift-${String(code).toLowerCase()} scroll-anchor"
+    id="${esc(id)}"
+    tabindex="-1">
+    <div class="shift-head">
+      ${medal(code)}
+      <div class="shift-title">${esc(title)}</div>
+    </div>
+
+    ${
+      list.length
+        ? list.map((agent,index)=>planningAgentRow(agent,index,code)).join("")
+        : '<div class="empty">Aucun agent détecté</div>'
+    }
+  </div>`;
 }
 function normalizeHour(value){
   const txt=String(value||"").trim();
@@ -716,6 +1370,8 @@ function normalizeAlerts(value){
         out.push({
           title:String(title||"Point à vérifier"),
           detail:String(detail),
+          action:String(v.action||v.aFaire||v.solution||""),
+          label:String(v.label||""),
           level,
           agentCible:String(
             v.agentCible||
@@ -736,6 +1392,8 @@ function normalizeAlerts(value){
       out.push({
         title:"Point à vérifier",
         detail:txt,
+        action:"",
+        label:"",
         level:/bloquant|danger|indisponible/i.test(txt)
           ? "danger"
           : "warning",
@@ -753,6 +1411,7 @@ function normalizeAlerts(value){
     const key=(
       a.title+"|"+
       a.detail+"|"+
+      a.action+"|"+
       a.agentCible+"|"+
       a.gheCible
     ).toLowerCase();
@@ -797,144 +1456,186 @@ function collectImportantAlerts(jour){
 function renderImportant(jour){
   const formations=asArray(jour.formations);
   const stagiaires=asArray(jour.stagiaires);
+
   if(!formations.length&&!stagiaires.length)return "";
 
   infoStore={};
+
+  function normaliseRecherche(value){
+    return String(value||"")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g,"")
+      .toUpperCase()
+      .replace(/\s+/g," ")
+      .trim();
+  }
+
+  function alerteConcerneAgent(alerte,agent){
+    const cible=normaliseRecherche(
+      alerte.agentCible||
+      alerte.agent||
+      alerte.personne||
+      alerte.gheCible||
+      ""
+    );
+
+    const nom=normaliseRecherche(
+      agent.agent||
+      agent.nomComplet||
+      [agent.nom,agent.prenom].filter(Boolean).join(" ")||
+      agent.prenom||
+      ""
+    );
+
+    const prenom=normaliseRecherche(agent.prenom||"");
+    const ghe=normaliseRecherche(agent.ghe||"");
+    const texte=normaliseRecherche(
+      [alerte.title,alerte.detail,cible].filter(Boolean).join(" ")
+    );
+
+    return (
+      (!!cible && !!nom && (nom.includes(cible)||cible.includes(nom))) ||
+      (!!prenom && texte.includes(prenom)) ||
+      (!!ghe && texte.includes(ghe))
+    );
+  }
+
   let html='<div class="section-title">À ne pas rater</div>';
 
-  formations.forEach((f,index)=>{
-    const liste=asArray(f.agents);
+  if(formations.length){
+    const formationCards=formations.map((formation,index)=>{
+      const agents=asArray(formation.agents);
+      const sessionKey=`formation-${index}`;
+      const sessionAlerts=normalizeAlerts(formation.alertes);
+      const alertesSessionRestantes=[...sessionAlerts];
 
-    const sessionKey=`formation-${index}`;
-    const sessionAlerts=normalizeAlerts(f.alertes);
+      const agentsHtml=agents.map((agent,agentIndex)=>{
+        const agentKey=`formation-${index}-agent-${agentIndex}`;
+        const directes=normalizeAlerts(agent.alertes);
+        const rattachees=[];
 
-    function normaliseRecherche(value){
-      return String(value||"")
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g,"")
-        .toUpperCase()
-        .replace(/\s+/g," ")
-        .trim();
-    }
-
-    function alerteConcerneAgent(alerte,agent){
-      const cible=normaliseRecherche(
-        alerte.agentCible||
-        alerte.agent||
-        alerte.personne||
-        alerte.gheCible||
-        ""
-      );
-
-      const nom=normaliseRecherche(
-        agent.agent||
-        agent.nomComplet||
-        [agent.nom,agent.prenom].filter(Boolean).join(" ")||
-        agent.prenom||
-        ""
-      );
-
-      const prenom=normaliseRecherche(agent.prenom||"");
-      const ghe=normaliseRecherche(agent.ghe||"");
-      const texte=normaliseRecherche(
-        [alerte.title,alerte.detail,cible].filter(Boolean).join(" ")
-      );
-
-      return (
-        (!!cible && !!nom && (nom.includes(cible)||cible.includes(nom))) ||
-        (!!prenom && texte.includes(prenom)) ||
-        (!!ghe && texte.includes(ghe))
-      );
-    }
-
-    const alertesSessionRestantes=[...sessionAlerts];
-
-    const agentsHtml=liste.map((agent,agentIndex)=>{
-      const agentKey=`formation-${index}-agent-${agentIndex}`;
-
-      const directes=normalizeAlerts(agent.alertes);
-      const rattachees=[];
-
-      for(let i=alertesSessionRestantes.length-1;i>=0;i--){
-        if(alerteConcerneAgent(alertesSessionRestantes[i],agent)){
-          rattachees.unshift(alertesSessionRestantes[i]);
-          alertesSessionRestantes.splice(i,1);
+        for(let i=alertesSessionRestantes.length-1;i>=0;i--){
+          if(alerteConcerneAgent(alertesSessionRestantes[i],agent)){
+            rattachees.unshift(alertesSessionRestantes[i]);
+            alertesSessionRestantes.splice(i,1);
+          }
         }
-      }
 
-      const agentAlerts=[...directes,...rattachees];
-      infoStore[agentKey]=agentAlerts;
+        const agentAlerts=[...directes,...rattachees];
+        infoStore[agentKey]=agentAlerts;
 
-      const danger=agentAlerts.some(a=>a.level==="danger");
+        const danger=agentAlerts.some(item=>item.level==="danger");
 
-      return `<div class="formation-agent-block${agentAlerts.length?" has-alert":""}">
-        ${agentLine(agent)}
-        ${
-          agentAlerts.length
-            ? `<button
-                class="formation-agent-alert${danger?" danger":""}"
-                type="button"
-                data-info-key="${esc(agentKey)}"
-                aria-label="Voir l’alerte concernant ${esc(agent.prenom||agent.agent||"cet agent")}">
-                ${danger?"🚨":"⚠️"}
-              </button>`
-            : ""
-        }
-      </div>`;
-    }).join("");
+        return `<div class="formation-agent-block">
+          <div class="formation-agent-row">
+            ${agentLine(agent)}
+            ${
+              agentAlerts.length
+                ? `<button
+                    class="formation-agent-alert${danger?" danger":""}"
+                    type="button"
+                    data-info-key="${esc(agentKey)}"
+                    aria-label="Voir l’alerte concernant ${esc(agent.prenom||agent.agent||"cet agent")}">
+                    <span>${danger?"🚨":"⚠️"}</span>
+                    <span>${danger?"Alerte":"À vérifier"}</span>
+                  </button>`
+                : ""
+            }
+          </div>
+        </div>`;
+      }).join("");
 
-    infoStore[sessionKey]=alertesSessionRestantes;
+      infoStore[sessionKey]=alertesSessionRestantes;
 
-    html+=`
-      <div class="card important formation-card">
-        <div class="formation-head-line">
-          <span class="formation-head-label">🎓 FORMATION</span>
+      return `<article class="important-mini-card">
+        <div class="mini-formation-head">
+          <div class="mini-formation-title">${esc(cleanFormationTitle(formation.titre))}</div>
           ${
-            f.horaire
-              ? `<span class="formation-head-time">${esc(formatRange(f.horaire))}</span>`
+            formation.horaire
+              ? `<div class="mini-formation-time">${esc(formatRange(formation.horaire))}</div>`
               : ""
           }
         </div>
 
-        <div class="important-name">${esc(cleanFormationTitle(f.titre))}</div>
-
         ${agentsHtml||'<div class="empty">Aucun agent indiqué</div>'}
-
         ${renderMiniAlert(alertesSessionRestantes,sessionKey)}
-      </div>
-    `;
-  });
-
-  stagiaires.forEach((s,index)=>{
-    const refs=asArray(s.referents);
-    const key=`stagiaire-${index}`;
-    const alerts=[...normalizeAlerts(s.alertes)];
-    refs.forEach(ref=>alerts.push(...normalizeAlerts(ref.alertes)));
-    infoStore[key]=alerts;
-
-    const horaire=s.horaire||s.shiftHoraire||(
-      s.heureDebut&&s.heureFin
-        ? `${normalizeHour(s.heureDebut)} ⟶ ${normalizeHour(s.heureFin)}`
-        : ""
-    );
-    const shift=s.shiftLabel||"";
+      </article>`;
+    }).join("");
 
     html+=`
-      <div class="card important stagiaire-card">
-        <div class="important-heading"><span>👶</span><span>Stagiaire</span></div>
-        <div class="stagiaire-main">
-          ${esc(String(s.stagiaire||"Stagiaire").toUpperCase())}
-          ${(shift||horaire)?` <span class="stagiaire-hours">· ${esc([shift,horaire].filter(Boolean).join(" · "))}</span>`:""}
+      <section class="important-group formations-group">
+        <div class="important-group-head">
+          <span>🎓 Formations</span>
+          <span class="important-group-count">${formations.length}</span>
         </div>
-        ${refs.length?refs.map(ref=>agentLine({
-          agent:ref.agent||ref.prenom||"",
-          prenom:ref.prenom||ref.agent||"",
-          ghe:ref.ghe||""
-        })).join(""):'<div class="agent">Référent à attribuer</div>'}
-        ${renderMiniAlert(alerts,key)}
-      </div>
+        <div class="important-group-list">${formationCards}</div>
+      </section>
     `;
-  });
+  }
+
+  if(stagiaires.length){
+    const stagiaireCards=stagiaires.map((stagiaire,index)=>{
+      const referents=asArray(stagiaire.referents);
+      const pairKey=`stagiaire-${index}`;
+      const pairAlerts=[...normalizeAlerts(stagiaire.alertes)];
+
+      referents.forEach(ref=>{
+        pairAlerts.push(...normalizeAlerts(ref.alertes));
+      });
+
+      infoStore[pairKey]=pairAlerts;
+
+      const horaire=
+        stagiaire.horaire||
+        stagiaire.shiftHoraire||
+        (
+          stagiaire.heureDebut&&stagiaire.heureFin
+            ? `${normalizeHour(stagiaire.heureDebut)} ⟶ ${normalizeHour(stagiaire.heureFin)}`
+            : ""
+        );
+
+      const shift=stagiaire.shiftLabel||"";
+      const meta=[shift,horaire].filter(Boolean).join(" · ");
+
+      const referentsHtml=referents.length
+        ? referents.map(ref=>agentLine({
+            agent:ref.agent||ref.prenom||"",
+            prenom:ref.prenom||ref.agent||"",
+            ghe:ref.ghe||""
+          })).join("")
+        : '<div class="agent">RÉFÉRENT À ATTRIBUER</div>';
+
+      return `<article class="important-mini-card trainee-pair-card">
+        <div class="person-role">Stagiaire</div>
+
+        <div class="pair-person-line">
+          <div class="pair-person-main">
+            ${esc(String(stagiaire.stagiaire||"Stagiaire").toUpperCase())}
+            ${meta?` <span class="pair-person-meta">· ${esc(meta)}</span>`:""}
+          </div>
+        </div>
+
+        <div class="pair-link">accompagné par</div>
+
+        <div class="person-role referent">Référent</div>
+        <div class="referents-list">${referentsHtml}</div>
+
+        <div class="pair-alert">
+          ${renderMiniAlert(pairAlerts,pairKey)}
+        </div>
+      </article>`;
+    }).join("");
+
+    html+=`
+      <section class="important-group stagiaires-group">
+        <div class="important-group-head">
+          <span>👶 Stagiaires</span>
+          <span class="important-group-count">${stagiaires.length}</span>
+        </div>
+        <div class="important-group-list">${stagiaireCards}</div>
+      </section>
+    `;
+  }
 
   return html;
 }
@@ -946,28 +1647,32 @@ function issuePresentation(value){
   if(/code shift inconnu/i.test(txt))return {title:"Code de planning à identifier",detail:txt,level:"warning"};
   return {title:"Information à vérifier",detail:txt,level:/danger|bloquant/i.test(txt)?"danger":"warning"};
 }
-function renderControl(jour){
-  const globalIssues=unique([].concat(asArray(jour.gheManquants),asArray(jour.codesInconnus),asArray(jour.alertesSource)))
-    .map(issuePresentation).filter(Boolean);
-  const cardIssues=collectImportantAlerts(jour);
-  const issues=[...globalIssues,...cardIssues];
-  const seen=new Set();
-  const clean=issues.filter(item=>{
-    const key=((item.context||"")+"|"+item.title+"|"+item.detail).toLowerCase();
-    if(seen.has(key))return false;
-    seen.add(key);
-    return true;
-  });
+function renderControl(){
+  const clean=normalizeAlerts(planningUnmatchedIssues);
+
   if(!clean.length)return "";
 
   return `<section class="control">
-    <div class="control-head"><span>À vérifier</span><span>${clean.length}</span></div>
-    <div class="control-body"><div class="alert-list">${
-      clean.map(item=>`<div class="alert-line">
-        <strong>${esc(item.context?item.context+" · "+item.title:item.title)}</strong>
-        <span>${esc(item.detail)}</span>
-      </div>`).join("")
-    }</div></div>
+    <div class="control-head">
+      <span>À vérifier</span>
+      <span>${clean.length}</span>
+    </div>
+
+    <div class="control-body">
+      <div class="alert-list">
+        ${
+          clean.map(item=>`<div class="alert-line">
+            <strong>${esc(item.title)}</strong>
+            <span>${esc(item.detail)}</span>
+            ${
+              item.action
+                ? `<span><strong>${esc(item.action)}</strong></span>`
+                : ""
+            }
+          </div>`).join("")
+        }
+      </div>
+    </div>
   </section>`;
 }
 function renderPage(data){
@@ -975,6 +1680,10 @@ function renderPage(data){
   const g=jour.groupes||{};
   const M=asArray(g.M),J=asArray(g.J),J4=asArray(g.J4),S=asArray(g.S),N=asArray(g.N);
   const total=M.length+J.length+J4.length+S.length+N.length;
+  const tousLesAgents=[...M,...J,...J4,...S,...N];
+
+  construireAlertesPlanning(jour,tousLesAgents);
+
   content.innerHTML=`
     <section class="stats-grid">
       ${statCard("M","Matin",M.length)}
@@ -985,13 +1694,13 @@ function renderPage(data){
       ${statCard("","",total,true)}
     </section>
     ${renderImportant(jour)}
-    <div class="section-title">Planning</div>
+    <div class="section-title scroll-anchor" id="planning-section" tabindex="-1">Planning</div>
     ${renderShift("M","MATIN",M)}
     ${renderShift("J","JOUR",J)}
     ${renderShift("J4","J4",J4)}
     ${renderShift("S","SOIR",S)}
     ${renderShift("N","NUIT",N)}
-    ${renderControl(jour)}
+    ${renderControl()}
   `;
   finishLoadingProgress();
 }
@@ -1135,6 +1844,31 @@ window.addEventListener("popstate",()=>{
 });
 
 content.addEventListener("click",event=>{
+  const navTarget=event.target.closest("[data-scroll-target]");
+
+  if(navTarget){
+    const id=navTarget.dataset.scrollTarget||"";
+    const destination=document.getElementById(id);
+
+    if(destination){
+      destination.scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+      });
+
+      destination.classList.remove("scroll-focus");
+      requestAnimationFrame(()=>{
+        destination.classList.add("scroll-focus");
+      });
+
+      setTimeout(()=>{
+        destination.classList.remove("scroll-focus");
+      },1150);
+    }
+
+    return;
+  }
+
   const alertTarget=event.target.closest("[data-info-key]");
   if(alertTarget){
     const key=alertTarget.dataset.infoKey||"";
@@ -1144,6 +1878,11 @@ content.addEventListener("click",event=>{
       ? list.map(item=>`<div class="info-item ${esc(item.level)}">
           <div class="info-item-title">${esc(item.title)}</div>
           <div>${esc(item.detail)}</div>
+          ${
+            item.action
+              ? `<div class="info-item-action">${esc(item.action)}</div>`
+              : ""
+          }
         </div>`).join("")
       : '<div class="info-item">Aucune information supplémentaire.</div>';
     openModal(infoModal);
@@ -1152,7 +1891,17 @@ content.addEventListener("click",event=>{
   const el=event.target.closest(".ghe-phone-trigger");
   if(el)demanderTelephone(el.dataset.agent||"",el.dataset.ghe||"");
 });
-content.addEventListener("keydown",event=>{const el=event.target.closest(".ghe-phone-trigger");if(el&&(event.key==="Enter"||event.key===" ")){event.preventDefault();demanderTelephone(el.dataset.agent||"",el.dataset.ghe||"")}});
+content.addEventListener("keydown",event=>{
+  const gheTarget=event.target.closest(".ghe-phone-trigger");
+
+  if(gheTarget&&(event.key==="Enter"||event.key===" ")){
+    event.preventDefault();
+    demanderTelephone(
+      gheTarget.dataset.agent||"",
+      gheTarget.dataset.ghe||""
+    );
+  }
+});
 phoneNumberButton.addEventListener("click",()=>{if(activePhoneDial){closeModal(phoneNumberModal);openModal(phoneChoiceModal)}});
 infoModalClose.addEventListener("click",()=>closeModal(infoModal));
 infoModal.addEventListener("click",event=>{if(event.target===infoModal)closeModal(infoModal)});
