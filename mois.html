@@ -71,6 +71,14 @@ body::before{
   padding:18px 12px 46px;
 }
 
+.back-wrap{
+  position:relative;
+  z-index:3;
+  width:min(900px,100%);
+  margin:auto;
+  padding:18px 12px 0;
+}
+
 .back{
   display:flex;
   align-items:center;
@@ -213,6 +221,7 @@ h1{
 
 @media(max-width:520px){
   .page{padding:14px 10px 42px}
+  .back-wrap{padding:14px 10px 0}
   .hero img{height:118px}
   .back{border-width:4px;min-height:52px}
   .title-box{border-width:5px;border-radius:30px 25px 33px 26px}
@@ -223,13 +232,15 @@ h1{
 
 <body>
 
+<div class="back-wrap">
+  <a class="back" href="index.html">&larr; Retour &agrave; l&rsquo;accueil</a>
+</div>
+
 <header class="hero" id="hero">
   <img id="banner" alt="Banni&egrave;re choix du mois">
 </header>
 
 <main class="page">
-
-  <a class="back" href="index.html">&larr; Retour &agrave; l&rsquo;accueil</a>
 
   <div class="title-box">
     <h1 id="pageTitle">Choisis ton mois</h1>
