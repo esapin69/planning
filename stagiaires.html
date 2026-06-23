@@ -1,836 +1,412 @@
-/*******************************************************
- * 02_MAIL_STAGIAIRES.gs
- *
- * VERSION PATCH CIBLÉ — RETOUR AU DESIGN SOBRE 2026-06-23
- *
- * Source stable :
- * - Classeur "Photocopie, intelligente"
- * - Onglet SORTIE_MAILS_STAGIAIRE
- *
- * Principes :
- * - lecture directe de la sortie stable ;
- * - téléphone du référent conservé et cliquable ;
- * - aucune adresse personnelle affichée ;
- * - anomalies rattachées au binôme concerné ;
- * - design sobre conservé ; seule l’icône de shift est reprise du planning individuel ;
- * - une anomalie métier n'empêche pas l'envoi aux chefs.
- *******************************************************/
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fff7dd">
+<title>GHE — Stagiaires</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --navy:#07183f;
+  --cream:#fff7dd;
+  --paper:#fffdf4;
+  --muted:#697184;
+  --blue:#1675ef;
+  --green:#24a247;
+  --orange:#ff7c12;
+  --yellow:#f5bd00;
+  --black:#171717;
+  --warn:#7c4b00;
+  --warn-bg:#fff1b8;
+  --danger:#a82018;
+  --danger-bg:#fff0ec;
+  --shadow:0 9px 0 rgba(7,24,63,.16);
+  --display:Impact,"Arial Black",system-ui,sans-serif;
+}
+html,body{margin:0;min-height:100%;background:var(--cream);color:var(--navy)}
+body{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:
+    repeating-linear-gradient(0deg,rgba(7,24,63,.025) 0 1px,transparent 1px 27px),
+    linear-gradient(180deg,#fffaf0 0%,#fff6d6 100%);
+}
+body.modal-open{overflow:hidden}
+button,a{font:inherit;color:inherit}
+button{border:0}
+[hidden]{display:none!important}
+.page{width:min(760px,100%);margin:auto;padding:calc(7px + env(safe-area-inset-top)) 9px calc(95px + env(safe-area-inset-bottom))}
+.topbar{margin-bottom:9px}
+.navbtn{min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:8px 14px;border:3px solid var(--navy);border-radius:17px;background:var(--paper);text-decoration:none;font-size:16px;font-weight:950;box-shadow:0 4px 0 rgba(7,24,63,.13)}
+.hero{overflow:hidden;border:5px solid var(--navy);border-radius:28px;background:var(--navy);box-shadow:var(--shadow);margin-bottom:17px}
+.hero img{display:block;width:100%;height:clamp(112px,26vw,190px);object-fit:cover}
+.loading,.empty,.error{background:var(--paper);border:4px solid var(--navy);border-radius:22px;padding:16px;font-weight:900;box-shadow:var(--shadow)}
+.error{color:var(--danger)}
+.day-card{overflow:hidden;background:var(--paper);border:5px solid var(--navy);border-radius:30px;box-shadow:var(--shadow);margin:0 0 18px}
+.day-band{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:13px 17px 12px;background:linear-gradient(180deg,#aab4c8 0%,#6b778e 100%);color:#fff;text-shadow:0 3px 0 rgba(7,24,63,.22)}
+.day-name{font-family:var(--display);font-size:clamp(31px,8vw,52px);line-height:.82;text-transform:uppercase;letter-spacing:.3px}
+.date-inline{font-family:var(--display);font-size:clamp(19px,5vw,31px);line-height:.9;text-transform:uppercase;white-space:nowrap}
+.assignments{background:linear-gradient(145deg,#fffdf6 0%,#fff6da 100%)}
+.assignment{--accent:#7b8597;--accent-deep:#5f697b;position:relative;padding:16px 14px 15px;background:linear-gradient(145deg,#f2f4f7 0%,rgba(255,255,255,.96) 75%)}
+.assignment+.assignment{border-top:3px dashed rgba(7,24,63,.16)}
+.assignment.status-ok{background:linear-gradient(145deg,#eaf8ef 0%,#fbfffc 78%)}
+.assignment.status-warning{background:linear-gradient(145deg,#fff7d9 0%,#fffdf5 78%)}
+.assignment.status-danger{background:linear-gradient(145deg,#fff0ec 0%,#fffdfb 78%)}
+.assignment.shift-m{--accent:var(--blue);--accent-deep:#0756c7}
+.assignment.shift-j{--accent:var(--green);--accent-deep:#168037}
+.assignment.shift-j4{--accent:var(--orange);--accent-deep:#d95800}
+.assignment.shift-s{--accent:var(--yellow);--accent-deep:#c79300}
+.assignment.shift-n{--accent:var(--black);--accent-deep:#000}
+.shift-head{display:flex;align-items:center;justify-content:center;gap:12px;margin:0 0 16px;text-align:center}
+.shift-medallion{width:58px;height:58px;flex:0 0 58px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 34% 28%,#fff 0 7%,var(--accent) 18% 58%,var(--accent-deep) 59% 100%);border:5px solid var(--accent-deep);box-shadow:inset 0 0 0 5px rgba(255,255,255,.35),0 6px 0 rgba(7,24,63,.14)}
+.shift-letter{font-family:var(--display);font-size:30px;line-height:1;color:var(--navy);text-shadow:0 2px 0 rgba(255,255,255,.35)}
+.shift-name{font-family:var(--display);font-size:clamp(24px,6vw,36px);line-height:.9;text-transform:uppercase;letter-spacing:.3px}
+.people{display:grid;grid-template-columns:minmax(0,1fr) 36px minmax(0,1fr);gap:8px;align-items:start}
+.arrow{align-self:center;display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--navy);color:#fff;font-size:21px;font-weight:950;box-shadow:0 4px 0 rgba(7,24,63,.16)}
+.person{text-align:center;min-width:0}
+.role-tag{display:inline-flex;align-items:center;justify-content:center;min-width:94px;margin:0 auto 8px;padding:5px 10px;border:3px solid var(--navy);border-radius:999px;background:var(--paper);font-size:10px;line-height:1;font-weight:1000;letter-spacing:.7px;text-transform:uppercase;box-shadow:0 3px 0 rgba(7,24,63,.11)}
+.avatar-shell{position:relative;width:116px;height:116px;margin:0 auto 9px}
+.avatar{width:116px;height:116px;border-radius:31px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.86);border:4px solid var(--navy);box-shadow:0 6px 0 rgba(7,24,63,.14)}
+.avatar img{width:100%;height:100%;object-fit:contain;display:block}
+.avatar-fallback{display:flex;align-items:center;justify-content:center;width:74px;height:74px;border-radius:24px;background:#eef1f7;border:3px solid rgba(7,24,63,.3);font-size:40px}
+.avatar.has-img .avatar-fallback{display:none}
+.ghe-badge{position:absolute;top:-7px;right:-7px;z-index:3;min-height:29px;padding:5px 8px;border:3px solid var(--navy);border-radius:999px;background:var(--navy);color:#fff;font-size:10px;line-height:1;font-weight:1000;letter-spacing:.2px;box-shadow:0 3px 0 rgba(7,24,63,.16);white-space:nowrap}
+button.ghe-badge{cursor:pointer}
+button.ghe-badge:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(7,24,63,.16)}
+.person-name{display:block;min-height:42px;font-size:clamp(17px,4.8vw,24px);line-height:.94;font-weight:1000;text-transform:uppercase;overflow-wrap:anywhere}
+.person-shift{min-height:42px;margin-top:7px;display:flex;align-items:flex-start;justify-content:center;gap:6px;color:var(--muted);font-size:12px;line-height:1.18;font-weight:900}
+.person-shift-dot{width:11px;height:11px;margin-top:2px;flex:0 0 auto;border-radius:3px;background:var(--accent);border:1px solid rgba(7,24,63,.2)}
+.person-shift-text{max-width:132px}
+.alert-strip{width:100%;margin-top:14px;border:0;border-radius:15px;padding:10px 12px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:9px;align-items:center;text-align:left;box-shadow:0 3px 0 rgba(7,24,63,.09)}
+.alert-strip.warning{background:var(--warn-bg);color:var(--warn);cursor:pointer}
+.alert-strip.danger{background:var(--danger-bg);color:var(--danger);cursor:pointer}
+.alert-icon{font-size:20px}
+.alert-main{min-width:0}
+.alert-title{font-size:13px;font-weight:1000;text-transform:uppercase;line-height:1.05}
+.alert-text{margin-top:3px;font-size:12px;font-weight:850;line-height:1.24}
+.alert-more{font-size:23px;font-weight:1000}
+.modal{position:fixed;inset:0;z-index:1000;display:none;align-items:flex-end;justify-content:center;padding:12px;background:rgba(7,24,63,.62);backdrop-filter:blur(5px)}
+.modal.open{display:flex}
+.sheet{width:min(650px,100%);max-height:86vh;overflow:auto;border:5px solid var(--navy);border-radius:29px 29px 22px 22px;background:var(--paper);padding:18px 15px calc(18px + env(safe-area-inset-bottom));box-shadow:0 14px 0 rgba(0,0,0,.22)}
+.sheet h2{margin:0;font-family:var(--display);font-size:clamp(31px,8vw,49px);line-height:.88;text-transform:uppercase}
+.sheet-sub{margin:8px 0 15px;color:var(--muted);font-size:13px;font-weight:850;line-height:1.3}
+.group{margin-top:13px}
+.group-title{margin-bottom:7px;font-size:13px;font-weight:1000;text-transform:uppercase;color:var(--navy)}
+.issue{border-radius:17px;padding:12px;margin-bottom:9px}
+.issue.warning{background:var(--warn-bg);color:var(--warn)}
+.issue.danger{background:var(--danger-bg);color:var(--danger)}
+.issue-title{font-size:15px;font-weight:1000}
+.issue-detail{margin-top:5px;font-size:13px;font-weight:800;line-height:1.34}
+.issue-action{margin-top:8px;padding-top:8px;border-top:1px solid currentColor;font-size:13px;font-weight:850;line-height:1.34}
+.close{width:100%;min-height:50px;margin-top:11px;border:4px solid var(--navy);border-radius:17px;background:var(--navy);color:var(--cream);font-weight:1000;cursor:pointer}
+.call-number{margin:16px 0 12px;padding:14px;border:3px solid var(--navy);border-radius:18px;background:#f7f9ff;text-align:center;font-size:24px;font-weight:1000;letter-spacing:.8px}
+.call-actions{display:grid;gap:9px}
+.call-action{min-height:52px;display:flex;align-items:center;justify-content:center;border:4px solid var(--navy);border-radius:17px;text-decoration:none;font-weight:1000}
+.call-action.primary{background:var(--navy);color:var(--cream)}
+.call-action.secondary{background:var(--paper)}
+@media(max-width:390px){
+  .page{padding-left:7px;padding-right:7px}
+  .day-band{padding-left:13px;padding-right:13px}
+  .assignment{padding-left:10px;padding-right:10px}
+  .shift-medallion{width:51px;height:51px;flex-basis:51px}
+  .shift-letter{font-size:27px}
+  .shift-name{font-size:24px}
+  .avatar-shell,.avatar{width:96px;height:96px}
+  .avatar{border-radius:26px}
+  .avatar-fallback{width:62px;height:62px;font-size:33px}
+  .role-tag{min-width:82px;font-size:9px}
+  .people{grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);gap:4px}
+  .arrow{width:28px;height:28px;font-size:16px}
+  .person-name{font-size:16px}
+  .person-shift{font-size:10.5px}
+  .ghe-badge{font-size:9px;padding:4px 6px}
+}
+@media(min-width:700px){
+  .assignment{padding:20px 22px 18px}
+  .avatar-shell,.avatar{width:142px;height:142px}
+  .avatar{border-radius:36px}
+  .avatar-fallback{width:88px;height:88px;font-size:47px}
+  .role-tag{min-width:112px;font-size:12px}
+  .person-name{font-size:27px}
+  .person-shift{font-size:14px}
+  .modal{align-items:center}
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="topbar"><a class="navbtn" href="index.html">← Accueil</a></div>
 
-var STAGIAIRES_MAIL = (function () {
-  "use strict";
+  <section class="hero">
+    <img src="Image/Bannière/Page stagiaire.PNG" alt="Stagiaires GHE" onerror="this.onerror=null;this.src='Image/Banni%C3%A8re/Page%20stagiaire.PNG';">
+  </section>
 
-  var CFG = {
-    sourceSpreadsheetId: "11U2QvzJW0JTN5SSlW9YdwmxXqyUnNhtLzSiUXRH2zqI",
-    sourceSheetName: "SORTIE_MAILS_STAGIAIRE",
-    imageBanniereDriveId: "1CdWfirxIns57lDz79KvOQpD0Uf-vcvHl",
+  <section id="content"><div class="loading">Connexion aux données…</div></section>
+</main>
 
-    destinataires: [
-      "samir.diabi@chu-lyon.fr",
-      "kouamelan.nobou@chu-lyon.fr",
-      "rami.rahali@chu-lyon.fr",
-      "mohamed.rahmani@chu-lyon.fr"
-    ],
+<div id="issueModal" class="modal" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h2 id="modalTitle">Pourquoi cette alerte ?</h2>
+    <div id="modalSub" class="sheet-sub"></div>
+    <div id="modalBody"></div>
+    <button id="modalClose" class="close" type="button">Fermer</button>
+  </div>
+</div>
 
-    copie: "eddy.sapin@gmail.com",
-    lienPlanning: "https://docs.google.com/spreadsheets/d/1e1YOsbeaZAsehaKt6NSnyEt1PtIpz-Da58e99OcdjGY/edit",
-    timezone: "Europe/Paris",
-    testUtiliseProchaineDateSiAucuneAujourdhui: true,
-    seuilCouvertureCritique: 0.60
-  };
+<div id="callModal" class="modal" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="callTitle">
+    <h2 id="callTitle">Contacter l’agent</h2>
+    <div id="callSub" class="sheet-sub"></div>
+    <div id="callNumber" class="call-number"></div>
+    <div class="call-actions">
+      <a id="callNormal" class="call-action primary" href="#">Appeler</a>
+      <a id="callHidden" class="call-action secondary" href="#">Appeler en numéro masqué</a>
+      <button id="callClose" class="close" type="button">Annuler</button>
+    </div>
+  </div>
+</div>
 
-  var PALETTE = {
-    fond: "#fff7df",
-    papier: "#fffdf6",
-    blanc: "#ffffff",
-    marine: "#07183f",
-    marine2: "#102657",
-    bleuClair: "#eaf2ff",
-    or: "#f2b705",
-    orClair: "#fff1a8",
-    vert: "#176b39",
-    vertFond: "#eaf8ef",
-    orange: "#985000",
-    orangeFond: "#fff3cf",
-    rouge: "#a52424",
-    rougeFond: "#fff0ed",
-    gris: "#6b7280",
-    grisFond: "#edf0f5",
-    bordure: "#d7ddea"
-  };
+<script>
+const WEB_APP_URL="https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOlle3cafAKEAZQ8NAX-peSN6D-yxFO3gX26SnVNUVd5xbwV3CUISg/exec";
+let ITEMS=[];
 
-  var CODES_TRAVAILLES = {
-    M: true,
-    M0130: true,
-    M0131: true,
-    J: true,
-    J4: true,
-    S: true,
-    N: true
-  };
+const content=document.getElementById("content");
+const issueModal=document.getElementById("issueModal");
+const modalSub=document.getElementById("modalSub");
+const modalBody=document.getElementById("modalBody");
+const callModal=document.getElementById("callModal");
+const callSub=document.getElementById("callSub");
+const callNumber=document.getElementById("callNumber");
+const callNormal=document.getElementById("callNormal");
+const callHidden=document.getElementById("callHidden");
 
-  var CODES_NON_TRAVAILLES = {
-    RH: "Repos hebdomadaire",
-    RTT: "RTT",
-    RTTA: "RTT",
-    RTA: "RTT",
-    CA: "Congé annuel",
-    CP: "Congé payé",
-    RC: "Repos compensateur",
-    RF: "Repos férié",
-    SYR: "Repos syndical",
-    SYN: "Repos syndical",
-    ABS: "Absence",
-    ABSENCE: "Absence",
-    AT: "Accident du travail",
-    MAL: "Maladie",
-    AM: "Absence / motif à identifier",
-    MA: "Absence / motif à identifier",
-    AA: "Absence autorisée",
-    AR: "Absence / repos",
-    FO: "Formation"
-  };
+function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#039;")}
+function norm(v){return String(v??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().replace(/\s+/g," ").trim()}
+function arr(v){return Array.isArray(v)?v:[]}
 
-  function testMoi() {
-    return executer_("TEST");
+function dateParts(item){
+  const raw=String(item&&item.dateKey||"");
+  const m=raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  let d;
+  if(m){d=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]),12,0,0)}else{d=new Date(item&&item.dateLabel||raw)}
+  const jours=["DIMANCHE","LUNDI","MARDI","MERCREDI","JEUDI","VENDREDI","SAMEDI"];
+  const mois=["JANVIER","FÉVRIER","MARS","AVRIL","MAI","JUIN","JUILLET","AOÛT","SEPTEMBRE","OCTOBRE","NOVEMBRE","DÉCEMBRE"];
+  return Number.isNaN(d.getTime())?{jour:"DATE",numero:"--",mois:""}:{jour:jours[d.getDay()],numero:String(d.getDate()),mois:mois[d.getMonth()]};
+}
+
+function groups(item){
+  const a=item&&item.anomalies||{};
+  return{stagiaire:arr(a.stagiaire),referent:arr(a.referent),affectation:arr(a.affectation)};
+}
+
+function issuesWithTargets(item){
+  const g=groups(item);
+  return[
+    ...g.stagiaire.map(x=>({target:"Stagiaire",issue:x})),
+    ...g.referent.map(x=>({target:"Référent",issue:x})),
+    ...g.affectation.map(x=>({target:"Affectation",issue:x}))
+  ];
+}
+
+function level(item){
+  const all=issuesWithTargets(item);
+  if(item&&item.niveau==="danger"||all.some(x=>x.issue&&x.issue.niveau==="danger"))return"danger";
+  return all.length?"warning":"ok";
+}
+
+function shiftBase(shift){
+  const code=norm(shift&&(shift.code||shift.base||shift.label)).replace(/[^A-Z0-9]/g,"");
+  if(code.includes("J4"))return"J4";
+  if(code==="M"||code.includes("MATIN"))return"M";
+  if(code==="J"||code.includes("JOURNEE")||code==="JOUR")return"J";
+  if(code==="S"||code.includes("SOIR"))return"S";
+  if(code==="N"||code.includes("NUIT"))return"N";
+  return code;
+}
+
+function shiftClass(shift){
+  const base=shiftBase(shift);
+  return base==="M"?"shift-m":base==="J4"?"shift-j4":base==="J"?"shift-j":base==="S"?"shift-s":base==="N"?"shift-n":"shift-neutral";
+}
+
+function shiftLetter(shift){
+  const base=shiftBase(shift);
+  return base||"?";
+}
+
+function shiftText(shift){return shift&&(shift.label||shift.code)||"Shift à vérifier"}
+function shiftHours(shift){return shift&&shift.horaire||"Horaire à vérifier"}
+
+function mainShift(item){
+  const s=item&&item.stagiaireShift||{};
+  const r=item&&item.referentShift||{};
+  if(shiftBase(s)&&shiftBase(s)===shiftBase(r))return s;
+  return item&&item.shift&&Object.keys(item.shift).length?item.shift:(s.code?s:r);
+}
+
+function avatarBlock(person,role){
+  person=person||{};
+  const a=person.avatar||{};
+  const thumb=a.thumb||"";
+  const ghe=person.ghe||"";
+  const phone=person.telephone||"";
+  const name=person.nomPrenom||person.nomComplet||role;
+  let badge="";
+  if(ghe){
+    badge=phone
+      ?`<button class="ghe-badge" type="button" data-call-name="${esc(name)}" data-call-ghe="${esc(ghe)}" data-call-phone="${esc(phone)}">${esc(ghe)}</button>`
+      :`<span class="ghe-badge">${esc(ghe)}</span>`;
   }
+  return `<div class="role-tag">${esc(role)}</div><div class="avatar-shell"><div class="avatar ${thumb?"has-img":""}">${thumb?`<img src="${esc(thumb)}" alt="" loading="lazy" onerror="this.parentElement.classList.remove('has-img');this.remove()">`:""}<span class="avatar-fallback">👤</span></div>${badge}</div>`;
+}
 
-  function prod() {
-    return executer_("PROD");
-  }
+function person(personData,role,shift){
+  personData=personData||{};
+  const name=personData.nomPrenom||personData.nomComplet||(role==="Référent"?"Référent à attribuer":"Stagiaire");
+  const hasShift=!!(shift&&(shift.code||shift.label||shift.horaire));
+  const detail=hasShift?[shiftText(shift),shiftHours(shift)].filter(Boolean).join(" · "):"Horaire à vérifier";
+  return `<section class="person">${avatarBlock(personData,role)}<span class="person-name">${esc(name)}</span><div class="person-shift"><span class="person-shift-dot"></span><span class="person-shift-text">${esc(detail)}</span></div></section>`;
+}
 
-  function executer_(mode) {
-    try {
-      var lignes = lireSortie_();
-      var dateCible = choisirDateCible_(lignes, mode);
-
-      if (!dateCible) {
-        if (mode === "TEST") {
-          envoyerInfo_(
-            "[TEST] Aucun stagiaire à afficher",
-            "Aucune affectation future exploitable n'a été trouvée dans " + CFG.sourceSheetName + "."
-          );
-        }
-        Logger.log("STAGIAIRES : aucune date cible. Aucun mail envoyé.");
-        return { ok: true, envoye: false, raison: "Aucune affectation" };
-      }
-
-      var affectations = lignes
-        .filter(function (row) { return row.dateKey === dateCible; })
-        .map(enrichirAffectation_);
-
-      if (!affectations.length) {
-        Logger.log("STAGIAIRES : aucune affectation pour " + dateCible + ".");
-        return { ok: true, envoye: false, raison: "Aucune affectation pour la date" };
-      }
-
-      var stats = calculerStats_(affectations);
-      var inlineImages = preparerImagesInline_(affectations);
-      var html = construireHtml_(affectations, dateCible, stats, mode);
-      var sujet = construireSujet_(affectations, dateCible, stats, mode);
-      var texte = construireTexteBrut_(affectations, dateCible, stats, mode);
-
-      var destinataire = mode === "TEST"
-        ? CFG.copie
-        : CFG.destinataires.join(",");
-
-      var options = {
-        htmlBody: html,
-        inlineImages: inlineImages
-      };
-
-      if (mode === "PROD" && CFG.copie) options.cc = CFG.copie;
-
-      GmailApp.sendEmail(destinataire, sujet, texte, options);
-
-      Logger.log(
-        "STAGIAIRES " + mode + " : mail envoyé pour " + dateCible +
-        " | affectations=" + affectations.length +
-        " | à vérifier=" + stats.aVerifier
-      );
-
-      return {
-        ok: true,
-        envoye: true,
-        mode: mode,
-        date: dateCible,
-        affectations: affectations.length,
-        aVerifier: stats.aVerifier
-      };
-
-    } catch (err) {
-      envoyerErreur_(err, mode);
-      throw err;
-    }
-  }
-
-  function lireSortie_() {
-    var ss = SpreadsheetApp.openById(CFG.sourceSpreadsheetId);
-    var sheet = ss.getSheetByName(CFG.sourceSheetName);
-
-    if (!sheet) {
-      throw new Error("Onglet introuvable : " + CFG.sourceSheetName);
-    }
-
-    var values = sheet.getDataRange().getDisplayValues();
-    if (!values || values.length < 2) return [];
-
-    var headers = values[0].map(normaliserEntete_);
-    var lignes = [];
-
-    for (var i = 1; i < values.length; i++) {
-      var row = values[i];
-      var obj = {};
-
-      for (var c = 0; c < headers.length; c++) {
-        if (headers[c]) obj[headers[c]] = String(row[c] || "").trim();
-      }
-
-      var date = parseDate_(obj.DATE);
-      var stagiaire = obj.STAGIAIRE || "";
-
-      if (!date || !stagiaire) continue;
-
-      obj.dateObj = date;
-      obj.dateKey = dateKey_(date);
-      lignes.push(obj);
-    }
-
-    return lignes.sort(function (a, b) {
-      if (a.dateKey !== b.dateKey) return a.dateKey.localeCompare(b.dateKey);
-      return String(a.STAGIAIRE || "").localeCompare(String(b.STAGIAIRE || ""), "fr");
-    });
-  }
-
-  function choisirDateCible_(lignes, mode) {
-    var aujourdHui = dateKey_(new Date());
-    var dates = {};
-
-    lignes.forEach(function (row) {
-      if (row.dateKey) dates[row.dateKey] = true;
-    });
-
-    if (dates[aujourdHui]) return aujourdHui;
-    if (mode === "PROD") return "";
-    if (!CFG.testUtiliseProchaineDateSiAucuneAujourdhui) return "";
-
-    var futures = Object.keys(dates)
-      .filter(function (key) { return key >= aujourdHui; })
-      .sort();
-
-    return futures.length ? futures[0] : "";
-  }
-
-  function enrichirAffectation_(row, index) {
-    var stagiairePoste = normaliserCode_(row.STAGIAIRE_POSTE);
-    var referentPoste = normaliserCode_(row.REFERENT_POSTE);
-
-    var stagiaireDebut = nettoyerHeure_(row.STAGIAIRE_HEURE_DEBUT);
-    var stagiaireFin = nettoyerHeure_(row.STAGIAIRE_HEURE_FIN);
-    var referentDebut = nettoyerHeure_(row.REFERENT_HEURE_DEBUT);
-    var referentFin = nettoyerHeure_(row.REFERENT_HEURE_FIN);
-
-    var alertes = [];
-
-    if (!row.REFERENT) {
-      alertes.push({
-        niveau: "danger",
-        titre: "Référent manquant",
-        message: "Aucun référent n'est rattaché à ce stagiaire.",
-        action: "Choisir un référent disponible avant le début du poste."
-      });
-    }
-
-    if (referentPoste && CODES_NON_TRAVAILLES[referentPoste]) {
-      alertes.push({
-        niveau: "danger",
-        titre: "Référent indisponible",
-        message: "Le référent est prévu en " + CODES_NON_TRAVAILLES[referentPoste] + " ce jour-là.",
-        action: "Choisir un autre référent présent sur le créneau."
-      });
-    }
-
-    if (row.REFERENT && !referentPoste) {
-      alertes.push({
-        niveau: "warning",
-        titre: "Poste du référent à confirmer",
-        message: "Le poste du référent n'a pas été retrouvé.",
-        action: "Vérifier son planning du jour."
-      });
-    }
-
-    if (
-      row.REFERENT &&
-      CODES_TRAVAILLES[referentPoste] &&
-      stagiaireDebut && stagiaireFin && referentDebut && referentFin
-    ) {
-      var couverture = calculerCouverture_(
-        stagiaireDebut,
-        stagiaireFin,
-        referentDebut,
-        referentFin
-      );
-
-      if (couverture.ratio <= 0) {
-        alertes.push({
-          niveau: "danger",
-          titre: "Horaires incompatibles",
-          message: "Le stagiaire et le référent ne travaillent pas sur le même créneau.",
-          action: "Modifier le référent ou corriger les horaires."
-        });
-      } else if (couverture.ratio < CFG.seuilCouvertureCritique) {
-        alertes.push({
-          niveau: "danger",
-          titre: "Couverture horaire insuffisante",
-          message: "Le référent couvre seulement " + Math.round(couverture.ratio * 100) + "% du poste du stagiaire.",
-          action: "Prévoir un référent qui couvre la majorité du créneau."
-        });
-      } else if (couverture.ratio < 1) {
-        alertes.push({
-          niveau: "warning",
-          titre: "Couverture horaire partielle",
-          message: "Le référent couvre " + Math.round(couverture.ratio * 100) + "% du poste du stagiaire.",
-          action: "Vérifier que le relais est organisé sur la partie non couverte."
-        });
-      }
-    }
-
-    var alerteSource = nettoyerAlerteSource_(row.ALERTE);
-    if (alerteSource) {
-      alertes.push({
-        niveau: "warning",
-        titre: "Affectation à vérifier",
-        message: alerteSource,
-        action: "Contrôler uniquement la donnée métier concernée."
-      });
-    }
-
-    alertes = dedoublonnerAlertes_(alertes);
-
-    var niveau = alertes.some(function (a) { return a.niveau === "danger"; })
-      ? "danger"
-      : alertes.length
-        ? "warning"
-        : "ok";
-
-    return {
-      index: index,
-      dateObj: row.dateObj,
-      dateKey: row.dateKey,
-
-      stagiaire: row.STAGIAIRE || "Stagiaire",
-      stagiaireAvatarId: extraireDriveId_(row.STAGIAIRE_AVATAR_ID),
-      stagiairePoste: stagiairePoste || row.STAGIAIRE_POSTE || "—",
-      stagiaireDebut: stagiaireDebut,
-      stagiaireFin: stagiaireFin,
-
-      referent: row.REFERENT || "Référent à choisir",
-      referentGhe: nettoyerGhe_(row.REFERENT_GHE),
-      referentTelephone: formaterTelephone_(row.REFERENT_TELEPHONE),
-      referentAvatarId: extraireDriveId_(row.REFERENT_AVATAR_ID),
-      referentPoste: referentPoste || row.REFERENT_POSTE || "—",
-      referentDebut: referentDebut,
-      referentFin: referentFin,
-
-      alertes: alertes,
-      niveau: niveau,
-      cidStagiaire: "",
-      cidReferent: ""
+function publicIssue(issue){
+  issue=issue||{};
+  const bag=norm([issue.titre,issue.resume,issue.detail].filter(Boolean).join(" "));
+  const mismatch=bag.includes("MEME SHIFT")||bag.includes("CRENEAUX DIFFERENTS")||bag.includes("HORAIRES DIFFERENTS")||bag.includes("PAS EXACTEMENT")||bag.includes("HORAIRE DIFFERENT");
+  if(mismatch){
+    return{
+      ...issue,
+      titre:"Horaires différents",
+      resume:"Le stagiaire et le référent n’ont pas exactement les mêmes horaires.",
+      detail:"Ils travaillent sur le même type de shift, mais leur heure de début ou de fin est différente.",
+      action:issue.action||"Vérifier que la différence d’horaires permet l’accompagnement prévu."
     };
   }
-
-  function calculerStats_(affectations) {
-    var stats = { total: affectations.length, ok: 0, warning: 0, danger: 0, aVerifier: 0 };
-
-    affectations.forEach(function (item) {
-      stats[item.niveau]++;
-      if (item.niveau !== "ok") stats.aVerifier++;
-    });
-
-    return stats;
-  }
-
-  function preparerImagesInline_(affectations) {
-    var inlineImages = {};
-
-    affectations.forEach(function (item, index) {
-      var cidStagiaire = "stagiaire_" + index;
-      var cidReferent = "referent_" + index;
-
-      if (ajouterImageInline_(item.stagiaireAvatarId, cidStagiaire, inlineImages)) {
-        item.cidStagiaire = cidStagiaire;
-      }
-
-      if (ajouterImageInline_(item.referentAvatarId, cidReferent, inlineImages)) {
-        item.cidReferent = cidReferent;
-      }
-    });
-
-    return inlineImages;
-  }
-
-  function ajouterImageInline_(fileId, cid, inlineImages) {
-    fileId = extraireDriveId_(fileId);
-    if (!fileId) return false;
-
-    try {
-      inlineImages[cid] = DriveApp
-        .getFileById(fileId)
-        .getBlob()
-        .setName(cid + ".png");
-      return true;
-    } catch (e) {
-      Logger.log("Image ignorée " + cid + " : " + e.message);
-      return false;
-    }
-  }
-
-  function construireSujet_(affectations, dateKey, stats, mode) {
-    var prefixe = mode === "TEST" ? "[TEST] " : "";
-    var date = dateLisibleCourte_(parseDate_(dateKey));
-
-    if (affectations.length === 1) {
-      var item = affectations[0];
-      var horaire = plage_(item.stagiaireDebut, item.stagiaireFin);
-      return prefixe + "Stagiaire " + date + " — " + item.stagiaire +
-        " avec " + item.referent + (horaire ? " · " + horaire : "") +
-        (stats.aVerifier ? " · À vérifier" : "");
-    }
-
-    return prefixe + "Stagiaires " + date + " — " + affectations.length +
-      " affectations" + (stats.aVerifier ? " · " + stats.aVerifier + " à vérifier" : "");
-  }
-
-  function construireTexteBrut_(affectations, dateKey, stats, mode) {
-    var lignes = [];
-    lignes.push((mode === "TEST" ? "TEST — " : "") + "AFFECTATIONS DU JOUR");
-    lignes.push(dateLongue_(parseDate_(dateKey)));
-    lignes.push(affectations.length + " affectation(s) · " + stats.aVerifier + " à vérifier");
-    lignes.push("");
-
-    affectations.forEach(function (item) {
-      lignes.push(item.stagiaire + " → " + item.referent);
-      lignes.push("Stagiaire : " + item.stagiairePoste + " " + plage_(item.stagiaireDebut, item.stagiaireFin));
-      lignes.push("Référent : " + item.referentPoste + " " + plage_(item.referentDebut, item.referentFin));
-      if (item.referentGhe) lignes.push("GHE : " + item.referentGhe);
-      if (item.referentTelephone.affiche) lignes.push("Téléphone : " + item.referentTelephone.affiche);
-      item.alertes.forEach(function (a) {
-        lignes.push("À vérifier — " + a.titre + " : " + a.message + " Action : " + a.action);
-      });
-      lignes.push("");
-    });
-
-    lignes.push(CFG.lienPlanning);
-    return lignes.join("\n");
-  }
-
-  function construireHtml_(affectations, dateKey, stats, mode) {
-    var date = parseDate_(dateKey);
-    var titreTest = mode === "TEST"
-      ? '<div style="margin:0 0 12px;background:#eef8f6;border:1px solid #8fcfc7;border-radius:12px;padding:9px 12px;text-align:center;color:#195f59;font-size:12px;font-weight:800;">TEST INTERNE · envoyé uniquement à Eddy</div>'
-      : "";
-
-    var cartes = affectations.map(construireCarte_).join("");
-
-    return '' +
-      '<div style="margin:0;padding:0;background:#f2f5fa;font-family:Arial,Helvetica,sans-serif;color:' + PALETTE.marine + ';">' +
-        '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f2f5fa;">' +
-          '<tr><td align="center" style="padding:18px 8px 26px;">' +
-            '<table role="presentation" width="680" cellpadding="0" cellspacing="0" border="0" style="width:680px;max-width:100%;">' +
-              '<tr><td>' + titreTest + '</td></tr>' +
-              '<tr><td align="center" style="padding:4px 8px 18px;">' +
-                '<div style="font-size:13px;letter-spacing:2px;font-weight:800;color:#64708a;">AFFECTATION DU JOUR</div>' +
-                '<div style="font-size:30px;line-height:36px;font-weight:900;color:' + PALETTE.marine + ';margin-top:4px;">Stagiaire et référent</div>' +
-                '<div style="font-size:15px;line-height:22px;color:#59647a;margin-top:5px;">' + echapperHtml_(dateLongue_(date)) + '</div>' +
-              '</td></tr>' +
-              '<tr><td>' + cartes + '</td></tr>' +
-              '<tr><td align="center" style="padding:4px 8px 0;">' +
-                '<a href="' + echapperAttribut_(CFG.lienPlanning) + '" style="display:inline-block;color:' + PALETTE.marine + ';font-size:13px;font-weight:800;text-decoration:underline;">Consulter le planning stagiaires complet</a>' +
-              '</td></tr>' +
-              '<tr><td align="center" style="padding:14px 8px 0;color:#8991a1;font-size:10px;line-height:15px;">Mail automatique · Organisation stagiaires GHE</td></tr>' +
-            '</table>' +
-          '</td></tr>' +
-        '</table>' +
-      '</div>';
-  }
-
-  function construireCarte_(item) {
-    var statut = statutVisuel_(item.niveau);
-    var stagiaireShift = shiftVisuel_(item.stagiairePoste, item.stagiaireDebut, item.stagiaireFin);
-    var referentShift = shiftVisuel_(item.referentPoste, item.referentDebut, item.referentFin);
-    var alertes = repartirAlertes_(item.alertes);
-
-    var telephoneHtml = item.referentTelephone.affiche
-      ? '<a href="tel:' + echapperAttribut_(item.referentTelephone.tel) + '" style="color:' + PALETTE.marine + ';text-decoration:none;font-weight:800;">' + echapperHtml_(item.referentTelephone.affiche) + '</a>'
-      : '<span style="color:#8b5b00;font-weight:700;">Non renseigné</span>';
-
-    return '' +
-      '<div style="margin:0 0 20px;background:#eef8f1;border:2px solid ' + statut.bordure + ';border-radius:24px;overflow:hidden;">' +
-        '<div style="padding:12px 16px 8px;">' +
-          '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>' +
-            '<td style="font-size:10px;font-weight:900;letter-spacing:1.4px;color:#64708a;">BINÔME DU JOUR</td>' +
-            '<td align="right"><span style="display:inline-block;background:' + statut.fond + ';border:1px solid ' + statut.couleur + ';color:' + statut.couleur + ';border-radius:999px;padding:5px 9px;font-size:10px;font-weight:900;">' + statut.label + '</span></td>' +
-          '</tr></table>' +
-        '</div>' +
-        '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">' +
-          '<tr>' +
-            '<td width="50%" align="center" style="width:50%;padding:12px 16px 18px;vertical-align:top;border-right:1px solid #a9d4b5;">' +
-              personneColonneHtml_(
-                "STAGIAIRE",
-                item.stagiaire,
-                item.cidStagiaire,
-                item.stagiaire,
-                stagiaireShift,
-                '',
-                alertes.stagiaire
-              ) +
-            '</td>' +
-            '<td width="50%" align="center" style="width:50%;padding:12px 16px 18px;vertical-align:top;">' +
-              personneColonneHtml_(
-                "RÉFÉRENT",
-                item.referent,
-                item.cidReferent,
-                item.referent,
-                referentShift,
-                '<div style="font-size:13px;line-height:20px;color:' + PALETTE.marine + ';margin-top:10px;">' +
-                  (item.referentGhe ? '<strong>GHE :</strong> ' + echapperHtml_(item.referentGhe) + '<br>' : '') +
-                  '<strong>Téléphone :</strong> ' + telephoneHtml +
-                '</div>',
-                alertes.referent
-              ) +
-            '</td>' +
-          '</tr>' +
-        '</table>' +
-        alertes.binome +
-      '</div>';
-  }
-
-  function personneColonneHtml_(role, nom, cid, fallback, shift, extraHtml, alertesHtml) {
-    return '' +
-      '<div style="font-size:10px;line-height:14px;font-weight:900;letter-spacing:1.8px;color:#667085;">' + role + '</div>' +
-      '<div style="margin-top:10px;">' + avatarHtml_(cid, fallback) + '</div>' +
-      '<div style="font-size:23px;line-height:27px;font-weight:900;color:' + PALETTE.marine + ';margin-top:10px;text-transform:' + (role === "RÉFÉRENT" ? "uppercase" : "none") + ';">' + echapperHtml_(nom) + '</div>' +
-      '<div style="margin-top:11px;">' + shift.bloc + '</div>' +
-      extraHtml +
-      alertesHtml;
-  }
-
-  function avatarHtml_(cid, nom) {
-    if (cid) {
-      return '<img src="cid:' + echapperAttribut_(cid) + '" alt="" style="display:block;width:150px;height:150px;max-width:100%;object-fit:contain;border:0;margin:0 auto;background:transparent;">';
-    }
-
-    return '<div style="width:112px;height:112px;line-height:112px;text-align:center;border-radius:56px;background:#e5ebf4;border:1px solid #c7d0df;font-size:28px;font-weight:900;color:' + PALETTE.marine + ';margin:0 auto;">' + echapperHtml_(initiales_(nom)) + '</div>';
-  }
-
-  function shiftVisuel_(code, debut, fin) {
-    var meta = shiftMeta_(code);
-    var horaire = plage_(debut, fin);
-    var texte = meta.libelle + (horaire ? " · " + horaire : "");
-
-    return {
-      code: meta.code,
-      couleur: meta.couleur,
-      fond: meta.fond,
-      libelle: meta.libelle,
-      horaire: horaire,
-      resume: texte,
-      bloc: shiftBlocHtml_(meta, horaire)
-    };
-  }
-
-  function shiftBlocHtml_(meta, horaire) {
-    return '' +
-      '<table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center"><tr>' +
-        '<td style="vertical-align:middle;padding-right:9px;">' +
-          '<div style="width:46px;height:46px;line-height:46px;text-align:center;border-radius:50%;background:' + meta.fond + ';border:4px solid ' + meta.couleur + ';color:' + meta.couleur + ';font-size:20px;font-weight:900;">' + echapperHtml_(meta.code) + '</div>' +
-        '</td>' +
-        '<td align="left" style="vertical-align:middle;">' +
-          '<div style="font-size:14px;line-height:18px;font-weight:900;color:' + PALETTE.marine + ';">' + echapperHtml_(meta.libelle) + '</div>' +
-          (horaire ? '<div style="font-size:13px;line-height:18px;font-weight:700;color:#5f6878;">' + echapperHtml_(horaire) + '</div>' : '') +
-        '</td>' +
-      '</tr></table>';
-  }
-
-  function shiftMeta_(code) {
-    code = normaliserCode_(code);
-
-    var map = {
-      M: { code: "M", libelle: "Matin", couleur: "#2467c7", fond: "#e8f1ff" },
-      M0130: { code: "M", libelle: "Matin", couleur: "#2467c7", fond: "#e8f1ff" },
-      M0131: { code: "M", libelle: "Matin", couleur: "#2467c7", fond: "#e8f1ff" },
-      J: { code: "J", libelle: "Journée", couleur: "#27844a", fond: "#e8f6ed" },
-      J4: { code: "J4", libelle: "Journée 4", couleur: "#cb6412", fond: "#fff0de" },
-      S: { code: "S", libelle: "Soir", couleur: "#c28b00", fond: "#fff6c8" },
-      N: { code: "N", libelle: "Nuit", couleur: "#1f2937", fond: "#edf0f4" },
-      RH: { code: "RH", libelle: "Repos hebdomadaire", couleur: "#6b7280", fond: "#edf0f4" },
-      CA: { code: "CA", libelle: "Congé annuel", couleur: "#a33a35", fond: "#fff0ee" },
-      CP: { code: "CP", libelle: "Congé payé", couleur: "#a33a35", fond: "#fff0ee" },
-      RTT: { code: "RTT", libelle: "RTT", couleur: "#6b7280", fond: "#edf0f4" },
-      RTTA: { code: "RTT", libelle: "RTT", couleur: "#6b7280", fond: "#edf0f4" },
-      RTA: { code: "RTT", libelle: "RTT", couleur: "#6b7280", fond: "#edf0f4" },
-      RC: { code: "RC", libelle: "Repos compensateur", couleur: "#6b7280", fond: "#edf0f4" },
-      RF: { code: "RF", libelle: "Repos férié", couleur: "#6b7280", fond: "#edf0f4" },
-      AT: { code: "AT", libelle: "Accident du travail", couleur: "#a33a35", fond: "#fff0ee" },
-      MAL: { code: "MAL", libelle: "Maladie", couleur: "#a33a35", fond: "#fff0ee" },
-      ABS: { code: "ABS", libelle: "Absence", couleur: "#a33a35", fond: "#fff0ee" },
-      ABSENCE: { code: "ABS", libelle: "Absence", couleur: "#a33a35", fond: "#fff0ee" }
-    };
-
-    return map[code] || { code: code || "?", libelle: code || "Poste à confirmer", couleur: "#9a6a00", fond: "#fff3cf" };
-  }
-
-  function repartirAlertes_(alertes) {
-    var groupes = { stagiaire: [], referent: [], binome: [] };
-
-    (alertes || []).forEach(function (a) {
-      var texte = normaliser_(a.titre + " " + a.message);
-      if (texte.indexOf("STAGIAIRE") !== -1 && texte.indexOf("REFERENT") !== -1) {
-        groupes.binome.push(a);
-      } else if (texte.indexOf("STAGIAIRE") !== -1) {
-        groupes.stagiaire.push(a);
-      } else if (texte.indexOf("REFERENT") !== -1 || texte.indexOf("POSTE DU REFERENT") !== -1) {
-        groupes.referent.push(a);
-      } else {
-        groupes.binome.push(a);
-      }
-    });
-
-    return {
-      stagiaire: alertesCourtesHtml_(groupes.stagiaire),
-      referent: alertesCourtesHtml_(groupes.referent),
-      binome: groupes.binome.length
-        ? '<div style="padding:0 16px 16px;">' + alertesCourtesHtml_(groupes.binome) + '</div>'
-        : ''
-    };
-  }
-
-  function alertesCourtesHtml_(alertes) {
-    if (!alertes || !alertes.length) return "";
-
-    return '<div style="margin-top:12px;">' + alertes.map(function (a) {
-      var danger = a.niveau === "danger";
-      var couleur = danger ? "#a33a35" : "#946200";
-      var fond = danger ? "#fff0ee" : "#fff6d7";
-      return '<div style="margin-top:6px;background:' + fond + ';border:1px solid ' + couleur + ';border-radius:10px;padding:8px 10px;text-align:left;">' +
-        '<div style="font-size:12px;line-height:17px;font-weight:900;color:' + couleur + ';">' + (danger ? 'À corriger : ' : 'À vérifier : ') + echapperHtml_(a.titre) + '</div>' +
-        '<div style="font-size:11px;line-height:16px;color:#566072;margin-top:2px;">' + echapperHtml_(a.message) + '</div>' +
-      '</div>';
-    }).join("") + '</div>';
-  }
-
-  function statutVisuel_(niveau) {
-    if (niveau === "danger") {
-      return { label: "À CORRIGER", couleur: "#a33a35", fond: "#fff0ee", bordure: "#d39a96" };
-    }
-    if (niveau === "warning") {
-      return { label: "À VÉRIFIER", couleur: "#946200", fond: "#fff6d7", bordure: "#d5bb72" };
-    }
-    return { label: "AFFECTATION CONFIRMÉE", couleur: "#2f7a46", fond: "#eaf7ee", bordure: "#9cc9aa" };
-  }
-
-  function calculerCouverture_(sd, sf, rd, rf) {
-    var stagiaire = intervalle_(sd, sf);
-    var referent = intervalle_(rd, rf);
-
-    if (!stagiaire || !referent) return { ratio: 0 };
-
-    var debut = Math.max(stagiaire.debut, referent.debut);
-    var fin = Math.min(stagiaire.fin, referent.fin);
-    var recouvrement = Math.max(0, fin - debut);
-    var duree = Math.max(1, stagiaire.fin - stagiaire.debut);
-
-    return { ratio: recouvrement / duree };
-  }
-
-  function intervalle_(debut, fin) {
-    var d = minutes_(debut);
-    var f = minutes_(fin);
-    if (d === null || f === null) return null;
-    if (f <= d) f += 1440;
-    return { debut: d, fin: f };
-  }
-
-  function minutes_(heure) {
-    var m = String(heure || "").match(/^(\d{1,2}):(\d{2})$/);
-    if (!m) return null;
-    return Number(m[1]) * 60 + Number(m[2]);
-  }
-
-  function nettoyerAlerteSource_(value) {
-    var morceaux = String(value || "")
-      .split(/\||\n|;/)
-      .map(function (x) { return x.trim(); })
-      .filter(Boolean)
-      .filter(function (x) {
-        var n = normaliser_(x);
-        if (!n) return false;
-        if (n.indexOf("HORAIRE STAGIAIRE RECUPERE DEPUIS LIGNE") !== -1) return false;
-        if (n.indexOf("MAIL PERSONNEL") !== -1) return false;
-        if (n.indexOf("SOURCE") !== -1 && n.indexOf("LIGNE") !== -1) return false;
-        return true;
-      });
-
-    return morceaux.join(" · ");
-  }
-
-  function dedoublonnerAlertes_(alertes) {
-    var vus = {};
-    return alertes.filter(function (a) {
-      var key = normaliser_(a.titre + " " + a.message);
-      if (!key || vus[key]) return false;
-      vus[key] = true;
-      return true;
-    });
-  }
-
-  function normaliserCode_(value) {
-    var n = normaliser_(value).replace(/[^A-Z0-9]/g, " ");
-    var tokens = n.split(/\s+/).filter(Boolean);
-    var connus = Object.keys(CODES_TRAVAILLES).concat(Object.keys(CODES_NON_TRAVAILLES));
-
-    for (var i = 0; i < tokens.length; i++) {
-      if (connus.indexOf(tokens[i]) !== -1) return tokens[i];
-    }
-
-    return tokens.length ? tokens[tokens.length - 1] : "";
-  }
-
-  function nettoyerHeure_(value) {
-    var s = String(value || "").trim().replace(/[hH]/, ":").replace(/\s/g, "");
-    var m = s.match(/^(\d{1,2})(?::(\d{1,2}))?$/);
-    if (!m) return "";
-    var h = Number(m[1]);
-    var min = Number(m[2] || 0);
-    if (h > 23 || min > 59) return "";
-    return (h < 10 ? "0" : "") + h + ":" + (min < 10 ? "0" : "") + min;
-  }
-
-  function plage_(debut, fin) {
-    if (!debut && !fin) return "";
-    if (debut && fin) return debut + "–" + fin;
-    return debut || fin;
-  }
-
-  function formaterTelephone_(value) {
-    var digits = String(value || "").replace(/\D/g, "");
-
-    if (digits.indexOf("33") === 0 && digits.length === 11) {
-      digits = "0" + digits.slice(2);
-    }
-
-    if (digits.length === 9 && /^[67]/.test(digits)) digits = "0" + digits;
-
-    if (digits.length !== 10) {
-      return { affiche: String(value || "").trim(), tel: digits ? "+" + digits : "" };
-    }
-
-    var affiche = digits.replace(/(\d{2})(?=\d)/g, "$1 ").trim();
-    var tel = digits.charAt(0) === "0" ? "+33" + digits.slice(1) : "+" + digits;
-    return { affiche: affiche, tel: tel };
-  }
-
-  function nettoyerGhe_(value) {
-    var txt = String(value || "").replace(/\s+/g, " ").trim();
-    if (!txt) return "";
-    var sans = txt.replace(/^(GHE\s*)+/i, "").trim();
-    return sans ? "GHE " + sans : "";
-  }
-
-  function extraireDriveId_(value) {
-    var txt = String(value || "").trim();
-    if (!txt) return "";
-    var match = txt.match(/[-\w]{20,}/);
-    return match ? match[0] : "";
-  }
-
-  function parseDate_(value) {
-    if (value instanceof Date && !isNaN(value.getTime())) return new Date(value.getFullYear(), value.getMonth(), value.getDate());
-
-    var txt = String(value || "").trim();
-    var iso = txt.match(/^(\d{4})-(\d{2})-(\d{2})/);
-    if (iso) return new Date(Number(iso[1]), Number(iso[2]) - 1, Number(iso[3]));
-
-    var fr = txt.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);
-    if (fr) return new Date(Number(fr[3]), Number(fr[2]) - 1, Number(fr[1]));
-
-    return null;
-  }
-
-  function dateKey_(date) {
-    return Utilities.formatDate(date, CFG.timezone, "yyyy-MM-dd");
-  }
-
-  function dateLongue_(date) {
-    var jours = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
-    var mois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
-    return jours[date.getDay()] + " " + date.getDate() + " " + mois[date.getMonth()] + " " + date.getFullYear();
-  }
-
-  function dateLisibleCourte_(date) {
-    var jours = ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."];
-    return jours[date.getDay()] + " " + date.getDate() + "/" + (date.getMonth() + 1);
-  }
-
-  function normaliserEntete_(value) {
-    return normaliser_(value).replace(/\s+/g, "_");
-  }
-
-  function normaliser_(value) {
-    return String(value || "")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toUpperCase()
-      .replace(/\s+/g, " ")
-      .trim();
-  }
-
-  function initiales_(nom) {
-    var parts = String(nom || "").trim().split(/\s+/).filter(Boolean);
-    if (!parts.length) return "?";
-    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
-  }
-
-  function echapperHtml_(value) {
-    return String(value == null ? "" : value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;");
-  }
-
-  function echapperAttribut_(value) {
-    return echapperHtml_(value);
-  }
-
-  function envoyerInfo_(sujet, message) {
-    GmailApp.sendEmail(CFG.copie, sujet, message);
-  }
-
-  function envoyerErreur_(err, mode) {
-    var message = err && err.stack ? err.stack : String(err && err.message ? err.message : err);
-    GmailApp.sendEmail(
-      CFG.copie,
-      "[ERREUR] Mail stagiaires " + mode,
-      message
-    );
-  }
-
-  return {
-    testMoi: testMoi,
-    prod: prod
+  return issue;
+}
+
+function alertStrip(item,index){
+  const all=issuesWithTargets(item);
+  if(!all.length)return"";
+  const first=all.find(x=>x.issue&&x.issue.niveau==="danger")||all[0];
+  const lvl=level(item);
+  const issue=publicIssue(first.issue||{});
+  const target=first.target||"Affectation";
+  const suffix=all.length>1?` · ${all.length} points au total`:"";
+  return `<button class="alert-strip ${lvl}" type="button" data-alert-index="${index}"><span class="alert-icon">${lvl==="danger"?"⛔":"⚠️"}</span><div class="alert-main"><div class="alert-title">${esc(target)} · ${esc(issue.titre||"Point à vérifier")}</div><div class="alert-text">${esc(issue.resume||issue.detail||"Une information doit être vérifiée.")}${esc(suffix)}</div></div><span class="alert-more">›</span></button>`;
+}
+
+function assignment(item,index){
+  const primary=mainShift(item);
+  const lvl=level(item);
+  return `<article class="assignment ${shiftClass(primary)} status-${lvl}"><div class="shift-head"><div class="shift-medallion"><span class="shift-letter">${esc(shiftLetter(primary))}</span></div><div class="shift-name">${esc(shiftText(primary))}</div></div><div class="people">${person(item.stagiaire,"Stagiaire",item.stagiaireShift||{})}<div class="arrow">→</div>${person(item.referent,"Référent",item.referentShift||{})}</div>${alertStrip(item,index)}</article>`;
+}
+
+function dayCard(list){
+  const first=list[0].item;
+  const p=dateParts(first);
+  return `<article class="day-card"><header class="day-band"><span class="day-name">${esc(p.jour)}</span><span class="date-inline">${esc(p.numero)} ${esc(p.mois)}</span></header><div class="assignments">${list.map(x=>assignment(x.item,x.index)).join("")}</div></article>`;
+}
+
+function issueHtml(x){
+  const shown=publicIssue(x);
+  const lvl=shown&&shown.niveau==="danger"?"danger":"warning";
+  return `<div class="issue ${lvl}"><div class="issue-title">${lvl==="danger"?"⛔":"⚠️"} ${esc(shown&&shown.titre||"Point à vérifier")}</div><div class="issue-detail">${esc(shown&&shown.detail||shown&&shown.resume||"Une information doit être vérifiée.")}</div><div class="issue-action"><strong>À faire :</strong> ${esc(shown&&shown.action||"Vérifier l’information concernée.")}</div></div>`;
+}
+
+function groupHtml(label,list){
+  list=arr(list);
+  if(!list.length)return"";
+  return `<section class="group"><div class="group-title">${esc(label)}</div>${list.map(issueHtml).join("")}</section>`;
+}
+
+function openAlert(index){
+  const item=ITEMS[index];
+  if(!item)return;
+  const g=groups(item);
+  const stagiaire=item.stagiaire&&item.stagiaire.nomPrenom||"Stagiaire";
+  const referent=item.referent&&item.referent.nomComplet||"Référent à attribuer";
+  modalSub.textContent=(item.dateLabel||"")+" · "+stagiaire+" → "+referent;
+  modalBody.innerHTML=groupHtml("Concernant le stagiaire",g.stagiaire)+groupHtml("Concernant le référent",g.referent)+groupHtml("Concernant l’affectation",g.affectation);
+  issueModal.classList.add("open");
+  issueModal.setAttribute("aria-hidden","false");
+  document.body.classList.add("modal-open");
+}
+
+function closeIssueModal(){
+  issueModal.classList.remove("open");
+  issueModal.setAttribute("aria-hidden","true");
+  document.body.classList.remove("modal-open");
+}
+
+function phoneDigits(value){
+  let digits=String(value||"").replace(/\D/g,"");
+  if(digits.startsWith("33")&&digits.length===11)digits="0"+digits.slice(2);
+  if((digits.startsWith("6")||digits.startsWith("7"))&&digits.length===9)digits="0"+digits;
+  return digits;
+}
+
+function phoneDisplay(value){
+  const digits=phoneDigits(value);
+  return digits.replace(/(\d{2})(?=\d)/g,"$1 ").trim();
+}
+
+function openCall(button){
+  const name=button.dataset.callName||"Agent";
+  const ghe=button.dataset.callGhe||"";
+  const digits=phoneDigits(button.dataset.callPhone||"");
+  if(!digits)return;
+  callSub.textContent=[name,ghe].filter(Boolean).join(" · ");
+  callNumber.textContent=phoneDisplay(digits);
+  callNormal.href="tel:"+digits;
+  callHidden.href="tel:%2331%23"+digits;
+  callModal.classList.add("open");
+  callModal.setAttribute("aria-hidden","false");
+  document.body.classList.add("modal-open");
+}
+
+function closeCallModal(){
+  callModal.classList.remove("open");
+  callModal.setAttribute("aria-hidden","true");
+  document.body.classList.remove("modal-open");
+}
+
+function render(){
+  if(!ITEMS.length){content.innerHTML='<div class="empty">Aucun stagiaire à venir.</div>';return}
+  const byDate={};
+  ITEMS.forEach((item,index)=>{const key=item.dateKey||String(index);(byDate[key]||(byDate[key]=[])).push({item,index})});
+  content.innerHTML=Object.keys(byDate).sort().map(key=>dayCard(byDate[key])).join("");
+}
+
+content.addEventListener("click",e=>{
+  const callButton=e.target.closest("[data-call-phone]");
+  if(callButton){e.preventDefault();e.stopPropagation();openCall(callButton);return}
+  const alertButton=e.target.closest("[data-alert-index]");
+  if(alertButton)openAlert(Number(alertButton.dataset.alertIndex));
+});
+document.getElementById("modalClose").addEventListener("click",closeIssueModal);
+issueModal.addEventListener("click",e=>{if(e.target===issueModal)closeIssueModal()});
+document.getElementById("callClose").addEventListener("click",closeCallModal);
+callModal.addEventListener("click",e=>{if(e.target===callModal)closeCallModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeIssueModal();closeCallModal()}});
+
+(function load(){
+  const cb="recevoirStagiaires_"+Date.now();
+  const s=document.createElement("script");
+  window[cb]=data=>{
+    delete window[cb];
+    s.remove();
+    if(!data||!data.ok){content.innerHTML=`<div class="error">${esc(data&&data.erreur||"Données invalides.")}</div>`;return}
+    ITEMS=arr(data.items);
+    render();
   };
+  s.onerror=()=>{
+    delete window[cb];
+    s.remove();
+    content.innerHTML='<div class="error">Impossible de charger les données.</div>';
+  };
+  s.src=WEB_APP_URL+"?mode=site_stagiaires_formations&type=stagiaires&callback="+encodeURIComponent(cb)+"&v="+Date.now();
+  document.body.appendChild(s);
 })();
-
-/*******************************************************
- * COMPATIBILITÉ AVEC LES ANCIENS DÉCLENCHEURS
- *******************************************************/
-
-function DECLENCHEUR_1_TEST_MAIL_MOI() {
-  return STAGIAIRES_MAIL.testMoi();
-}
-
-function envoyerRappelStagiaires_AUTO() {
-  return STAGIAIRES_MAIL.prod();
-}
+</script>
+</body>
+</html>
