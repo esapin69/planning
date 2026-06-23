@@ -261,81 +261,71 @@ p{color:var(--muted);line-height:1.48;margin:0 0 12px}
 .shiftCard{
   position:relative;
   width:100%;
-  border:1px solid #dde5ef;
-  background:linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
-  border-radius:22px;
-  padding:15px;
+  min-height:148px;
+  border:3px solid #07163f;
+  background:linear-gradient(180deg,#fffdf7 0%,#fff7df 100%);
+  border-radius:24px;
+  padding:14px;
   text-align:left;
   cursor:pointer;
-  box-shadow:0 10px 24px rgba(8,19,38,.06);
-  transition:transform .12s ease,border-color .12s ease,box-shadow .12s ease;
+  box-shadow:0 7px 0 rgba(7,22,63,.16);
+  transition:transform .12s ease,box-shadow .12s ease;
 }
-.shiftCard:hover{
-  transform:translateY(-2px);
-  border-color:#94a3b8;
-  box-shadow:0 18px 38px rgba(8,19,38,.12);
-}
+.shiftCard:hover{transform:translateY(-1px);box-shadow:0 9px 0 rgba(7,22,63,.16)}
+.shiftCard:active{transform:translateY(3px);box-shadow:0 4px 0 rgba(7,22,63,.16)}
 .shiftRow{
+  min-height:116px;
   display:grid;
-  grid-template-columns:auto 1fr;
+  grid-template-columns:78px minmax(0,1fr);
   gap:14px;
   align-items:center;
 }
-.shiftIconBox{
-  width:78px;
-  height:78px;
-  border-radius:24px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+.shiftIconBox,
+.choiceBadge{
+  width:68px;
+  height:68px;
+  flex:0 0 68px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
   color:#fff;
-  font-size:34px;
+  border:5px solid rgba(7,22,63,.72);
+  box-shadow:inset 0 0 0 5px rgba(255,255,255,.28),0 7px 0 rgba(7,22,63,.16),0 10px 18px rgba(7,22,63,.16);
+  font-family:"Arial Black",Impact,system-ui,sans-serif;
+  font-size:27px;
+  line-height:1;
   font-weight:1000;
   letter-spacing:-.06em;
-  box-shadow:0 10px 24px rgba(8,19,38,.12);
+  text-shadow:0 2px 0 rgba(0,0,0,.18);
 }
-.shiftIconBox.M{background:#2563eb}
-.shiftIconBox.J{background:#16a34a}
-.shiftIconBox.J4{background:#f97316}
-.shiftIconBox.S{background:#ca8a04}
-.shiftIconBox.N{background:#111827}
-.shiftIconBox.REST{background:#64748b}
+.shiftIconBox.M,.choiceBadge.M{background:linear-gradient(145deg,#63a7ff 0%,#1f6df2 56%,#1744b7 100%)}
+.shiftIconBox.J,.choiceBadge.J{background:linear-gradient(145deg,#79dc55 0%,#36a52e 56%,#187826 100%)}
+.shiftIconBox.J4,.choiceBadge.J4{background:linear-gradient(145deg,#ffb257 0%,#ff7613 56%,#c84b00 100%)}
+.shiftIconBox.S,.choiceBadge.S{background:linear-gradient(145deg,#ffe45e 0%,#f7bf00 56%,#c98b00 100%);color:#07163f}
+.shiftIconBox.N,.choiceBadge.N{background:linear-gradient(145deg,#4b5563 0%,#111827 58%,#000 100%)}
+.shiftIconBox.REST,.choiceBadge.REST{background:linear-gradient(145deg,#cbd5e1 0%,#8491a5 56%,#586579 100%)}
 .shiftMain{min-width:0}
 .shiftCode{
-  font-size:46px;
-  line-height:.85;
+  font-family:"Arial Black",Impact,system-ui,sans-serif;
+  font-size:31px;
+  line-height:.95;
   font-weight:1000;
-  letter-spacing:-.09em;
-  color:#081326;
+  letter-spacing:-.06em;
+  color:#07163f;
 }
-.shiftLabel{
-  margin-top:8px;
-  font-size:16px;
-  font-weight:1000;
-  color:#1e293b;
-}
-.shiftDate{
-  margin-top:10px;
-  color:#334155;
-  font-size:14px;
-  font-weight:900;
-}
-.shiftHint{
-  margin-top:4px;
-  color:#64748b;
-  font-size:13px;
-  font-weight:750;
-}
+.shiftLabel{margin-top:6px;font-size:16px;font-weight:1000;color:#1e293b;line-height:1.15}
+.shiftDate{margin-top:8px;color:#334155;font-size:13px;font-weight:900}
+.shiftHint{margin-top:4px;color:#64748b;font-size:12px;font-weight:800}
 .changedPill{
   position:absolute;
-  top:12px;
-  right:12px;
+  top:9px;
+  right:9px;
   border-radius:999px;
   padding:5px 8px;
   background:#ecfdf5;
   color:#065f46;
-  border:1px solid #bbf7d0;
-  font-size:12px;
+  border:2px solid #15803d;
+  font-size:11px;
   font-weight:1000;
 }
 .messageBox textarea{
@@ -478,41 +468,65 @@ p{color:var(--muted);line-height:1.48;margin:0 0 12px}
 .choiceGrid{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px;
+  gap:12px;
 }
 .choice{
-  border:1px solid #d1d5db;
-  background:#fff;
-  border-radius:20px;
-  padding:14px;
-  text-align:left;
+  position:relative;
+  min-width:0;
+  min-height:148px;
+  border:4px solid #07163f;
+  background:#fffaf0;
+  border-radius:24px;
+  padding:12px 8px 11px;
+  text-align:center;
   cursor:pointer;
+  box-shadow:0 6px 0 rgba(7,22,63,.16);
+  transition:transform .12s ease,box-shadow .12s ease,background .12s ease;
 }
-.choice:hover{background:#f8fafc;border-color:#94a3b8}
+.choice:hover{background:#fff7df}
+.choice:active{transform:translateY(3px);box-shadow:0 3px 0 rgba(7,22,63,.16)}
+.choice.active{background:#fff3c7;box-shadow:0 6px 0 rgba(7,22,63,.22),0 0 0 4px rgba(255,199,39,.34)}
+.choice.active::after{
+  content:"✓";
+  position:absolute;
+  top:8px;
+  right:9px;
+  width:25px;
+  height:25px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#07163f;
+  color:#fff7df;
+  font-size:15px;
+  font-weight:1000;
+}
 .choiceMain{
+  min-height:120px;
   display:flex;
+  flex-direction:column;
   align-items:center;
-  gap:11px;
+  justify-content:center;
+  gap:7px;
 }
-.choiceBadge{
-  width:54px;
-  height:54px;
-  border-radius:18px;
+.choiceLabel{
+  min-height:38px;
   display:flex;
   align-items:center;
   justify-content:center;
-  color:#fff;
+  font-family:"Arial Black",Impact,system-ui,sans-serif;
+  font-size:16px;
+  line-height:1.05;
   font-weight:1000;
-  font-size:18px;
+  color:#07163f;
 }
-.choiceBadge.M{background:#2563eb}
-.choiceBadge.J{background:#16a34a}
-.choiceBadge.J4{background:#f97316}
-.choiceBadge.S{background:#ca8a04}
-.choiceBadge.N{background:#111827}
-.choiceBadge.REST{background:#64748b}
-.choiceLabel{font-weight:1000}
-.choiceHours{font-size:13px;color:#64748b;margin-top:3px}
+.choiceHours{
+  min-height:15px;
+  font-size:12px;
+  line-height:1.1;
+  color:#64748b;
+  font-weight:900;
+}
 .status{
   display:none;
   border-radius:18px;
@@ -543,10 +557,7 @@ p{color:var(--muted);line-height:1.48;margin:0 0 12px}
     font-size:22px;
   }
   .personName{font-size:22px}
-  .shiftIconBox{width:66px;height:66px;font-size:28px}
-  .shiftCode{font-size:38px}
   .actionGrid{grid-template-columns:1fr}
-  .choiceGrid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -883,13 +894,19 @@ function renderChoices(){
   $("restChoices").innerHTML = rest.map(choiceHtml).join("");
 }
 function choiceHtml(s){
-  return `<button class="choice" type="button" onclick="chooseShift('${esc(s.code)}')">
+  let selected="";
+  if(state.currentEdit){
+    const item=state.items.find(x=>x.item_id===state.currentEdit.itemId);
+    if(item){
+      const current=state.currentEdit.side==="demandeur" ? item.demandeur_shift : item.accepteur_shift;
+      if(String(current||"").toUpperCase()===String(s.code||"").toUpperCase()) selected=" active";
+    }
+  }
+  return `<button class="choice${selected}" type="button" onclick="chooseShift('${esc(s.code)}')">
     <div class="choiceMain">
       <div class="choiceBadge ${esc(badgeClass(s.code))}">${esc(s.code)}</div>
-      <div>
-        <div class="choiceLabel">${esc(s.label)}</div>
-        <div class="choiceHours">${esc(s.heure || "Repos / absence")}</div>
-      </div>
+      <div class="choiceLabel">${esc(s.label)}</div>
+      <div class="choiceHours">${esc(s.heure || "Repos / absence")}</div>
     </div>
   </button>`;
 }
@@ -900,6 +917,7 @@ function openModal(itemId, side){
   const person = side === "demandeur" ? item.demandeur_nom : item.accepteur_nom;
   $("modalTitle").textContent = "Choisir un horaire";
   $("modalSub").textContent = person + " - " + normalizeDateLabel(item.date);
+  renderChoices();
   $("modal").classList.add("show");
 }
 function closeModal(){

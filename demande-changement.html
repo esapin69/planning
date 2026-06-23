@@ -245,19 +245,121 @@ input:focus,textarea:focus{background:#fffdf6;box-shadow:0 0 0 4px rgba(225,184,
   margin:14px 0;
 }
 .exchangeCard.done{border-color:#15803d;background:#f0fdf4}
-.goalGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:13px 0}
-@media(min-width:680px){.goalGrid{grid-template-columns:repeat(6,1fr)}.respGrid{grid-template-columns:1fr 1fr}}
-.goal{
-  border:3px solid var(--navy);
-  background:rgba(255,250,240,.95);
-  color:var(--navy);
-  border-radius:17px;
-  padding:12px 8px;
-  font-size:14px;
-  font-weight:950;
-  cursor:pointer;
+.goalGrid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin:15px 0;
 }
-.goal.active{background:var(--navy);color:#fff7df}
+@media(min-width:680px){
+  .goalGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .respGrid{grid-template-columns:1fr 1fr}
+}
+.goal{
+  position:relative;
+  min-width:0;
+  min-height:146px;
+  border:4px solid var(--navy);
+  background:rgba(255,250,240,.96);
+  color:var(--navy);
+  border-radius:24px;
+  padding:12px 8px 11px;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  text-align:center;
+  box-shadow:0 6px 0 rgba(7,22,63,.18);
+  transition:transform .12s ease,box-shadow .12s ease,background .12s ease;
+}
+.goal:active{transform:translateY(3px);box-shadow:0 3px 0 rgba(7,22,63,.18)}
+.goal.active{
+  background:#fff3c7;
+  box-shadow:0 6px 0 rgba(7,22,63,.24),0 0 0 4px rgba(255,199,39,.34);
+}
+.goal.active::after{
+  content:"✓";
+  position:absolute;
+  top:8px;
+  right:9px;
+  width:25px;
+  height:25px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:var(--navy);
+  color:#fff7df;
+  font-family:system-ui,sans-serif;
+  font-size:15px;
+  font-weight:1000;
+}
+.shiftMedal{
+  width:68px;
+  height:68px;
+  flex:0 0 68px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  color:#fff;
+  border:5px solid rgba(7,22,63,.72);
+  box-shadow:
+    inset 0 0 0 5px rgba(255,255,255,.28),
+    0 7px 0 rgba(7,22,63,.16),
+    0 10px 18px rgba(7,22,63,.16);
+  font-family:"Arial Black",Impact,system-ui,sans-serif;
+  font-size:28px;
+  line-height:1;
+  letter-spacing:-.06em;
+  text-shadow:0 2px 0 rgba(0,0,0,.18);
+}
+.shiftMedal.shift-m{background:linear-gradient(145deg,#63a7ff 0%,#1f6df2 56%,#1744b7 100%)}
+.shiftMedal.shift-j{background:linear-gradient(145deg,#79dc55 0%,#36a52e 56%,#187826 100%)}
+.shiftMedal.shift-j4{background:linear-gradient(145deg,#ffb257 0%,#ff7613 56%,#c84b00 100%)}
+.shiftMedal.shift-s{background:linear-gradient(145deg,#ffe45e 0%,#f7bf00 56%,#c98b00 100%);color:#07163f}
+.shiftMedal.shift-n{background:linear-gradient(145deg,#4b5563 0%,#111827 58%,#000 100%)}
+.shiftMedal.shift-rest{background:linear-gradient(145deg,#cbd5e1 0%,#8491a5 56%,#586579 100%)}
+.shiftChoiceLabel{
+  min-height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:"Arial Black",Impact,system-ui,sans-serif;
+  font-size:17px;
+  line-height:1.05;
+  font-weight:1000;
+  text-transform:none;
+}
+.shiftChoiceHours{
+  min-height:15px;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:12px;
+  line-height:1.1;
+  font-weight:900;
+  color:#687086;
+}
+.currentShiftCard{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  margin-top:8px;
+  padding:11px 13px;
+  border:3px solid var(--navy);
+  border-radius:22px;
+  background:rgba(255,255,255,.72);
+}
+.currentShiftCard .shiftMedal{
+  width:58px;
+  height:58px;
+  flex-basis:58px;
+  border-width:4px;
+  font-size:24px;
+  box-shadow:inset 0 0 0 4px rgba(255,255,255,.28),0 5px 0 rgba(7,22,63,.15);
+}
+.currentShiftText{min-width:0;display:grid;gap:2px}
+.currentShiftLabel{font-size:18px;font-weight:1000;color:var(--navy)}
+.currentShiftHours{font-size:14px;font-weight:900;color:var(--muted)}
 .candidateList{display:grid;gap:9px;margin-top:11px}
 .candidateBtn.active{border-color:#15803d;background:#ecfdf5}
 .chosen{
@@ -1696,6 +1798,31 @@ function goalText(code){
   const s=shiftInfo(code);
   return `${s.icon ? s.icon+' ' : ''}${s.label}`;
 }
+function shiftVisualClass(code){
+  const family=goalFamily(code);
+  if(family==='M') return 'shift-m';
+  if(family==='J') return 'shift-j';
+  if(family==='J4') return 'shift-j4';
+  if(family==='S') return 'shift-s';
+  if(family==='N') return 'shift-n';
+  return 'shift-rest';
+}
+function shiftMedalCode(code){
+  const family=goalFamily(code);
+  return family==='RH' ? 'RH' : (family || cleanShiftKey(code) || '?');
+}
+function goalChoiceHtml(code){
+  const s=shiftInfo(code);
+  const family=goalFamily(code);
+  const label=family==='RH' ? 'Repos hebdomadaire' : s.label;
+  return `<span class="shiftMedal ${shiftVisualClass(code)}">${esc(shiftMedalCode(code))}</span><span class="shiftChoiceLabel">${esc(label)}</span><span class="shiftChoiceHours">${esc(s.hours||'')}</span>`;
+}
+function currentShiftCardHtml(code){
+  const s=shiftInfo(code);
+  const family=goalFamily(code);
+  const label=family==='RH' ? 'Repos hebdomadaire' : s.label;
+  return `<div class="currentShiftCard"><span class="shiftMedal ${shiftVisualClass(code)}">${esc(shiftMedalCode(code))}</span><span class="currentShiftText"><span class="currentShiftLabel">${esc(label)}</span><span class="currentShiftHours">${esc(s.hours||'')}</span></span></div>`;
+}
 function goalFamily(code){
   const key=cleanShiftKey(code);
 
@@ -2514,8 +2641,8 @@ function renderExchange(){
   $('noAgent').checked=state.noAgent;
   $('exchangeList').innerHTML=state.basket.map((it,idx)=>`<div class="exchangeCard ${(state.noAgent||it.accepteur_id)&&it.objectif?'done':''}" id="card_${attr(it.item_id)}">
     <div class="dayTitle">${esc(labelLong(it.label_demandeur,it.mois_demandeur,it.jour_demandeur))}</div>
-    <div class="small">Ton horaire actuel :</div><div>${shiftInline(it.shift_demandeur,'light')}</div>
-    <div class="goalGrid">${goalsForItem(it).map(g=>`<button class="goal ${it.objectif===g.code?'active':''}" onclick="chooseGoal('${attr(it.item_id)}','${g.code}')">${esc(goalText(g.code))}</button>`).join('')}</div>
+    <div class="small">Ton horaire actuel :</div>${currentShiftCardHtml(it.shift_demandeur)}
+    <div class="goalGrid">${goalsForItem(it).map(g=>`<button class="goal ${it.objectif===g.code?'active':''}" onclick="chooseGoal('${attr(it.item_id)}','${g.code}')" aria-label="Choisir ${attr(goalText(g.code))}">${goalChoiceHtml(g.code)}</button>`).join('')}</div>
     ${renderChosen(it)}
     <div id="cand_${attr(it.item_id)}" class="candidateList">${renderCandidates(it)}</div>
   </div>`).join('');
