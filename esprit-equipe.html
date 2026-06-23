@@ -1,632 +1,927 @@
-/****************************************************
- * 99_WEB_ESPRIT_EQUIPE.gs
- * VERSION COMPLÈTE — ESPRIT D’ÉQUIPE + TÉLÉPHONE AU CLIC
- *
- * À remplacer entièrement.
- *
- * Sert :
- * - esprit-equipe.html en JSONP ;
- * - stagiaires.html et formations.html via la passerelle ;
- * - la lecture du téléphone uniquement après clic sur GHE ;
- * - une page HTML directe si l’URL Apps Script est ouverte.
- *
- * IMPORTANT : un seul doGet(e) actif dans le projet.
- ****************************************************/
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07183f">
+<title>Esprit d’équipe — GHE</title>
+<link rel="preload" as="image" href="Image/Chargement/Organisation.PNG" fetchpriority="high">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --ink:#07183f;--paper:#fff7dd;--cream:#fff9e8;--line:#07183f;
+  --danger:#b42318;--danger-bg:#fff0ec;--warning:#8a4b00;--warning-bg:#fff4c7;
+  --ok:#176b39;--ok-bg:#eaf8ef;--shadow:0 7px 0 rgba(7,24,63,.16);
+}
+html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink)}
+body{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:
+    radial-gradient(circle at 15% 0%,rgba(255,255,255,.95) 0 9%,transparent 31%),
+    radial-gradient(circle at 88% 4%,rgba(255,218,116,.46) 0 9%,transparent 32%),
+    repeating-linear-gradient(-6deg,rgba(7,24,63,.035) 0 1px,transparent 1px 13px),
+    linear-gradient(180deg,#fff9e8 0%,#f5e8bf 57%,#ead9a5 100%);
+}
+body.modal-open{overflow:hidden}
+button,a{font:inherit;color:inherit}
+.page{width:min(920px,100%);margin:auto;padding:calc(10px + env(safe-area-inset-top)) 10px calc(34px + env(safe-area-inset-bottom))}
 
-function doGet(e) {
-  try {
-    const params = e && e.parameter ? e.parameter : {};
-    const mode = String(params.mode || "").trim().toLowerCase();
-
-    if (mode === "site_stagiaires_formations") {
-      return WEB_STAGIAIRES_FORMATIONS_REPONDRE(e);
-    }
-
-    if (mode === "telephone") {
-      return WEB_ESPRIT_repondreTelephone_(params);
-    }
-
-    const jour = WEB_ESPRIT_getJour_(params);
-
-    if (mode === "jsonp") {
-      const callback = WEB_ESPRIT_callback_(params.callback);
-      return WEB_ESPRIT_reponseJsonp_(callback, {
-        ok: true,
-        jour: WEB_ESPRIT_serialiserJour_(jour)
-      });
-    }
-
-    return HtmlService
-      .createHtmlOutput(WEB_ESPRIT_pageHtmlDirecte_(jour))
-      .setTitle("Esprit d’équipe — GHE");
-
-  } catch (err) {
-    const message = String(err && err.message ? err.message : err);
-    const params = e && e.parameter ? e.parameter : {};
-    const mode = String(params.mode || "").trim().toLowerCase();
-
-    if (mode === "site_stagiaires_formations") {
-      const callback = WEB_ESPRIT_callbackFacultatif_(params.callback);
-      const payload = { ok:false, erreur:message };
-      if (callback) return WEB_ESPRIT_reponseJsonp_(callback, payload);
-      return ContentService.createTextOutput(JSON.stringify(payload)).setMimeType(ContentService.MimeType.JSON);
-    }
-
-    if (mode === "telephone" || mode === "jsonp") {
-      const callback = WEB_ESPRIT_callback_(params.callback || (mode === "telephone" ? "recevoirTelephoneGhe" : "recevoirEspritEquipeGhe"));
-      return WEB_ESPRIT_reponseJsonp_(callback, { ok:false, erreur:message });
-    }
-
-    return HtmlService
-      .createHtmlOutput(WEB_ESPRIT_pageErreur_(message))
-      .setTitle("Erreur — Esprit d’équipe GHE");
-  }
+.hero-photo{
+  overflow:hidden;
+  border:5px solid var(--ink);
+  border-radius:30px;
+  background:#07183f;
+  box-shadow:0 10px 0 rgba(7,24,63,.20),0 15px 0 rgba(0,0,0,.12);
+  margin-bottom:14px;
+}
+.hero-photo img{
+  display:block;
+  width:100%;
+  height:clamp(170px,46vw,320px);
+  object-fit:cover;
+  object-position:center;
 }
 
-/****************************************************
- * RÉCUPÉRATION DU JOUR
- ****************************************************/
+.hero{
+  background:radial-gradient(circle at 18% 10%,rgba(255,255,255,.13),transparent 30%),
+             linear-gradient(135deg,#07183f 0%,#101f46 58%,#020817 100%);
+  color:#fff7dd;border:5px solid var(--ink);border-radius:30px;padding:22px 18px;
+  box-shadow:0 10px 0 rgba(7,24,63,.20),0 15px 0 rgba(0,0,0,.12);margin-bottom:14px;
+}
+.badge{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;margin-bottom:13px;border-radius:999px;background:rgba(255,255,255,.13);border:2px solid rgba(255,255,255,.20);font-size:14px;font-weight:900}
+h1{margin:0;font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:clamp(44px,11vw,86px);line-height:.86;letter-spacing:.3px;text-shadow:0 4px 0 rgba(211,162,75,.35),4px 7px 0 rgba(0,0,0,.20)}
+.subtitle{margin:12px 0 0;color:rgba(255,247,221,.88);font-weight:900;line-height:1.3}
+.top-actions{display:grid;gap:9px;margin:8px 0 17px}
+.back-btn{
+  display:flex;align-items:center;justify-content:center;min-height:62px;padding:12px 16px;
+  border:5px solid var(--ink);border-radius:23px;text-decoration:none;
+  background:linear-gradient(145deg,#4a4d52 0%,#2d3035 48%,#181a1e 100%);
+  color:#fff5d7;font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(24px,6vw,38px);text-transform:uppercase;box-shadow:0 8px 0 rgba(7,24,63,.24);
+}
+.stats-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:18px 0}
+.stat{
+  min-height:84px;display:flex;align-items:center;padding:13px 14px;border:4px solid var(--ink);
+  border-radius:19px;background:linear-gradient(180deg,#fff,#fff9e8);font-weight:1000;
+  font-size:clamp(18px,4.7vw,29px);line-height:1.05;box-shadow:var(--shadow);
+}
+.stat.total{background:linear-gradient(145deg,#353941,#171a20);color:#fff6d8;border-color:#07183f}
+.section-title{margin:24px 4px 12px;font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:clamp(28px,7vw,50px);line-height:.9;text-transform:uppercase;text-shadow:0 3px 0 #f8d67d}
+.card{background:var(--cream);border:4px solid var(--ink);border-radius:22px;padding:15px 14px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card.important{border-left:10px solid #f07c00}
+.card.warning{border-left:10px solid #dc0917}
+.shift-title{font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:clamp(24px,5.6vw,38px);line-height:.9;margin-bottom:11px;text-transform:uppercase}
+.agent{padding:10px 0;border-top:2px dashed rgba(7,24,63,.22);font-size:17px;font-weight:900}
+.agent:first-of-type{border-top:0}
+.ghe{color:rgba(7,24,63,.60);font-weight:900}
+.ghe-phone-trigger{cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.ghe-phone-trigger:focus-visible{outline:3px solid #1769e0;outline-offset:3px;border-radius:6px}
+.empty{color:rgba(7,24,63,.55);font-weight:900;font-style:italic}
+.alert-list{display:grid;gap:8px}
+.alert-line{padding:10px;border:2px solid rgba(7,24,63,.16);border-radius:14px;background:#fff}
+.alert-line strong{display:block}
+.alert-line span{display:block;margin-top:4px;color:#46516b;font-size:13px;font-weight:750;line-height:1.3}
+details.control{background:var(--cream);border:4px solid var(--ink);border-radius:22px;margin-top:14px;box-shadow:var(--shadow);overflow:hidden}
+details.control summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;cursor:pointer;list-style:none;font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:clamp(24px,6vw,38px);text-transform:uppercase}
+details.control summary::-webkit-details-marker{display:none}
+.control-body{padding:0 14px 14px}
+.loader,.error{background:var(--cream);border:4px solid var(--ink);border-radius:22px;padding:16px;font-weight:900;box-shadow:var(--shadow)}
+.loader-track{height:14px;border:3px solid var(--ink);border-radius:999px;overflow:hidden;background:#fff;margin-top:10px}
+.loader-fill{height:100%;width:8%;background:#f0c400;transition:width .2s ease}
+.error{color:var(--danger);display:none}
+.modal{
+  position:fixed;inset:0;z-index:1000;display:none;align-items:flex-end;justify-content:center;
+  padding:12px;background:rgba(2,8,23,.66);backdrop-filter:blur(5px)
+}
+.modal.open{display:flex}
+.modal-panel{width:min(520px,100%);background:var(--cream);border:5px solid var(--ink);border-radius:26px;padding:16px;box-shadow:0 14px 0 rgba(0,0,0,.28)}
+.modal-title{margin:0;font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:clamp(30px,8vw,48px);line-height:.92;text-transform:uppercase}
+.modal-text{margin:8px 0 14px;color:#42506c;font-weight:800;line-height:1.35}
+.phone-profile{display:grid;justify-items:center;gap:10px;margin:12px 0 14px;text-align:center}
+.phone-avatar-box{
+  width:min(230px,68vw);aspect-ratio:1/1;border:5px solid var(--ink);border-radius:28px;
+  background:#fff;overflow:hidden;display:grid;place-items:center;box-shadow:0 8px 0 rgba(7,24,63,.18)
+}
+.phone-avatar{width:100%;height:100%;object-fit:contain;display:block;background:#fff}
+.phone-avatar-fallback{
+  width:100%;height:100%;display:grid;place-items:center;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:72px;background:#eef2fb
+}
+.phone-agent-name{font-size:25px;font-weight:1000;line-height:1.05;text-transform:uppercase}
+.phone-ghe-label{font-size:17px;font-weight:950;color:#667087}
+.phone-number{width:100%;min-height:62px;border:4px solid var(--ink);border-radius:18px;background:#fff;font-size:25px;font-weight:1000}
+.modal-actions{display:grid;gap:9px;margin-top:10px}
+.modal-btn{width:100%;min-height:54px;border:4px solid var(--ink);border-radius:17px;font-weight:1000;background:#fff}
+.modal-btn.primary{background:#176b39;color:#fff}
+.modal-btn.hidden-call{background:#07183f;color:#fff7dd}
+@media(min-width:720px){.modal{align-items:center}}
 
-function WEB_ESPRIT_getJour_(params) {
-  if (typeof dateIsoAujourdhuiGhe_ !== "function") {
-    throw new Error("La fonction dateIsoAujourdhuiGhe_ est introuvable dans le moteur Agenda GHE.");
-  }
-  if (typeof trouverFeuilleSourceGhe_ !== "function") {
-    throw new Error("La fonction trouverFeuilleSourceGhe_ est introuvable dans le moteur Agenda GHE.");
-  }
-  if (typeof lirePlanningParJourGhe_ !== "function") {
-    throw new Error("La fonction lirePlanningParJourGhe_ est introuvable dans le moteur Agenda GHE.");
-  }
-  if (typeof GHE_AGENDA === "undefined" || !GHE_AGENDA || !GHE_AGENDA.SOURCE_SPREADSHEET_ID) {
-    throw new Error("La configuration GHE_AGENDA.SOURCE_SPREADSHEET_ID est introuvable.");
-  }
+.card.important{position:relative;overflow:hidden}
+.card.formation-card{
+  border-left:4px solid var(--ink);
+  background:var(--cream);
+}
+.card.stagiaire-card{
+  border-left:4px solid var(--ink);
+  background:var(--cream);
+}
+.shift-medal{
+  --medal:#64748b;--medal-dark:#334155;--medal-light:#cbd5e1;
+  width:58px;height:58px;flex:0 0 58px;border-radius:50%;
+  display:grid;place-items:center;color:#fff;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:28px;line-height:1;
+  background:
+    radial-gradient(circle at 35% 25%,rgba(255,255,255,.95) 0 6%,transparent 7%),
+    radial-gradient(circle at 40% 35%,var(--medal-light) 0 18%,var(--medal) 45%,var(--medal-dark) 100%);
+  border:5px solid var(--medal-dark);
+  box-shadow:inset 0 0 0 4px rgba(255,255,255,.32),0 6px 0 rgba(7,24,63,.17);
+}
+.shift-medal.small{width:48px;height:48px;flex-basis:48px;font-size:23px;border-width:4px}
+.shift-medal.m{--medal:#2f7df4;--medal-dark:#0b4cc4;--medal-light:#9cc9ff}
+.shift-medal.j{--medal:#20b96b;--medal-dark:#08763f;--medal-light:#a5f0c5}
+.shift-medal.j4{--medal:#ff8f27;--medal-dark:#c24c00;--medal-light:#ffd0a1}
+.shift-medal.s{--medal:#ffd119;--medal-dark:#b97900;--medal-light:#fff2a1;color:#07183f}
+.shift-medal.n{--medal:#171717;--medal-dark:#000;--medal-light:#777}
+.shift-head{display:flex;align-items:center;gap:12px;margin-bottom:11px}
+.stat{gap:11px}
+.stat-label{display:block}
+.important-heading{
+  display:flex;align-items:center;flex-wrap:wrap;gap:7px;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(24px,5.6vw,38px);line-height:.95;text-transform:uppercase;
+}
+.important-dot{opacity:.42}
+.important-time{white-space:nowrap}
+.important-name{
+  margin:9px 0 6px;color:#4b5568;font-weight:950;
+  font-size:clamp(17px,4.4vw,23px);line-height:1.15
+}
+.stagiaire-main{
+  margin:10px 0 2px;padding:10px 0;border-top:2px dashed rgba(7,24,63,.20);
+  font-size:19px;font-weight:1000
+}
+.stagiaire-hours{color:#6b7280;font-weight:900}
+.mini-alert{
+  width:100%;margin-top:10px;padding:8px 10px;border:0;border-top:2px dashed rgba(7,24,63,.18);
+  background:transparent;display:flex;align-items:center;justify-content:space-between;gap:8px;
+  text-align:left;color:#8a4b00;font-size:13px;font-weight:950;cursor:pointer;
+}
+.mini-alert.danger{color:#b42318}
+.mini-alert .mini-arrow{font-size:20px;line-height:1}
+.info-list{display:grid;gap:10px;margin-top:12px}
+.info-item{
+  padding:13px;border:2px solid rgba(7,24,63,.15);border-radius:16px;background:#fff;
+  font-weight:850;line-height:1.35
+}
+.info-item.warning{background:#fff8d9;border-color:#e2bd4f;color:#74420a}
+.info-item.danger{background:#fff0ec;border-color:#e1a09a;color:#9f291e}
+.info-item-title{font-weight:1000;margin-bottom:5px}
+.control{
+  background:var(--cream);border:4px solid var(--ink);border-radius:22px;
+  margin-top:14px;box-shadow:var(--shadow);overflow:hidden
+}
+.control-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(24px,6vw,38px);text-transform:uppercase
+}
 
-  const aujourdHuiIso = dateIsoAujourdhuiGhe_();
-  const dateExplicite = !!(params && params.date);
-  const dateDemandee = dateExplicite ? String(params.date).trim() : aujourdHuiIso;
 
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateDemandee)) {
-    throw new Error("Date invalide : " + dateDemandee + ".");
-  }
+/* Navigation hebdomadaire */
+.week-nav{
+  margin:0 0 17px;padding:10px 10px 12px;
+  background:rgba(255,255,255,.84);border:4px solid var(--ink);border-radius:22px;
+  box-shadow:7px 7px 0 rgba(7,24,63,.17);touch-action:pan-y;
+}
+.week-nav-head{display:grid;grid-template-columns:46px 1fr 46px;align-items:center;gap:8px;margin-bottom:7px}
+.week-arrow{
+  width:46px;height:42px;border:0;border-radius:14px;background:transparent;color:var(--ink);
+  display:grid;place-items:center;font-size:38px;font-weight:1000;line-height:1;cursor:pointer;
+  -webkit-tap-highlight-color:transparent
+}
+.week-arrow:active{transform:scale(.94);background:rgba(7,24,63,.08)}
+.week-title{text-align:center;font-weight:1000;font-size:15px;letter-spacing:.07em;text-transform:uppercase}
+.week-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+.week-day{
+  min-width:0;border:0;background:transparent;padding:2px 0 1px;border-radius:15px;
+  display:grid;justify-items:center;gap:4px;cursor:pointer;color:var(--ink);
+  -webkit-tap-highlight-color:transparent
+}
+.week-day-name{font-size:12px;font-weight:1000;line-height:1;color:#111}
+.week-day-number{
+  width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
+  border:3px solid transparent;font-size:20px;font-weight:1000;line-height:1;
+  transition:transform .12s ease,background .12s ease,color .12s ease,border-color .12s ease
+}
+.week-day.is-weekend .week-day-name,.week-day.is-weekend:not(.is-selected) .week-day-number{color:#888}
+.week-day.is-today .week-day-number{border-color:#dc2626;color:#b91c1c}
+.week-day.is-selected .week-day-number{background:var(--ink);color:#fff;border-color:var(--ink);box-shadow:0 4px 0 rgba(7,24,63,.20)}
+.week-day.is-today.is-selected .week-day-number{outline:3px solid #dc2626;outline-offset:2px;border-color:var(--ink);color:#fff}
+.week-day:active .week-day-number{transform:scale(.90)}
 
-  const ss = SpreadsheetApp.openById(GHE_AGENDA.SOURCE_SPREADSHEET_ID);
-  const sheet = trouverFeuilleSourceGhe_(ss);
+/* Cartes neutres avec relief coloré en bas et à droite */
+.card,.stat{--card-accent:#9ca3af;box-shadow:7px 7px 0 var(--card-accent)}
+.stat.stat-m,.card.shift-m{--card-accent:#2f7df4}
+.stat.stat-j,.card.shift-j{--card-accent:#20b96b}
+.stat.stat-j4,.card.shift-j4{--card-accent:#ff8f27}
+.stat.stat-s,.card.shift-s{--card-accent:#e7bb00}
+.stat.stat-n,.card.shift-n{--card-accent:#252525}
+.stat.total{--card-accent:#07183f}
+.card.formation-card{
+  --card-accent:#6d28d9;background:var(--cream);border-left:4px solid var(--ink)
+}
+.card.stagiaire-card{
+  --card-accent:#8c1d40;background:var(--cream);border-left:4px solid var(--ink)
+}
+.agent-name{text-transform:uppercase}
+.ghe{text-transform:none;color:rgba(7,24,63,.56);font-size:.88em}
 
-  /*
-   * Le lecteur reçoit la date la plus ancienne nécessaire.
-   * Cela permet au calendrier du site de consulter aussi les jours passés.
-   */
-  const dateLectureMinimum = dateDemandee < aujourdHuiIso
-    ? dateDemandee
-    : aujourdHuiIso;
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="top-actions"><a class="back-btn" href="index.html">← Accueil</a></div>
 
-  const jours = lirePlanningParJourGhe_(sheet, dateLectureMinimum) || [];
+  <section class="hero-photo">
+    <img src="Image/Chargement/Organisation.PNG"
+         alt="Organisation du jour"
+         fetchpriority="high"
+         onerror="this.onerror=null;this.src='/Image/Chargement/Organisation.PNG';">
+  </section>
 
-  let jour = jours.find(function(item) {
-    return String(item && item.dateIso || "") === dateDemandee;
+  <section class="week-nav" id="weekNav" aria-label="Choisir une date">
+    <div class="week-nav-head">
+      <button class="week-arrow" id="weekPrev" type="button" aria-label="Semaine précédente">‹</button>
+      <div class="week-title" id="weekTitle">MOIS · SEM. 00</div>
+      <button class="week-arrow" id="weekNext" type="button" aria-label="Semaine suivante">›</button>
+    </div>
+    <div class="week-days" id="weekDays"></div>
+  </section>
+
+  <section id="loader" class="loader">
+    <div id="loadingText">Connexion au planning collectif…</div>
+    <div class="loader-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="8" id="loadingTrack">
+      <div class="loader-fill" id="loadingFill"></div>
+    </div>
+  </section>
+  <section id="errorBox" class="error"></section>
+  <section id="content" style="display:none"></section>
+</main>
+
+<div class="modal" id="infoModal" aria-hidden="true">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="infoModalTitle">
+    <h2 class="modal-title" id="infoModalTitle">Information</h2>
+    <div class="info-list" id="infoModalBody"></div>
+    <div class="modal-actions">
+      <button class="modal-btn" id="infoModalClose" type="button">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="phoneNumberModal" aria-hidden="true">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="phoneNumberTitle">
+    <h2 class="modal-title" id="phoneNumberTitle">Contact GHE</h2>
+
+    <div class="phone-profile">
+      <div class="phone-avatar-box">
+        <img class="phone-avatar" id="phoneAvatar" alt="" hidden>
+        <div class="phone-avatar-fallback" id="phoneAvatarFallback">?</div>
+      </div>
+      <div class="phone-agent-name" id="phoneAgentName">Agent</div>
+      <div class="phone-ghe-label" id="phoneGheLabel">GHE</div>
+    </div>
+
+    <button class="phone-number" id="phoneNumberButton" type="button" disabled>…</button>
+
+    <div class="modal-actions">
+      <button class="modal-btn" id="phoneNumberClose" type="button">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="phoneChoiceModal" aria-hidden="true">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="phoneChoiceTitle">
+    <h2 class="modal-title" id="phoneChoiceTitle">Appeler</h2>
+    <p class="modal-text">Choisis le type d’appel.</p>
+    <div class="modal-actions">
+      <button class="modal-btn primary" id="phoneCallNormal" type="button">Appeler</button>
+      <button class="modal-btn hidden-call" id="phoneCallHidden" type="button">Appeler en N° masqué</button>
+      <button class="modal-btn" id="phoneCallCancel" type="button">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_ESPRIT_EQUIPE = "https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOlle3cafAKEAZQ8NAX-peSN6D-yxFO3gX26SnVNUVd5xbwV3CUISg/exec";
+
+const loader = document.getElementById("loader");
+const errorBox = document.getElementById("errorBox");
+const content = document.getElementById("content");
+const loadingText = document.getElementById("loadingText");
+const loadingTrack = document.getElementById("loadingTrack");
+const loadingFill = document.getElementById("loadingFill");
+const weekNav = document.getElementById("weekNav");
+const weekTitle = document.getElementById("weekTitle");
+const weekDays = document.getElementById("weekDays");
+const weekPrev = document.getElementById("weekPrev");
+const weekNext = document.getElementById("weekNext");
+const planningDayLabel = document.getElementById("planningDayLabel");
+const subtitle = document.getElementById("subtitle");
+const infoModal = document.getElementById("infoModal");
+const infoModalTitle = document.getElementById("infoModalTitle");
+const infoModalBody = document.getElementById("infoModalBody");
+const infoModalClose = document.getElementById("infoModalClose");
+const phoneNumberModal = document.getElementById("phoneNumberModal");
+const phoneChoiceModal = document.getElementById("phoneChoiceModal");
+const phoneNumberButton = document.getElementById("phoneNumberButton");
+const phoneAvatar = document.getElementById("phoneAvatar");
+const phoneAvatarFallback = document.getElementById("phoneAvatarFallback");
+const phoneAgentName = document.getElementById("phoneAgentName");
+const phoneGheLabel = document.getElementById("phoneGheLabel");
+const phoneNumberClose = document.getElementById("phoneNumberClose");
+const phoneCallNormal = document.getElementById("phoneCallNormal");
+const phoneCallHidden = document.getElementById("phoneCallHidden");
+const phoneCallCancel = document.getElementById("phoneCallCancel");
+
+let loadingProgress = 8;
+let loadingTimer = null;
+let loadingFinished = false;
+let activePhoneDial = "";
+let activePhoneRequest = 0;
+let planningRequestId = 0;
+let planningScript = null;
+let selectedDate = null;
+let visibleWeekStart = null;
+let loadedDateIso = "";
+let weekSwipeStartX = null;
+
+function esc(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+}
+function asArray(value){return Array.isArray(value)?value:[]}
+function unique(values){
+  const seen=new Set();
+  return asArray(values).map(v=>String(v||"").trim()).filter(v=>{
+    const k=v.toLowerCase(); if(!v||seen.has(k)) return false; seen.add(k); return true;
   });
-
-  /*
-   * Lorsqu’une date a été choisie dans le calendrier, on ne remplace jamais
-   * silencieusement cette date par aujourd’hui.
-   */
-  if (!jour && dateExplicite) {
-    throw new Error("Aucun planning trouvé pour le " + dateDemandee + ".");
-  }
-
-  if (!jour) {
-    jour = jours.find(function(item) {
-      return String(item && item.dateIso || "") === aujourdHuiIso;
-    });
-  }
-
-  if (!jour) {
-    jour = jours
-      .filter(function(item) {
-        return String(item && item.dateIso || "") >= aujourdHuiIso;
-      })
-      .sort(function(a,b) {
-        return String(a.dateIso || "").localeCompare(String(b.dateIso || ""));
-      })[0];
-  }
-
-  if (!jour) throw new Error("Aucun planning trouvé à partir du " + aujourdHuiIso + ".");
-  return jour;
 }
-
-/****************************************************
- * TÉLÉPHONE — LECTURE UNIQUEMENT AU CLIC
- ****************************************************/
-
-function WEB_ESPRIT_repondreTelephone_(params) {
-  const callback = WEB_ESPRIT_callback_(params && params.callback ? params.callback : "recevoirTelephoneGhe");
-  try {
-    const agent = String(params && params.agent ? params.agent : "").trim();
-    const ghe = String(params && params.ghe ? params.ghe : "").trim();
-    if (!agent && !ghe) throw new Error("Agent non précisé.");
-
-    const resultat = WEB_ESPRIT_trouverTelephoneAgent_(agent, ghe);
-    return WEB_ESPRIT_reponseJsonp_(callback, {
-      ok: true,
-      agent: resultat.agent,
-      ghe: resultat.ghe,
-      telephone: resultat.telephoneAffiche,
-      telephoneDial: resultat.telephoneDial,
-      avatar: resultat.avatarThumb || "",
-      initiales: resultat.initiales || ""
-    });
-  } catch (err) {
-    return WEB_ESPRIT_reponseJsonp_(callback, {
-      ok: false,
-      erreur: String(err && err.message ? err.message : err)
-    });
+function setLoadingProgress(value,label){
+  loadingProgress=Math.max(loadingProgress,Math.min(100,Math.round(Number(value)||0)));
+  loadingFill.style.width=loadingProgress+"%";
+  loadingTrack.setAttribute("aria-valuenow",String(loadingProgress));
+  if(label) loadingText.textContent=label;
+}
+function startLoadingProgress(){
+  loadingProgress=0;setLoadingProgress(8,"Connexion au planning collectif…");
+  clearInterval(loadingTimer);
+  loadingTimer=setInterval(()=>{if(loadingProgress<35)setLoadingProgress(loadingProgress+1)},420);
+}
+function finishLoadingProgress(){
+  clearInterval(loadingTimer);setLoadingProgress(100,"Planning collectif prêt");
+  setTimeout(()=>{loadingFinished=true;loader.style.display="none";errorBox.style.display="none";content.style.display="block"},220);
+}
+function pad2(value){return String(value).padStart(2,"0")}
+function dateToIso(date){
+  return `${date.getFullYear()}-${pad2(date.getMonth()+1)}-${pad2(date.getDate())}`;
+}
+function isoToDate(iso){
+  const m=String(iso||"").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!m)return null;
+  const date=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]),12,0,0);
+  return Number.isNaN(date.getTime())?null:date;
+}
+function parisToday(){
+  try{
+    const parts=new Intl.DateTimeFormat("fr-FR",{
+      timeZone:"Europe/Paris",year:"numeric",month:"2-digit",day:"2-digit"
+    }).formatToParts(new Date());
+    const map={};parts.forEach(p=>{if(p.type!=="literal")map[p.type]=p.value});
+    return new Date(Number(map.year),Number(map.month)-1,Number(map.day),12,0,0);
+  }catch(_){
+    const now=new Date();return new Date(now.getFullYear(),now.getMonth(),now.getDate(),12,0,0);
   }
 }
+function startOfIsoWeek(date){
+  const d=new Date(date.getFullYear(),date.getMonth(),date.getDate(),12,0,0);
+  const day=d.getDay()||7;
+  d.setDate(d.getDate()-day+1);
+  return d;
+}
+function addDays(date,days){
+  const d=new Date(date.getFullYear(),date.getMonth(),date.getDate(),12,0,0);
+  d.setDate(d.getDate()+days);return d;
+}
+function isoWeekNumber(date){
+  const d=new Date(Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()));
+  const day=d.getUTCDay()||7;
+  d.setUTCDate(d.getUTCDate()+4-day);
+  const yearStart=new Date(Date.UTC(d.getUTCFullYear(),0,1));
+  return Math.ceil((((d-yearStart)/86400000)+1)/7);
+}
+function monthWeekLabel(weekStart){
+  const weekEnd=addDays(weekStart,6);
+  const monthNames=["JANVIER","FÉVRIER","MARS","AVRIL","MAI","JUIN","JUILLET","AOÛT","SEPTEMBRE","OCTOBRE","NOVEMBRE","DÉCEMBRE"];
+  const monthLabel=weekStart.getMonth()===weekEnd.getMonth()
+    ? monthNames[weekStart.getMonth()]
+    : `${monthNames[weekStart.getMonth()]} / ${monthNames[weekEnd.getMonth()]}`;
+  return `${monthLabel} · SEM. ${isoWeekNumber(weekStart)}`;
+}
+function renderWeekNavigator(){
+  if(!visibleWeekStart)visibleWeekStart=startOfIsoWeek(selectedDate||parisToday());
+  const todayIso=dateToIso(parisToday());
+  const selectedIso=selectedDate?dateToIso(selectedDate):"";
+  const names=["L","M","M","J","V","S","D"];
 
-function WEB_ESPRIT_trouverTelephoneAgent_(agentRecherche, gheRecherche) {
-  if (typeof GHE_AGENDA === "undefined" || !GHE_AGENDA || !GHE_AGENDA.SOURCE_SPREADSHEET_ID) {
-    throw new Error("Source intelligente introuvable.");
+  weekTitle.textContent=monthWeekLabel(visibleWeekStart);
+  weekDays.innerHTML=Array.from({length:7},(_,index)=>{
+    const date=addDays(visibleWeekStart,index);
+    const iso=dateToIso(date);
+    const classes=["week-day"];
+    if(index>=5)classes.push("is-weekend");
+    if(iso===todayIso)classes.push("is-today");
+    if(iso===selectedIso)classes.push("is-selected");
+    return `<button class="${classes.join(" ")}" type="button" data-date="${iso}" aria-label="${esc(date.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"}))}">
+      <span class="week-day-name">${names[index]}</span>
+      <span class="week-day-number">${date.getDate()}</span>
+    </button>`;
+  }).join("");
+}
+function changeVisibleWeek(offset){
+  visibleWeekStart=addDays(visibleWeekStart||startOfIsoWeek(selectedDate||parisToday()),offset*7);
+  renderWeekNavigator();
+}
+function setSelectedDate(date){
+  selectedDate=new Date(date.getFullYear(),date.getMonth(),date.getDate(),12,0,0);
+  visibleWeekStart=startOfIsoWeek(selectedDate);
+  renderWeekNavigator();
+}
+function setPageLoading(label){
+  loadingFinished=false;
+  loader.style.display="block";
+  errorBox.style.display="none";
+  content.style.display="none";
+  startLoadingProgress();
+  if(label)setLoadingProgress(14,label);
+}
+function loadPlanningDate(dateIso,{initial=false}={}){
+  const date=isoToDate(dateIso)||parisToday();
+  setSelectedDate(date);
+  const requestId=++planningRequestId;
+  const callbackName=`recevoirEspritEquipeGhe_${Date.now()}_${Math.floor(Math.random()*100000)}`;
+
+  if(planningScript){planningScript.remove();planningScript=null}
+  setPageLoading(initial?"Connexion au planning collectif…":"Chargement du jour sélectionné…");
+
+  const script=document.createElement("script");
+  planningScript=script;
+  let finished=false;
+
+  function cleanup(){
+    if(finished)return;
+    finished=true;
+    delete window[callbackName];
+    if(script.isConnected)script.remove();
+    if(planningScript===script)planningScript=null;
   }
 
-  const ss = SpreadsheetApp.openById(GHE_AGENDA.SOURCE_SPREADSHEET_ID);
-  const sheet = ss.getSheetByName("INDEX_AGENTS");
-  if (!sheet) throw new Error("Feuille INDEX_AGENTS introuvable.");
-
-  const values = sheet.getDataRange().getDisplayValues();
-  if (values.length < 2) throw new Error("INDEX_AGENTS est vide.");
-
-  const headers = values[0].map(WEB_ESPRIT_normaliserCle_);
-  const col = {};
-  headers.forEach(function(header,index) { if (header) col[header] = index; });
-
-  function cellule(row, noms) {
-    for (let i=0;i<noms.length;i++) {
-      const idx = col[WEB_ESPRIT_normaliserCle_(noms[i])];
-      if (idx !== undefined) {
-        const value = String(row[idx] || "").trim();
-        if (value) return value;
-      }
+  window[callbackName]=function(data){
+    if(requestId!==planningRequestId){cleanup();return}
+    try{
+      if(!data||data.ok===false)throw new Error(data&&data.erreur?data.erreur:"Données invalides.");
+      const jour=data.jour||data;
+      const actualIso=String(jour.dateIso||dateIso);
+      const actualDate=isoToDate(actualIso)||date;
+      loadedDateIso=actualIso;
+      setSelectedDate(actualDate);
+      const url=new URL(location.href);
+      url.searchParams.set("date",actualIso);
+      history.replaceState({date:actualIso},"",url);
+      setLoadingProgress(76,"Données reçues…");
+      renderPage(data);
+    }catch(err){
+      showError("Erreur d’affichage : "+String(err.message||err));
     }
-    return "";
-  }
-
-  const agentNorm = WEB_ESPRIT_normaliserCle_(agentRecherche);
-  const gheNorm = WEB_ESPRIT_normaliserGheComparaison_(gheRecherche);
-  const candidats = [];
-
-  for (let r=1;r<values.length;r++) {
-    const row = values[r];
-    const nom = cellule(row,["NOM"]);
-    const prenom = cellule(row,["PRÉNOM","PRENOM"]);
-    const nomComplet = cellule(row,["NOM / PRÉNOM","NOM / PRENOM","NOM COMPLET","NOM_COMPLET","AGENT","AGENT_AFFICHE"]) || [nom,prenom].filter(Boolean).join(" ").trim();
-    const ghe = cellule(row,["GHE","NUMERO GHE","NUMÉRO GHE","N° GHE","N GHE"]);
-    const telSource = cellule(row,["TÉLÉPHONE","TELEPHONE","TEL","PORTABLE","NUMERO","NUMÉRO"]);
-    const telDial = WEB_ESPRIT_telephoneDial_(telSource);
-    const avatarId = cellule(row,["AVATAR_ID","AVATAR ID","AVATAR_ID_DRIVE","AVATAR ID DRIVE"]);
-    if (!telDial) continue;
-
-    const formes = [
-      nomComplet,
-      [nom,prenom].filter(Boolean).join(" "),
-      [prenom,nom].filter(Boolean).join(" "),
-      prenom
-    ].map(WEB_ESPRIT_normaliserCle_).filter(Boolean);
-
-    const ligneGhe = WEB_ESPRIT_normaliserGheComparaison_(ghe);
-    let score = 0;
-    if (agentNorm && formes.indexOf(agentNorm) >= 0) score += 100;
-    else if (agentNorm && formes.some(function(v){ return v.indexOf(agentNorm) >= 0 || agentNorm.indexOf(v) >= 0; })) score += 35;
-    if (gheNorm && ligneGhe && gheNorm === ligneGhe) score += 120;
-
-    if (score > 0) {
-      candidats.push({
-        score: score,
-        agent: nomComplet || agentRecherche,
-        ghe: WEB_ESPRIT_nettoyerGhe_(ghe || gheRecherche),
-        telephoneDial: telDial,
-        telephoneAffiche: WEB_ESPRIT_telephoneAffiche_(telDial),
-        avatarThumb: avatarId
-          ? "https://drive.google.com/thumbnail?id=" + encodeURIComponent(avatarId) + "&sz=w600"
-          : "",
-        initiales: WEB_ESPRIT_initiales_(nomComplet || agentRecherche)
-      });
-    }
-  }
-
-  candidats.sort(function(a,b){ return b.score-a.score; });
-  if (!candidats.length) throw new Error("Numéro indisponible.");
-  if (candidats.length > 1 && candidats[0].score === candidats[1].score && candidats[0].telephoneDial !== candidats[1].telephoneDial) {
-    throw new Error("Plusieurs agents correspondent. Vérifie le GHE.");
-  }
-  return candidats[0];
-}
-
-
-function WEB_ESPRIT_initiales_(value) {
-  const parts = String(value || "")
-    .replace(/\s+/g," ")
-    .trim()
-    .split(" ")
-    .filter(Boolean);
-
-  if (!parts.length) return "?";
-  if (parts.length === 1) return parts[0].slice(0,2).toUpperCase();
-
-  return (
-    (parts[0].charAt(0) || "") +
-    (parts[1].charAt(0) || "")
-  ).toUpperCase();
-}
-
-function WEB_ESPRIT_telephoneDial_(value) {
-  let txt = String(value || "").trim();
-  if (!txt) return "";
-  const plus = txt.charAt(0) === "+";
-  txt = txt.replace(/[^0-9]/g,"");
-  if (!txt) return "";
-  if (plus) return "+" + txt;
-  if (txt.indexOf("0033") === 0) return "+33" + txt.slice(4);
-  return txt;
-}
-
-function WEB_ESPRIT_telephoneAffiche_(dial) {
-  const txt = String(dial || "");
-  if (/^0\d{9}$/.test(txt)) return txt.replace(/(\d{2})(?=\d)/g,"$1 ").trim();
-  if (/^\+33\d{9}$/.test(txt)) {
-    const local = "0" + txt.slice(3);
-    return local.replace(/(\d{2})(?=\d)/g,"$1 ").trim();
-  }
-  return txt;
-}
-
-function WEB_ESPRIT_normaliserGheComparaison_(value) {
-  return WEB_ESPRIT_normaliserCle_(String(value || "").replace(/^GHE\s*/i,""));
-}
-
-function WEB_ESPRIT_normaliserCle_(value) {
-  return String(value || "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")
-    .toUpperCase()
-    .replace(/[^A-Z0-9]/g,"")
-    .trim();
-}
-
-/****************************************************
- * JSON / JSONP
- ****************************************************/
-
-function WEB_ESPRIT_callback_(callback) {
-  const cb = String(callback || "recevoirEspritEquipeGhe").trim();
-  return cb.replace(/[^a-zA-Z0-9_$\.]/g,"") || "recevoirEspritEquipeGhe";
-}
-
-function WEB_ESPRIT_callbackFacultatif_(callback) {
-  const cb = String(callback || "").trim();
-  return cb ? cb.replace(/[^a-zA-Z0-9_$\.]/g,"") : "";
-}
-
-function WEB_ESPRIT_reponseJsonp_(callback,payload) {
-  return ContentService
-    .createTextOutput(callback + "(" + JSON.stringify(payload) + ");")
-    .setMimeType(ContentService.MimeType.JAVASCRIPT);
-}
-
-/****************************************************
- * SÉRIALISATION DU PLANNING
- ****************************************************/
-
-function WEB_ESPRIT_serialiserJour_(jour) {
-  return {
-    dateIso: jour.dateIso || "",
-    label: jour.label || "",
-    sync: WEB_ESPRIT_formatSync_(new Date()),
-    groupes: {
-      M: WEB_ESPRIT_serialiserAgents_(jour.groupes && jour.groupes.M),
-      J: WEB_ESPRIT_serialiserAgents_(jour.groupes && jour.groupes.J),
-      J4: WEB_ESPRIT_serialiserAgents_(jour.groupes && jour.groupes.J4),
-      S: WEB_ESPRIT_serialiserAgents_(jour.groupes && jour.groupes.S),
-      N: WEB_ESPRIT_serialiserAgents_(jour.groupes && jour.groupes.N)
-    },
-    formations: WEB_ESPRIT_serialiserFormations_(jour.formations),
-    stagiaires: WEB_ESPRIT_serialiserStagiaires_(jour.stagiaires),
-    gheManquants: WEB_ESPRIT_listePublique_(jour.gheManquants),
-    codesInconnus: WEB_ESPRIT_listePublique_(jour.codesInconnus),
-    alertesSource: WEB_ESPRIT_listePublique_(jour.alertesSource)
+    cleanup();
   };
-}
 
-function WEB_ESPRIT_serialiserAgents_(agents) {
-  return (agents || []).map(function(agent) {
-    return {
-      agent: agent.agent || "",
-      nom: agent.nom || "",
-      prenom: WEB_ESPRIT_nomAffiche_(agent.prenom || agent.agent || ""),
-      ghe: WEB_ESPRIT_nettoyerGhe_(agent.ghe || ""),
-      shiftCode: agent.shiftCode || "",
-      heureDebut: agent.heureDebut || "",
-      heureFin: agent.heureFin || ""
-    };
-  });
-}
+  script.onerror=function(){
+    if(requestId===planningRequestId)showError("Impossible de charger cette date depuis Apps Script.");
+    cleanup();
+  };
 
-function WEB_ESPRIT_serialiserFormations_(formations) {
-  return (formations || []).map(function(formation) {
-    return {
-      horaire:
-        formation.horaire ||
-        formation.formationHoraire ||
-        formation.horaireFormation ||
-        "",
-      titre:
-        formation.titre ||
-        formation.intitule ||
-        formation.formation ||
-        "",
-      alertes: WEB_ESPRIT_extraireAlertesObjet_(formation),
-      agents: (formation.agents || []).map(function(agent) {
-        const nomComplet =
-          agent.agent ||
-          agent.nomComplet ||
-          [agent.nom, agent.prenom].filter(Boolean).join(" ").trim() ||
-          agent.prenom ||
-          "";
+  script.src=API_ESPRIT_EQUIPE+
+    "?mode=jsonp"+
+    "&date="+encodeURIComponent(dateIso)+
+    "&callback="+encodeURIComponent(callbackName)+
+    "&t="+Date.now();
+  document.body.appendChild(script);
 
-        return {
-          agent: nomComplet,
-          prenom: WEB_ESPRIT_nomAffiche_(agent.prenom || nomComplet),
-          ghe: WEB_ESPRIT_nettoyerGhe_(agent.ghe || ""),
-          alertes: WEB_ESPRIT_extraireAlertesObjet_(agent)
-        };
-      })
-    };
-  });
-}
-
-function WEB_ESPRIT_serialiserStagiaires_(stagiaires) {
-  return (stagiaires || []).map(function(stagiaire) {
-    const heureDebut =
-      stagiaire.heureDebut ||
-      stagiaire.stagiaireHeureDebut ||
-      stagiaire.debut ||
-      "";
-
-    const heureFin =
-      stagiaire.heureFin ||
-      stagiaire.stagiaireHeureFin ||
-      stagiaire.fin ||
-      "";
-
-    const horaire =
-      stagiaire.horaire ||
-      stagiaire.shiftHoraire ||
-      (heureDebut && heureFin ? heureDebut + "–" + heureFin : "");
-
-    return {
-      stagiaire: stagiaire.stagiaire || "",
-      shiftLabel:
-        stagiaire.shiftLabel ||
-        stagiaire.shift ||
-        stagiaire.poste ||
-        "",
-      heureDebut: heureDebut,
-      heureFin: heureFin,
-      horaire: horaire,
-      alertes: WEB_ESPRIT_extraireAlertesObjet_(stagiaire),
-      referents: (stagiaire.referents || []).map(function(referent) {
-        const nomComplet =
-          referent.agent ||
-          referent.nomComplet ||
-          [referent.nom, referent.prenom].filter(Boolean).join(" ").trim() ||
-          referent.prenom ||
-          "";
-
-        return {
-          agent: nomComplet,
-          prenom: WEB_ESPRIT_nomAffiche_(referent.prenom || nomComplet),
-          ghe: WEB_ESPRIT_nettoyerGhe_(referent.ghe || ""),
-          alertes: WEB_ESPRIT_extraireAlertesObjet_(referent)
-        };
-      })
-    };
-  });
-}
-
-function WEB_ESPRIT_extraireAlertesObjet_(objet) {
-  const result = [];
-  const keys = [
-    "alertes", "alerte", "alertesSource", "anomalies",
-    "messageAlerte", "alerteMessage", "messages"
-  ];
-
-  function push(value) {
-    if (value === null || value === undefined || value === "") return;
-
-    if (Array.isArray(value)) {
-      value.forEach(push);
-      return;
+  setTimeout(()=>{
+    if(!finished&&requestId===planningRequestId){
+      showError("Temps de chargement dépassé pour cette date.");
+      cleanup();
     }
+  },10000);
+}
 
-    if (typeof value === "object") {
-      const titre =
-        value.titre ||
-        value.title ||
-        value.resume ||
-        value.message ||
-        "Point à vérifier";
-
-      const detail =
-        value.detail ||
-        value.message ||
-        value.resume ||
-        titre;
-
-      const propre = WEB_ESPRIT_alertePublique_(detail);
-      if (!propre) return;
-
-      result.push({
-        titre: String(titre || "Point à vérifier"),
-        detail: propre,
-        niveau:
-          String(value.niveau || value.level || "")
-            .toLowerCase()
-            .indexOf("danger") >= 0
-              ? "danger"
-              : "warning"
-      });
-      return;
-    }
-
-    const propre = WEB_ESPRIT_alertePublique_(value);
-    if (propre) {
-      result.push({
-        titre: "Point à vérifier",
-        detail: propre,
-        niveau:
-          /danger|bloquant|indisponible/i.test(String(value))
-            ? "danger"
-            : "warning"
-      });
+function agentLine(agent){
+  const prenom=agent.prenom||agent.agent||agent.nom||"";
+  const agentComplet=agent.agent||[agent.nom,agent.prenom].filter(Boolean).join(" ").trim()||prenom;
+  const ghe=String(agent.ghe||"").trim();
+  const gheAffiche=ghe.replace(/^GHE\s*/i,"ghe ");
+  const gheHtml=ghe?` <span class="ghe ghe-phone-trigger" role="button" tabindex="0" data-agent="${esc(agentComplet)}" data-ghe="${esc(ghe)}">· ${esc(gheAffiche)}</span>`:"";
+  return `<div class="agent"><span class="agent-name">${esc(String(prenom).toUpperCase())}</span>${gheHtml}</div>`;
+}
+function medal(code,small=false){
+  const raw=String(code||"").toUpperCase();
+  const key=raw==="J4"?"j4":raw.toLowerCase();
+  return `<span class="shift-medal ${key}${small?" small":""}" aria-hidden="true">${esc(raw)}</span>`;
+}
+function statCard(code,label,count,total=false){
+  return `<div class="stat${total?" total":` stat-${String(code).toLowerCase()}`}">${
+    total
+      ? `<span aria-hidden="true">👥</span><span class="stat-label">${count} agents</span>`
+      : `${medal(code,true)}<span class="stat-label">${esc(label)} : ${count}</span>`
+  }</div>`;
+}
+function renderShift(code,title,agents){
+  const list=asArray(agents);
+  return `<div class="card shift-${String(code).toLowerCase()}"><div class="shift-head">${medal(code)}<div class="shift-title">${esc(title)}</div></div>${
+    list.length?list.map(agentLine).join(""):'<div class="empty">Aucun agent détecté</div>'
+  }</div>`;
+}
+function normalizeHour(value){
+  const txt=String(value||"").trim();
+  const m=txt.match(/(\d{1,2})[:h](\d{2})/i);
+  return m?`${String(m[1]).padStart(2,"0")}h${m[2]}`:"";
+}
+function formatRange(value){
+  const txt=String(value||"").trim();
+  const matches=[...txt.matchAll(/(\d{1,2})[:h](\d{2})/gi)];
+  if(matches.length>=2){
+    const a=`${String(matches[0][1]).padStart(2,"0")}h${matches[0][2]}`;
+    const b=`${String(matches[1][1]).padStart(2,"0")}h${matches[1][2]}`;
+    return `${a} ⟶ ${b}`;
+  }
+  return txt;
+}
+function cleanFormationTitle(value){
+  let txt=String(value||"Formation").replace(/\bformation\b/gi," ").replace(/\s+/g," ").trim();
+  const words=txt.split(" ").filter(Boolean);
+  if(words.length%2===0){
+    const half=words.length/2;
+    if(words.slice(0,half).join(" ").toLowerCase()===words.slice(half).join(" ").toLowerCase()){
+      txt=words.slice(0,half).join(" ");
     }
   }
-
-  keys.forEach(function(key) {
-    if (objet && Object.prototype.hasOwnProperty.call(objet,key)) {
-      push(objet[key]);
+  return txt||"Formation";
+}
+function normalizeAlerts(value){
+  const out=[];
+  const push=v=>{
+    if(v===null||v===undefined)return;
+    if(Array.isArray(v)){v.forEach(push);return;}
+    if(typeof v==="object"){
+      const title=v.titre||v.title||v.resume||v.message||v.detail||"";
+      const detail=v.detail||v.message||v.resume||title;
+      const level=String(v.niveau||v.level||"warning").toLowerCase().includes("danger")?"danger":"warning";
+      if(detail)out.push({title:String(title||"Point à vérifier"),detail:String(detail),level});
+      return;
     }
-  });
-
-  const seen = {};
-  return result.filter(function(item) {
-    const key = WEB_ESPRIT_normaliserTexte_(
-      String(item.titre || "") + "|" + String(item.detail || "")
-    );
-    if (!key || seen[key]) return false;
-    seen[key] = true;
+    const txt=String(v||"").trim();
+    if(txt)out.push({title:"Point à vérifier",detail:txt,level:/bloquant|danger|indisponible/i.test(txt)?"danger":"warning"});
+  };
+  push(value);
+  const seen=new Set();
+  return out.filter(a=>{
+    const key=(a.title+"|"+a.detail).toLowerCase();
+    if(seen.has(key))return false;
+    seen.add(key);
     return true;
   });
 }
-
-function WEB_ESPRIT_listePublique_(arr) {
-  const result = [];
-  (arr || []).forEach(function(value) {
-    const propre = WEB_ESPRIT_alertePublique_(value);
-    if (propre && result.indexOf(propre) < 0) result.push(propre);
+function renderMiniAlert(alerts,key){
+  const list=normalizeAlerts(alerts);
+  if(!list.length)return "";
+  const danger=list.some(a=>a.level==="danger");
+  return `<button class="mini-alert${danger?" danger":""}" type="button" data-info-key="${esc(key)}">
+    <span>${danger?"🚨 Alerte":"⚠️ À vérifier"} · ${list.length} information${list.length>1?"s":""}</span>
+    <span class="mini-arrow">›</span>
+  </button>`;
+}
+let infoStore={};
+function collectImportantAlerts(jour){
+  const result=[];
+  asArray(jour.formations).forEach(f=>{
+    normalizeAlerts(f.alertes).forEach(a=>result.push({...a,context:`Formation · ${cleanFormationTitle(f.titre)}`}));
+    asArray(f.agents).forEach(agent=>{
+      normalizeAlerts(agent.alertes).forEach(a=>result.push({...a,context:`${agent.prenom||agent.agent||"Agent"} · formation`}));
+    });
+  });
+  asArray(jour.stagiaires).forEach(s=>{
+    normalizeAlerts(s.alertes).forEach(a=>result.push({...a,context:`Stagiaire · ${s.stagiaire||""}`}));
+    asArray(s.referents).forEach(ref=>{
+      normalizeAlerts(ref.alertes).forEach(a=>result.push({...a,context:`Référent · ${ref.prenom||ref.agent||""}`}));
+    });
   });
   return result;
 }
+function renderImportant(jour){
+  const formations=asArray(jour.formations);
+  const stagiaires=asArray(jour.stagiaires);
+  if(!formations.length&&!stagiaires.length)return "";
 
-function WEB_ESPRIT_alertePublique_(value) {
-  const brut = String(value || "").replace(/\s+/g," ").trim();
-  const n = WEB_ESPRIT_normaliserTexte_(brut);
-  if (!n) return "";
-  if (/CODE SHIFT INCONNU\s*:\s*AM\b/i.test(brut)) return "";
-  if (n.indexOf("TELEPHONE") >= 0 || n.indexOf("NUMERO PERSONNEL") >= 0) return "";
-  if (n.indexOf("MAIL PERSONNEL") >= 0 || n.indexOf("EMAIL PERSONNEL") >= 0 || n.indexOf("ADRESSE MAIL") >= 0 || n.indexOf("EMAIL MANQUANT") >= 0 || n.indexOf("MAIL MANQUANT") >= 0) {
-    return "Convocation à confirmer.";
-  }
-  return brut
-    .replace(/SORTIE_MAILS_STAGIAIRE/gi,"les données stagiaires")
-    .replace(/SORTIE_MAILS_FORMATION/gi,"les données de formation")
-    .replace(/DETAIL_STAGIAIRES/gi,"les données stagiaires")
-    .replace(/DETAIL_FORMATIONS/gi,"les données de formation")
-    .replace(/INDEX_AGENTS/gi,"l’annuaire des agents")
-    .replace(/SORTIE_AGENT_JOUR/gi,"le planning du jour")
-    .replace(/EMAILS_AGENTS/gi,"le canal interne de convocation");
-}
+  infoStore={};
+  let html='<div class="section-title">À ne pas rater</div>';
 
-function WEB_ESPRIT_normaliserTexte_(value) {
-  return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().trim();
-}
+  formations.forEach((f,index)=>{
+    const liste=asArray(f.agents);
+    const key=`formation-${index}`;
+    const alerts=[...normalizeAlerts(f.alertes)];
+    liste.forEach(agent=>alerts.push(...normalizeAlerts(agent.alertes)));
+    infoStore[key]=alerts;
 
-/****************************************************
- * OUTILS LOCAUX
- ****************************************************/
-
-function WEB_ESPRIT_formatSync_(date) {
-  const timezone = typeof GHE_AGENDA !== "undefined" && GHE_AGENDA && GHE_AGENDA.TIMEZONE ? GHE_AGENDA.TIMEZONE : "Europe/Paris";
-  return Utilities.formatDate(date || new Date(),timezone,"dd/MM à HH:mm");
-}
-
-function WEB_ESPRIT_nomAffiche_(value) {
-  const texte = String(value || "").replace(/\s+/g," ").trim();
-  if (!texte) return "";
-  return texte.toLowerCase().replace(/(^|[\s'-])([a-zà-ÿ])/g,function(_,avant,lettre){ return avant + lettre.toUpperCase(); });
-}
-
-function WEB_ESPRIT_nettoyerGhe_(value) {
-  const texte = String(value || "").replace(/\s+/g," ").trim();
-  if (!texte) return "";
-  const sansPrefixe = texte.replace(/^(GHE\s*)+/i,"").trim();
-  return sansPrefixe ? "GHE " + sansPrefixe : "";
-}
-
-/****************************************************
- * PAGE HTML DIRECTE
- ****************************************************/
-
-function WEB_ESPRIT_pageHtmlDirecte_(jour) {
-  const groupes = jour.groupes || {};
-  const total = (groupes.M || []).length + (groupes.J || []).length + (groupes.J4 || []).length + (groupes.S || []).length + (groupes.N || []).length;
-  return `<!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Esprit d’équipe — GHE</title>
-<style>*{box-sizing:border-box}body{margin:0;padding:14px;background:#fff7dd;color:#07183f;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif}.page{max-width:920px;margin:auto}.hero,.stat,.card{border:4px solid #07183f;border-radius:20px;box-shadow:0 5px 0 rgba(7,24,63,.16)}.hero{padding:20px;background:#07183f;color:#fff7dd}.hero h1{margin:0;font:50px/.9 Impact,"Arial Black",sans-serif;text-transform:uppercase}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}.stat{padding:13px;background:#fffaf0;font-weight:950;font-size:20px}.card{padding:13px;background:#fffaf0;margin:10px 0}.title{font:30px/.9 Impact,"Arial Black",sans-serif;margin-bottom:9px}.agent{padding:8px 0;border-top:2px dashed rgba(7,24,63,.2);font-weight:850}.agent:first-of-type{border-top:0}</style></head><body><main class="page">
-<section class="hero"><h1>Esprit d’équipe</h1><p>${WEB_ESPRIT_esc_(jour.label || jour.dateIso || "Planning du jour")} · ${WEB_ESPRIT_esc_(WEB_ESPRIT_formatSync_(new Date()))}</p></section>
-<section class="stats"><div class="stat">🟦 Matin : ${(groupes.M || []).length}</div><div class="stat">🟩 Jour : ${(groupes.J || []).length}</div><div class="stat">🟧 J4 : ${(groupes.J4 || []).length}</div><div class="stat">🟨 Soir : ${(groupes.S || []).length}</div><div class="stat">⬛ Nuit : ${(groupes.N || []).length}</div><div class="stat">👥 ${total} agents</div></section>
-${WEB_ESPRIT_htmlShift_("🟦","MATIN",groupes.M)}${WEB_ESPRIT_htmlShift_("🟩","JOUR",groupes.J)}${WEB_ESPRIT_htmlShift_("🟧","J4",groupes.J4)}${WEB_ESPRIT_htmlShift_("🟨","SOIR",groupes.S)}${WEB_ESPRIT_htmlShift_("⬛","NUIT",groupes.N)}
-</main></body></html>`;
-}
-
-function WEB_ESPRIT_htmlShift_(emoji,titre,agents) {
-  const liste = agents || [];
-  let html = `<div class="card"><div class="title">${WEB_ESPRIT_esc_(emoji + " " + titre)}</div>`;
-  if (!liste.length) html += `<div class="agent">Aucun agent détecté</div>`;
-  else liste.forEach(function(agent){
-    const prenom = WEB_ESPRIT_nomAffiche_(agent.prenom || agent.agent || "");
-    const ghe = WEB_ESPRIT_nettoyerGhe_(agent.ghe || "");
-    html += `<div class="agent">${WEB_ESPRIT_esc_(prenom)}${ghe ? " · " + WEB_ESPRIT_esc_(ghe) : ""}</div>`;
+    html+=`
+      <div class="card important formation-card">
+        <div class="important-heading">
+          <span>🎓</span><span class="important-dot">·</span><span>Formation</span>
+          ${f.horaire?`<span class="important-dot">·</span><span class="important-time">${esc(formatRange(f.horaire))}</span>`:""}
+        </div>
+        <div class="important-name">${esc(cleanFormationTitle(f.titre))}</div>
+        ${liste.length?liste.map(agentLine).join(""):'<div class="empty">Aucun agent indiqué</div>'}
+        ${renderMiniAlert(alerts,key)}
+      </div>
+    `;
   });
-  return html + `</div>`;
+
+  stagiaires.forEach((s,index)=>{
+    const refs=asArray(s.referents);
+    const key=`stagiaire-${index}`;
+    const alerts=[...normalizeAlerts(s.alertes)];
+    refs.forEach(ref=>alerts.push(...normalizeAlerts(ref.alertes)));
+    infoStore[key]=alerts;
+
+    const horaire=s.horaire||s.shiftHoraire||(
+      s.heureDebut&&s.heureFin
+        ? `${normalizeHour(s.heureDebut)} ⟶ ${normalizeHour(s.heureFin)}`
+        : ""
+    );
+    const shift=s.shiftLabel||"";
+
+    html+=`
+      <div class="card important stagiaire-card">
+        <div class="important-heading"><span>👶</span><span>Stagiaire</span></div>
+        <div class="stagiaire-main">
+          ${esc(String(s.stagiaire||"Stagiaire").toUpperCase())}
+          ${(shift||horaire)?` <span class="stagiaire-hours">· ${esc([shift,horaire].filter(Boolean).join(" · "))}</span>`:""}
+        </div>
+        ${refs.length?refs.map(ref=>agentLine({
+          agent:ref.agent||ref.prenom||"",
+          prenom:ref.prenom||ref.agent||"",
+          ghe:ref.ghe||""
+        })).join(""):'<div class="agent">Référent à attribuer</div>'}
+        ${renderMiniAlert(alerts,key)}
+      </div>
+    `;
+  });
+
+  return html;
 }
-
-function WEB_ESPRIT_pageErreur_(message) {
-  return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Erreur</title></head><body style="font-family:Arial;padding:20px;background:#fff7dd;color:#07183f"><h1>Esprit d’équipe</h1><div style="background:#fff1ed;color:#b42318;padding:14px;border-radius:12px;font-weight:bold">Problème : ${WEB_ESPRIT_esc_(message)}</div></body></html>`;
+function issuePresentation(value){
+  const txt=String(value||"").trim();
+  if(!txt)return null;
+  if(/code shift inconnu\s*:\s*am/i.test(txt))return null;
+  if(/ghe manquant/i.test(txt))return {title:"Numéro GHE manquant",detail:txt,level:"warning"};
+  if(/code shift inconnu/i.test(txt))return {title:"Code de planning à identifier",detail:txt,level:"warning"};
+  return {title:"Information à vérifier",detail:txt,level:/danger|bloquant/i.test(txt)?"danger":"warning"};
 }
+function renderControl(jour){
+  const globalIssues=unique([].concat(asArray(jour.gheManquants),asArray(jour.codesInconnus),asArray(jour.alertesSource)))
+    .map(issuePresentation).filter(Boolean);
+  const cardIssues=collectImportantAlerts(jour);
+  const issues=[...globalIssues,...cardIssues];
+  const seen=new Set();
+  const clean=issues.filter(item=>{
+    const key=((item.context||"")+"|"+item.title+"|"+item.detail).toLowerCase();
+    if(seen.has(key))return false;
+    seen.add(key);
+    return true;
+  });
+  if(!clean.length)return "";
 
-function WEB_ESPRIT_esc_(value) {
-  return String(value || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+  return `<section class="control">
+    <div class="control-head"><span>À vérifier</span><span>${clean.length}</span></div>
+    <div class="control-body"><div class="alert-list">${
+      clean.map(item=>`<div class="alert-line">
+        <strong>${esc(item.context?item.context+" · "+item.title:item.title)}</strong>
+        <span>${esc(item.detail)}</span>
+      </div>`).join("")
+    }</div></div>
+  </section>`;
 }
-
-/****************************************************
- * DÉTECTION DE CATÉGORIE — TYPO CORRIGÉE
- ****************************************************/
-
-function detecterCategorieShift_(shiftCode,titre,heureDebut,heureFin) {
-  let ref = String(shiftCode || titre || "").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().trim();
-  ref = ref.replace(/\+1/g,"").replace(/\*/g,"").replace(/\s+/g,"").replace(/[()]/g,"");
-  if (ref === "J4" || ref.indexOf("J4") >= 0) return "J4";
-  if (ref === "M" || ref.indexOf("MATIN") >= 0) return "MATIN";
-  if (ref === "J" || ref.indexOf("JOUR") >= 0 || ref.indexOf("JOURNEE") >= 0) return "JOUR";
-  if (ref === "S" || ref.indexOf("SOIR") >= 0) return "SOIR";
-  if (ref === "N" || ref.indexOf("NUIT") >= 0) return "NUIT";
-  if (ref === "AM" || ref.indexOf("ARRETMEDICAL") >= 0) return "ABSENCE_MEDICALE";
-
-  const hDebut = String(heureDebut || "").trim();
-  if (hDebut.startsWith("06:") || hDebut.startsWith("07:")) return "MATIN";
-  if (hDebut.startsWith("08:") || hDebut.startsWith("09:")) return "JOUR";
-  if (hDebut.startsWith("10:")) return "J4";
-  if (hDebut.startsWith("13:") || hDebut.startsWith("14:")) return "SOIR";
-  if (hDebut.startsWith("20:") || hDebut.startsWith("21:")) return "NUIT";
-  return "";
+function renderPage(data){
+  const jour=data.jour||data;
+  const g=jour.groupes||{};
+  const M=asArray(g.M),J=asArray(g.J),J4=asArray(g.J4),S=asArray(g.S),N=asArray(g.N);
+  const total=M.length+J.length+J4.length+S.length+N.length;
+  content.innerHTML=`
+    <section class="stats-grid">
+      ${statCard("M","Matin",M.length)}
+      ${statCard("J","Jour",J.length)}
+      ${statCard("J4","J4",J4.length)}
+      ${statCard("S","Soir",S.length)}
+      ${statCard("N","Nuit",N.length)}
+      ${statCard("","",total,true)}
+    </section>
+    ${renderImportant(jour)}
+    <div class="section-title">Planning</div>
+    ${renderShift("M","MATIN",M)}
+    ${renderShift("J","JOUR",J)}
+    ${renderShift("J4","J4",J4)}
+    ${renderShift("S","SOIR",S)}
+    ${renderShift("N","NUIT",N)}
+    ${renderControl(jour)}
+  `;
+  finishLoadingProgress();
 }
-
-/****************************************************
- * TESTS — LECTURE SEULE
- ****************************************************/
-
-function TEST_WEB_ESPRIT_EQUIPE() {
-  const jour = WEB_ESPRIT_getJour_({});
-  const resultat = WEB_ESPRIT_serialiserJour_(jour);
-  Logger.log(JSON.stringify(resultat,null,2));
-  return resultat;
+function showError(message){
+  clearInterval(loadingTimer);loadingFinished=true;loader.style.display="none";
+  errorBox.style.display="block";errorBox.textContent=message||"Impossible de charger les données.";
 }
+function openModal(modal){modal.classList.add("open");modal.setAttribute("aria-hidden","false");document.body.classList.add("modal-open")}
+function closeModal(modal){
+  modal.classList.remove("open");modal.setAttribute("aria-hidden","true");
+  if(!phoneNumberModal.classList.contains("open")&&!phoneChoiceModal.classList.contains("open")&&!infoModal.classList.contains("open"))document.body.classList.remove("modal-open");
+}
+function closeAllPhoneModals(){closeModal(phoneNumberModal);closeModal(phoneChoiceModal)}
+function initials(value){
+  const parts=String(value||"").trim().split(/\s+/).filter(Boolean);
+  if(!parts.length)return "?";
+  if(parts.length===1)return parts[0].slice(0,2).toUpperCase();
+  return ((parts[0][0]||"")+(parts[1][0]||"")).toUpperCase();
+}
+function resetPhoneProfile(agent,ghe){
+  phoneAgentName.textContent=agent||"Agent";
+  phoneGheLabel.textContent=String(ghe||"ghe").replace(/^GHE\s*/i,"ghe ");
+  phoneAvatar.hidden=true;
+  phoneAvatar.removeAttribute("src");
+  phoneAvatar.alt="";
+  phoneAvatarFallback.hidden=false;
+  phoneAvatarFallback.textContent=initials(agent);
+}
+function afficherAvatarTelephone(url,agent,initiales){
+  if(!url){
+    phoneAvatar.hidden=true;
+    phoneAvatarFallback.hidden=false;
+    phoneAvatarFallback.textContent=initiales||initials(agent);
+    return;
+  }
+
+  phoneAvatarFallback.hidden=true;
+  phoneAvatar.hidden=false;
+  phoneAvatar.alt="Avatar de "+(agent||"l’agent");
+  phoneAvatar.onerror=function(){
+    phoneAvatar.hidden=true;
+    phoneAvatarFallback.hidden=false;
+    phoneAvatarFallback.textContent=initiales||initials(agent);
+  };
+  phoneAvatar.src=String(url);
+}
+function demanderTelephone(agent,ghe){
+  const requestId=++activePhoneRequest;
+  activePhoneDial="";
+
+  resetPhoneProfile(agent,ghe);
+  phoneNumberButton.textContent="…";
+  phoneNumberButton.disabled=true;
+
+  closeModal(phoneChoiceModal);
+  openModal(phoneNumberModal);
+
+  const callbackName="recevoirTelephoneGhe_"+Date.now()+"_"+Math.floor(Math.random()*100000);
+  const script=document.createElement("script");
+  let done=false;
+
+  function cleanup(){
+    if(done)return;
+    done=true;
+    delete window[callbackName];
+    script.remove();
+  }
+
+  window[callbackName]=function(data){
+    if(requestId!==activePhoneRequest){
+      cleanup();
+      return;
+    }
+
+    if(data&&data.ok&&data.telephone&&data.telephoneDial){
+      activePhoneDial=String(data.telephoneDial);
+      phoneAgentName.textContent=String(data.agent||agent||"Agent");
+      phoneGheLabel.textContent=String(data.ghe||ghe||"ghe").replace(/^GHE\s*/i,"ghe ");
+      afficherAvatarTelephone(data.avatar||"",data.agent||agent||"",data.initiales||"");
+      phoneNumberButton.textContent=String(data.telephone);
+      phoneNumberButton.disabled=false;
+    }else{
+      afficherAvatarTelephone("",agent,initials(agent));
+      phoneNumberButton.textContent="INDISPONIBLE";
+      phoneNumberButton.disabled=true;
+    }
+
+    cleanup();
+  };
+
+  script.onerror=function(){
+    if(requestId===activePhoneRequest){
+      afficherAvatarTelephone("",agent,initials(agent));
+      phoneNumberButton.textContent="INDISPONIBLE";
+      phoneNumberButton.disabled=true;
+    }
+    cleanup();
+  };
+
+  script.src=API_ESPRIT_EQUIPE+
+    "?mode=telephone"+
+    "&agent="+encodeURIComponent(agent||"")+
+    "&ghe="+encodeURIComponent(ghe||"")+
+    "&callback="+encodeURIComponent(callbackName)+
+    "&t="+Date.now();
+
+  document.body.appendChild(script);
+
+  setTimeout(()=>{
+    if(!done){
+      if(requestId===activePhoneRequest){
+        afficherAvatarTelephone("",agent,initials(agent));
+        phoneNumberButton.textContent="INDISPONIBLE";
+        phoneNumberButton.disabled=true;
+      }
+      cleanup();
+    }
+  },8000);
+}
+weekPrev.addEventListener("click",()=>changeVisibleWeek(-1));
+weekNext.addEventListener("click",()=>changeVisibleWeek(1));
+weekDays.addEventListener("click",event=>{
+  const button=event.target.closest("[data-date]");
+  if(!button)return;
+  loadPlanningDate(button.dataset.date||dateToIso(parisToday()));
+});
+weekNav.addEventListener("touchstart",event=>{
+  weekSwipeStartX=event.touches&&event.touches[0]?event.touches[0].clientX:null;
+},{passive:true});
+weekNav.addEventListener("touchend",event=>{
+  if(weekSwipeStartX===null)return;
+  const endX=event.changedTouches&&event.changedTouches[0]?event.changedTouches[0].clientX:weekSwipeStartX;
+  const delta=endX-weekSwipeStartX;
+  weekSwipeStartX=null;
+  if(Math.abs(delta)<55)return;
+  changeVisibleWeek(delta>0?-1:1);
+},{passive:true});
+window.addEventListener("popstate",()=>{
+  const iso=new URL(location.href).searchParams.get("date")||dateToIso(parisToday());
+  if(iso!==loadedDateIso)loadPlanningDate(iso);
+});
+
+content.addEventListener("click",event=>{
+  const alertTarget=event.target.closest("[data-info-key]");
+  if(alertTarget){
+    const key=alertTarget.dataset.infoKey||"";
+    const list=normalizeAlerts(infoStore[key]||[]);
+    infoModalTitle.textContent=list.some(a=>a.level==="danger")?"Pourquoi cette alerte ?":"Pourquoi vérifier ?";
+    infoModalBody.innerHTML=list.length
+      ? list.map(item=>`<div class="info-item ${esc(item.level)}">
+          <div class="info-item-title">${esc(item.title)}</div>
+          <div>${esc(item.detail)}</div>
+        </div>`).join("")
+      : '<div class="info-item">Aucune information supplémentaire.</div>';
+    openModal(infoModal);
+    return;
+  }
+  const el=event.target.closest(".ghe-phone-trigger");
+  if(el)demanderTelephone(el.dataset.agent||"",el.dataset.ghe||"");
+});
+content.addEventListener("keydown",event=>{const el=event.target.closest(".ghe-phone-trigger");if(el&&(event.key==="Enter"||event.key===" ")){event.preventDefault();demanderTelephone(el.dataset.agent||"",el.dataset.ghe||"")}});
+phoneNumberButton.addEventListener("click",()=>{if(activePhoneDial){closeModal(phoneNumberModal);openModal(phoneChoiceModal)}});
+infoModalClose.addEventListener("click",()=>closeModal(infoModal));
+infoModal.addEventListener("click",event=>{if(event.target===infoModal)closeModal(infoModal)});
+phoneNumberClose.addEventListener("click",()=>closeModal(phoneNumberModal));
+phoneCallCancel.addEventListener("click",()=>closeModal(phoneChoiceModal));
+phoneCallNormal.addEventListener("click",()=>{if(activePhoneDial){closeAllPhoneModals();location.href="tel:"+activePhoneDial}});
+phoneCallHidden.addEventListener("click",()=>{if(activePhoneDial){closeAllPhoneModals();location.href="tel:%2331%23"+activePhoneDial}});
+[phoneNumberModal,phoneChoiceModal].forEach(modal=>modal.addEventListener("click",event=>{if(event.target===modal)closeModal(modal)}));
+document.addEventListener("keydown",event=>{if(event.key==="Escape"){closeAllPhoneModals();closeModal(infoModal)}});
+
+(function initPlanning(){
+  const requested=new URL(location.href).searchParams.get("date");
+  const initialDate=isoToDate(requested)||parisToday();
+  selectedDate=initialDate;
+  visibleWeekStart=startOfIsoWeek(initialDate);
+  renderWeekNavigator();
+  loadPlanningDate(dateToIso(initialDate),{initial:true});
+})();
+</script>
+</body>
+</html>
