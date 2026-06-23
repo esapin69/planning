@@ -994,6 +994,87 @@ details.control summary::-webkit-details-marker{display:none}
   }
 }
 
+
+/* V10 — shift placé juste après le prénom du stagiaire */
+.trainee-main-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:10px;
+  min-height:58px;
+}
+.trainee-main-identity{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:7px;
+}
+.trainee-main-identity .shift-medal.small{
+  width:40px;
+  height:40px;
+  flex-basis:40px;
+  font-size:19px;
+  border-width:3px;
+}
+.trainee-main-shift-label{
+  color:#707889;
+  font-size:clamp(15px,3.8vw,19px);
+  font-weight:950;
+  line-height:1;
+}
+.trainee-main-right{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.trainee-main-hours{
+  color:#707889;
+  font-size:clamp(14px,3.6vw,18px);
+  font-weight:950;
+  line-height:1;
+  white-space:nowrap;
+}
+.trainee-open-arrow{
+  position:static;
+  flex:0 0 auto;
+}
+@media(max-width:390px){
+  .trainee-main-row{
+    grid-template-columns:1fr;
+    gap:6px;
+  }
+  .trainee-main-right{
+    justify-content:space-between;
+    padding-left:0;
+  }
+  .trainee-main-hours{
+    white-space:normal;
+  }
+}
+
+
+/* Correction finale — horaires stagiaire et GHE */
+.trainee-main-identity{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:7px;
+}
+.trainee-main-identity .shift-medal.small{
+  margin-left:1px;
+}
+.trainee-main-shift-label{
+  display:none!important;
+}
+.trainee-date-label{
+  display:none!important;
+}
+.trainee-date-referent .ghe-phone-trigger{
+  display:inline;
+}
+
 </style>
 </head>
 <body>
@@ -1308,6 +1389,20 @@ function loadPlanningDate(dateIso,{initial=false}={}){
   },10000);
 }
 
+function gheTriggerHtml(agentName,ghe,withDot=true){
+  const gheRaw=String(ghe||"").trim();
+  if(!gheRaw)return "";
+
+  const gheAffiche=gheRaw.replace(/^GHE\s*/i,"ghe ");
+
+  return `${withDot?" · ":""}<span
+    class="ghe ghe-phone-trigger"
+    role="button"
+    tabindex="0"
+    data-agent="${esc(agentName||"Agent")}"
+    data-ghe="${esc(gheRaw)}">${esc(gheAffiche)}</span>`;
+}
+
 function agentLine(agent){
   const prenom=agent.prenom||agent.agent||agent.nom||"";
   const agentComplet=
@@ -1315,20 +1410,9 @@ function agentLine(agent){
     [agent.nom,agent.prenom].filter(Boolean).join(" ").trim()||
     prenom;
 
-  const ghe=String(agent.ghe||"").trim();
-  const gheAffiche=ghe.replace(/^GHE\s*/i,"ghe ");
-
-  const gheHtml=ghe
-    ? ` <span
-          class="ghe ghe-phone-trigger"
-          role="button"
-          tabindex="0"
-          data-agent="${esc(agentComplet)}"
-          data-ghe="${esc(ghe)}">· ${esc(gheAffiche)}</span>`
-    : "";
-
   return `<div class="agent">
-    <span class="agent-name">${esc(String(prenom).toUpperCase())}</span>${gheHtml}
+    <span class="agent-name">${esc(String(prenom).toUpperCase())}</span>
+    ${gheTriggerHtml(agentComplet,agent.ghe||"",true)}
   </div>`;
 }
 
@@ -1678,55 +1762,233 @@ function traineeItemShift(item){
   return {code,horaire,label};
 }
 
-function flattenTraineeAlerts(item){
-  const values=[];
 
-  const push=value=>{
-    if(!value)return;
-    if(Array.isArray(value)){
-      value.forEach(push);
-      return;
+function traineeHourMinutes(value){
+  const txt=String(value||"").trim();
+  const match=txt.match(/(\d{1,2})[:h](\d{2})/i);
+  if(!match)return null;
+  return Number(match[1])*60+Number(match[2]);
+}
+
+function traineeShiftInterval(shift){
+  shift=shift||{};
+
+  let debut=shift.heureDebut||"";
+  let fin=shift.heureFin||"";
+
+  if((!debut||!fin)&&shift.horaire){
+    const matches=[
+      ...String(shift.horaire).matchAll(/(\d{1,2})[:h](\d{2})/gi)
+    ];
+
+    if(matches.length>=2){
+      debut=`${matches[0][1]}:${matches[0][2]}`;
+      fin=`${matches[1][1]}:${matches[1][2]}`;
     }
-    if(typeof value==="object"){
-      const detail=
-        value.detail||
-        value.resume||
-        value.message||
-        value.titre||
-        "";
-      if(detail){
-        values.push({
-          detail:String(detail),
-          level:String(value.niveau||value.level||"warning")
-            .toLowerCase()
-            .includes("danger")
-              ?"danger"
-              :"warning"
-        });
-      }
-      return;
-    }
-    values.push({
-      detail:String(value),
-      level:/danger|bloquant|indisponible/i.test(String(value))
-        ?"danger"
-        :"warning"
-    });
-  };
+  }
 
-  push(item.anomalies&&item.anomalies.stagiaire);
-  push(item.anomalies&&item.anomalies.referent);
-  push(item.anomalies&&item.anomalies.affectation);
-  push(item.alertes);
+  const start=traineeHourMinutes(debut);
+  let end=traineeHourMinutes(fin);
 
-  const seen=new Set();
+  if(start===null||end===null)return null;
+  if(end<=start)end+=1440;
 
-  return values.filter(alert=>{
-    const key=alert.detail.toLowerCase();
-    if(seen.has(key))return false;
-    seen.add(key);
-    return true;
+  return {start,end,debut,fin};
+}
+
+function traineeShiftPair(item){
+  item=item||{};
+
+  const trainee=
+    item.stagiaireShift||
+    (
+      item.stagiaire&&item.stagiaire.shift
+        ? item.stagiaire.shift
+        : null
+    )||
+    {
+      heureDebut:item.heureDebut||item.stagiaireHeureDebut||"",
+      heureFin:item.heureFin||item.stagiaireHeureFin||"",
+      horaire:item.horaire||item.shiftHoraire||""
+    };
+
+  const referent=
+    item.referentShift||
+    (
+      item.referent&&item.referent.shift
+        ? item.referent.shift
+        : null
+    )||
+    (
+      Array.isArray(item.referents)&&item.referents[0]
+        ? (
+            item.referents[0].shift||
+            {
+              heureDebut:item.referents[0].heureDebut||"",
+              heureFin:item.referents[0].heureFin||"",
+              horaire:item.referents[0].horaire||""
+            }
+          )
+        : {}
+    );
+
+  return {trainee,referent};
+}
+
+function traineeBestReferentInterval(traineeInterval,referentInterval){
+  if(!traineeInterval||!referentInterval)return null;
+
+  const candidates=[-1440,0,1440].map(offset=>({
+    start:referentInterval.start+offset,
+    end:referentInterval.end+offset
+  }));
+
+  candidates.sort((a,b)=>{
+    const overlapA=Math.max(
+      0,
+      Math.min(traineeInterval.end,a.end)-
+      Math.max(traineeInterval.start,a.start)
+    );
+
+    const overlapB=Math.max(
+      0,
+      Math.min(traineeInterval.end,b.end)-
+      Math.max(traineeInterval.start,b.start)
+    );
+
+    return overlapB-overlapA;
   });
+
+  return candidates[0];
+}
+
+function traineeCoverageIssue(item){
+  const pair=traineeShiftPair(item);
+  const traineeInterval=traineeShiftInterval(pair.trainee);
+  const rawReferentInterval=traineeShiftInterval(pair.referent);
+
+  if(!traineeInterval||!rawReferentInterval)return null;
+
+  const referentInterval=traineeBestReferentInterval(
+    traineeInterval,
+    rawReferentInterval
+  );
+
+  if(!referentInterval)return null;
+
+  const fullyCovered=
+    referentInterval.start<=traineeInterval.start&&
+    referentInterval.end>=traineeInterval.end;
+
+  if(fullyCovered)return null;
+
+  const traineeName=String(
+    item&&item.stagiaire&&item.stagiaire.nomPrenom||
+    item&&item.stagiaire||
+    "Le stagiaire"
+  ).toUpperCase();
+
+  const referentName=String(
+    item&&item.referent&&(
+      item.referent.prenomCourt||
+      item.referent.nomComplet
+    )||
+    (
+      Array.isArray(item&&item.referents)&&item.referents[0]
+        ? (
+            item.referents[0].prenom||
+            item.referents[0].agent||
+            "le référent"
+          )
+        : "le référent"
+    )
+  ).toUpperCase();
+
+  const problems=[];
+
+  if(referentInterval.start>traineeInterval.start){
+    problems.push(
+      `${traineeName} commence avant l’arrivée de ${referentName}.`
+    );
+  }
+
+  if(referentInterval.end<traineeInterval.end){
+    problems.push(
+      `${traineeName} reste présent après le départ de ${referentName}.`
+    );
+  }
+
+  const noOverlap=
+    referentInterval.end<=traineeInterval.start||
+    referentInterval.start>=traineeInterval.end;
+
+  return {
+    title:noOverlap
+      ?"Référent absent pendant le créneau"
+      :"Accompagnement incomplet",
+    detail:problems.join(" ")||
+      "Le référent ne couvre pas toute la présence du stagiaire.",
+    action:"Vérifier l’affectation ou choisir un référent présent pendant tout le créneau du stagiaire.",
+    label:noOverlap?"Référent absent":"Créneau incomplet",
+    level:noOverlap?"danger":"warning"
+  };
+}
+
+function isGenericTraineeMismatchAlert(alert){
+  const text=String(
+    [
+      alert&&alert.title,
+      alert&&alert.titre,
+      alert&&alert.detail,
+      alert&&alert.resume,
+      alert&&alert.message
+    ].filter(Boolean).join(" ")
+  )
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .toUpperCase();
+
+  return (
+    text.includes("HORAIRES DIFFERENTS")||
+    text.includes("HORAIRE DIFFERENT")||
+    text.includes("PAS EXACTEMENT")||
+    text.includes("CRENEAUX DIFFERENTS")||
+    text.includes("SHIFT DIFFERENT")||
+    text.includes("SHIFTS DIFFERENTS")||
+    text.includes("HORAIRE INCOMPATIBLE")||
+    text.includes("HORAIRES INCOMPATIBLES")||
+    text.includes("MEME SHIFT")
+  );
+}
+
+function filterTraineeCoverageAlerts(alerts,item){
+  const clean=normalizeAlerts(alerts).filter(
+    alert=>!isGenericTraineeMismatchAlert(alert)
+  );
+
+  const coverage=traineeCoverageIssue(item);
+
+  if(coverage){
+    const exists=clean.some(alert=>
+      String(alert.title||"").toLowerCase()===
+      String(coverage.title||"").toLowerCase()
+    );
+
+    if(!exists)clean.push(coverage);
+  }
+
+  return clean;
+}
+
+function flattenTraineeAlerts(item){
+  const raw=[];
+
+  raw.push(item.anomalies&&item.anomalies.stagiaire);
+  raw.push(item.anomalies&&item.anomalies.referent);
+  raw.push(item.anomalies&&item.anomalies.affectation);
+  raw.push(item.alertes);
+
+  return filterTraineeCoverageAlerts(raw,item);
 }
 
 function renderTraineeScheduleCard(item){
@@ -1755,12 +2017,14 @@ function renderTraineeScheduleCard(item){
 
       <div class="trainee-date-info">
         <div class="trainee-date-hours">${esc(shift.horaire||"Horaire à confirmer")}</div>
-        <div class="trainee-date-label">${esc(shift.label||"Shift")}</div>
-
         <div class="trainee-date-referent">
           RÉFÉRENT :
           ${esc(String(referentNom||"À attribuer").toUpperCase())}
-          ${ghe?` <span class="ghe">· ${esc(ghe)}</span>`:""}
+          ${gheTriggerHtml(
+            referent.nomComplet||referent.prenomCourt||"Référent",
+            referent.ghe||"",
+            true
+          )}
         </div>
       </div>
     </div>
@@ -2175,11 +2439,16 @@ function renderImportant(jour){
     const stagiaireCards=stagiaires.map((stagiaire,index)=>{
       const referents=asArray(stagiaire.referents);
       const pairKey=`stagiaire-${index}`;
-      const pairAlerts=[...normalizeAlerts(stagiaire.alertes)];
+      const rawPairAlerts=[stagiaire.alertes];
 
       referents.forEach(ref=>{
-        pairAlerts.push(...normalizeAlerts(ref.alertes));
+        rawPairAlerts.push(ref.alertes);
       });
+
+      const pairAlerts=filterTraineeCoverageAlerts(
+        rawPairAlerts,
+        stagiaire
+      );
 
       infoStore[pairKey]=pairAlerts;
 
@@ -2211,14 +2480,21 @@ function renderImportant(jour){
           type="button"
           data-trainee-name="${esc(stagiaire.stagiaire||"")}">
           <span class="trainee-main-row">
-            ${medal(traineeCurrentMeta(stagiaire).code||"?",true)}
-            <span class="trainee-main-name">
-              ${esc(String(stagiaire.stagiaire||"Stagiaire").toUpperCase())}
+            <span class="trainee-main-identity">
+              <span class="trainee-main-name">
+                ${esc(String(stagiaire.stagiaire||"Stagiaire").toUpperCase())}
+              </span>
+
+              ${medal(traineeCurrentMeta(stagiaire).code||"?",true)}
+
             </span>
-            <span class="trainee-main-hours">
-              ${esc(traineeCurrentMeta(stagiaire).horaire||shift||"")}
+
+            <span class="trainee-main-right">
+              <span class="trainee-main-hours">
+                ${esc(traineeCurrentMeta(stagiaire).horaire||"")}
+              </span>
+              <span class="trainee-open-arrow" aria-hidden="true">›</span>
             </span>
-            <span class="trainee-open-arrow" aria-hidden="true">›</span>
           </span>
         </button>
 
@@ -2520,6 +2796,34 @@ content.addEventListener("keydown",event=>{
 });
 phoneNumberButton.addEventListener("click",()=>{if(activePhoneDial){closeModal(phoneNumberModal);openModal(phoneChoiceModal)}});
 traineePlanningClose.addEventListener("click",()=>closeModal(traineePlanningModal));
+traineePlanningBody.addEventListener("click",event=>{
+  const gheTarget=event.target.closest(".ghe-phone-trigger");
+
+  if(gheTarget){
+    event.preventDefault();
+    event.stopPropagation();
+    demanderTelephone(
+      gheTarget.dataset.agent||"",
+      gheTarget.dataset.ghe||""
+    );
+  }
+});
+
+traineePlanningBody.addEventListener("keydown",event=>{
+  const gheTarget=event.target.closest(".ghe-phone-trigger");
+
+  if(
+    gheTarget&&
+    (event.key==="Enter"||event.key===" ")
+  ){
+    event.preventDefault();
+    demanderTelephone(
+      gheTarget.dataset.agent||"",
+      gheTarget.dataset.ghe||""
+    );
+  }
+});
+
 traineePlanningModal.addEventListener("click",event=>{
   if(event.target===traineePlanningModal)closeModal(traineePlanningModal);
 });
