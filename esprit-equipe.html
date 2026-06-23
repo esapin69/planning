@@ -755,6 +755,245 @@ details.control summary::-webkit-details-marker{display:none}
   }
 }
 
+
+/* V9 — Stagiaire : médaillon shift + planning complet en popup */
+.trainee-open-planning{
+  width:100%;
+  border:0;
+  background:transparent;
+  padding:0;
+  margin:0;
+  color:inherit;
+  font:inherit;
+  text-align:left;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.trainee-open-planning:active{
+  transform:translateY(1px);
+}
+.trainee-main-row{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:10px;
+  min-height:58px;
+}
+.trainee-main-name{
+  min-width:0;
+  color:var(--ink);
+  font-size:clamp(18px,4.8vw,24px);
+  font-weight:1000;
+  line-height:1.08;
+  text-transform:uppercase;
+}
+.trainee-main-hours{
+  color:#707889;
+  font-size:clamp(14px,3.6vw,18px);
+  font-weight:950;
+  line-height:1;
+  white-space:nowrap;
+}
+.trainee-open-arrow{
+  color:#8c1d40;
+  font-size:24px;
+  font-weight:1000;
+  line-height:1;
+}
+
+/* Popup planning stagiaire */
+.trainee-planning-panel{
+  width:min(720px,calc(100% - 22px));
+  max-height:90vh;
+  overflow:auto;
+  padding:18px;
+}
+.trainee-planning-head{
+  position:sticky;
+  top:-18px;
+  z-index:2;
+  margin:-18px -18px 14px;
+  padding:18px 18px 14px;
+  background:linear-gradient(180deg,#fffaf0 82%,rgba(255,250,240,.92));
+  border-bottom:2px solid rgba(7,24,63,.12);
+}
+.trainee-planning-title{
+  margin:0;
+  color:var(--ink);
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(34px,9vw,58px);
+  line-height:.9;
+  text-transform:uppercase;
+}
+.trainee-planning-subtitle{
+  margin:8px 0 0;
+  color:#6b7280;
+  font-size:15px;
+  font-weight:900;
+}
+.trainee-planning-loader,
+.trainee-planning-empty{
+  padding:22px 14px;
+  border:3px solid var(--ink);
+  border-radius:20px;
+  background:#fffdf5;
+  text-align:center;
+  font-size:17px;
+  font-weight:950;
+}
+.trainee-planning-list{
+  display:grid;
+  gap:13px;
+}
+.trainee-date-card{
+  --shift:#64748b;
+  --shift-dark:#334155;
+  --shift-light:#cbd5e1;
+  overflow:hidden;
+  border:4px solid var(--ink);
+  border-radius:24px;
+  background:linear-gradient(135deg,#fffef8,#f7f7f7);
+  box-shadow:7px 7px 0 var(--shift-dark);
+}
+.trainee-date-card.m{
+  --shift:#2f7df4;
+  --shift-dark:#0b4cc4;
+  --shift-light:#dcecff;
+  background:linear-gradient(135deg,#fff,#eaf3ff);
+}
+.trainee-date-card.j{
+  --shift:#20b96b;
+  --shift-dark:#08763f;
+  --shift-light:#e1f8ea;
+  background:linear-gradient(135deg,#fff,#e8f8ee);
+}
+.trainee-date-card.j4{
+  --shift:#ff8f27;
+  --shift-dark:#c24c00;
+  --shift-light:#fff0df;
+  background:linear-gradient(135deg,#fff,#fff0df);
+}
+.trainee-date-card.s{
+  --shift:#ffd119;
+  --shift-dark:#b97900;
+  --shift-light:#fff8c9;
+  background:linear-gradient(135deg,#fff,#fff7c4);
+}
+.trainee-date-card.n{
+  --shift:#171717;
+  --shift-dark:#000;
+  --shift-light:#e5e7eb;
+  background:linear-gradient(135deg,#fff,#eceff3);
+}
+.trainee-date-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:11px 14px;
+  color:#fff;
+  background:linear-gradient(180deg,var(--shift),var(--shift-dark));
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(22px,6vw,34px);
+  line-height:1;
+  text-transform:uppercase;
+}
+.trainee-date-top .date-small{
+  font-size:.72em;
+}
+.trainee-date-body{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  align-items:center;
+  gap:14px;
+  padding:16px 14px 14px;
+}
+.trainee-date-medal{
+  width:86px;
+  height:86px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  color:#fff;
+  background:
+    radial-gradient(circle at 34% 24%,rgba(255,255,255,.95) 0 6%,transparent 7%),
+    radial-gradient(circle at 42% 35%,var(--shift-light) 0 19%,var(--shift) 48%,var(--shift-dark) 100%);
+  border:5px solid var(--shift-dark);
+  box-shadow:inset 0 0 0 4px rgba(255,255,255,.28),0 7px 0 rgba(7,24,63,.16);
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:42px;
+  line-height:1;
+}
+.trainee-date-card.s .trainee-date-medal{
+  color:var(--ink);
+}
+.trainee-date-info{
+  min-width:0;
+}
+.trainee-date-hours{
+  color:var(--ink);
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(26px,7vw,40px);
+  line-height:.95;
+}
+.trainee-date-label{
+  margin-top:5px;
+  color:#707889;
+  font-size:16px;
+  font-weight:950;
+}
+.trainee-date-referent{
+  margin-top:12px;
+  padding-top:10px;
+  border-top:2px dashed rgba(7,24,63,.18);
+  color:var(--ink);
+  font-size:15px;
+  font-weight:950;
+}
+.trainee-date-referent .ghe{
+  color:#7a8292;
+}
+.trainee-date-alert{
+  margin:0 14px 14px;
+  padding:10px 12px;
+  border:2px solid #d59b21;
+  border-radius:15px;
+  background:#fff6d9;
+  color:#7d4900;
+  font-size:13px;
+  font-weight:950;
+}
+.trainee-date-alert.danger{
+  border-color:#dc6e64;
+  background:#ffe9e5;
+  color:#ad2e22;
+}
+@media(max-width:390px){
+  .trainee-main-row{
+    grid-template-columns:auto minmax(0,1fr);
+  }
+  .trainee-main-hours{
+    grid-column:2;
+    white-space:normal;
+  }
+  .trainee-open-arrow{
+    position:absolute;
+    right:12px;
+  }
+  .trainee-date-body{
+    grid-template-columns:72px minmax(0,1fr);
+    gap:11px;
+  }
+  .trainee-date-medal{
+    width:70px;
+    height:70px;
+    font-size:34px;
+  }
+  .trainee-date-hours{
+    font-size:29px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -786,6 +1025,23 @@ details.control summary::-webkit-details-marker{display:none}
   <section id="errorBox" class="error"></section>
   <section id="content" style="display:none"></section>
 </main>
+
+<div class="modal" id="traineePlanningModal" aria-hidden="true">
+  <div class="modal-panel trainee-planning-panel" role="dialog" aria-modal="true" aria-labelledby="traineePlanningTitle">
+    <div class="trainee-planning-head">
+      <h2 class="trainee-planning-title" id="traineePlanningTitle">Planning stagiaire</h2>
+      <p class="trainee-planning-subtitle" id="traineePlanningSubtitle">Chargement des dates…</p>
+    </div>
+
+    <div id="traineePlanningBody">
+      <div class="trainee-planning-loader">Chargement du planning…</div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="modal-btn" id="traineePlanningClose" type="button">Fermer</button>
+    </div>
+  </div>
+</div>
 
 <div class="modal" id="infoModal" aria-hidden="true">
   <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="infoModalTitle">
@@ -846,6 +1102,11 @@ const weekPrev = document.getElementById("weekPrev");
 const weekNext = document.getElementById("weekNext");
 const planningDayLabel = document.getElementById("planningDayLabel");
 const subtitle = document.getElementById("subtitle");
+const traineePlanningModal = document.getElementById("traineePlanningModal");
+const traineePlanningTitle = document.getElementById("traineePlanningTitle");
+const traineePlanningSubtitle = document.getElementById("traineePlanningSubtitle");
+const traineePlanningBody = document.getElementById("traineePlanningBody");
+const traineePlanningClose = document.getElementById("traineePlanningClose");
 const infoModal = document.getElementById("infoModal");
 const infoModalTitle = document.getElementById("infoModalTitle");
 const infoModalBody = document.getElementById("infoModalBody");
@@ -873,6 +1134,8 @@ let selectedDate = null;
 let visibleWeekStart = null;
 let loadedDateIso = "";
 let weekSwipeStartX = null;
+let traineeScheduleCache = null;
+let traineeScheduleRequestId = 0;
 
 function esc(value){
   return String(value ?? "")
@@ -1307,6 +1570,341 @@ function renderShift(code,title,agents){
     }
   </div>`;
 }
+
+function traineeShiftCode(value){
+  const txt=String(value||"")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .toUpperCase()
+    .replace(/\s+/g,"")
+    .trim();
+
+  if(!txt)return "";
+  if(txt.includes("J4"))return "J4";
+  if(txt==="M"||txt.includes("MATIN"))return "M";
+  if(txt==="J"||txt.includes("JOUR")||txt.includes("JOURNEE"))return "J";
+  if(txt==="S"||txt.includes("SOIR"))return "S";
+  if(txt==="N"||txt.includes("NUIT"))return "N";
+  return txt.replace(/[^A-Z0-9]/g,"");
+}
+
+function traineeCurrentMeta(stagiaire){
+  const code=traineeShiftCode(
+    stagiaire.shiftCode||
+    stagiaire.shiftLabel||
+    stagiaire.shift||
+    stagiaire.poste||
+    ""
+  );
+
+  const horaire=
+    stagiaire.horaire||
+    stagiaire.shiftHoraire||
+    (
+      stagiaire.heureDebut&&stagiaire.heureFin
+        ? `${normalizeHour(stagiaire.heureDebut)} ⟶ ${normalizeHour(stagiaire.heureFin)}`
+        : ""
+    );
+
+  return {code,horaire};
+}
+
+function normalizePersonName(value){
+  return String(value||"")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g,"")
+    .trim();
+}
+
+function traineeDateParts(item){
+  const date=isoToDate(item.dateKey||"");
+  if(!date){
+    return {
+      jour:"DATE",
+      date:"À CONFIRMER"
+    };
+  }
+
+  const jours=[
+    "DIMANCHE","LUNDI","MARDI","MERCREDI",
+    "JEUDI","VENDREDI","SAMEDI"
+  ];
+
+  const mois=[
+    "JANVIER","FÉVRIER","MARS","AVRIL","MAI","JUIN",
+    "JUILLET","AOÛT","SEPTEMBRE","OCTOBRE","NOVEMBRE","DÉCEMBRE"
+  ];
+
+  return {
+    jour:jours[date.getDay()],
+    date:`${date.getDate()} ${mois[date.getMonth()]}`
+  };
+}
+
+function traineeItemShift(item){
+  const shift=
+    item.stagiaireShift||
+    item.shift||
+    {};
+
+  const code=traineeShiftCode(
+    shift.base||
+    shift.code||
+    shift.label||
+    ""
+  );
+
+  const horaire=
+    shift.horaire||
+    (
+      shift.heureDebut&&shift.heureFin
+        ? `${normalizeHour(shift.heureDebut)} ⟶ ${normalizeHour(shift.heureFin)}`
+        : ""
+    );
+
+  const label=
+    shift.label||
+    (
+      code==="M"?"Matin":
+      code==="J"?"Journée":
+      code==="J4"?"Journée J4":
+      code==="S"?"Soir":
+      code==="N"?"Nuit":
+      "Shift"
+    );
+
+  return {code,horaire,label};
+}
+
+function flattenTraineeAlerts(item){
+  const values=[];
+
+  const push=value=>{
+    if(!value)return;
+    if(Array.isArray(value)){
+      value.forEach(push);
+      return;
+    }
+    if(typeof value==="object"){
+      const detail=
+        value.detail||
+        value.resume||
+        value.message||
+        value.titre||
+        "";
+      if(detail){
+        values.push({
+          detail:String(detail),
+          level:String(value.niveau||value.level||"warning")
+            .toLowerCase()
+            .includes("danger")
+              ?"danger"
+              :"warning"
+        });
+      }
+      return;
+    }
+    values.push({
+      detail:String(value),
+      level:/danger|bloquant|indisponible/i.test(String(value))
+        ?"danger"
+        :"warning"
+    });
+  };
+
+  push(item.anomalies&&item.anomalies.stagiaire);
+  push(item.anomalies&&item.anomalies.referent);
+  push(item.anomalies&&item.anomalies.affectation);
+  push(item.alertes);
+
+  const seen=new Set();
+
+  return values.filter(alert=>{
+    const key=alert.detail.toLowerCase();
+    if(seen.has(key))return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function renderTraineeScheduleCard(item){
+  const parts=traineeDateParts(item);
+  const shift=traineeItemShift(item);
+  const referent=item.referent||{};
+  const referentNom=
+    referent.prenomCourt||
+    referent.nomComplet||
+    "";
+
+  const ghe=String(referent.ghe||"")
+    .replace(/^GHE\s*/i,"ghe ");
+
+  const alerts=flattenTraineeAlerts(item);
+  const danger=alerts.some(alert=>alert.level==="danger");
+
+  return `<article class="trainee-date-card ${esc(String(shift.code||"").toLowerCase())}">
+    <div class="trainee-date-top">
+      <span>${esc(parts.jour)}</span>
+      <span class="date-small">${esc(parts.date)}</span>
+    </div>
+
+    <div class="trainee-date-body">
+      <div class="trainee-date-medal">${esc(shift.code||"?")}</div>
+
+      <div class="trainee-date-info">
+        <div class="trainee-date-hours">${esc(shift.horaire||"Horaire à confirmer")}</div>
+        <div class="trainee-date-label">${esc(shift.label||"Shift")}</div>
+
+        <div class="trainee-date-referent">
+          RÉFÉRENT :
+          ${esc(String(referentNom||"À attribuer").toUpperCase())}
+          ${ghe?` <span class="ghe">· ${esc(ghe)}</span>`:""}
+        </div>
+      </div>
+    </div>
+
+    ${
+      alerts.length
+        ? `<div class="trainee-date-alert${danger?" danger":""}">
+            ${danger?"🚨":"⚠️"} ${esc(alerts[0].detail)}
+          </div>`
+        : ""
+    }
+  </article>`;
+}
+
+function fetchAllTraineeDates(){
+  if(Array.isArray(traineeScheduleCache)){
+    return Promise.resolve(traineeScheduleCache);
+  }
+
+  return new Promise((resolve,reject)=>{
+    const requestId=++traineeScheduleRequestId;
+    const callbackName=
+      `recevoirToutesDatesStagiaires_${Date.now()}_${Math.floor(Math.random()*100000)}`;
+
+    const script=document.createElement("script");
+    let finished=false;
+
+    function cleanup(){
+      if(finished)return;
+      finished=true;
+      delete window[callbackName];
+      if(script.isConnected)script.remove();
+    }
+
+    window[callbackName]=function(data){
+      if(requestId!==traineeScheduleRequestId){
+        cleanup();
+        return;
+      }
+
+      if(!data||data.ok===false){
+        reject(new Error(
+          data&&data.erreur
+            ? data.erreur
+            : "Données stagiaires indisponibles."
+        ));
+        cleanup();
+        return;
+      }
+
+      traineeScheduleCache=asArray(data.items);
+      resolve(traineeScheduleCache);
+      cleanup();
+    };
+
+    script.onerror=function(){
+      reject(new Error("Impossible de charger les dates du stagiaire."));
+      cleanup();
+    };
+
+    script.src=
+      API_ESPRIT_EQUIPE+
+      "?mode=site_stagiaires_formations"+
+      "&type=stagiaires"+
+      "&callback="+encodeURIComponent(callbackName)+
+      "&t="+Date.now();
+
+    document.body.appendChild(script);
+
+    setTimeout(()=>{
+      if(!finished){
+        reject(new Error("Temps de chargement dépassé."));
+        cleanup();
+      }
+    },10000);
+  });
+}
+
+async function openTraineePlanning(name){
+  const traineeName=String(name||"").trim();
+
+  traineePlanningTitle.textContent=traineeName
+    ? traineeName
+    : "Planning stagiaire";
+
+  traineePlanningSubtitle.textContent=
+    "Chargement de toutes les dates à venir…";
+
+  traineePlanningBody.innerHTML=
+    '<div class="trainee-planning-loader">Chargement du planning…</div>';
+
+  openModal(traineePlanningModal);
+
+  try{
+    const items=await fetchAllTraineeDates();
+    const target=normalizePersonName(traineeName);
+
+    const exact=items.filter(item=>{
+      const nom=
+        item&&item.stagiaire
+          ? item.stagiaire.nomPrenom
+          : "";
+      return normalizePersonName(nom)===target;
+    });
+
+    const matched=exact.length
+      ? exact
+      : items.filter(item=>{
+          const nom=
+            item&&item.stagiaire
+              ? item.stagiaire.nomPrenom
+              : "";
+          const normalized=normalizePersonName(nom);
+          return (
+            !!normalized&&
+            !!target&&
+            (
+              normalized.includes(target)||
+              target.includes(normalized)
+            )
+          );
+        });
+
+    matched.sort((a,b)=>
+      String(a.dateKey||"").localeCompare(String(b.dateKey||""))
+    );
+
+    traineePlanningSubtitle.textContent=matched.length
+      ? `${matched.length} date${matched.length>1?"s":""} à venir`
+      : "Aucune date à venir trouvée";
+
+    traineePlanningBody.innerHTML=matched.length
+      ? `<div class="trainee-planning-list">${
+          matched.map(renderTraineeScheduleCard).join("")
+        }</div>`
+      : '<div class="trainee-planning-empty">Aucune autre date disponible pour ce stagiaire.</div>';
+
+  }catch(error){
+    traineePlanningSubtitle.textContent="Chargement impossible";
+    traineePlanningBody.innerHTML=
+      `<div class="trainee-planning-empty">${esc(String(error.message||error))}</div>`;
+  }
+}
+
 function normalizeHour(value){
   const txt=String(value||"").trim();
   const m=txt.match(/(\d{1,2})[:h](\d{2})/i);
@@ -1608,12 +2206,21 @@ function renderImportant(jour){
       return `<article class="important-mini-card trainee-pair-card">
         <div class="person-role">Stagiaire</div>
 
-        <div class="pair-person-line">
-          <div class="pair-person-main">
-            ${esc(String(stagiaire.stagiaire||"Stagiaire").toUpperCase())}
-            ${meta?` <span class="pair-person-meta">· ${esc(meta)}</span>`:""}
-          </div>
-        </div>
+        <button
+          class="trainee-open-planning"
+          type="button"
+          data-trainee-name="${esc(stagiaire.stagiaire||"")}">
+          <span class="trainee-main-row">
+            ${medal(traineeCurrentMeta(stagiaire).code||"?",true)}
+            <span class="trainee-main-name">
+              ${esc(String(stagiaire.stagiaire||"Stagiaire").toUpperCase())}
+            </span>
+            <span class="trainee-main-hours">
+              ${esc(traineeCurrentMeta(stagiaire).horaire||shift||"")}
+            </span>
+            <span class="trainee-open-arrow" aria-hidden="true">›</span>
+          </span>
+        </button>
 
         <div class="pair-link">accompagné par</div>
 
@@ -1844,6 +2451,15 @@ window.addEventListener("popstate",()=>{
 });
 
 content.addEventListener("click",event=>{
+  const traineeTarget=event.target.closest("[data-trainee-name]");
+
+  if(traineeTarget){
+    openTraineePlanning(
+      traineeTarget.dataset.traineeName||""
+    );
+    return;
+  }
+
   const navTarget=event.target.closest("[data-scroll-target]");
 
   if(navTarget){
@@ -1903,6 +2519,10 @@ content.addEventListener("keydown",event=>{
   }
 });
 phoneNumberButton.addEventListener("click",()=>{if(activePhoneDial){closeModal(phoneNumberModal);openModal(phoneChoiceModal)}});
+traineePlanningClose.addEventListener("click",()=>closeModal(traineePlanningModal));
+traineePlanningModal.addEventListener("click",event=>{
+  if(event.target===traineePlanningModal)closeModal(traineePlanningModal);
+});
 infoModalClose.addEventListener("click",()=>closeModal(infoModal));
 infoModal.addEventListener("click",event=>{if(event.target===infoModal)closeModal(infoModal)});
 phoneNumberClose.addEventListener("click",()=>closeModal(phoneNumberModal));
@@ -1910,7 +2530,13 @@ phoneCallCancel.addEventListener("click",()=>closeModal(phoneChoiceModal));
 phoneCallNormal.addEventListener("click",()=>{if(activePhoneDial){closeAllPhoneModals();location.href="tel:"+activePhoneDial}});
 phoneCallHidden.addEventListener("click",()=>{if(activePhoneDial){closeAllPhoneModals();location.href="tel:%2331%23"+activePhoneDial}});
 [phoneNumberModal,phoneChoiceModal].forEach(modal=>modal.addEventListener("click",event=>{if(event.target===modal)closeModal(modal)}));
-document.addEventListener("keydown",event=>{if(event.key==="Escape"){closeAllPhoneModals();closeModal(infoModal)}});
+document.addEventListener("keydown",event=>{
+  if(event.key==="Escape"){
+    closeAllPhoneModals();
+    closeModal(infoModal);
+    closeModal(traineePlanningModal);
+  }
+});
 
 (function initPlanning(){
   const requested=new URL(location.href).searchParams.get("date");
