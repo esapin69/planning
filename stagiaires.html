@@ -131,6 +131,16 @@ button.ghe-badge:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(7,24,6
   .person-shift{font-size:14px}
   .modal{align-items:center}
 }
+
+/* Correction finale — GHE toujours cliquable */
+.call-action.is-disabled{
+  pointer-events:none;
+  opacity:.45;
+}
+.ghe-badge{
+  -webkit-tap-highlight-color:transparent;
+}
+
 </style>
 </head>
 <body>
@@ -194,9 +204,175 @@ function dateParts(item){
   return Number.isNaN(d.getTime())?{jour:"DATE",numero:"--",mois:""}:{jour:jours[d.getDay()],numero:String(d.getDate()),mois:mois[d.getMonth()]};
 }
 
-function groups(item){
+function rawGroups(item){
   const a=item&&item.anomalies||{};
-  return{stagiaire:arr(a.stagiaire),referent:arr(a.referent),affectation:arr(a.affectation)};
+  return{
+    stagiaire:arr(a.stagiaire),
+    referent:arr(a.referent),
+    affectation:arr(a.affectation)
+  };
+}
+
+function hourMinutes(value){
+  const txt=String(value||"").trim();
+  const match=txt.match(/(\d{1,2})[:h](\d{2})/i);
+  if(!match)return null;
+  return Number(match[1])*60+Number(match[2]);
+}
+
+function shiftInterval(shift){
+  shift=shift||{};
+
+  let debut=shift.heureDebut||"";
+  let fin=shift.heureFin||"";
+
+  if((!debut||!fin)&&shift.horaire){
+    const matches=[
+      ...String(shift.horaire).matchAll(/(\d{1,2})[:h](\d{2})/gi)
+    ];
+
+    if(matches.length>=2){
+      debut=`${matches[0][1]}:${matches[0][2]}`;
+      fin=`${matches[1][1]}:${matches[1][2]}`;
+    }
+  }
+
+  const start=hourMinutes(debut);
+  let end=hourMinutes(fin);
+
+  if(start===null||end===null)return null;
+  if(end<=start)end+=1440;
+
+  return {start,end};
+}
+
+function bestReferentInterval(traineeInterval,referentInterval){
+  if(!traineeInterval||!referentInterval)return null;
+
+  const candidates=[-1440,0,1440].map(offset=>({
+    start:referentInterval.start+offset,
+    end:referentInterval.end+offset
+  }));
+
+  candidates.sort((a,b)=>{
+    const overlapA=Math.max(
+      0,
+      Math.min(traineeInterval.end,a.end)-
+      Math.max(traineeInterval.start,a.start)
+    );
+
+    const overlapB=Math.max(
+      0,
+      Math.min(traineeInterval.end,b.end)-
+      Math.max(traineeInterval.start,b.start)
+    );
+
+    return overlapB-overlapA;
+  });
+
+  return candidates[0];
+}
+
+function isMismatchIssue(issue){
+  const text=norm(
+    [
+      issue&&issue.titre,
+      issue&&issue.resume,
+      issue&&issue.detail,
+      issue&&issue.message
+    ].filter(Boolean).join(" ")
+  );
+
+  return (
+    text.includes("HORAIRES DIFFERENTS")||
+    text.includes("HORAIRE DIFFERENT")||
+    text.includes("PAS EXACTEMENT")||
+    text.includes("CRENEAUX DIFFERENTS")||
+    text.includes("SHIFT DIFFERENT")||
+    text.includes("SHIFTS DIFFERENTS")||
+    text.includes("HORAIRE INCOMPATIBLE")||
+    text.includes("HORAIRES INCOMPATIBLES")||
+    text.includes("MEME SHIFT")
+  );
+}
+
+function coverageIssue(item){
+  const traineeInterval=shiftInterval(item&&item.stagiaireShift);
+  const rawReferentInterval=shiftInterval(item&&item.referentShift);
+
+  if(!traineeInterval||!rawReferentInterval)return null;
+
+  const referentInterval=bestReferentInterval(
+    traineeInterval,
+    rawReferentInterval
+  );
+
+  if(!referentInterval)return null;
+
+  const fullyCovered=
+    referentInterval.start<=traineeInterval.start&&
+    referentInterval.end>=traineeInterval.end;
+
+  if(fullyCovered)return null;
+
+  const stagiaire=String(
+    item&&item.stagiaire&&item.stagiaire.nomPrenom||
+    "Le stagiaire"
+  ).toUpperCase();
+
+  const referent=String(
+    item&&item.referent&&item.referent.nomComplet||
+    "Le référent"
+  ).toUpperCase();
+
+  const details=[];
+
+  if(referentInterval.start>traineeInterval.start){
+    details.push(
+      `${stagiaire} commence avant l’arrivée de ${referent}.`
+    );
+  }
+
+  if(referentInterval.end<traineeInterval.end){
+    details.push(
+      `${stagiaire} reste présent après le départ de ${referent}.`
+    );
+  }
+
+  const noOverlap=
+    referentInterval.end<=traineeInterval.start||
+    referentInterval.start>=traineeInterval.end;
+
+  return {
+    niveau:noOverlap?"danger":"warning",
+    titre:noOverlap
+      ?"Référent absent pendant le créneau"
+      :"Accompagnement incomplet",
+    resume:noOverlap
+      ?"Le référent n’est pas présent pendant le créneau du stagiaire."
+      :"Le référent ne couvre pas toute la présence du stagiaire.",
+    detail:details.join(" ")||
+      "Le référent ne couvre pas toute la présence du stagiaire.",
+    action:"Vérifier l’affectation ou choisir un référent présent pendant tout le créneau du stagiaire."
+  };
+}
+
+function groups(item){
+  const raw=rawGroups(item);
+
+  const clean={
+    stagiaire:raw.stagiaire.filter(issue=>!isMismatchIssue(issue)),
+    referent:raw.referent.filter(issue=>!isMismatchIssue(issue)),
+    affectation:raw.affectation.filter(issue=>!isMismatchIssue(issue))
+  };
+
+  const coverage=coverageIssue(item);
+
+  if(coverage){
+    clean.affectation.push(coverage);
+  }
+
+  return clean;
 }
 
 function issuesWithTargets(item){
@@ -210,7 +386,15 @@ function issuesWithTargets(item){
 
 function level(item){
   const all=issuesWithTargets(item);
-  if(item&&item.niveau==="danger"||all.some(x=>x.issue&&x.issue.niveau==="danger"))return"danger";
+
+  if(
+    all.some(
+      x=>x.issue&&x.issue.niveau==="danger"
+    )
+  ){
+    return"danger";
+  }
+
   return all.length?"warning":"ok";
 }
 
@@ -253,9 +437,12 @@ function avatarBlock(person,role){
   const name=person.nomPrenom||person.nomComplet||role;
   let badge="";
   if(ghe){
-    badge=phone
-      ?`<button class="ghe-badge" type="button" data-call-name="${esc(name)}" data-call-ghe="${esc(ghe)}" data-call-phone="${esc(phone)}">${esc(ghe)}</button>`
-      :`<span class="ghe-badge">${esc(ghe)}</span>`;
+    badge=`<button
+      class="ghe-badge"
+      type="button"
+      data-call-name="${esc(name)}"
+      data-call-ghe="${esc(ghe)}"
+      data-call-phone="${esc(phone)}">${esc(ghe)}</button>`;
   }
   return `<div class="role-tag">${esc(role)}</div><div class="avatar-shell"><div class="avatar ${thumb?"has-img":""}">${thumb?`<img src="${esc(thumb)}" alt="" loading="lazy" onerror="this.parentElement.classList.remove('has-img');this.remove()">`:""}<span class="avatar-fallback">👤</span></div>${badge}</div>`;
 }
@@ -264,7 +451,7 @@ function person(personData,role,shift){
   personData=personData||{};
   const name=personData.nomPrenom||personData.nomComplet||(role==="Référent"?"Référent à attribuer":"Stagiaire");
   const hasShift=!!(shift&&(shift.code||shift.label||shift.horaire));
-  const detail=hasShift?[shiftText(shift),shiftHours(shift)].filter(Boolean).join(" · "):"Horaire non renseigné";
+  const detail=hasShift?shiftHours(shift):"Horaire non renseigné";
   return `<section class="person">${avatarBlock(personData,role)}<span class="person-name">${esc(name)}</span><div class="person-shift"><span class="person-shift-dot"></span><span class="person-shift-text">${esc(detail)}</span></div></section>`;
 }
 
@@ -350,18 +537,105 @@ function phoneDisplay(value){
   return digits.replace(/(\d{2})(?=\d)/g,"$1 ").trim();
 }
 
-function openCall(button){
-  const name=button.dataset.callName||"Agent";
-  const ghe=button.dataset.callGhe||"";
-  const digits=phoneDigits(button.dataset.callPhone||"");
-  if(!digits)return;
-  callSub.textContent=[name,ghe].filter(Boolean).join(" · ");
+function setCallUnavailable(){
+  callNumber.textContent="Numéro indisponible";
+  callNormal.href="#";
+  callHidden.href="#";
+  callNormal.classList.add("is-disabled");
+  callHidden.classList.add("is-disabled");
+  callNormal.setAttribute("aria-disabled","true");
+  callHidden.setAttribute("aria-disabled","true");
+}
+
+function setCallReady(digits){
   callNumber.textContent=phoneDisplay(digits);
   callNormal.href="tel:"+digits;
   callHidden.href="tel:%2331%23"+digits;
+  callNormal.classList.remove("is-disabled");
+  callHidden.classList.remove("is-disabled");
+  callNormal.removeAttribute("aria-disabled");
+  callHidden.removeAttribute("aria-disabled");
+}
+
+function openCall(button){
+  const name=button.dataset.callName||"Agent";
+  const ghe=button.dataset.callGhe||"";
+  const provided=phoneDigits(button.dataset.callPhone||"");
+
+  callSub.textContent=[name,ghe].filter(Boolean).join(" · ");
+  callNumber.textContent=provided
+    ? phoneDisplay(provided)
+    : "Chargement…";
+
   callModal.classList.add("open");
   callModal.setAttribute("aria-hidden","false");
   document.body.classList.add("modal-open");
+
+  if(provided){
+    setCallReady(provided);
+    return;
+  }
+
+  callNormal.classList.add("is-disabled");
+  callHidden.classList.add("is-disabled");
+  callNormal.setAttribute("aria-disabled","true");
+  callHidden.setAttribute("aria-disabled","true");
+
+  const callback=
+    "recevoirTelephoneStagiaire_"+
+    Date.now()+"_"+
+    Math.floor(Math.random()*100000);
+
+  const script=document.createElement("script");
+  let finished=false;
+
+  function cleanup(){
+    if(finished)return;
+    finished=true;
+    delete window[callback];
+    if(script.isConnected)script.remove();
+  }
+
+  window[callback]=data=>{
+    const digits=phoneDigits(
+      data&&(
+        data.telephoneDial||
+        data.telephone
+      )||
+      ""
+    );
+
+    if(data&&data.ok&&digits){
+      button.dataset.callPhone=digits;
+      setCallReady(digits);
+    }else{
+      setCallUnavailable();
+    }
+
+    cleanup();
+  };
+
+  script.onerror=()=>{
+    setCallUnavailable();
+    cleanup();
+  };
+
+  script.src=
+    WEB_APP_URL+
+    "?mode=telephone"+
+    "&agent="+encodeURIComponent(name)+
+    "&ghe="+encodeURIComponent(ghe)+
+    "&callback="+encodeURIComponent(callback)+
+    "&v="+Date.now();
+
+  document.body.appendChild(script);
+
+  setTimeout(()=>{
+    if(!finished){
+      setCallUnavailable();
+      cleanup();
+    }
+  },8000);
 }
 
 function closeCallModal(){
@@ -378,7 +652,7 @@ function render(){
 }
 
 content.addEventListener("click",e=>{
-  const callButton=e.target.closest("[data-call-phone]");
+  const callButton=e.target.closest("[data-call-ghe]");
   if(callButton){e.preventDefault();e.stopPropagation();openCall(callButton);return}
   const alertButton=e.target.closest("[data-alert-index]");
   if(alertButton)openAlert(Number(alertButton.dataset.alertIndex));
