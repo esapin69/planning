@@ -273,6 +273,70 @@ details.control summary::-webkit-details-marker{display:none}
   .formation-card .important-time{font-size:.80em}
 }
 
+
+/* V5 — Formation et horaire strictement sur une seule ligne */
+.formation-head-line{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:nowrap;
+  gap:7px;
+  white-space:nowrap;
+  overflow:hidden;
+}
+.formation-head-label{
+  flex:0 1 auto;
+  min-width:0;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(22px,6vw,31px);
+  line-height:.95;
+  text-transform:uppercase;
+  letter-spacing:-.15px;
+}
+.formation-head-time{
+  flex:0 0 auto;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(18px,4.8vw,25px);
+  line-height:1;
+  letter-spacing:-.35px;
+}
+.formation-agent-block{
+  position:relative;
+}
+.formation-agent-block.has-alert{
+  padding-right:36px;
+}
+.formation-agent-alert{
+  position:absolute;
+  right:0;
+  top:8px;
+  width:31px;
+  height:31px;
+  border:0;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:#fff3cd;
+  color:#8a4b00;
+  font-size:17px;
+  cursor:pointer;
+  box-shadow:0 3px 0 rgba(7,24,63,.14);
+}
+.formation-agent-alert.danger{
+  background:#ffe8e4;
+  color:#b42318;
+}
+.formation-agent-alert:active{
+  transform:translateY(1px);
+  box-shadow:0 2px 0 rgba(7,24,63,.14);
+}
+@media(max-width:360px){
+  .formation-head-line{gap:5px}
+  .formation-head-label{font-size:20px}
+  .formation-head-time{font-size:17px}
+}
+
 </style>
 </head>
 <body>
@@ -617,23 +681,82 @@ function cleanFormationTitle(value){
 }
 function normalizeAlerts(value){
   const out=[];
+
   const push=v=>{
     if(v===null||v===undefined)return;
-    if(Array.isArray(v)){v.forEach(push);return;}
-    if(typeof v==="object"){
-      const title=v.titre||v.title||v.resume||v.message||v.detail||"";
-      const detail=v.detail||v.message||v.resume||title;
-      const level=String(v.niveau||v.level||"warning").toLowerCase().includes("danger")?"danger":"warning";
-      if(detail)out.push({title:String(title||"Point à vérifier"),detail:String(detail),level});
+
+    if(Array.isArray(v)){
+      v.forEach(push);
       return;
     }
+
+    if(typeof v==="object"){
+      const title=
+        v.titre||
+        v.title||
+        v.resume||
+        v.message||
+        v.detail||
+        "";
+
+      const detail=
+        v.detail||
+        v.message||
+        v.resume||
+        title;
+
+      const level=
+        String(v.niveau||v.level||"warning")
+          .toLowerCase()
+          .includes("danger")
+            ? "danger"
+            : "warning";
+
+      if(detail){
+        out.push({
+          title:String(title||"Point à vérifier"),
+          detail:String(detail),
+          level,
+          agentCible:String(
+            v.agentCible||
+            v.agent||
+            v.personne||
+            ""
+          ),
+          gheCible:String(v.gheCible||v.ghe||"")
+        });
+      }
+
+      return;
+    }
+
     const txt=String(v||"").trim();
-    if(txt)out.push({title:"Point à vérifier",detail:txt,level:/bloquant|danger|indisponible/i.test(txt)?"danger":"warning"});
+
+    if(txt){
+      out.push({
+        title:"Point à vérifier",
+        detail:txt,
+        level:/bloquant|danger|indisponible/i.test(txt)
+          ? "danger"
+          : "warning",
+        agentCible:"",
+        gheCible:""
+      });
+    }
   };
+
   push(value);
+
   const seen=new Set();
+
   return out.filter(a=>{
-    const key=(a.title+"|"+a.detail).toLowerCase();
+    const key=(
+      a.title+"|"+
+      a.detail+"|"+
+      a.agentCible+"|"+
+      a.gheCible
+    ).toLowerCase();
+
     if(seen.has(key))return false;
     seen.add(key);
     return true;
@@ -684,32 +807,100 @@ function renderImportant(jour){
 
     const sessionKey=`formation-${index}`;
     const sessionAlerts=normalizeAlerts(f.alertes);
-    infoStore[sessionKey]=sessionAlerts;
+
+    function normaliseRecherche(value){
+      return String(value||"")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g,"")
+        .toUpperCase()
+        .replace(/\s+/g," ")
+        .trim();
+    }
+
+    function alerteConcerneAgent(alerte,agent){
+      const cible=normaliseRecherche(
+        alerte.agentCible||
+        alerte.agent||
+        alerte.personne||
+        alerte.gheCible||
+        ""
+      );
+
+      const nom=normaliseRecherche(
+        agent.agent||
+        agent.nomComplet||
+        [agent.nom,agent.prenom].filter(Boolean).join(" ")||
+        agent.prenom||
+        ""
+      );
+
+      const prenom=normaliseRecherche(agent.prenom||"");
+      const ghe=normaliseRecherche(agent.ghe||"");
+      const texte=normaliseRecherche(
+        [alerte.title,alerte.detail,cible].filter(Boolean).join(" ")
+      );
+
+      return (
+        (!!cible && !!nom && (nom.includes(cible)||cible.includes(nom))) ||
+        (!!prenom && texte.includes(prenom)) ||
+        (!!ghe && texte.includes(ghe))
+      );
+    }
+
+    const alertesSessionRestantes=[...sessionAlerts];
 
     const agentsHtml=liste.map((agent,agentIndex)=>{
       const agentKey=`formation-${index}-agent-${agentIndex}`;
-      const agentAlerts=normalizeAlerts(agent.alertes);
+
+      const directes=normalizeAlerts(agent.alertes);
+      const rattachees=[];
+
+      for(let i=alertesSessionRestantes.length-1;i>=0;i--){
+        if(alerteConcerneAgent(alertesSessionRestantes[i],agent)){
+          rattachees.unshift(alertesSessionRestantes[i]);
+          alertesSessionRestantes.splice(i,1);
+        }
+      }
+
+      const agentAlerts=[...directes,...rattachees];
       infoStore[agentKey]=agentAlerts;
 
-      return `<div class="formation-agent-block">
+      const danger=agentAlerts.some(a=>a.level==="danger");
+
+      return `<div class="formation-agent-block${agentAlerts.length?" has-alert":""}">
         ${agentLine(agent)}
-        ${renderMiniAlert(agentAlerts,agentKey)}
+        ${
+          agentAlerts.length
+            ? `<button
+                class="formation-agent-alert${danger?" danger":""}"
+                type="button"
+                data-info-key="${esc(agentKey)}"
+                aria-label="Voir l’alerte concernant ${esc(agent.prenom||agent.agent||"cet agent")}">
+                ${danger?"🚨":"⚠️"}
+              </button>`
+            : ""
+        }
       </div>`;
     }).join("");
 
+    infoStore[sessionKey]=alertesSessionRestantes;
+
     html+=`
       <div class="card important formation-card">
-        <div class="important-heading">
-          <span>🎓</span>
-          <span>FORMATION</span>
-          ${f.horaire?`<span class="important-dot">·</span><span class="important-time">${esc(formatRange(f.horaire))}</span>`:""}
+        <div class="formation-head-line">
+          <span class="formation-head-label">🎓 FORMATION</span>
+          ${
+            f.horaire
+              ? `<span class="formation-head-time">${esc(formatRange(f.horaire))}</span>`
+              : ""
+          }
         </div>
 
         <div class="important-name">${esc(cleanFormationTitle(f.titre))}</div>
 
         ${agentsHtml||'<div class="empty">Aucun agent indiqué</div>'}
 
-        ${renderMiniAlert(sessionAlerts,sessionKey)}
+        ${renderMiniAlert(alertesSessionRestantes,sessionKey)}
       </div>
     `;
   });
