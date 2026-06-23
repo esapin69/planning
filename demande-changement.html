@@ -100,6 +100,7 @@ p{
   text-align:center;
 }
 .small{font-size:14px;color:var(--muted);line-height:1.35;text-align:left;font-weight:750}
+.choiceSubtitle{margin:18px 0 10px;font-size:18px;color:var(--ink);line-height:1.2;text-align:left;font-weight:950}
 .page{display:none;animation:fade .16s ease-out}.page.active{display:block}
 @keyframes fade{from{opacity:.25;transform:translateY(5px)}to{opacity:1;transform:none}}
 .card{
@@ -2642,6 +2643,7 @@ function renderExchange(){
   $('exchangeList').innerHTML=state.basket.map((it,idx)=>`<div class="exchangeCard ${(state.noAgent||it.accepteur_id)&&it.objectif?'done':''}" id="card_${attr(it.item_id)}">
     <div class="dayTitle">${esc(labelLong(it.label_demandeur,it.mois_demandeur,it.jour_demandeur))}</div>
     <div class="small">Ton horaire actuel :</div>${currentShiftCardHtml(it.shift_demandeur)}
+    <div class="choiceSubtitle">Choisis maintenant l’horaire souhaité :</div>
     <div class="goalGrid">${goalsForItem(it).map(g=>`<button class="goal ${it.objectif===g.code?'active':''}" onclick="chooseGoal('${attr(it.item_id)}','${g.code}')" aria-label="Choisir ${attr(goalText(g.code))}">${goalChoiceHtml(g.code)}</button>`).join('')}</div>
     ${renderChosen(it)}
     <div id="cand_${attr(it.item_id)}" class="candidateList">${renderCandidates(it)}</div>
