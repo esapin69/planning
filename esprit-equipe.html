@@ -236,6 +236,43 @@ details.control summary::-webkit-details-marker{display:none}
 .agent-name{text-transform:uppercase}
 .ghe{text-transform:none;color:rgba(7,24,63,.56);font-size:.88em}
 
+
+/* Formation : titre + horaire sur une seule ligne */
+.formation-card .important-heading{
+  flex-wrap:nowrap;
+  gap:5px;
+  white-space:nowrap;
+  font-size:clamp(18px,4.65vw,30px);
+  letter-spacing:-.15px;
+}
+.formation-card .important-heading > span{flex:0 0 auto}
+.formation-card .important-time{
+  font-size:.84em;
+  letter-spacing:-.35px;
+}
+.formation-agent-block{
+  border-top:2px dashed rgba(7,24,63,.22);
+  padding:0;
+}
+.formation-agent-block:first-of-type{border-top:0}
+.formation-agent-block .agent{
+  border-top:0;
+  padding:10px 0 7px;
+}
+.formation-agent-block .mini-alert{
+  margin:0 0 8px;
+  padding:7px 4px 8px;
+  border-top:0;
+  font-size:12.5px;
+}
+@media(max-width:390px){
+  .formation-card .important-heading{
+    font-size:clamp(17px,4.45vw,27px);
+    gap:4px;
+  }
+  .formation-card .important-time{font-size:.80em}
+}
+
 </style>
 </head>
 <body>
@@ -605,9 +642,15 @@ function normalizeAlerts(value){
 function renderMiniAlert(alerts,key){
   const list=normalizeAlerts(alerts);
   if(!list.length)return "";
+
   const danger=list.some(a=>a.level==="danger");
+  const first=list.find(a=>a.level==="danger")||list[0];
+  const title=first&&first.title
+    ? String(first.title)
+    : (danger?"Alerte":"À vérifier");
+
   return `<button class="mini-alert${danger?" danger":""}" type="button" data-info-key="${esc(key)}">
-    <span>${danger?"🚨 Alerte":"⚠️ À vérifier"} · ${list.length} information${list.length>1?"s":""}</span>
+    <span>${danger?"🚨":"⚠️"} ${esc(title)}</span>
     <span class="mini-arrow">›</span>
   </button>`;
 }
@@ -638,20 +681,35 @@ function renderImportant(jour){
 
   formations.forEach((f,index)=>{
     const liste=asArray(f.agents);
-    const key=`formation-${index}`;
-    const alerts=[...normalizeAlerts(f.alertes)];
-    liste.forEach(agent=>alerts.push(...normalizeAlerts(agent.alertes)));
-    infoStore[key]=alerts;
+
+    const sessionKey=`formation-${index}`;
+    const sessionAlerts=normalizeAlerts(f.alertes);
+    infoStore[sessionKey]=sessionAlerts;
+
+    const agentsHtml=liste.map((agent,agentIndex)=>{
+      const agentKey=`formation-${index}-agent-${agentIndex}`;
+      const agentAlerts=normalizeAlerts(agent.alertes);
+      infoStore[agentKey]=agentAlerts;
+
+      return `<div class="formation-agent-block">
+        ${agentLine(agent)}
+        ${renderMiniAlert(agentAlerts,agentKey)}
+      </div>`;
+    }).join("");
 
     html+=`
       <div class="card important formation-card">
         <div class="important-heading">
-          <span>🎓</span><span class="important-dot">·</span><span>Formation</span>
+          <span>🎓</span>
+          <span>FORMATION</span>
           ${f.horaire?`<span class="important-dot">·</span><span class="important-time">${esc(formatRange(f.horaire))}</span>`:""}
         </div>
+
         <div class="important-name">${esc(cleanFormationTitle(f.titre))}</div>
-        ${liste.length?liste.map(agentLine).join(""):'<div class="empty">Aucun agent indiqué</div>'}
-        ${renderMiniAlert(alerts,key)}
+
+        ${agentsHtml||'<div class="empty">Aucun agent indiqué</div>'}
+
+        ${renderMiniAlert(sessionAlerts,sessionKey)}
       </div>
     `;
   });
