@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#07183f">
 <title>Esprit d’équipe — GHE</title>
-<link rel="preload" as="image" href="/Image/Chargement/Organisation.PNG" fetchpriority="high">
+<link rel="preload" as="image" href="Image/Chargement/Organisation.PNG" fetchpriority="high">
 <style>
 *,*::before,*::after{box-sizing:border-box}
 :root{
@@ -25,6 +25,23 @@ body{
 body.modal-open{overflow:hidden}
 button,a{font:inherit;color:inherit}
 .page{width:min(920px,100%);margin:auto;padding:calc(10px + env(safe-area-inset-top)) 10px calc(34px + env(safe-area-inset-bottom))}
+
+.hero-photo{
+  overflow:hidden;
+  border:5px solid var(--ink);
+  border-radius:30px;
+  background:#07183f;
+  box-shadow:0 10px 0 rgba(7,24,63,.20),0 15px 0 rgba(0,0,0,.12);
+  margin-bottom:14px;
+}
+.hero-photo img{
+  display:block;
+  width:100%;
+  height:clamp(170px,46vw,320px);
+  object-fit:cover;
+  object-position:center;
+}
+
 .hero{
   background:radial-gradient(circle at 18% 10%,rgba(255,255,255,.13),transparent 30%),
              linear-gradient(135deg,#07183f 0%,#101f46 58%,#020817 100%);
@@ -90,6 +107,13 @@ details.control summary::-webkit-details-marker{display:none}
 </head>
 <body>
 <main class="page">
+  <section class="hero-photo">
+    <img src="Image/Chargement/Organisation.PNG"
+         alt="Organisation du jour"
+         fetchpriority="high"
+         onerror="this.onerror=null;this.src='/Image/Chargement/Organisation.PNG';">
+  </section>
+
   <section class="hero">
     <div class="badge">👑 Organisation du jour</div>
     <h1>Esprit d’équipe</h1>
