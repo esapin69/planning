@@ -2,840 +2,219 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fff7dd">
 <title>GHE — Stagiaires</title>
 <style>
 *,*::before,*::after{box-sizing:border-box}
 :root{
-  --ink:#07183f;
-  --ink-soft:#33415f;
-  --cream:#fff7dd;
-  --paper:#fffaf0;
-  --paper-2:#fff2c9;
-  --line:#07183f;
-  --muted-line:rgba(7,24,63,.18);
-
-  --danger:#b42318;
-  --danger-bg:#fff0ec;
-  --warning:#8a4b00;
-  --warning-bg:#fff4c7;
-  --ok:#176b39;
-  --ok-bg:#eaf8ef;
-
-  --matin:#1976f3;
-  --matin-soft:#dcebff;
-  --journee:#20a754;
-  --journee-soft:#dff6e8;
-  --j4:#f27617;
-  --j4-soft:#ffead6;
-  --soir:#f0c400;
-  --soir-soft:#fff3a8;
-  --nuit:#6d42d8;
-  --nuit-soft:#e9e0ff;
-  --off:#6b7280;
-  --off-soft:#eceef2;
-
-  --shadow:0 7px 0 rgba(7,24,63,.16);
-  --shadow-small:0 4px 0 rgba(7,24,63,.12);
-  --font:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  --ink:#07183f;--ink-soft:#33415f;--cream:#fff7dd;--paper:#fffaf0;--paper2:#fff2c9;
+  --danger:#b42318;--danger-bg:#fff0ec;--warning:#8a4b00;--warning-bg:#fff4c7;
+  --ok:#176b39;--ok-bg:#eaf8ef;--line:#07183f;--shadow:0 6px 0 rgba(7,24,63,.15);
   --display:Impact,"Arial Black",system-ui,sans-serif;
 }
 html,body{margin:0;min-height:100%;background:var(--cream);color:var(--ink)}
-body{font-family:var(--font)}
-a{color:inherit}
-.page{
-  width:min(1080px,100%);
-  margin:auto;
-  padding:calc(10px + env(safe-area-inset-top)) 8px calc(130px + env(safe-area-inset-bottom));
-}
-
-/* RETOUR ACCUEIL — même style que les autres pages */
-.topbar{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:10px;
-  margin:8px 0 20px;
-}
-.navbtn{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:84px;
-  padding:14px 18px;
-  border:6px solid var(--line);
-  border-radius:28px;
-  background:
-    radial-gradient(circle at 16% 4%,rgba(255,255,255,.13),transparent 30%),
-    repeating-linear-gradient(-7deg,rgba(255,255,255,.045) 0 2px,transparent 2px 15px),
-    linear-gradient(145deg,#4a4d52 0%,#2d3035 48%,#181a1e 100%);
-  color:#fff5d7;
-  text-decoration:none;
-  font-family:var(--display);
-  font-size:clamp(28px,6.4vw,46px);
-  line-height:.95;
-  letter-spacing:.025em;
-  text-transform:uppercase;
-  text-shadow:
-    0 3px 0 rgba(0,0,0,.55),
-    0 6px 0 rgba(210,162,69,.22);
-  box-shadow:
-    0 10px 0 rgba(7,24,63,.24),
-    0 15px 0 rgba(0,0,0,.10),
-    inset 0 0 0 3px rgba(255,255,255,.06);
-}
-.navbtn:active{
-  transform:translateY(4px);
-  box-shadow:
-    0 6px 0 rgba(7,24,63,.24),
-    0 10px 0 rgba(0,0,0,.10),
-    inset 0 0 0 3px rgba(255,255,255,.06);
-}
-
-/* BANNIÈRE LIBRE — plus de carte autour de l’image */
-.hero{
-  margin:0 0 18px;
-  padding:0;
-  border:0;
-  border-radius:0;
-  overflow:visible;
-  background:transparent;
-  box-shadow:none;
-}
-.hero img{
-  display:block;
-  width:100%;
-  height:auto;
-  max-height:none;
-  margin:0 auto;
-  border:0;
-  border-radius:0;
-  object-fit:contain;
-  object-position:center;
-  filter:drop-shadow(0 10px 0 rgba(7,24,63,.13));
-}
-
-.pilot{
-  background:var(--paper);border:4px solid var(--line);border-radius:22px;
-  padding:12px;box-shadow:var(--shadow);margin-bottom:10px
-}
-.pilot.ok{border-color:var(--ok)}
-.pilot.warning{border-color:#d2a631}
-.pilot.danger{border-color:#c43a2f}
-.pilot-title{font-weight:950;font-size:20px;line-height:1.1}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+body.modal-open{overflow:hidden}
+button,input,a{font:inherit;color:inherit}
+[hidden]{display:none!important}
+.page{width:min(1080px,100%);margin:auto;padding:calc(8px + env(safe-area-inset-top)) 8px calc(80px + env(safe-area-inset-bottom))}
+.topbar{display:flex;gap:9px;margin-bottom:9px}
+.navbtn{min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:8px 14px;border:3px solid var(--line);border-radius:18px;background:var(--paper);text-decoration:none;font-size:18px;font-weight:950;box-shadow:0 4px 0 rgba(7,24,63,.12)}
+.hero{border:4px solid var(--line);border-radius:22px;overflow:hidden;background:var(--ink);box-shadow:var(--shadow);margin-bottom:11px}
+.hero img{display:block;width:100%;height:clamp(104px,24vw,190px);object-fit:cover}
+.pilot{background:var(--paper);border:4px solid var(--line);border-radius:22px;padding:11px 12px;box-shadow:var(--shadow);margin-bottom:10px}
+.pilot.ok{border-color:#2f8f4e}.pilot.warning{border-color:#d2a631}.pilot.danger{border-color:#c43a2f}
+.pilot-title{font-weight:950;font-size:clamp(21px,5.5vw,33px);line-height:1.02}
 .pilot-sub{margin-top:4px;color:var(--ink-soft);font-size:14px;font-weight:850;line-height:1.25}
-.pilot-line{margin-top:10px;display:flex;flex-wrap:wrap;gap:7px}
-.mini-pill,.chip{
-  display:inline-flex;align-items:center;gap:5px;min-height:30px;
-  padding:6px 9px;border-radius:999px;background:var(--paper-2);
-  border:2px solid var(--muted-line);font-size:14px;font-weight:900
-}
-.mini-pill.ok,.chip.ok{background:var(--ok-bg);color:var(--ok);border-color:#9dd5af}
-.mini-pill.warning,.chip.warning{background:var(--warning-bg);color:var(--warning);border-color:#e2c060}
-.mini-pill.danger,.chip.danger{background:var(--danger-bg);color:var(--danger);border-color:#e7a29d}
-.tools{display:grid;gap:8px;margin-bottom:14px}
-.search{
-  width:100%;min-height:48px;border:3px solid var(--line);border-radius:17px;
-  padding:9px 12px;font-size:16px;font-weight:850;background:var(--paper);
-  color:var(--ink);outline:none;box-shadow:var(--shadow-small)
-}
-.search::placeholder{color:rgba(7,24,63,.38)}
-.filters{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px}
-.filter-btn{
-  flex:0 0 auto;border:3px solid var(--line);border-radius:999px;
-  background:var(--paper);color:var(--ink);padding:8px 12px;
-  font-size:14px;font-weight:950;cursor:pointer;box-shadow:0 3px 0 rgba(7,24,63,.12)
-}
+.pilot-pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+.pill{display:inline-flex;align-items:center;min-height:30px;padding:6px 9px;border-radius:999px;background:var(--paper2);border:2px solid rgba(7,24,63,.18);font-size:13px;font-weight:900}
+.pill.ok{background:var(--ok-bg);color:var(--ok)}.pill.warning{background:var(--warning-bg);color:var(--warning)}.pill.danger{background:var(--danger-bg);color:var(--danger)}
+.tools{display:grid;gap:8px;margin-bottom:12px}
+.search{width:100%;min-height:48px;border:3px solid var(--line);border-radius:17px;padding:9px 12px;font-size:16px;font-weight:850;background:var(--paper);outline:none;box-shadow:0 4px 0 rgba(7,24,63,.12)}
+.filters{display:flex;gap:7px;overflow-x:auto;padding:1px 0 4px}
+.filter-btn{flex:0 0 auto;border:3px solid var(--line);border-radius:999px;background:var(--paper);padding:8px 12px;font-size:14px;font-weight:950;cursor:pointer}
 .filter-btn.active{background:var(--ink);color:var(--cream)}
-.section-label{
-  margin:19px 4px 8px;color:rgba(7,24,63,.62);
-  text-transform:uppercase;font-size:13px;font-weight:950;letter-spacing:.7px
-}
-.summary-list{display:grid;gap:8px;margin-bottom:14px}
-.summary-row{
-  position:relative;overflow:hidden;background:var(--paper);border:3px solid var(--line);
-  border-radius:20px;padding:11px 12px 11px 17px;box-shadow:var(--shadow-small)
-}
-.summary-row::before{
-  content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--ok)
-}
-.summary-row.warning::before{background:#d2a631}
-.summary-row.danger::before{background:#c43a2f}
-.summary-title{
-  font-family:var(--display);font-size:clamp(25px,6.4vw,40px);
-  line-height:.92;letter-spacing:-.5px;text-transform:uppercase
-}
-.summary-meta{margin-top:5px;color:var(--ink-soft);font-size:14px;line-height:1.2;font-weight:850}
-.summary-issues{margin-top:7px;display:flex;flex-wrap:wrap;gap:6px}
-.day-title{
-  margin:25px 4px 10px;font-family:var(--display);
-  font-size:clamp(35px,9vw,62px);line-height:.88;letter-spacing:-1px;
-  text-transform:uppercase;text-shadow:0 3px 0 #f8d67d
-}
-.main-card{
-  background:var(--paper);border:4px solid var(--line);border-radius:26px;
-  padding:12px;margin-bottom:16px;box-shadow:var(--shadow)
-}
-.main-card.warning{border-color:#d2a631}
-.main-card.danger{border-color:#c43a2f}
-.avatar{
-  width:68px;height:68px;border-radius:18px;background:#eaf0ff;
-  overflow:hidden;display:flex;align-items:center;justify-content:center;
-  border:2px solid rgba(7,24,63,.13);flex:0 0 auto
-}
-.avatar img{max-width:97%;max-height:97%;width:auto;height:auto;object-fit:contain;display:block}
-.avatar .initials{
-  width:54px;height:54px;border-radius:15px;border:3px solid var(--line);
-  background:var(--paper);display:flex;align-items:center;justify-content:center;
-  font-family:var(--display);font-size:20px
-}
+.day-title{margin:22px 4px 9px;font-family:var(--display);font-size:clamp(31px,8vw,56px);line-height:.88;text-transform:uppercase;text-shadow:0 3px 0 #f8d67d}
+.main-card{background:var(--paper);border:4px solid var(--line);border-radius:24px;padding:10px;margin-bottom:12px;box-shadow:var(--shadow)}
+.main-card.warning{border-color:#d2a631}.main-card.danger{border-color:#c43a2f}
+.card-toggle{width:100%;border:0;background:transparent;padding:2px;text-align:left;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;cursor:pointer}
+.card-title{font-size:clamp(18px,4.8vw,28px);line-height:1.05;font-weight:950;text-transform:uppercase;overflow-wrap:anywhere}
+.card-meta{margin-top:7px;display:flex;flex-wrap:wrap;gap:6px}
+.chevron{width:34px;height:34px;border-radius:50%;border:3px solid var(--line);display:flex;align-items:center;justify-content:center;background:var(--paper2);font-size:22px;transition:transform .18s}
+.card-toggle[aria-expanded="true"] .chevron{transform:rotate(180deg)}
+.issue-btn{width:100%;min-height:42px;margin-top:8px;border:2px solid rgba(7,24,63,.18);border-radius:15px;padding:8px 10px;background:var(--paper2);display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;font-weight:950;text-align:left;cursor:pointer}
+.issue-btn.warning{background:var(--warning-bg);color:var(--warning);border-color:#e2c060}
+.issue-btn.danger{background:var(--danger-bg);color:var(--danger);border-color:#e7a29d}
+.details{display:grid;gap:8px;padding-top:10px}
+.person{display:grid;grid-template-columns:62px minmax(0,1fr);gap:9px;align-items:center;padding:9px;border:3px solid var(--line);border-radius:20px;background:var(--paper2)}
+.person.stagiaire{border-color:#2f67c8;background:linear-gradient(145deg,#edf3ff,#fffaf0)}
+.person.referent{border-color:#2f8f4e;background:linear-gradient(145deg,#e8f8ee,#fffaf0)}
+.avatar{width:62px;height:62px;border-radius:17px;background:#eaf0ff;overflow:hidden;display:flex;align-items:center;justify-content:center;border:2px solid rgba(7,24,63,.13)}
+.avatar img{max-width:97%;max-height:97%;object-fit:contain;display:block}
+.initials{width:49px;height:49px;border-radius:14px;border:3px solid var(--line);background:var(--paper);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:19px}
 .avatar.has-img .initials{display:none}
-.role{
-  display:block;margin-bottom:3px;color:rgba(7,24,63,.58);
-  font-size:12px;font-weight:950;letter-spacing:.65px;text-transform:uppercase
-}
-.person-name{
-  display:block;font-size:clamp(22px,5.7vw,34px);line-height:.98;
-  font-weight:950;letter-spacing:-.7px;text-transform:uppercase;
-  overflow-wrap:anywhere
-}
-.info-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.info-chip{
-  min-height:29px;display:inline-flex;align-items:center;gap:5px;
-  padding:5px 9px;border-radius:999px;border:2px solid var(--muted-line);
-  background:var(--paper);font-size:13px;line-height:1.05;font-weight:900
-}
-.info-chip a{color:#064ee4;font-weight:950;text-decoration:none}
-.shift-pill{
-  display:inline-flex;align-items:center;gap:6px;min-height:34px;
-  padding:7px 11px;border:3px solid var(--line);border-radius:999px;
-  font-size:14px;line-height:1;font-weight:950;box-shadow:0 3px 0 rgba(7,24,63,.12)
-}
-.shift-pill.matin{background:var(--matin-soft);border-color:var(--matin);color:#074baf}
-.shift-pill.journee{background:var(--journee-soft);border-color:var(--journee);color:#0b6d31}
-.shift-pill.j4{background:var(--j4-soft);border-color:var(--j4);color:#9b3e00}
-.shift-pill.soir{background:var(--soir-soft);border-color:#d4a900;color:#6f5500}
-.shift-pill.nuit{background:var(--nuit-soft);border-color:var(--nuit);color:#43219d}
-.shift-pill.off,.shift-pill.unknown{background:var(--off-soft);border-color:#9ca3af;color:#4b5563}
-.alerts{display:grid;gap:7px;margin-top:9px}
-.alert{
-  padding:9px 11px;border-radius:15px;border:2px solid transparent;
-  font-size:14px;line-height:1.25;font-weight:850
-}
-.alert.danger{background:var(--danger-bg);color:var(--danger);border-color:#e7a29d}
-.alert.warning{background:var(--warning-bg);color:var(--warning);border-color:#e2c060}
-.empty,.error,.loading{
-  background:var(--paper);border:4px solid var(--line);border-radius:21px;
-  padding:14px;font-weight:900;box-shadow:var(--shadow)
-}
+.role{display:block;margin-bottom:3px;color:rgba(7,24,63,.58);font-size:12px;font-weight:950;letter-spacing:.65px;text-transform:uppercase}
+.person-name{display:block;font-size:clamp(21px,5.4vw,33px);line-height:.98;font-weight:950;text-transform:uppercase;overflow-wrap:anywhere}
+.info{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.chip{display:inline-flex;align-items:center;min-height:29px;padding:5px 8px;border-radius:999px;border:2px solid rgba(7,24,63,.18);background:var(--paper);font-size:13px;font-weight:900}
+.loading,.error,.empty{background:var(--paper);border:4px solid var(--line);border-radius:21px;padding:14px;font-weight:900;box-shadow:var(--shadow)}
 .error{color:var(--danger)}
-.agenda-box{
-  margin:27px 0 4px;padding:13px;background:var(--paper);
-  border:4px solid var(--line);border-radius:25px;box-shadow:var(--shadow)
-}
-.agenda-title{
-  margin:0 0 10px;font-family:var(--display);font-size:clamp(25px,7vw,44px);
-  line-height:.92;text-align:center;text-transform:uppercase;
-  letter-spacing:-.8px;text-shadow:0 3px 0 #f8d67d
-}
-.agenda-buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.agenda-btn{
-  min-height:62px;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:2px;text-decoration:none;color:#fff4ce;
-  border:4px solid #061738;border-radius:20px;font-family:var(--display);
-  font-size:clamp(21px,5.5vw,34px);line-height:.95;text-transform:uppercase;
-  box-shadow:0 6px 0 rgba(7,24,63,.32)
-}
-.agenda-btn.ios{background:linear-gradient(145deg,#3db9ff 0%,#0c6ed5 56%,#083c91 100%)}
-.agenda-btn.android{background:linear-gradient(145deg,#35d864 0%,#12873d 56%,#075324 100%)}
-@media(min-width:720px){
-  .page{padding-left:14px;padding-right:14px}
-  .main-card,.pilot{padding:14px}
-  .avatar{width:76px;height:76px}
-}
-@media(max-width:620px){
-  .topbar{margin:4px 0 16px}
-  .navbtn{
-    min-height:74px;
-    border-width:4px;
-    border-radius:24px;
-    font-size:clamp(25px,6.4vw,36px);
-  }
-  .hero{margin-bottom:16px}
-  .hero img{filter:drop-shadow(0 8px 0 rgba(7,24,63,.12))}
-}
-@media(max-width:370px){
-  .avatar{width:58px;height:58px;border-radius:15px}
-  .avatar .initials{width:47px;height:47px;font-size:18px}
-  .person-name{font-size:20px}
-  .shift-pill,.info-chip,.chip{font-size:12px;padding:5px 7px}
-}
-
-.binome{
-  display:grid;gap:9px;align-items:stretch
-}
-.person-panel{
-  position:relative;display:grid;grid-template-columns:68px minmax(0,1fr);
-  gap:10px;align-items:center;min-width:0;padding:10px;
-  background:var(--paper-2);border:3px solid var(--line);border-radius:21px
-}
-.person-panel.stagiaire{
-  background:linear-gradient(145deg,#edf3ff 0%,#fffaf0 72%);
-  border-color:#2f67c8
-}
-.person-panel.referent{
-  background:linear-gradient(145deg,#e8f8ee 0%,#fffaf0 72%);
-  border-color:#2f8f4e
-}
-.binome-link{
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  min-height:38px;padding:7px 12px;border:3px solid var(--line);
-  border-radius:15px;background:var(--ink);color:var(--cream);
-  font-size:13px;font-weight:950;letter-spacing:.55px;text-transform:uppercase
-}
-.binome-link .arrow{font-size:21px;line-height:1}
-@media(min-width:720px){
-  .binome{grid-template-columns:1fr 150px 1fr;align-items:center}
-  .binome-link{height:100%;min-height:78px;flex-direction:column;text-align:center}
-  .binome-link .arrow{transform:rotate(-90deg)}
-  .person-panel{grid-template-columns:76px minmax(0,1fr)}
-}
+.modal{position:fixed;inset:0;z-index:1000;display:none;align-items:flex-end;justify-content:center;padding:10px;background:rgba(2,8,23,.67);backdrop-filter:blur(5px)}
+.modal.open{display:flex}
+.modal-panel{width:min(620px,100%);max-height:88vh;overflow:auto;background:var(--paper);border:5px solid var(--line);border-radius:27px;padding:14px;box-shadow:0 15px 0 rgba(0,0,0,.27)}
+.modal-title{margin:0;font-family:var(--display);font-size:clamp(30px,8vw,49px);line-height:.9;text-transform:uppercase}
+.modal-sub{margin:7px 0 12px;color:var(--ink-soft);font-weight:800;line-height:1.3}
+.issue-section{border:3px solid var(--line);border-radius:19px;padding:10px;margin-top:9px}
+.issue-section.stagiaire{border-color:#2f67c8}.issue-section.referent{border-color:#2f8f4e}.issue-section.affectation{border-color:#d2a631}
+.issue-section-title{font-size:14px;font-weight:950;text-transform:uppercase;letter-spacing:.5px}
+.issue-detail{margin-top:8px;border-radius:15px;padding:9px;border:2px solid transparent}
+.issue-detail.warning{background:var(--warning-bg);color:var(--warning);border-color:#e2c060}
+.issue-detail.danger{background:var(--danger-bg);color:var(--danger);border-color:#e7a29d}
+.issue-message{font-size:14px;font-weight:950;line-height:1.3}
+.issue-action{margin-top:6px;padding-top:6px;border-top:1px solid currentColor;font-size:13px;font-weight:800;line-height:1.3}
+.close-btn{width:100%;min-height:52px;margin-top:12px;border:4px solid var(--line);border-radius:17px;background:var(--ink);color:var(--cream);font-weight:950}
+@media(min-width:720px){.modal{align-items:center}.details{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 <main class="page">
-  <div class="topbar">
-    <a class="navbtn" href="index.html">← Retour accueil</a>
-  </div>
-
-  <section class="hero">
-    <img src="Image/Bannière/Page stagiaire.PNG" alt="Stagiaires GHE"
-      onerror="this.onerror=null;this.src='Image/Banni%C3%A8re/Page%20stagiaire.PNG';">
-  </section>
-
-  <section id="pilot" class="pilot ok">
-    <div id="pilotTitle" class="pilot-title">Chargement du cockpit…</div>
-    <div id="pilotSub" class="pilot-sub">Analyse des présences stagiaires à venir</div>
-    <div class="pilot-line">
-      <span id="pilotStudents" class="mini-pill">👶 0 stagiaire</span>
-      <span id="pilotDates" class="mini-pill">📅 0 date prévue</span>
-      <span id="pilotDanger" class="mini-pill danger">⛔ 0 bloquant</span>
-      <span id="pilotWarning" class="mini-pill warning">⚠️ 0 à vérifier</span>
-    </div>
-  </section>
-
+  <div class="topbar"><a class="navbtn" href="index.html">← Accueil</a></div>
+  <section class="hero"><img src="Image/Bannière/Page stagiaire.PNG" alt="Stagiaires GHE" onerror="this.onerror=null;this.src='Image/Banni%C3%A8re/Page%20stagiaire.PNG';"></section>
+  <section id="pilot" class="pilot"><div class="pilot-title">Chargement des stagiaires…</div><div class="pilot-sub">Lecture de la source GHE.</div></section>
   <section class="tools">
-    <input id="search" class="search" type="search" placeholder="Rechercher stagiaire, référent, GHE, téléphone…">
+    <input id="search" class="search" type="search" placeholder="Rechercher stagiaire, référent ou GHE…" autocomplete="off">
     <div class="filters">
-      <button class="filter-btn active" data-filter="tous">Tous</button>
-      <button class="filter-btn" data-filter="traiter">À traiter</button>
-      <button class="filter-btn" data-filter="bloquants">Bloquants</button>
+      <button class="filter-btn active" data-filter="tous" type="button">Tous</button>
+      <button class="filter-btn" data-filter="traiter" type="button">À vérifier</button>
+      <button class="filter-btn" data-filter="bloquants" type="button">Bloquants</button>
     </div>
   </section>
-
-  <div class="section-label">Stagiaires concernés</div>
-  <section id="studentSummary" class="summary-list"><div class="loading">Analyse des stagiaires…</div></section>
-
-  <div class="section-label">Détail par date</div>
-  <section id="content"><div class="loading">Chargement des stagiaires…</div></section>
-
-  <section class="agenda-box">
-    <h2 class="agenda-title">Ajouter l’agenda stagiaires</h2>
-    <div class="agenda-buttons">
-      <a id="btnIos" class="agenda-btn ios" href="#"><span>🍎</span><span>iOS</span></a>
-      <a id="btnAndroid" class="agenda-btn android" href="#"><span>🤖</span><span>Android</span></a>
-    </div>
-  </section>
+  <section id="content"><div class="loading">Chargement…</div></section>
 </main>
+
+<div class="modal" id="issueModal" aria-hidden="true">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="issueModalTitle">
+    <h2 class="modal-title" id="issueModalTitle">Points à vérifier</h2>
+    <p class="modal-sub" id="issueModalSub"></p>
+    <div id="issueModalBody"></div>
+    <button class="close-btn" id="issueModalClose" type="button">Fermer</button>
+  </div>
+</div>
+
 <script>
-function plural(number){ return Number(number) > 1 ? "s" : ""; }
-
-function esc(value){
-  return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-}
-
-function norm(value){
-  return String(value ?? "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")
-    .toLowerCase()
-    .trim();
-}
-
-function hasUsefulValue(value){
-  const n = norm(value);
-  return !!n &&
-    n !== "nr" &&
-    n !== "-" &&
-    !n.includes("non renseigne") &&
-    !n.includes("non connu") &&
-    !n.includes("inconnu");
-}
-
-function pushUnique(list,message){
-  const key = norm(message);
-  if (key && !list.some(item => norm(item) === key)) list.push(String(message).trim());
-}
-
-function dedupeList(list){
-  const seen = new Set();
-  return (list || []).filter(item => {
-    const key = norm(item);
-    if (!key || seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-}
-
-function groupByDate(items){
-  return (items || []).reduce((acc,item) => {
-    const key = item.dateKey || item.dateLabel || "sans-date";
-    (acc[key] ||= []).push(item);
-    return acc;
-  }, {});
-}
-
-function avatarHtml(avatar){
-  avatar = avatar || {};
-  const initials = esc(avatar.initiales || "?");
-  const thumb = String(avatar.thumb || "").trim();
-
-  if (!thumb) {
-    return `<div class="avatar"><div class="initials">${initials}</div></div>`;
-  }
-
-  return `
-    <div class="avatar has-img">
-      <img src="${esc(thumb)}" alt="" loading="lazy"
-        onerror="this.parentElement.classList.remove('has-img');this.remove();">
-      <div class="initials">${initials}</div>
-    </div>
-  `;
-}
-
-function formatGhe(value){
-  if (!hasUsefulValue(value)) return "";
-  const cleaned = String(value).replace(/^(ghe\s*)+/i,"").trim();
-  return cleaned ? "GHE " + cleaned : "";
-}
-
-function issueBlock(issues){
-  const danger = (issues && issues.danger) || [];
-  const warning = (issues && issues.warning) || [];
-  if (!danger.length && !warning.length) return "";
-
-  return `
-    <div class="alerts">
-      ${danger.map(x => `<div class="alert danger">⛔ ${esc(x)}</div>`).join("")}
-      ${warning.map(x => `<div class="alert warning">⚠️ ${esc(x)}</div>`).join("")}
-    </div>
-  `;
-}
-
-function shiftCodeFromAny(value){
-  const parts = typeof value === "object" && value
-    ? [value.code,value.label,value.base,value.horaire]
-    : [value];
-
-  const raw = parts.filter(Boolean).join(" ")
-    .normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase();
-  const compact = raw.replace(/[^A-Z0-9]/g,"");
-  const tokens = raw.replace(/[^A-Z0-9]+/g," ").trim().split(/\s+/).filter(Boolean);
-
-  if (/^M\d+$/.test(compact) || compact.includes("M0130") || compact.includes("M0131")) return "M";
-  if (/^S\d+$/.test(compact) || compact.includes("S0113")) return "S";
-  if (compact.includes("J0464")) return "J";
-  if (tokens.includes("J4") || compact === "J4") return "J4";
-  if (/^J\d+$/.test(compact)) return "J";
-  if (/^N\d+$/.test(compact)) return "N";
-
-  if (tokens.includes("RTTA") || tokens.includes("RTA") || compact === "RTTA" || compact === "RTA") return "RTTA";
-  if (tokens.includes("RTT") || compact === "RTT") return "RTT";
-
-  const exact = ["RH","CA","RC","RF","SYR","ABS","AM","MA","AA","AR","FO","M","J","S","N"];
-  for (const code of exact) if (tokens.includes(code) || compact === code) return code;
-
-  if (raw.includes("MATIN")) return "M";
-  if (raw.includes("JOURNEE")) return "J";
-  if (raw.includes("SOIR")) return "S";
-  if (raw.includes("NUIT")) return "N";
-  if (raw.includes("SYNDICAT")) return "SYR";
-  if (raw.includes("ABSENCE")) return "ABS";
-  return "";
-}
-
-function shiftMeta(value){
-  const code = shiftCodeFromAny(value);
-  const map = {
-    M:{label:"Matin",icon:"🔵",className:"matin",worked:true,blocking:false},
-    J:{label:"Journée",icon:"🟢",className:"journee",worked:true,blocking:false},
-    J4:{label:"Journée J4",icon:"🟠",className:"j4",worked:true,blocking:false},
-    S:{label:"Soir",icon:"🟡",className:"soir",worked:true,blocking:false},
-    N:{label:"Nuit",icon:"🌙",className:"nuit",worked:true,blocking:false},
-
-    RH:{label:"Repos hebdomadaire",icon:"🛋️",className:"off",worked:false,blocking:true},
-    CA:{label:"Congé payé",icon:"🏝️",className:"off",worked:false,blocking:true},
-    RC:{label:"Repos compensateur",icon:"🔁",className:"off",worked:false,blocking:true},
-    RF:{label:"Repos férié",icon:"🎌",className:"off",worked:false,blocking:true},
-    RTT:{label:"RTT",icon:"🧘",className:"off",worked:false,blocking:true},
-    RTTA:{label:"Récupération du temps de travail",icon:"🧘",className:"off",worked:false,blocking:true},
-    SYR:{label:"Syndicat",icon:"🗣️",className:"off",worked:false,blocking:true},
-    ABS:{label:"Absence",icon:"⚠️",className:"off",worked:false,blocking:true},
-    AM:{label:"Arrêt médical",icon:"🩺",className:"off",worked:false,blocking:true},
-    MA:{label:"Maladie",icon:"🩺",className:"off",worked:false,blocking:true},
-    AA:{label:"Absence autorisée",icon:"📝",className:"off",worked:false,blocking:true},
-    AR:{label:"Absence à régulariser",icon:"⚠️",className:"off",worked:false,blocking:true},
-    FO:{label:"Formation",icon:"🎓",className:"off",worked:false,blocking:true}
-  };
-
-  return code && map[code]
-    ? {...map[code],code,known:true}
-    : {code:"",label:"Shift à vérifier",icon:"⚪",className:"unknown",worked:false,blocking:false,known:false};
-}
-
-function shiftPillHtml(shift, includeTime){
-  const meta = shiftMeta(shift);
-  const time = includeTime && shift && hasUsefulValue(shift.horaire) ? String(shift.horaire).trim() : "";
-  return `
-    <span class="shift-pill ${esc(meta.className)}">
-      <span>${esc(meta.icon)}</span>
-      <span>${esc(meta.label)}${time ? " · " + esc(time) : ""}</span>
-    </span>
-  `;
-}
-
-function missingPhrase(parts){
-  if (parts.length === 1) return parts[0] + " manquant.";
-  if (parts.length === 2) return parts[0] + " et " + parts[1] + " manquants.";
-  const copy = parts.slice();
-  const last = copy.pop();
-  return copy.join(", ") + " et " + last + " manquants.";
-}
-
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOlle3cafAKEAZQ8NAX-peSN6D-yxFO3gX26SnVNUVd5xbwV3CUISg/exec";
-const ICS_URL = "https://calendar.google.com/calendar/ical/2ced33be0e6a5c88fab9bae2ffdf3b56366970e4003b1718a7dabf4c0603eae6%40group.calendar.google.com/private-d3db5a97d6dbdd8ceeeaa375c8a460ef/basic.ics";
+let ITEMS=[];let CURRENT_FILTER="tous";
+const pilot=document.getElementById("pilot");
+const content=document.getElementById("content");
+const search=document.getElementById("search");
+const issueModal=document.getElementById("issueModal");
+const issueModalSub=document.getElementById("issueModalSub");
+const issueModalBody=document.getElementById("issueModalBody");
 
-let ITEMS = [];
-let CURRENT_FILTER = "tous";
-
-document.getElementById("btnIos").href = ICS_URL.replace(/^https:\/\//i,"webcal://");
-document.getElementById("btnAndroid").href =
-  "https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(ICS_URL);
-
-document.getElementById("search").addEventListener("input",refreshView);
-document.querySelectorAll(".filter-btn").forEach(btn => {
-  btn.addEventListener("click",() => {
-    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    CURRENT_FILTER = btn.dataset.filter;
-    refreshView();
+function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function norm(v){return String(v??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().replace(/\s+/g," ").trim()}
+function arr(v){return Array.isArray(v)?v:[]}
+function initials(v){const p=String(v||"").trim().split(/\s+/).filter(Boolean);return p.length?((p[0][0]||"")+(p[1]?.[0]||p[0][1]||"")).toUpperCase():"?"}
+function levelOf(item){return item.niveau==="danger"?"danger":item.niveau==="warning"?"warning":"ok"}
+function anomalyGroups(item){
+  const a=item.anomalies||{};
+  return {stagiaire:arr(a.stagiaire),referent:arr(a.referent),affectation:arr(a.affectation)};
+}
+function issueCount(item){const g=anomalyGroups(item);return g.stagiaire.length+g.referent.length+g.affectation.length}
+function avatarHtml(person){
+  const av=person&&person.avatar||{};const thumb=av.thumb||"";
+  return `<div class="avatar ${thumb?"has-img":""}">${thumb?`<img src="${esc(thumb)}" alt="" onerror="this.parentElement.classList.remove('has-img');this.remove()">`:""}<span class="initials">${esc(av.initiales||initials(person&&((person.nomPrenom||person.nomComplet||person.prenomCourt)||"")))}</span></div>`;
+}
+function chip(text){return text?`<span class="chip">${esc(text)}</span>`:""}
+function personHtml(role,person,kind,shift){
+  person=person||{};
+  const name=person.nomPrenom||person.nomComplet||person.prenomCourt||(kind==="referent"?"Référent à attribuer":"Stagiaire");
+  return `<article class="person ${kind}">${avatarHtml(person)}<div><span class="role">${esc(role)}</span><span class="person-name">${esc(name)}</span><div class="info">${kind==="referent"?chip(person.ghe):""}${shift?chip((shift.label||shift.code||"Shift")+(shift.horaire?" · "+shift.horaire:"")):""}</div></div></article>`;
+}
+function publicIssue(issue){
+  if(typeof issue==="string")return {message:issue,action:"Vérifier uniquement la donnée concernée.",niveau:"warning"};
+  return {message:String(issue&&issue.message||""),action:String(issue&&issue.action||"Vérifier uniquement la donnée concernée."),niveau:issue&&issue.niveau==="danger"?"danger":"warning"};
+}
+function issueSection(label,key,list){
+  list=arr(list).map(publicIssue).filter(x=>x.message);
+  if(!list.length)return "";
+  return `<section class="issue-section ${key}"><div class="issue-section-title">${esc(label)}</div>${list.map(x=>`<div class="issue-detail ${x.niveau}"><div class="issue-message">${esc(x.message)}</div><div class="issue-action"><strong>Action :</strong> ${esc(x.action)}</div></div>`).join("")}</section>`;
+}
+function openIssues(index){
+  const item=ITEMS[index];if(!item)return;
+  const g=anomalyGroups(item);
+  issueModalSub.textContent=(item.dateLabel||"")+" · "+((item.stagiaire&&item.stagiaire.nomPrenom)||"Stagiaire");
+  issueModalBody.innerHTML=issueSection("Stagiaire","stagiaire",g.stagiaire)+issueSection("Référent","referent",g.referent)+issueSection("Affectation","affectation",g.affectation);
+  issueModal.classList.add("open");issueModal.setAttribute("aria-hidden","false");document.body.classList.add("modal-open");
+}
+function closeIssues(){issueModal.classList.remove("open");issueModal.setAttribute("aria-hidden","true");document.body.classList.remove("modal-open")}
+function filterItems(){
+  const q=norm(search.value);
+  return ITEMS.map((item,index)=>({item,index})).filter(({item})=>{
+    const count=issueCount(item);const level=levelOf(item);
+    if(CURRENT_FILTER==="traiter"&&!count)return false;
+    if(CURRENT_FILTER==="bloquants"&&level!=="danger")return false;
+    if(!q)return true;
+    const g=anomalyGroups(item);
+    const txt=[item.titre,item.dateLabel,item.semaineLabel,item.shift&&item.shift.code,item.shift&&item.shift.label,
+      item.stagiaire&&item.stagiaire.nomPrenom,item.referent&&item.referent.nomComplet,item.referent&&item.referent.ghe,
+      ...g.stagiaire.map(x=>x.message||x),...g.referent.map(x=>x.message||x),...g.affectation.map(x=>x.message||x)].join(" ");
+    return norm(txt).includes(q);
   });
+}
+function render(){
+  const filtered=filterItems();
+  if(!filtered.length){content.innerHTML='<div class="empty">Aucun stagiaire à afficher avec ce filtre.</div>';return}
+  const byDate={};
+  filtered.forEach(x=>{const k=x.item.dateKey||"date";(byDate[k]||(byDate[k]=[])).push(x)});
+  content.innerHTML=Object.keys(byDate).sort().map(k=>{
+    const first=byDate[k][0].item;
+    return `<section><h2 class="day-title">${esc(first.dateLabel||k)}</h2>${byDate[k].map(({item,index})=>cardHtml(item,index)).join("")}</section>`;
+  }).join("");
+}
+function cardHtml(item,index){
+  const count=issueCount(item);const level=levelOf(item);
+  const stag=(item.stagiaire&&item.stagiaire.nomPrenom)||"Stagiaire";
+  const ref=(item.referent&&item.referent.nomComplet)||"Référent à attribuer";
+  const id="details-"+index;
+  return `<article class="main-card ${level}">
+    <button class="card-toggle" type="button" aria-expanded="false" aria-controls="${id}" data-toggle="${id}">
+      <div><div class="card-title">👶 ${esc(stag)} → ${esc(ref)}</div><div class="card-meta">${chip(item.shift&&item.shift.label)}${chip(item.shift&&item.shift.horaire)}${chip(item.semaineLabel)}</div></div>
+      <span class="chevron">⌄</span>
+    </button>
+    ${count?`<button class="issue-btn ${level}" type="button" data-issues="${index}"><span>${level==="danger"?"⛔":"⚠️"} ${count} point${count>1?"s":""} à vérifier</span><span>›</span></button>`:""}
+    <div class="details" id="${id}" hidden>
+      ${personHtml("Stagiaire",item.stagiaire,"stagiaire",item.shift)}
+      ${personHtml("Référent",item.referent,"referent",item.shift)}
+    </div>
+  </article>`;
+}
+function updatePilot(){
+  const total=ITEMS.length;const danger=ITEMS.filter(x=>levelOf(x)==="danger").length;const warning=ITEMS.filter(x=>levelOf(x)==="warning").length;
+  const lvl=danger?"danger":warning?"warning":"ok";
+  pilot.className="pilot "+lvl;
+  pilot.innerHTML=`<div class="pilot-title">${total} affectation${total>1?"s":""} à venir</div><div class="pilot-sub">Les détails restent repliés. Les alertes sont rattachées uniquement à la bonne personne ou à l’affectation.</div><div class="pilot-pills"><span class="pill ok">✅ ${total-danger-warning} OK</span><span class="pill warning">⚠️ ${warning} à vérifier</span><span class="pill danger">⛔ ${danger} bloquantes</span></div>`;
+}
+content.addEventListener("click",e=>{
+  const toggle=e.target.closest("[data-toggle]");
+  if(toggle){const id=toggle.dataset.toggle;const el=document.getElementById(id);const open=toggle.getAttribute("aria-expanded")==="true";toggle.setAttribute("aria-expanded",String(!open));el.hidden=open}
+  const issue=e.target.closest("[data-issues]");if(issue)openIssues(Number(issue.dataset.issues));
 });
+search.addEventListener("input",render);
+document.querySelectorAll(".filter-btn").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll(".filter-btn").forEach(x=>x.classList.remove("active"));btn.classList.add("active");CURRENT_FILTER=btn.dataset.filter;render()}));
+document.getElementById("issueModalClose").addEventListener("click",closeIssues);
+issueModal.addEventListener("click",e=>{if(e.target===issueModal)closeIssues()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeIssues()});
 
-loadJsonp("stagiaires");
-
-function loadJsonp(type){
-  const callbackName = "recevoirGhe_" + type + "_" + Date.now();
-  const script = document.createElement("script");
-
-  window[callbackName] = data => {
-    delete window[callbackName];
-    script.remove();
-
-    if (!data || !data.ok) {
-      showError(data && data.erreur ? data.erreur : "Données invalides.");
-      return;
-    }
-
-    ITEMS = Array.isArray(data.items) ? data.items : [];
-    updatePilot(ITEMS);
-    refreshView();
-  };
-
-  script.onerror = () => {
-    delete window[callbackName];
-    script.remove();
-    showError("Impossible de charger les données.");
-  };
-
-  script.src = WEB_APP_URL
-    + "?mode=site_stagiaires_formations"
-    + "&type=" + encodeURIComponent(type)
-    + "&callback=" + encodeURIComponent(callbackName)
-    + "&v=" + Date.now();
-
+function loadJsonp(){
+  const cb="recevoirStagiaires_"+Date.now();const script=document.createElement("script");
+  window[cb]=data=>{delete window[cb];script.remove();if(!data||!data.ok){content.innerHTML=`<div class="error">${esc(data&&data.erreur||"Données invalides.")}</div>`;return}ITEMS=arr(data.items);updatePilot();render()};
+  script.onerror=()=>{delete window[cb];script.remove();content.innerHTML='<div class="error">Impossible de charger les données.</div>'};
+  script.src=WEB_APP_URL+"?mode=site_stagiaires_formations&type=stagiaires&callback="+encodeURIComponent(cb)+"&v="+Date.now();
   document.body.appendChild(script);
 }
-
-function refreshView(){
-  const filtered = filterItems();
-  renderStudentSummary(filtered);
-  render(filtered);
-}
-
-function filterItems(){
-  const q = norm(document.getElementById("search").value);
-
-  return ITEMS.filter(item => {
-    const level = itemLevel(item);
-    const issueCount = countItemIssues(item).total;
-
-    if (CURRENT_FILTER === "traiter" && issueCount === 0) return false;
-    if (CURRENT_FILTER === "bloquants" && level !== "danger") return false;
-    if (!q) return true;
-
-    const s = item.stagiaire || {};
-    const r = item.referent || {};
-    const shift = item.shift || {};
-    const alerts = item.alertes || {};
-
-    return norm([
-      item.titre,item.dateLabel,s.nomPrenom,r.nomComplet,r.ghe,r.telephone,
-      shift.code,shift.label,shift.horaire,
-      ...(alerts.bloquantes || []),...(alerts.infos || [])
-    ].join(" ")).includes(q);
-  });
-}
-
-function updatePilot(items){
-  const summaries = studentSummaries(items);
-  const dates = summaries.reduce((sum,s) => sum + s.dateCount,0);
-  const totals = uniqueGlobalIssues(items);
-  const pilot = document.getElementById("pilot");
-
-  pilot.classList.remove("ok","warning","danger");
-  pilot.classList.add(totals.danger ? "danger" : totals.warning ? "warning" : "ok");
-
-  document.getElementById("pilotTitle").textContent =
-    totals.total ? totals.total + " point" + plural(totals.total) + " à traiter" : "Tout est prêt";
-
-  document.getElementById("pilotSub").textContent =
-    summaries.length + " stagiaire" + plural(summaries.length) + " concerné" + plural(summaries.length)
-    + " · " + dates + " date" + plural(dates) + " prévue" + plural(dates);
-
-  document.getElementById("pilotStudents").textContent =
-    "👶 " + summaries.length + " stagiaire" + plural(summaries.length);
-  document.getElementById("pilotDates").textContent =
-    "📅 " + dates + " date" + plural(dates) + " prévue" + plural(dates);
-  document.getElementById("pilotDanger").textContent =
-    "⛔ " + totals.danger + " bloquant" + plural(totals.danger);
-  document.getElementById("pilotWarning").textContent =
-    "⚠️ " + totals.warning + " à vérifier";
-}
-
-function studentKey(stagiaire){
-  return norm(stagiaire && stagiaire.nomPrenom ? stagiaire.nomPrenom : "stagiaire");
-}
-
-function issueSignature(item,message,type){
-  const s = item.stagiaire || {};
-  const r = item.referent || {};
-  return [type,studentKey(s),norm(r.nomComplet || r.ghe || "referent"),norm(message)].join("|");
-}
-
-function itemIssues(item){
-  const r = item.referent || {};
-  const shift = item.shift || {};
-  const alerts = item.alertes || {};
-  const danger = [];
-  const warning = [];
-  const meta = shiftMeta(shift);
-
-  if (meta.blocking) pushUnique(danger,"Indisponible : " + meta.label);
-
-  (alerts.bloquantes || []).forEach(msg => pushUnique(danger,cleanAlert(msg)));
-  (alerts.infos || []).forEach(msg => pushUnique(warning,cleanAlert(msg)));
-
-  const missing = [];
-  if (!hasUsefulValue(r.ghe)) missing.push("GHE");
-  if (!hasUsefulValue(r.telephone)) missing.push("téléphone");
-  if (missing.length) pushUnique(warning,"Référent : " + missingPhrase(missing));
-
-  if (!meta.known) pushUnique(warning,"Shift à vérifier.");
-  if (item.niveau === "danger" && !danger.length) pushUnique(danger,"Point bloquant à vérifier.");
-  if (item.niveau === "warning" && !warning.length) pushUnique(warning,"Information à vérifier.");
-
-  return {danger:dedupeList(danger),warning:dedupeList(warning)};
-}
-
-function cleanAlert(message){
-  return String(message || "")
-    .replace(/Référent prévu sur un code non travaillé\s*:\s*/i,"Indisponible : ")
-    .replace(/Code shift non reconnu\s*:\s*/i,"Shift à vérifier : ")
-    .trim();
-}
-
-function countItemIssues(item){
-  const issues = itemIssues(item);
-  return {danger:issues.danger.length,warning:issues.warning.length,total:issues.danger.length + issues.warning.length};
-}
-
-function itemLevel(item){
-  const count = countItemIssues(item);
-  if (count.danger || item.niveau === "danger") return "danger";
-  if (count.warning || item.niveau === "warning") return "warning";
-  return "ok";
-}
-
-function uniqueGlobalIssues(items){
-  const danger = new Set();
-  const warning = new Set();
-
-  items.forEach(item => {
-    const issues = itemIssues(item);
-    issues.danger.forEach(msg => danger.add(issueSignature(item,msg,"danger")));
-    issues.warning.forEach(msg => warning.add(issueSignature(item,msg,"warning")));
-  });
-
-  return {danger:danger.size,warning:warning.size,total:danger.size + warning.size};
-}
-
-function studentSummaries(items){
-  const map = new Map();
-
-  items.forEach(item => {
-    const s = item.stagiaire || {};
-    const r = item.referent || {};
-    const key = studentKey(s);
-    const dateKey = item.dateKey || item.dateLabel || "date";
-
-    if (!map.has(key)) {
-      map.set(key,{
-        name:s.nomPrenom || "Stagiaire",
-        dates:new Set(),
-        referents:new Set(),
-        danger:new Set(),
-        warning:new Set()
-      });
-    }
-
-    const row = map.get(key);
-    row.dates.add(norm(dateKey));
-    if (hasUsefulValue(r.nomComplet)) row.referents.add(norm(r.nomComplet));
-
-    const issues = itemIssues(item);
-    issues.danger.forEach(msg => row.danger.add(issueSignature(item,msg,"danger")));
-    issues.warning.forEach(msg => row.warning.add(issueSignature(item,msg,"warning")));
-  });
-
-  return Array.from(map.values()).map(row => ({
-    name:row.name,
-    dateCount:row.dates.size,
-    referentCount:row.referents.size,
-    danger:row.danger.size,
-    warning:row.warning.size
-  })).sort((a,b) => a.name.localeCompare(b.name,"fr"));
-}
-
-function renderStudentSummary(items){
-  const box = document.getElementById("studentSummary");
-  const summaries = studentSummaries(items);
-
-  if (!summaries.length) {
-    box.innerHTML = `<div class="empty">Aucun stagiaire à afficher avec ce filtre.</div>`;
-    return;
-  }
-
-  box.innerHTML = summaries.map(s => {
-    const level = s.danger ? "danger" : s.warning ? "warning" : "ok";
-    const points = s.danger + s.warning;
-
-    return `
-      <article class="summary-row ${level}">
-        <div class="summary-title">${esc(s.name)}</div>
-        <div class="summary-meta">
-          ${s.dateCount} date${plural(s.dateCount)}
-          ${s.referentCount ? " · " + s.referentCount + " référent" + plural(s.referentCount) : ""}
-        </div>
-        <div class="summary-issues">
-          ${points ? `<span class="chip ${level === "danger" ? "danger" : "warning"}">${points} point${plural(points)} à traiter</span>` : `<span class="chip ok">✅ Prêt</span>`}
-        </div>
-      </article>
-    `;
-  }).join("");
-}
-
-function render(items){
-  const content = document.getElementById("content");
-
-  if (!items.length) {
-    content.innerHTML = `<div class="empty">Aucun stagiaire à afficher avec ce filtre.</div>`;
-    return;
-  }
-
-  const groups = groupByDate(items);
-  content.innerHTML = Object.keys(groups).map(key => {
-    const list = groups[key];
-    return `
-      <div class="day-title">${esc(list[0].dateLabel || key)}</div>
-      ${list.map(cardStagiaire).join("")}
-    `;
-  }).join("");
-}
-
-function contactChipsHtml(person){
-  const chips = [];
-  const ghe = formatGhe(person && person.ghe);
-  const tel = person && hasUsefulValue(person.telephone) ? String(person.telephone).trim() : "";
-
-  if (ghe) chips.push(`<span class="info-chip">${esc(ghe)}</span>`);
-  if (tel) {
-    const href = tel.replace(/[^\d+]/g,"");
-    chips.push(`<span class="info-chip">📞 <a href="tel:${esc(href)}">${esc(tel)}</a></span>`);
-  }
-
-  return chips.join("");
-}
-
-function cardStagiaire(item){
-  const s = item.stagiaire || {};
-  const r = item.referent || {};
-  const shift = item.shift || {};
-  const level = itemLevel(item);
-  const issues = itemIssues(item);
-
-  return `
-    <article class="main-card ${level}">
-      <div class="binome">
-        <section class="person-panel stagiaire">
-          ${avatarHtml(s.avatar)}
-          <div>
-            <span class="role">Stagiaire</span>
-            <span class="person-name">${esc(s.nomPrenom || "Stagiaire")}</span>
-            <div class="info-chips">
-              ${shiftPillHtml(shift,true)}
-            </div>
-          </div>
-        </section>
-
-        <div class="binome-link">
-          <span class="arrow">↓</span>
-          <span>Accompagné(e) par</span>
-        </div>
-
-        <section class="person-panel referent">
-          ${avatarHtml(r.avatar)}
-          <div>
-            <span class="role">Référent</span>
-            <span class="person-name">${esc(r.nomComplet || "Référent à attribuer")}</span>
-            <div class="info-chips">${contactChipsHtml(r)}</div>
-          </div>
-        </section>
-      </div>
-
-      ${issueBlock(issues)}
-    </article>
-  `;
-}
-
-function showError(message){
-  document.getElementById("content").innerHTML = `<div class="error">Problème : ${esc(message)}</div>`;
-  document.getElementById("studentSummary").innerHTML = `<div class="error">Résumé indisponible.</div>`;
-}
+loadJsonp();
 </script>
 </body>
 </html>
