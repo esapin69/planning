@@ -2,219 +2,312 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#fff7dd">
 <title>GHE — Stagiaires</title>
 <style>
 *,*::before,*::after{box-sizing:border-box}
 :root{
-  --ink:#07183f;--ink-soft:#33415f;--cream:#fff7dd;--paper:#fffaf0;--paper2:#fff2c9;
-  --danger:#b42318;--danger-bg:#fff0ec;--warning:#8a4b00;--warning-bg:#fff4c7;
-  --ok:#176b39;--ok-bg:#eaf8ef;--line:#07183f;--shadow:0 6px 0 rgba(7,24,63,.15);
+  --navy:#07183f;
+  --cream:#fff7dd;
+  --paper:#fffdf4;
+  --muted:#687083;
+  --shadow:0 9px 0 rgba(7,24,63,.16);
+  --blue:#1675ef;
+  --green:#24a247;
+  --orange:#ff7c12;
+  --yellow:#f5bd00;
+  --black:#171717;
+  --ok:#18703b;
+  --ok-bg:#eaf8ef;
+  --warn:#7c4b00;
+  --warn-bg:#fff1b8;
+  --danger:#a82018;
+  --danger-bg:#fff0ec;
   --display:Impact,"Arial Black",system-ui,sans-serif;
 }
-html,body{margin:0;min-height:100%;background:var(--cream);color:var(--ink)}
-body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+html,body{margin:0;min-height:100%;background:var(--cream);color:var(--navy)}
+body{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:
+    repeating-linear-gradient(0deg,rgba(7,24,63,.025) 0 1px,transparent 1px 27px),
+    linear-gradient(180deg,#fffaf0 0%,#fff6d6 100%);
+}
 body.modal-open{overflow:hidden}
-button,input,a{font:inherit;color:inherit}
+button,a{font:inherit;color:inherit}
+button{border:0}
 [hidden]{display:none!important}
-.page{width:min(1080px,100%);margin:auto;padding:calc(8px + env(safe-area-inset-top)) 8px calc(80px + env(safe-area-inset-bottom))}
-.topbar{display:flex;gap:9px;margin-bottom:9px}
-.navbtn{min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:8px 14px;border:3px solid var(--line);border-radius:18px;background:var(--paper);text-decoration:none;font-size:18px;font-weight:950;box-shadow:0 4px 0 rgba(7,24,63,.12)}
-.hero{border:4px solid var(--line);border-radius:22px;overflow:hidden;background:var(--ink);box-shadow:var(--shadow);margin-bottom:11px}
-.hero img{display:block;width:100%;height:clamp(104px,24vw,190px);object-fit:cover}
-.pilot{background:var(--paper);border:4px solid var(--line);border-radius:22px;padding:11px 12px;box-shadow:var(--shadow);margin-bottom:10px}
-.pilot.ok{border-color:#2f8f4e}.pilot.warning{border-color:#d2a631}.pilot.danger{border-color:#c43a2f}
-.pilot-title{font-weight:950;font-size:clamp(21px,5.5vw,33px);line-height:1.02}
-.pilot-sub{margin-top:4px;color:var(--ink-soft);font-size:14px;font-weight:850;line-height:1.25}
-.pilot-pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
-.pill{display:inline-flex;align-items:center;min-height:30px;padding:6px 9px;border-radius:999px;background:var(--paper2);border:2px solid rgba(7,24,63,.18);font-size:13px;font-weight:900}
-.pill.ok{background:var(--ok-bg);color:var(--ok)}.pill.warning{background:var(--warning-bg);color:var(--warning)}.pill.danger{background:var(--danger-bg);color:var(--danger)}
-.tools{display:grid;gap:8px;margin-bottom:12px}
-.search{width:100%;min-height:48px;border:3px solid var(--line);border-radius:17px;padding:9px 12px;font-size:16px;font-weight:850;background:var(--paper);outline:none;box-shadow:0 4px 0 rgba(7,24,63,.12)}
-.filters{display:flex;gap:7px;overflow-x:auto;padding:1px 0 4px}
-.filter-btn{flex:0 0 auto;border:3px solid var(--line);border-radius:999px;background:var(--paper);padding:8px 12px;font-size:14px;font-weight:950;cursor:pointer}
-.filter-btn.active{background:var(--ink);color:var(--cream)}
-.day-title{margin:22px 4px 9px;font-family:var(--display);font-size:clamp(31px,8vw,56px);line-height:.88;text-transform:uppercase;text-shadow:0 3px 0 #f8d67d}
-.main-card{background:var(--paper);border:4px solid var(--line);border-radius:24px;padding:10px;margin-bottom:12px;box-shadow:var(--shadow)}
-.main-card.warning{border-color:#d2a631}.main-card.danger{border-color:#c43a2f}
-.card-toggle{width:100%;border:0;background:transparent;padding:2px;text-align:left;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;cursor:pointer}
-.card-title{font-size:clamp(18px,4.8vw,28px);line-height:1.05;font-weight:950;text-transform:uppercase;overflow-wrap:anywhere}
-.card-meta{margin-top:7px;display:flex;flex-wrap:wrap;gap:6px}
-.chevron{width:34px;height:34px;border-radius:50%;border:3px solid var(--line);display:flex;align-items:center;justify-content:center;background:var(--paper2);font-size:22px;transition:transform .18s}
-.card-toggle[aria-expanded="true"] .chevron{transform:rotate(180deg)}
-.issue-btn{width:100%;min-height:42px;margin-top:8px;border:2px solid rgba(7,24,63,.18);border-radius:15px;padding:8px 10px;background:var(--paper2);display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;font-weight:950;text-align:left;cursor:pointer}
-.issue-btn.warning{background:var(--warning-bg);color:var(--warning);border-color:#e2c060}
-.issue-btn.danger{background:var(--danger-bg);color:var(--danger);border-color:#e7a29d}
-.details{display:grid;gap:8px;padding-top:10px}
-.person{display:grid;grid-template-columns:62px minmax(0,1fr);gap:9px;align-items:center;padding:9px;border:3px solid var(--line);border-radius:20px;background:var(--paper2)}
-.person.stagiaire{border-color:#2f67c8;background:linear-gradient(145deg,#edf3ff,#fffaf0)}
-.person.referent{border-color:#2f8f4e;background:linear-gradient(145deg,#e8f8ee,#fffaf0)}
-.avatar{width:62px;height:62px;border-radius:17px;background:#eaf0ff;overflow:hidden;display:flex;align-items:center;justify-content:center;border:2px solid rgba(7,24,63,.13)}
-.avatar img{max-width:97%;max-height:97%;object-fit:contain;display:block}
-.initials{width:49px;height:49px;border-radius:14px;border:3px solid var(--line);background:var(--paper);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:19px}
-.avatar.has-img .initials{display:none}
-.role{display:block;margin-bottom:3px;color:rgba(7,24,63,.58);font-size:12px;font-weight:950;letter-spacing:.65px;text-transform:uppercase}
-.person-name{display:block;font-size:clamp(21px,5.4vw,33px);line-height:.98;font-weight:950;text-transform:uppercase;overflow-wrap:anywhere}
-.info{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
-.chip{display:inline-flex;align-items:center;min-height:29px;padding:5px 8px;border-radius:999px;border:2px solid rgba(7,24,63,.18);background:var(--paper);font-size:13px;font-weight:900}
-.loading,.error,.empty{background:var(--paper);border:4px solid var(--line);border-radius:21px;padding:14px;font-weight:900;box-shadow:var(--shadow)}
+.page{width:min(760px,100%);margin:auto;padding:calc(7px + env(safe-area-inset-top)) 9px calc(95px + env(safe-area-inset-bottom))}
+.topbar{margin-bottom:9px}
+.navbtn{min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:8px 14px;border:3px solid var(--navy);border-radius:17px;background:var(--paper);text-decoration:none;font-size:16px;font-weight:950;box-shadow:0 4px 0 rgba(7,24,63,.13)}
+.hero{overflow:hidden;border:5px solid var(--navy);border-radius:28px;background:var(--navy);box-shadow:var(--shadow);margin-bottom:17px}
+.hero img{display:block;width:100%;height:clamp(112px,26vw,190px);object-fit:cover}
+.loading,.empty,.error{background:var(--paper);border:4px solid var(--navy);border-radius:22px;padding:16px;font-weight:900;box-shadow:var(--shadow)}
 .error{color:var(--danger)}
-.modal{position:fixed;inset:0;z-index:1000;display:none;align-items:flex-end;justify-content:center;padding:10px;background:rgba(2,8,23,.67);backdrop-filter:blur(5px)}
+.day-card{overflow:hidden;background:var(--paper);border:5px solid var(--navy);border-radius:30px;box-shadow:var(--shadow);margin:0 0 18px}
+.day-band{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:13px 17px 12px;background:linear-gradient(180deg,#aab4c8 0%,#6b778e 100%);color:#fff;text-shadow:0 3px 0 rgba(7,24,63,.22)}
+.day-name{font-family:var(--display);font-size:clamp(31px,8vw,52px);line-height:.82;text-transform:uppercase;letter-spacing:.3px}
+.date-inline{font-family:var(--display);font-size:clamp(19px,5vw,31px);line-height:.9;text-transform:uppercase;white-space:nowrap}
+.assignments{background:linear-gradient(145deg,#fffdf6 0%,#fff6da 100%)}
+.assignment{--accent:#7b8597;--tint:#f0f2f5;position:relative;padding:15px 14px 14px;background:linear-gradient(145deg,var(--tint) 0%,rgba(255,255,255,.92) 72%)}
+.assignment+.assignment{border-top:3px dashed rgba(7,24,63,.16)}
+.assignment.shift-m{--accent:var(--blue);--tint:#e9f3ff}
+.assignment.shift-j{--accent:var(--green);--tint:#eaf8ee}
+.assignment.shift-j4{--accent:var(--orange);--tint:#fff0e0}
+.assignment.shift-s{--accent:#d9a900;--tint:#fff5ba}
+.assignment.shift-n{--accent:var(--black);--tint:#ececec}
+.assignment.shift-neutral{--accent:#7b8597;--tint:#f0f2f5}
+.shift-line{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 0 12px;color:var(--navy);font-weight:950;text-align:center}
+.shift-dot{width:19px;height:19px;flex:0 0 auto;border-radius:4px;background:var(--accent);border:2px solid rgba(7,24,63,.22);box-shadow:inset 0 2px 4px rgba(255,255,255,.55)}
+.shift-label{font-size:17px;text-transform:uppercase}
+.shift-hours{font-size:15px;color:var(--muted)}
+.people{display:grid;grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr);gap:7px;align-items:start}
+.arrow{align-self:center;display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;font-size:19px;font-weight:950;box-shadow:0 4px 0 rgba(7,24,63,.16)}
+.person{text-align:center;min-width:0}
+.avatar-shell{position:relative;width:112px;height:112px;margin:0 auto 15px}
+.avatar{width:112px;height:112px;border-radius:31px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.82);border:4px solid var(--navy);box-shadow:0 6px 0 rgba(7,24,63,.14)}
+.avatar img{width:100%;height:100%;object-fit:contain;display:block}
+.avatar-fallback{display:flex;align-items:center;justify-content:center;width:72px;height:72px;border-radius:24px;background:#eef1f7;border:3px solid rgba(7,24,63,.3);font-size:39px}
+.avatar.has-img .avatar-fallback{display:none}
+.role-ribbon{position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);min-width:92px;padding:5px 9px;border:3px solid var(--navy);border-radius:999px;background:var(--paper);font-size:10px;line-height:1;font-weight:950;letter-spacing:.7px;text-transform:uppercase;box-shadow:0 3px 0 rgba(7,24,63,.12);white-space:nowrap}
+.person-name{display:block;min-height:38px;font-size:clamp(17px,4.8vw,24px);line-height:.94;font-weight:1000;text-transform:uppercase;overflow-wrap:anywhere}
+.person-sub{margin-top:6px;min-height:30px;color:var(--muted);font-size:12px;line-height:1.2;font-weight:850}
+.person-sub strong{color:var(--navy)}
+.alert-strip{width:100%;margin-top:14px;border:0;border-radius:15px;padding:10px 12px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:9px;align-items:center;text-align:left;box-shadow:0 3px 0 rgba(7,24,63,.09)}
+.alert-strip.ok{background:var(--ok-bg);color:var(--ok)}
+.alert-strip.warning{background:var(--warn-bg);color:var(--warn);cursor:pointer}
+.alert-strip.danger{background:var(--danger-bg);color:var(--danger);cursor:pointer}
+.alert-icon{font-size:20px}
+.alert-main{min-width:0}
+.alert-title{font-size:13px;font-weight:1000;text-transform:uppercase;line-height:1.05}
+.alert-text{margin-top:3px;font-size:12px;font-weight:850;line-height:1.24}
+.alert-more{font-size:23px;font-weight:1000}
+.modal{position:fixed;inset:0;z-index:1000;display:none;align-items:flex-end;justify-content:center;padding:12px;background:rgba(7,24,63,.62);backdrop-filter:blur(5px)}
 .modal.open{display:flex}
-.modal-panel{width:min(620px,100%);max-height:88vh;overflow:auto;background:var(--paper);border:5px solid var(--line);border-radius:27px;padding:14px;box-shadow:0 15px 0 rgba(0,0,0,.27)}
-.modal-title{margin:0;font-family:var(--display);font-size:clamp(30px,8vw,49px);line-height:.9;text-transform:uppercase}
-.modal-sub{margin:7px 0 12px;color:var(--ink-soft);font-weight:800;line-height:1.3}
-.issue-section{border:3px solid var(--line);border-radius:19px;padding:10px;margin-top:9px}
-.issue-section.stagiaire{border-color:#2f67c8}.issue-section.referent{border-color:#2f8f4e}.issue-section.affectation{border-color:#d2a631}
-.issue-section-title{font-size:14px;font-weight:950;text-transform:uppercase;letter-spacing:.5px}
-.issue-detail{margin-top:8px;border-radius:15px;padding:9px;border:2px solid transparent}
-.issue-detail.warning{background:var(--warning-bg);color:var(--warning);border-color:#e2c060}
-.issue-detail.danger{background:var(--danger-bg);color:var(--danger);border-color:#e7a29d}
-.issue-message{font-size:14px;font-weight:950;line-height:1.3}
-.issue-action{margin-top:6px;padding-top:6px;border-top:1px solid currentColor;font-size:13px;font-weight:800;line-height:1.3}
-.close-btn{width:100%;min-height:52px;margin-top:12px;border:4px solid var(--line);border-radius:17px;background:var(--ink);color:var(--cream);font-weight:950}
-@media(min-width:720px){.modal{align-items:center}.details{grid-template-columns:1fr 1fr}}
+.sheet{width:min(650px,100%);max-height:86vh;overflow:auto;border:5px solid var(--navy);border-radius:29px 29px 22px 22px;background:var(--paper);padding:18px 15px calc(18px + env(safe-area-inset-bottom));box-shadow:0 14px 0 rgba(0,0,0,.22)}
+.sheet h2{margin:0;font-family:var(--display);font-size:clamp(31px,8vw,49px);line-height:.88;text-transform:uppercase}
+.sheet-sub{margin:8px 0 15px;color:var(--muted);font-size:13px;font-weight:850;line-height:1.3}
+.group{margin-top:13px}
+.group-title{margin-bottom:7px;font-size:13px;font-weight:1000;text-transform:uppercase;color:var(--navy)}
+.issue{border-radius:17px;padding:12px;margin-bottom:9px}
+.issue.warning{background:var(--warn-bg);color:var(--warn)}
+.issue.danger{background:var(--danger-bg);color:var(--danger)}
+.issue-title{font-size:15px;font-weight:1000}
+.issue-detail{margin-top:5px;font-size:13px;font-weight:800;line-height:1.34}
+.issue-action{margin-top:8px;padding-top:8px;border-top:1px solid currentColor;font-size:13px;font-weight:850;line-height:1.34}
+.close{width:100%;min-height:50px;margin-top:11px;border:4px solid var(--navy);border-radius:17px;background:var(--navy);color:var(--cream);font-weight:1000;cursor:pointer}
+@media(max-width:390px){
+  .page{padding-left:7px;padding-right:7px}
+  .day-band{padding-left:13px;padding-right:13px}
+  .assignment{padding-left:10px;padding-right:10px}
+  .avatar-shell,.avatar{width:94px;height:94px}
+  .avatar{border-radius:26px}
+  .avatar-fallback{width:62px;height:62px;font-size:33px}
+  .role-ribbon{min-width:82px;font-size:9px}
+  .people{grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);gap:4px}
+  .arrow{width:28px;height:28px;font-size:16px}
+  .person-name{font-size:16px}
+  .person-sub{font-size:10.5px}
+  .shift-label{font-size:15px}
+  .shift-hours{font-size:13px}
+}
+@media(min-width:700px){
+  .assignment{padding:20px 22px 18px}
+  .avatar-shell,.avatar{width:140px;height:140px}
+  .avatar{border-radius:36px}
+  .avatar-fallback{width:88px;height:88px;font-size:47px}
+  .role-ribbon{min-width:112px;font-size:12px}
+  .person-name{font-size:27px}
+  .person-sub{font-size:14px}
+  .modal{align-items:center}
+}
 </style>
 </head>
 <body>
 <main class="page">
   <div class="topbar"><a class="navbtn" href="index.html">← Accueil</a></div>
-  <section class="hero"><img src="Image/Bannière/Page stagiaire.PNG" alt="Stagiaires GHE" onerror="this.onerror=null;this.src='Image/Banni%C3%A8re/Page%20stagiaire.PNG';"></section>
-  <section id="pilot" class="pilot"><div class="pilot-title">Chargement des stagiaires…</div><div class="pilot-sub">Lecture de la source GHE.</div></section>
-  <section class="tools">
-    <input id="search" class="search" type="search" placeholder="Rechercher stagiaire, référent ou GHE…" autocomplete="off">
-    <div class="filters">
-      <button class="filter-btn active" data-filter="tous" type="button">Tous</button>
-      <button class="filter-btn" data-filter="traiter" type="button">À vérifier</button>
-      <button class="filter-btn" data-filter="bloquants" type="button">Bloquants</button>
-    </div>
+
+  <section class="hero">
+    <img src="Image/Bannière/Page stagiaire.PNG" alt="Stagiaires GHE" onerror="this.onerror=null;this.src='Image/Banni%C3%A8re/Page%20stagiaire.PNG';">
   </section>
-  <section id="content"><div class="loading">Chargement…</div></section>
+
+  <section id="content"><div class="loading">Connexion aux données…</div></section>
 </main>
 
-<div class="modal" id="issueModal" aria-hidden="true">
-  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="issueModalTitle">
-    <h2 class="modal-title" id="issueModalTitle">Points à vérifier</h2>
-    <p class="modal-sub" id="issueModalSub"></p>
-    <div id="issueModalBody"></div>
-    <button class="close-btn" id="issueModalClose" type="button">Fermer</button>
+<div id="issueModal" class="modal" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h2 id="modalTitle">Pourquoi cette alerte ?</h2>
+    <div id="modalSub" class="sheet-sub"></div>
+    <div id="modalBody"></div>
+    <button id="modalClose" class="close" type="button">Fermer</button>
   </div>
 </div>
 
 <script>
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOlle3cafAKEAZQ8NAX-peSN6D-yxFO3gX26SnVNUVd5xbwV3CUISg/exec";
-let ITEMS=[];let CURRENT_FILTER="tous";
-const pilot=document.getElementById("pilot");
-const content=document.getElementById("content");
-const search=document.getElementById("search");
-const issueModal=document.getElementById("issueModal");
-const issueModalSub=document.getElementById("issueModalSub");
-const issueModalBody=document.getElementById("issueModalBody");
+const WEB_APP_URL="https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOlle3cafAKEAZQ8NAX-peSN6D-yxFO3gX26SnVNUVd5xbwV3CUISg/exec";
+let ITEMS=[];
 
-function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+const content=document.getElementById("content");
+const modal=document.getElementById("issueModal");
+const modalSub=document.getElementById("modalSub");
+const modalBody=document.getElementById("modalBody");
+
+function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#039;")}
 function norm(v){return String(v??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().replace(/\s+/g," ").trim()}
 function arr(v){return Array.isArray(v)?v:[]}
-function initials(v){const p=String(v||"").trim().split(/\s+/).filter(Boolean);return p.length?((p[0][0]||"")+(p[1]?.[0]||p[0][1]||"")).toUpperCase():"?"}
-function levelOf(item){return item.niveau==="danger"?"danger":item.niveau==="warning"?"warning":"ok"}
-function anomalyGroups(item){
-  const a=item.anomalies||{};
-  return {stagiaire:arr(a.stagiaire),referent:arr(a.referent),affectation:arr(a.affectation)};
-}
-function issueCount(item){const g=anomalyGroups(item);return g.stagiaire.length+g.referent.length+g.affectation.length}
-function avatarHtml(person){
-  const av=person&&person.avatar||{};const thumb=av.thumb||"";
-  return `<div class="avatar ${thumb?"has-img":""}">${thumb?`<img src="${esc(thumb)}" alt="" onerror="this.parentElement.classList.remove('has-img');this.remove()">`:""}<span class="initials">${esc(av.initiales||initials(person&&((person.nomPrenom||person.nomComplet||person.prenomCourt)||"")))}</span></div>`;
-}
-function chip(text){return text?`<span class="chip">${esc(text)}</span>`:""}
-function personHtml(role,person,kind,shift){
-  person=person||{};
-  const name=person.nomPrenom||person.nomComplet||person.prenomCourt||(kind==="referent"?"Référent à attribuer":"Stagiaire");
-  return `<article class="person ${kind}">${avatarHtml(person)}<div><span class="role">${esc(role)}</span><span class="person-name">${esc(name)}</span><div class="info">${kind==="referent"?chip(person.ghe):""}${shift?chip((shift.label||shift.code||"Shift")+(shift.horaire?" · "+shift.horaire:"")):""}</div></div></article>`;
-}
-function publicIssue(issue){
-  if(typeof issue==="string")return {message:issue,action:"Vérifier uniquement la donnée concernée.",niveau:"warning"};
-  return {message:String(issue&&issue.message||""),action:String(issue&&issue.action||"Vérifier uniquement la donnée concernée."),niveau:issue&&issue.niveau==="danger"?"danger":"warning"};
-}
-function issueSection(label,key,list){
-  list=arr(list).map(publicIssue).filter(x=>x.message);
-  if(!list.length)return "";
-  return `<section class="issue-section ${key}"><div class="issue-section-title">${esc(label)}</div>${list.map(x=>`<div class="issue-detail ${x.niveau}"><div class="issue-message">${esc(x.message)}</div><div class="issue-action"><strong>Action :</strong> ${esc(x.action)}</div></div>`).join("")}</section>`;
-}
-function openIssues(index){
-  const item=ITEMS[index];if(!item)return;
-  const g=anomalyGroups(item);
-  issueModalSub.textContent=(item.dateLabel||"")+" · "+((item.stagiaire&&item.stagiaire.nomPrenom)||"Stagiaire");
-  issueModalBody.innerHTML=issueSection("Stagiaire","stagiaire",g.stagiaire)+issueSection("Référent","referent",g.referent)+issueSection("Affectation","affectation",g.affectation);
-  issueModal.classList.add("open");issueModal.setAttribute("aria-hidden","false");document.body.classList.add("modal-open");
-}
-function closeIssues(){issueModal.classList.remove("open");issueModal.setAttribute("aria-hidden","true");document.body.classList.remove("modal-open")}
-function filterItems(){
-  const q=norm(search.value);
-  return ITEMS.map((item,index)=>({item,index})).filter(({item})=>{
-    const count=issueCount(item);const level=levelOf(item);
-    if(CURRENT_FILTER==="traiter"&&!count)return false;
-    if(CURRENT_FILTER==="bloquants"&&level!=="danger")return false;
-    if(!q)return true;
-    const g=anomalyGroups(item);
-    const txt=[item.titre,item.dateLabel,item.semaineLabel,item.shift&&item.shift.code,item.shift&&item.shift.label,
-      item.stagiaire&&item.stagiaire.nomPrenom,item.referent&&item.referent.nomComplet,item.referent&&item.referent.ghe,
-      ...g.stagiaire.map(x=>x.message||x),...g.referent.map(x=>x.message||x),...g.affectation.map(x=>x.message||x)].join(" ");
-    return norm(txt).includes(q);
-  });
-}
-function render(){
-  const filtered=filterItems();
-  if(!filtered.length){content.innerHTML='<div class="empty">Aucun stagiaire à afficher avec ce filtre.</div>';return}
-  const byDate={};
-  filtered.forEach(x=>{const k=x.item.dateKey||"date";(byDate[k]||(byDate[k]=[])).push(x)});
-  content.innerHTML=Object.keys(byDate).sort().map(k=>{
-    const first=byDate[k][0].item;
-    return `<section><h2 class="day-title">${esc(first.dateLabel||k)}</h2>${byDate[k].map(({item,index})=>cardHtml(item,index)).join("")}</section>`;
-  }).join("");
-}
-function cardHtml(item,index){
-  const count=issueCount(item);const level=levelOf(item);
-  const stag=(item.stagiaire&&item.stagiaire.nomPrenom)||"Stagiaire";
-  const ref=(item.referent&&item.referent.nomComplet)||"Référent à attribuer";
-  const id="details-"+index;
-  return `<article class="main-card ${level}">
-    <button class="card-toggle" type="button" aria-expanded="false" aria-controls="${id}" data-toggle="${id}">
-      <div><div class="card-title">👶 ${esc(stag)} → ${esc(ref)}</div><div class="card-meta">${chip(item.shift&&item.shift.label)}${chip(item.shift&&item.shift.horaire)}${chip(item.semaineLabel)}</div></div>
-      <span class="chevron">⌄</span>
-    </button>
-    ${count?`<button class="issue-btn ${level}" type="button" data-issues="${index}"><span>${level==="danger"?"⛔":"⚠️"} ${count} point${count>1?"s":""} à vérifier</span><span>›</span></button>`:""}
-    <div class="details" id="${id}" hidden>
-      ${personHtml("Stagiaire",item.stagiaire,"stagiaire",item.shift)}
-      ${personHtml("Référent",item.referent,"referent",item.shift)}
-    </div>
-  </article>`;
-}
-function updatePilot(){
-  const total=ITEMS.length;const danger=ITEMS.filter(x=>levelOf(x)==="danger").length;const warning=ITEMS.filter(x=>levelOf(x)==="warning").length;
-  const lvl=danger?"danger":warning?"warning":"ok";
-  pilot.className="pilot "+lvl;
-  pilot.innerHTML=`<div class="pilot-title">${total} affectation${total>1?"s":""} à venir</div><div class="pilot-sub">Les détails restent repliés. Les alertes sont rattachées uniquement à la bonne personne ou à l’affectation.</div><div class="pilot-pills"><span class="pill ok">✅ ${total-danger-warning} OK</span><span class="pill warning">⚠️ ${warning} à vérifier</span><span class="pill danger">⛔ ${danger} bloquantes</span></div>`;
-}
-content.addEventListener("click",e=>{
-  const toggle=e.target.closest("[data-toggle]");
-  if(toggle){const id=toggle.dataset.toggle;const el=document.getElementById(id);const open=toggle.getAttribute("aria-expanded")==="true";toggle.setAttribute("aria-expanded",String(!open));el.hidden=open}
-  const issue=e.target.closest("[data-issues]");if(issue)openIssues(Number(issue.dataset.issues));
-});
-search.addEventListener("input",render);
-document.querySelectorAll(".filter-btn").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll(".filter-btn").forEach(x=>x.classList.remove("active"));btn.classList.add("active");CURRENT_FILTER=btn.dataset.filter;render()}));
-document.getElementById("issueModalClose").addEventListener("click",closeIssues);
-issueModal.addEventListener("click",e=>{if(e.target===issueModal)closeIssues()});
-document.addEventListener("keydown",e=>{if(e.key==="Escape")closeIssues()});
 
-function loadJsonp(){
-  const cb="recevoirStagiaires_"+Date.now();const script=document.createElement("script");
-  window[cb]=data=>{delete window[cb];script.remove();if(!data||!data.ok){content.innerHTML=`<div class="error">${esc(data&&data.erreur||"Données invalides.")}</div>`;return}ITEMS=arr(data.items);updatePilot();render()};
-  script.onerror=()=>{delete window[cb];script.remove();content.innerHTML='<div class="error">Impossible de charger les données.</div>'};
-  script.src=WEB_APP_URL+"?mode=site_stagiaires_formations&type=stagiaires&callback="+encodeURIComponent(cb)+"&v="+Date.now();
-  document.body.appendChild(script);
+function dateParts(item){
+  const raw=String(item&&item.dateKey||"");
+  const m=raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  let d;
+  if(m){d=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]),12,0,0)}else{d=new Date(item&&item.dateLabel||raw)}
+  const jours=["DIMANCHE","LUNDI","MARDI","MERCREDI","JEUDI","VENDREDI","SAMEDI"];
+  const mois=["JANVIER","FÉVRIER","MARS","AVRIL","MAI","JUIN","JUILLET","AOÛT","SEPTEMBRE","OCTOBRE","NOVEMBRE","DÉCEMBRE"];
+  return Number.isNaN(d.getTime())
+    ?{jour:"DATE",numero:"--",mois:""}
+    :{jour:jours[d.getDay()],numero:String(d.getDate()),mois:mois[d.getMonth()]};
 }
-loadJsonp();
+
+function groups(item){
+  const a=item&&item.anomalies||{};
+  return{stagiaire:arr(a.stagiaire),referent:arr(a.referent),affectation:arr(a.affectation)};
+}
+
+function issuesWithTargets(item){
+  const g=groups(item);
+  return[
+    ...g.stagiaire.map(x=>({target:"Stagiaire",issue:x})),
+    ...g.referent.map(x=>({target:"Référent",issue:x})),
+    ...g.affectation.map(x=>({target:"Affectation",issue:x}))
+  ];
+}
+
+function level(item){
+  const all=issuesWithTargets(item);
+  if(item&&item.niveau==="danger"||all.some(x=>x.issue&&x.issue.niveau==="danger"))return"danger";
+  return all.length?"warning":"ok";
+}
+
+function shiftClass(shift){
+  const code=norm(shift&&(shift.code||shift.base||shift.label));
+  if(code==="M"||code.includes("MATIN"))return"shift-m";
+  if(code==="J4"||code.includes("J4"))return"shift-j4";
+  if(code==="J"||code.includes("JOURNEE")||code==="JOUR")return"shift-j";
+  if(code==="S"||code.includes("SOIR"))return"shift-s";
+  if(code==="N"||code.includes("NUIT"))return"shift-n";
+  return"shift-neutral";
+}
+
+function shiftText(shift){return shift&&(shift.label||shift.code)||"Shift à vérifier"}
+function shiftHours(shift){return shift&&shift.horaire||"Horaire à vérifier"}
+
+function avatar(person){
+  const a=person&&person.avatar||{};
+  const thumb=a.thumb||"";
+  return `<div class="avatar-shell"><div class="avatar ${thumb?"has-img":""}">${thumb?`<img src="${esc(thumb)}" alt="" loading="lazy" onerror="this.parentElement.classList.remove('has-img');this.remove()">`:""}<span class="avatar-fallback">👤</span></div></div>`;
+}
+
+function person(personData,role,shift){
+  personData=personData||{};
+  const name=personData.nomPrenom||personData.nomComplet||(role==="Référent"?"Référent à attribuer":"Stagiaire");
+  const parts=[];
+  if(personData.ghe)parts.push(`<strong>${esc(personData.ghe)}</strong>`);
+  const individual=[shift&&(shift.label||shift.code),shift&&shift.horaire].filter(Boolean).join(" · ");
+  if(individual)parts.push(esc(individual));
+  return `<section class="person">${avatar(personData).replace('</div></div>',`<span class="role-ribbon">${esc(role)}</span></div></div>`) }<span class="person-name">${esc(name)}</span><div class="person-sub">${parts.join("<br>")}</div></section>`;
+}
+
+function alertStrip(item,index){
+  const all=issuesWithTargets(item);
+  if(!all.length){
+    return `<div class="alert-strip ok"><span class="alert-icon">✓</span><div class="alert-main"><div class="alert-title">Affectation conforme</div><div class="alert-text">Stagiaire et référent correctement associés.</div></div></div>`;
+  }
+  const first=all.find(x=>x.issue&&x.issue.niveau==="danger")||all[0];
+  const lvl=level(item);
+  const issue=first.issue||{};
+  const target=first.target||"Affectation";
+  const suffix=all.length>1?` · ${all.length} points au total`:"";
+  return `<button class="alert-strip ${lvl}" type="button" data-alert-index="${index}"><span class="alert-icon">${lvl==="danger"?"⛔":"⚠️"}</span><div class="alert-main"><div class="alert-title">${esc(target)} · ${esc(issue.titre||"Point à vérifier")}</div><div class="alert-text">${esc(issue.resume||issue.detail||"Une information doit être vérifiée.")}${esc(suffix)}</div></div><span class="alert-more">›</span></button>`;
+}
+
+function assignment(item,index){
+  const mainShift=item.shift||item.referentShift||item.stagiaireShift||{};
+  return `<article class="assignment ${shiftClass(mainShift)}"><div class="shift-line"><span class="shift-dot"></span><span class="shift-label">${esc(shiftText(mainShift))}</span><span>·</span><span class="shift-hours">${esc(shiftHours(mainShift))}</span></div><div class="people">${person(item.stagiaire,"Stagiaire",item.stagiaireShift||mainShift)}<div class="arrow">→</div>${person(item.referent,"Référent",item.referentShift||mainShift)}</div>${alertStrip(item,index)}</article>`;
+}
+
+function dayCard(list){
+  const first=list[0].item;
+  const p=dateParts(first);
+  return `<article class="day-card"><header class="day-band"><span class="day-name">${esc(p.jour)}</span><span class="date-inline">${esc(p.numero)} ${esc(p.mois)}</span></header><div class="assignments">${list.map(x=>assignment(x.item,x.index)).join("")}</div></article>`;
+}
+
+function issueHtml(x){
+  const lvl=x&&x.niveau==="danger"?"danger":"warning";
+  return `<div class="issue ${lvl}"><div class="issue-title">${lvl==="danger"?"⛔":"⚠️"} ${esc(x&&x.titre||"Point à vérifier")}</div><div class="issue-detail">${esc(x&&x.detail||x&&x.resume||"Une information doit être vérifiée.")}</div><div class="issue-action"><strong>À faire :</strong> ${esc(x&&x.action||"Vérifier l’information concernée.")}</div></div>`;
+}
+
+function groupHtml(label,list){
+  list=arr(list);
+  if(!list.length)return"";
+  return `<section class="group"><div class="group-title">${esc(label)}</div>${list.map(issueHtml).join("")}</section>`;
+}
+
+function openAlert(index){
+  const item=ITEMS[index];
+  if(!item)return;
+  const g=groups(item);
+  const stagiaire=item.stagiaire&&item.stagiaire.nomPrenom||"Stagiaire";
+  const referent=item.referent&&item.referent.nomComplet||"Référent à attribuer";
+  modalSub.textContent=(item.dateLabel||"")+" · "+stagiaire+" → "+referent;
+  modalBody.innerHTML=
+    groupHtml("Concernant le stagiaire",g.stagiaire)+
+    groupHtml("Concernant le référent",g.referent)+
+    groupHtml("Concernant l’affectation",g.affectation);
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden","false");
+  document.body.classList.add("modal-open");
+}
+
+function closeModal(){
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden","true");
+  document.body.classList.remove("modal-open");
+}
+
+function render(){
+  if(!ITEMS.length){content.innerHTML='<div class="empty">Aucun stagiaire à venir.</div>';return}
+  const byDate={};
+  ITEMS.forEach((item,index)=>{const key=item.dateKey||String(index);(byDate[key]||(byDate[key]=[])).push({item,index})});
+  content.innerHTML=Object.keys(byDate).sort().map(key=>dayCard(byDate[key])).join("");
+}
+
+content.addEventListener("click",e=>{
+  const b=e.target.closest("[data-alert-index]");
+  if(!b)return;
+  openAlert(Number(b.dataset.alertIndex));
+});
+document.getElementById("modalClose").addEventListener("click",closeModal);
+modal.addEventListener("click",e=>{if(e.target===modal)closeModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+
+(function load(){
+  const cb="recevoirStagiaires_"+Date.now();
+  const s=document.createElement("script");
+  window[cb]=data=>{
+    delete window[cb];
+    s.remove();
+    if(!data||!data.ok){content.innerHTML=`<div class="error">${esc(data&&data.erreur||"Données invalides.")}</div>`;return}
+    ITEMS=arr(data.items);
+    render();
+  };
+  s.onerror=()=>{
+    delete window[cb];
+    s.remove();
+    content.innerHTML='<div class="error">Impossible de charger les données.</div>';
+  };
+  s.src=WEB_APP_URL+"?mode=site_stagiaires_formations&type=stagiaires&callback="+encodeURIComponent(cb)+"&v="+Date.now();
+  document.body.appendChild(s);
+})();
 </script>
 </body>
 </html>
