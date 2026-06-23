@@ -97,6 +97,18 @@ details.control summary::-webkit-details-marker{display:none}
 .modal-panel{width:min(520px,100%);background:var(--cream);border:5px solid var(--ink);border-radius:26px;padding:16px;box-shadow:0 14px 0 rgba(0,0,0,.28)}
 .modal-title{margin:0;font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:clamp(30px,8vw,48px);line-height:.92;text-transform:uppercase}
 .modal-text{margin:8px 0 14px;color:#42506c;font-weight:800;line-height:1.35}
+.phone-profile{display:grid;justify-items:center;gap:10px;margin:12px 0 14px;text-align:center}
+.phone-avatar-box{
+  width:min(230px,68vw);aspect-ratio:1/1;border:5px solid var(--ink);border-radius:28px;
+  background:#fff;overflow:hidden;display:grid;place-items:center;box-shadow:0 8px 0 rgba(7,24,63,.18)
+}
+.phone-avatar{width:100%;height:100%;object-fit:contain;display:block;background:#fff}
+.phone-avatar-fallback{
+  width:100%;height:100%;display:grid;place-items:center;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:72px;background:#eef2fb
+}
+.phone-agent-name{font-size:25px;font-weight:1000;line-height:1.05;text-transform:uppercase}
+.phone-ghe-label{font-size:17px;font-weight:950;color:#667087}
 .phone-number{width:100%;min-height:62px;border:4px solid var(--ink);border-radius:18px;background:#fff;font-size:25px;font-weight:1000}
 .modal-actions{display:grid;gap:9px;margin-top:10px}
 .modal-btn{width:100%;min-height:54px;border:4px solid var(--ink);border-radius:17px;font-weight:1000;background:#fff}
@@ -113,13 +125,6 @@ details.control summary::-webkit-details-marker{display:none}
          fetchpriority="high"
          onerror="this.onerror=null;this.src='/Image/Chargement/Organisation.PNG';">
   </section>
-
-  <section class="hero">
-    <div class="badge">👑 Organisation du jour</div>
-    <h1>Esprit d’équipe</h1>
-    <p class="subtitle"><span id="planningDayLabel">Chargement du planning…</span><br><span id="subtitle">Connexion à la source GHE…</span></p>
-  </section>
-
   <div class="top-actions"><a class="back-btn" href="index.html">← Accueil</a></div>
 
   <section id="loader" class="loader">
@@ -134,10 +139,22 @@ details.control summary::-webkit-details-marker{display:none}
 
 <div class="modal" id="phoneNumberModal" aria-hidden="true">
   <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="phoneNumberTitle">
-    <h2 class="modal-title" id="phoneNumberTitle">Numéro GHE</h2>
-    <p class="modal-text">Le numéro est chargé uniquement après ton clic.</p>
+    <h2 class="modal-title" id="phoneNumberTitle">Contact GHE</h2>
+
+    <div class="phone-profile">
+      <div class="phone-avatar-box">
+        <img class="phone-avatar" id="phoneAvatar" alt="" hidden>
+        <div class="phone-avatar-fallback" id="phoneAvatarFallback">?</div>
+      </div>
+      <div class="phone-agent-name" id="phoneAgentName">Agent</div>
+      <div class="phone-ghe-label" id="phoneGheLabel">GHE</div>
+    </div>
+
     <button class="phone-number" id="phoneNumberButton" type="button" disabled>…</button>
-    <div class="modal-actions"><button class="modal-btn" id="phoneNumberClose" type="button">Fermer</button></div>
+
+    <div class="modal-actions">
+      <button class="modal-btn" id="phoneNumberClose" type="button">Fermer</button>
+    </div>
   </div>
 </div>
 
@@ -167,6 +184,10 @@ const subtitle = document.getElementById("subtitle");
 const phoneNumberModal = document.getElementById("phoneNumberModal");
 const phoneChoiceModal = document.getElementById("phoneChoiceModal");
 const phoneNumberButton = document.getElementById("phoneNumberButton");
+const phoneAvatar = document.getElementById("phoneAvatar");
+const phoneAvatarFallback = document.getElementById("phoneAvatarFallback");
+const phoneAgentName = document.getElementById("phoneAgentName");
+const phoneGheLabel = document.getElementById("phoneGheLabel");
 const phoneNumberClose = document.getElementById("phoneNumberClose");
 const phoneCallNormal = document.getElementById("phoneCallNormal");
 const phoneCallHidden = document.getElementById("phoneCallHidden");
@@ -221,16 +242,46 @@ function renderShift(emoji,title,agents){
 function renderImportant(jour){
   const formations=asArray(jour.formations);
   const stagiaires=asArray(jour.stagiaires);
+
   if(!formations.length&&!stagiaires.length)return "";
+
   let html='<div class="section-title">À ne pas rater</div>';
+
   formations.forEach(f=>{
-    const agents=asArray(f.agents).map(a=>a.prenom||"").filter(Boolean).join(", ");
-    html+=`<div class="card important"><div class="shift-title">🎓 ${esc(f.titre||"Formation")}</div><div>${esc(f.horaire||"Horaire à confirmer")}</div>${agents?`<div class="agent">${esc(agents)}</div>`:""}</div>`;
+    const liste=asArray(f.agents);
+    html+=`
+      <div class="card important">
+        <div class="shift-title">🎓 ${esc(f.titre||"Formation")}</div>
+        <div>${esc(f.horaire||"Horaire à confirmer")}</div>
+        ${
+          liste.length
+            ? liste.map(agentLine).join("")
+            : '<div class="empty">Aucun agent indiqué</div>'
+        }
+      </div>
+    `;
   });
+
   stagiaires.forEach(s=>{
-    const refs=asArray(s.referents).map(r=>[r.prenom,r.ghe].filter(Boolean).join(" · ")).filter(Boolean).join(", ");
-    html+=`<div class="card important"><div class="shift-title">👶 ${esc(s.stagiaire||"Stagiaire")}</div><div>${esc(s.shiftLabel||"Affectation")}</div><div class="agent">${refs?`Référent : ${esc(refs)}`:"Référent à attribuer"}</div></div>`;
+    const refs=asArray(s.referents);
+
+    html+=`
+      <div class="card important">
+        <div class="shift-title">👶 ${esc(s.stagiaire||"Stagiaire")}</div>
+        <div>${esc(s.shiftLabel||"Affectation")}</div>
+        ${
+          refs.length
+            ? refs.map(ref=>agentLine({
+                agent:ref.agent||ref.prenom||"",
+                prenom:ref.prenom||ref.agent||"",
+                ghe:ref.ghe||""
+              })).join("")
+            : '<div class="agent">Référent à attribuer</div>'
+        }
+      </div>
+    `;
   });
+
   return html;
 }
 function renderControl(jour){
@@ -245,8 +296,8 @@ function renderPage(data){
   const g=jour.groupes||{};
   const M=asArray(g.M),J=asArray(g.J),J4=asArray(g.J4),S=asArray(g.S),N=asArray(g.N);
   const total=M.length+J.length+J4.length+S.length+N.length;
-  planningDayLabel.textContent=jour.label||jour.dateIso||"Planning du jour";
-  subtitle.textContent=jour.sync?`Mise à jour le : ${jour.sync}`:"Mise à jour en attente";
+  if(planningDayLabel) planningDayLabel.textContent=jour.label||jour.dateIso||"Planning du jour";
+  if(subtitle) subtitle.textContent=jour.sync?`Mise à jour le : ${jour.sync}`:"Mise à jour en attente";
   content.innerHTML=`
     <section class="stats-grid">
       <div class="stat">🟦 Matin : ${M.length}</div>
@@ -277,24 +328,111 @@ function closeModal(modal){
   if(!phoneNumberModal.classList.contains("open")&&!phoneChoiceModal.classList.contains("open"))document.body.classList.remove("modal-open");
 }
 function closeAllPhoneModals(){closeModal(phoneNumberModal);closeModal(phoneChoiceModal)}
+function initials(value){
+  const parts=String(value||"").trim().split(/\s+/).filter(Boolean);
+  if(!parts.length)return "?";
+  if(parts.length===1)return parts[0].slice(0,2).toUpperCase();
+  return ((parts[0][0]||"")+(parts[1][0]||"")).toUpperCase();
+}
+function resetPhoneProfile(agent,ghe){
+  phoneAgentName.textContent=agent||"Agent";
+  phoneGheLabel.textContent=ghe||"GHE";
+  phoneAvatar.hidden=true;
+  phoneAvatar.removeAttribute("src");
+  phoneAvatar.alt="";
+  phoneAvatarFallback.hidden=false;
+  phoneAvatarFallback.textContent=initials(agent);
+}
+function afficherAvatarTelephone(url,agent,initiales){
+  if(!url){
+    phoneAvatar.hidden=true;
+    phoneAvatarFallback.hidden=false;
+    phoneAvatarFallback.textContent=initiales||initials(agent);
+    return;
+  }
+
+  phoneAvatarFallback.hidden=true;
+  phoneAvatar.hidden=false;
+  phoneAvatar.alt="Avatar de "+(agent||"l’agent");
+  phoneAvatar.onerror=function(){
+    phoneAvatar.hidden=true;
+    phoneAvatarFallback.hidden=false;
+    phoneAvatarFallback.textContent=initiales||initials(agent);
+  };
+  phoneAvatar.src=String(url);
+}
 function demanderTelephone(agent,ghe){
-  const requestId=++activePhoneRequest;activePhoneDial="";
-  phoneNumberButton.textContent="…";phoneNumberButton.disabled=true;
-  closeModal(phoneChoiceModal);openModal(phoneNumberModal);
+  const requestId=++activePhoneRequest;
+  activePhoneDial="";
+
+  resetPhoneProfile(agent,ghe);
+  phoneNumberButton.textContent="…";
+  phoneNumberButton.disabled=true;
+
+  closeModal(phoneChoiceModal);
+  openModal(phoneNumberModal);
+
   const callbackName="recevoirTelephoneGhe_"+Date.now()+"_"+Math.floor(Math.random()*100000);
-  const script=document.createElement("script");let done=false;
-  function cleanup(){if(done)return;done=true;delete window[callbackName];script.remove()}
+  const script=document.createElement("script");
+  let done=false;
+
+  function cleanup(){
+    if(done)return;
+    done=true;
+    delete window[callbackName];
+    script.remove();
+  }
+
   window[callbackName]=function(data){
-    if(requestId!==activePhoneRequest){cleanup();return}
+    if(requestId!==activePhoneRequest){
+      cleanup();
+      return;
+    }
+
     if(data&&data.ok&&data.telephone&&data.telephoneDial){
-      activePhoneDial=String(data.telephoneDial);phoneNumberButton.textContent=String(data.telephone);phoneNumberButton.disabled=false;
-    }else{phoneNumberButton.textContent="INDISPONIBLE";phoneNumberButton.disabled=true}
+      activePhoneDial=String(data.telephoneDial);
+      phoneAgentName.textContent=String(data.agent||agent||"Agent");
+      phoneGheLabel.textContent=String(data.ghe||ghe||"GHE");
+      afficherAvatarTelephone(data.avatar||"",data.agent||agent||"",data.initiales||"");
+      phoneNumberButton.textContent=String(data.telephone);
+      phoneNumberButton.disabled=false;
+    }else{
+      afficherAvatarTelephone("",agent,initials(agent));
+      phoneNumberButton.textContent="INDISPONIBLE";
+      phoneNumberButton.disabled=true;
+    }
+
     cleanup();
   };
-  script.onerror=function(){if(requestId===activePhoneRequest){phoneNumberButton.textContent="INDISPONIBLE";phoneNumberButton.disabled=true}cleanup()};
-  script.src=API_ESPRIT_EQUIPE+"?mode=telephone&agent="+encodeURIComponent(agent||"")+"&ghe="+encodeURIComponent(ghe||"")+"&callback="+encodeURIComponent(callbackName)+"&t="+Date.now();
+
+  script.onerror=function(){
+    if(requestId===activePhoneRequest){
+      afficherAvatarTelephone("",agent,initials(agent));
+      phoneNumberButton.textContent="INDISPONIBLE";
+      phoneNumberButton.disabled=true;
+    }
+    cleanup();
+  };
+
+  script.src=API_ESPRIT_EQUIPE+
+    "?mode=telephone"+
+    "&agent="+encodeURIComponent(agent||"")+
+    "&ghe="+encodeURIComponent(ghe||"")+
+    "&callback="+encodeURIComponent(callbackName)+
+    "&t="+Date.now();
+
   document.body.appendChild(script);
-  setTimeout(()=>{if(!done){if(requestId===activePhoneRequest){phoneNumberButton.textContent="INDISPONIBLE";phoneNumberButton.disabled=true}cleanup()}},8000);
+
+  setTimeout(()=>{
+    if(!done){
+      if(requestId===activePhoneRequest){
+        afficherAvatarTelephone("",agent,initials(agent));
+        phoneNumberButton.textContent="INDISPONIBLE";
+        phoneNumberButton.disabled=true;
+      }
+      cleanup();
+    }
+  },8000);
 }
 content.addEventListener("click",event=>{const el=event.target.closest(".ghe-phone-trigger");if(el)demanderTelephone(el.dataset.agent||"",el.dataset.ghe||"")});
 content.addEventListener("keydown",event=>{const el=event.target.closest(".ghe-phone-trigger");if(el&&(event.key==="Enter"||event.key===" ")){event.preventDefault();demanderTelephone(el.dataset.agent||"",el.dataset.ghe||"")}});
