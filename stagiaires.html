@@ -141,6 +141,401 @@ button.ghe-badge:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(7,24,6
   -webkit-tap-highlight-color:transparent;
 }
 
+
+/* VERSION FINALE — 2 colonnes réelles, sans shift commun */
+.day-card{
+  overflow:hidden;
+  background:var(--paper);
+  border:5px solid var(--navy);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  margin:0 0 18px;
+}
+.day-band{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:13px 14px 12px;
+  background:linear-gradient(180deg,#aab4c8 0%,#6b778e 100%);
+  color:#fff;
+  text-align:center;
+  text-shadow:0 3px 0 rgba(7,24,63,.22);
+}
+.day-title{
+  font-family:var(--display);
+  font-size:clamp(28px,7.2vw,46px);
+  line-height:.88;
+  text-transform:uppercase;
+  letter-spacing:.35px;
+}
+.day-title-date{
+  margin-left:8px;
+  font-size:.72em;
+  white-space:nowrap;
+}
+.assignments{
+  padding:12px;
+  background:linear-gradient(145deg,#fffdf6 0%,#fff6da 100%);
+}
+.assignment{
+  --accent:#7b8597;
+  --accent-deep:#5f697b;
+  position:relative;
+  padding:13px 12px 12px;
+  border:3px solid rgba(7,24,63,.13);
+  border-radius:22px;
+  background:rgba(255,255,255,.72);
+  box-shadow:0 5px 0 rgba(7,24,63,.10);
+}
+.assignment+.assignment{
+  margin-top:12px;
+  border-top:3px solid rgba(7,24,63,.13);
+}
+.assignment.status-ok{
+  background:linear-gradient(145deg,#f8fffa 0%,#fffdf7 85%);
+}
+.assignment.status-warning{
+  background:linear-gradient(145deg,#fffaf0 0%,#fffdf7 85%);
+}
+.assignment.status-danger{
+  background:linear-gradient(145deg,#fff4f1 0%,#fffdfb 85%);
+}
+
+/* L’ancien titre commun n’est plus utilisé */
+.shift-head{
+  display:none!important;
+}
+
+.people{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr);
+  gap:9px;
+  align-items:center;
+}
+.arrow{
+  align-self:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  background:var(--navy);
+  color:#fff;
+  font-size:20px;
+  font-weight:950;
+  box-shadow:0 4px 0 rgba(7,24,63,.16);
+}
+.person{
+  min-width:0;
+  text-align:center;
+}
+.person-button{
+  width:100%;
+  margin:0;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:inherit;
+  font:inherit;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.person-button:active{
+  transform:translateY(1px);
+}
+.role-tag{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:96px;
+  margin:0 auto 8px;
+  padding:5px 10px;
+  border:3px solid var(--navy);
+  border-radius:999px;
+  background:var(--paper);
+  font-size:10px;
+  line-height:1;
+  font-weight:1000;
+  letter-spacing:.7px;
+  text-transform:uppercase;
+  box-shadow:0 3px 0 rgba(7,24,63,.11);
+}
+.person.referent .role-tag{
+  background:#eff9f2;
+}
+.avatar-shell{
+  position:relative;
+  width:132px;
+  height:132px;
+  margin:0 auto 10px;
+}
+.avatar{
+  width:132px;
+  height:132px;
+  border-radius:34px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(255,255,255,.88);
+  border:4px solid var(--navy);
+  box-shadow:0 7px 0 rgba(7,24,63,.14);
+}
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
+.avatar-fallback{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:82px;
+  height:82px;
+  border-radius:25px;
+  background:#eef1f7;
+  border:3px solid rgba(7,24,63,.3);
+  font-size:43px;
+}
+.avatar.has-img .avatar-fallback{
+  display:none;
+}
+.person-name{
+  display:block;
+  min-height:44px;
+  font-size:clamp(19px,5.2vw,27px);
+  line-height:.93;
+  font-weight:1000;
+  text-transform:uppercase;
+  overflow-wrap:anywhere;
+}
+.person-shift{
+  --person-accent:#7b8597;
+  --person-deep:#5f697b;
+  min-height:48px;
+  margin-top:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  color:var(--muted);
+  font-size:clamp(12px,3.2vw,15px);
+  line-height:1.1;
+  font-weight:950;
+}
+.person-shift.shift-m{
+  --person-accent:var(--blue);
+  --person-deep:#0756c7;
+}
+.person-shift.shift-j{
+  --person-accent:var(--green);
+  --person-deep:#168037;
+}
+.person-shift.shift-j4{
+  --person-accent:var(--orange);
+  --person-deep:#d95800;
+}
+.person-shift.shift-s{
+  --person-accent:var(--yellow);
+  --person-deep:#c79300;
+}
+.person-shift.shift-n{
+  --person-accent:var(--black);
+  --person-deep:#000;
+}
+.person-shift-medal{
+  width:38px;
+  height:38px;
+  flex:0 0 38px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  border:3px solid var(--person-deep);
+  background:
+    radial-gradient(circle at 34% 27%,#fff 0 7%,var(--person-accent) 20% 58%,var(--person-deep) 60% 100%);
+  box-shadow:
+    inset 0 0 0 3px rgba(255,255,255,.3),
+    0 4px 0 rgba(7,24,63,.12);
+  color:var(--navy);
+  font-family:var(--display);
+  font-size:20px;
+  line-height:1;
+}
+.person-shift.shift-n .person-shift-medal{
+  color:#fff;
+}
+.person-shift-hours{
+  max-width:118px;
+  text-align:left;
+}
+
+/* Popup détails référent */
+.referent-sheet{
+  width:min(560px,100%);
+}
+.referent-profile{
+  --ref-accent:#7b8597;
+  --ref-deep:#5f697b;
+  display:grid;
+  justify-items:center;
+  gap:12px;
+  text-align:center;
+}
+.referent-profile.shift-m{
+  --ref-accent:var(--blue);
+  --ref-deep:#0756c7;
+}
+.referent-profile.shift-j{
+  --ref-accent:var(--green);
+  --ref-deep:#168037;
+}
+.referent-profile.shift-j4{
+  --ref-accent:var(--orange);
+  --ref-deep:#d95800;
+}
+.referent-profile.shift-s{
+  --ref-accent:var(--yellow);
+  --ref-deep:#c79300;
+}
+.referent-profile.shift-n{
+  --ref-accent:var(--black);
+  --ref-deep:#000;
+}
+.referent-avatar{
+  width:190px;
+  height:190px;
+  border-radius:38px;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+  background:#fff;
+  border:5px solid var(--navy);
+  box-shadow:0 9px 0 rgba(7,24,63,.16);
+}
+.referent-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+.referent-avatar-fallback{
+  font-size:72px;
+}
+.referent-name{
+  color:var(--navy);
+  font-size:clamp(28px,7vw,42px);
+  line-height:.92;
+  font-weight:1000;
+  text-transform:uppercase;
+}
+.referent-context{
+  color:var(--muted);
+  font-size:14px;
+  font-weight:900;
+  line-height:1.35;
+}
+.referent-shift{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+}
+.referent-shift-medal{
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  border:4px solid var(--ref-deep);
+  background:
+    radial-gradient(circle at 34% 27%,#fff 0 7%,var(--ref-accent) 20% 58%,var(--ref-deep) 60% 100%);
+  box-shadow:
+    inset 0 0 0 4px rgba(255,255,255,.3),
+    0 5px 0 rgba(7,24,63,.13);
+  color:var(--navy);
+  font-family:var(--display);
+  font-size:29px;
+}
+.referent-profile.shift-n .referent-shift-medal{
+  color:#fff;
+}
+.referent-hours{
+  color:var(--navy);
+  font-size:22px;
+  font-weight:1000;
+}
+.referent-ghe{
+  min-height:48px;
+  padding:9px 15px;
+  border:4px solid var(--navy);
+  border-radius:999px;
+  background:var(--navy);
+  color:#fff;
+  font-size:17px;
+  font-weight:1000;
+  cursor:pointer;
+  box-shadow:0 5px 0 rgba(7,24,63,.17);
+}
+.referent-ghe:active{
+  transform:translateY(2px);
+  box-shadow:0 3px 0 rgba(7,24,63,.17);
+}
+.referent-ghe.disabled{
+  background:#eef1f7;
+  color:var(--muted);
+  cursor:default;
+  box-shadow:none;
+  opacity:.75;
+}
+.referent-hint{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:850;
+}
+
+@media(max-width:390px){
+  .assignments{
+    padding:9px;
+  }
+  .assignment{
+    padding:12px 8px 11px;
+  }
+  .people{
+    grid-template-columns:minmax(0,1fr) 30px minmax(0,1fr);
+    gap:6px;
+  }
+  .arrow{
+    width:30px;
+    height:30px;
+    font-size:18px;
+  }
+  .avatar-shell,
+  .avatar{
+    width:116px;
+    height:116px;
+  }
+  .avatar{
+    border-radius:30px;
+  }
+  .person-name{
+    font-size:19px;
+  }
+  .person-shift{
+    gap:6px;
+    font-size:12px;
+  }
+  .person-shift-medal{
+    width:34px;
+    height:34px;
+    flex-basis:34px;
+    font-size:18px;
+  }
+  .person-shift-hours{
+    max-width:96px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -153,6 +548,14 @@ button.ghe-badge:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(7,24,6
 
   <section id="content"><div class="loading">Connexion aux données…</div></section>
 </main>
+
+<div id="referentModal" class="modal" aria-hidden="true">
+  <div class="sheet referent-sheet" role="dialog" aria-modal="true" aria-labelledby="referentTitle">
+    <h2 id="referentTitle">Référent</h2>
+    <div id="referentBody"></div>
+    <button id="referentClose" class="close" type="button">Fermer</button>
+  </div>
+</div>
 
 <div id="issueModal" class="modal" aria-hidden="true">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
@@ -181,6 +584,8 @@ const WEB_APP_URL="https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOlle3
 let ITEMS=[];
 
 const content=document.getElementById("content");
+const referentModal=document.getElementById("referentModal");
+const referentBody=document.getElementById("referentBody");
 const issueModal=document.getElementById("issueModal");
 const modalSub=document.getElementById("modalSub");
 const modalBody=document.getElementById("modalBody");
@@ -504,31 +909,85 @@ function mainShift(item){
   return item&&item.shift&&Object.keys(item.shift).length?item.shift:(s.code?s:r);
 }
 
-function avatarBlock(person,role){
+function avatarOnly(person){
   person=person||{};
-  const a=person.avatar||{};
-  const thumb=a.thumb||"";
-  const ghe=person.ghe||"";
-  const phone=person.telephone||"";
-  const name=person.nomPrenom||person.nomComplet||role;
-  let badge="";
-  if(ghe){
-    badge=`<button
-      class="ghe-badge"
-      type="button"
-      data-call-name="${esc(name)}"
-      data-call-ghe="${esc(ghe)}"
-      data-call-phone="${esc(phone)}">${esc(ghe)}</button>`;
-  }
-  return `<div class="role-tag">${esc(role)}</div><div class="avatar-shell"><div class="avatar ${thumb?"has-img":""}">${thumb?`<img src="${esc(thumb)}" alt="" loading="lazy" onerror="this.parentElement.classList.remove('has-img');this.remove()">`:""}<span class="avatar-fallback">👤</span></div>${badge}</div>`;
+  const avatar=person.avatar||{};
+  const thumb=avatar.thumb||"";
+
+  return `<div class="avatar-shell">
+    <div class="avatar ${thumb?"has-img":""}">
+      ${
+        thumb
+          ? `<img
+              src="${esc(thumb)}"
+              alt=""
+              loading="lazy"
+              onerror="this.parentElement.classList.remove('has-img');this.remove()">`
+          : ""
+      }
+      <span class="avatar-fallback">👤</span>
+    </div>
+  </div>`;
 }
 
-function person(personData,role,shift){
+function personShiftHtml(shift){
+  const base=shiftBase(shift);
+  const hours=shiftHours(shift);
+
+  return `<div class="person-shift ${esc(shiftClass(shift))}">
+    <span class="person-shift-medal">${esc(base||"?")}</span>
+    <span class="person-shift-hours">${esc(hours)}</span>
+  </div>`;
+}
+
+function traineePerson(personData,shift){
   personData=personData||{};
-  const name=personData.nomPrenom||personData.nomComplet||(role==="Référent"?"Référent à attribuer":"Stagiaire");
-  const hasShift=!!(shift&&(shift.code||shift.label||shift.horaire));
-  const detail=hasShift?shiftHours(shift):"Horaire non renseigné";
-  return `<section class="person">${avatarBlock(personData,role)}<span class="person-name">${esc(name)}</span><div class="person-shift"><span class="person-shift-dot"></span><span class="person-shift-text">${esc(detail)}</span></div></section>`;
+
+  const name=
+    personData.nomPrenom||
+    personData.nomComplet||
+    "Stagiaire";
+
+  return `<section class="person stagiaire">
+    <div class="role-tag">Stagiaire</div>
+    ${avatarOnly(personData)}
+    <span class="person-name">${esc(name)}</span>
+    ${personShiftHtml(shift||{})}
+  </section>`;
+}
+
+function referentPerson(personData,shift,itemIndex){
+  personData=personData||{};
+
+  const name=
+    personData.nomComplet||
+    personData.nomPrenom||
+    "Référent à attribuer";
+
+  const hasReferent=!!(
+    personData.nomComplet||
+    personData.nomPrenom
+  );
+
+  if(!hasReferent){
+    return `<section class="person referent">
+      <div class="role-tag">Référent</div>
+      ${avatarOnly(personData)}
+      <span class="person-name">${esc(name)}</span>
+      ${personShiftHtml(shift||{})}
+    </section>`;
+  }
+
+  return `<button
+    class="person person-button referent"
+    type="button"
+    data-referent-index="${itemIndex}"
+    aria-label="Voir les informations de ${esc(name)}">
+    <div class="role-tag">Référent</div>
+    ${avatarOnly(personData)}
+    <span class="person-name">${esc(name)}</span>
+    ${personShiftHtml(shift||{})}
+  </button>`;
 }
 
 function publicIssue(issue){
@@ -559,15 +1018,48 @@ function alertStrip(item,index){
 }
 
 function assignment(item,index){
-  const primary=mainShift(item);
-  const lvl=level(item);
-  return `<article class="assignment ${shiftClass(primary)} status-${lvl}"><div class="shift-head"><div class="shift-medallion"><span class="shift-letter">${esc(shiftLetter(primary))}</span></div><div class="shift-name">${esc(shiftText(primary))}</div></div><div class="people">${person(item.stagiaire,"Stagiaire",item.stagiaireShift||{})}<div class="arrow">→</div>${person(item.referent,"Référent",item.referentShift||{})}</div>${alertStrip(item,index)}</article>`;
+  const levelValue=level(item);
+
+  return `<article class="assignment status-${levelValue}">
+    <div class="people">
+      ${traineePerson(
+        item.stagiaire,
+        item.stagiaireShift||{}
+      )}
+
+      <div class="arrow" aria-hidden="true">→</div>
+
+      ${referentPerson(
+        item.referent,
+        item.referentShift||{},
+        index
+      )}
+    </div>
+
+    ${alertStrip(item,index)}
+  </article>`;
 }
 
 function dayCard(list){
   const first=list[0].item;
-  const p=dateParts(first);
-  return `<article class="day-card"><header class="day-band"><span class="day-name">${esc(p.jour)}</span><span class="date-inline">${esc(p.numero)} ${esc(p.mois)}</span></header><div class="assignments">${list.map(x=>assignment(x.item,x.index)).join("")}</div></article>`;
+  const parts=dateParts(first);
+
+  return `<article class="day-card">
+    <header class="day-band">
+      <div class="day-title">
+        ${esc(parts.jour)}
+        <span class="day-title-date">
+          · ${esc(parts.numero)} ${esc(parts.mois)}
+        </span>
+      </div>
+    </header>
+
+    <div class="assignments">
+      ${list.map(entry=>
+        assignment(entry.item,entry.index)
+      ).join("")}
+    </div>
+  </article>`;
 }
 
 function issueHtml(x){
@@ -593,6 +1085,88 @@ function openAlert(index){
   issueModal.classList.add("open");
   issueModal.setAttribute("aria-hidden","false");
   document.body.classList.add("modal-open");
+}
+
+function referentProfileHtml(item){
+  item=item||{};
+
+  const referent=item.referent||{};
+  const shift=item.referentShift||{};
+  const avatar=referent.avatar||{};
+  const thumb=avatar.thumb||"";
+
+  const name=
+    referent.nomComplet||
+    referent.nomPrenom||
+    "Référent";
+
+  const stagiaire=
+    item.stagiaire&&item.stagiaire.nomPrenom||
+    "Stagiaire";
+
+  const ghe=String(referent.ghe||"").trim();
+  const phone=String(referent.telephone||"").trim();
+
+  const date=item.dateLabel||"";
+  const shiftClassName=shiftClass(shift);
+  const shiftCode=shiftLetter(shift);
+  const hours=shiftHours(shift);
+
+  return `<section class="referent-profile ${esc(shiftClassName)}">
+    <div class="referent-avatar">
+      ${
+        thumb
+          ? `<img
+              src="${esc(thumb)}"
+              alt=""
+              onerror="this.remove();this.parentElement.innerHTML='<span class=&quot;referent-avatar-fallback&quot;>👤</span>'">`
+          : '<span class="referent-avatar-fallback">👤</span>'
+      }
+    </div>
+
+    <div class="referent-name">${esc(name)}</div>
+
+    <div class="referent-context">
+      Référent de ${esc(stagiaire)}
+      ${date?` · ${esc(date)}`:""}
+    </div>
+
+    <div class="referent-shift">
+      <span class="referent-shift-medal">${esc(shiftCode||"?")}</span>
+      <span class="referent-hours">${esc(hours)}</span>
+    </div>
+
+    ${
+      ghe
+        ? `<button
+            class="referent-ghe"
+            type="button"
+            data-call-name="${esc(name)}"
+            data-call-ghe="${esc(ghe)}"
+            data-call-phone="${esc(phone)}">${esc(ghe)}</button>`
+        : `<div class="referent-ghe disabled">GHE non renseigné</div>`
+    }
+
+    <div class="referent-hint">
+      Touchez le GHE pour afficher le numéro professionnel.
+    </div>
+  </section>`;
+}
+
+function openReferent(index){
+  const item=ITEMS[index];
+  if(!item)return;
+
+  referentBody.innerHTML=referentProfileHtml(item);
+  referentModal.classList.add("open");
+  referentModal.setAttribute("aria-hidden","false");
+  document.body.classList.add("modal-open");
+}
+
+function closeReferentModal(){
+  referentModal.classList.remove("open");
+  referentModal.setAttribute("aria-hidden","true");
+  document.body.classList.remove("modal-open");
 }
 
 function closeIssueModal(){
@@ -728,16 +1302,62 @@ function render(){
 }
 
 content.addEventListener("click",e=>{
-  const callButton=e.target.closest("[data-call-ghe]");
-  if(callButton){e.preventDefault();e.stopPropagation();openCall(callButton);return}
+  const referentButton=e.target.closest("[data-referent-index]");
+
+  if(referentButton){
+    openReferent(
+      Number(referentButton.dataset.referentIndex)
+    );
+    return;
+  }
+
   const alertButton=e.target.closest("[data-alert-index]");
-  if(alertButton)openAlert(Number(alertButton.dataset.alertIndex));
+
+  if(alertButton){
+    openAlert(
+      Number(alertButton.dataset.alertIndex)
+    );
+  }
 });
-document.getElementById("modalClose").addEventListener("click",closeIssueModal);
-issueModal.addEventListener("click",e=>{if(e.target===issueModal)closeIssueModal()});
-document.getElementById("callClose").addEventListener("click",closeCallModal);
-callModal.addEventListener("click",e=>{if(e.target===callModal)closeCallModal()});
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeIssueModal();closeCallModal()}});
+
+referentBody.addEventListener("click",e=>{
+  const callButton=e.target.closest("[data-call-ghe]");
+
+  if(callButton){
+    e.preventDefault();
+    e.stopPropagation();
+    closeReferentModal();
+    openCall(callButton);
+  }
+});
+document.getElementById("referentClose")
+  .addEventListener("click",closeReferentModal);
+
+referentModal.addEventListener("click",e=>{
+  if(e.target===referentModal)closeReferentModal();
+});
+
+document.getElementById("modalClose")
+  .addEventListener("click",closeIssueModal);
+
+issueModal.addEventListener("click",e=>{
+  if(e.target===issueModal)closeIssueModal();
+});
+
+document.getElementById("callClose")
+  .addEventListener("click",closeCallModal);
+
+callModal.addEventListener("click",e=>{
+  if(e.target===callModal)closeCallModal();
+});
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){
+    closeReferentModal();
+    closeIssueModal();
+    closeCallModal();
+  }
+});
 
 (function load(){
   const cb="recevoirStagiaires_"+Date.now();
