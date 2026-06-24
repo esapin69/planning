@@ -103,18 +103,34 @@ button{color:inherit}
 .directory-btn:active,.alerts-btn:active{transform:translateY(2px)}
 .micro-note{position:relative;margin:14px 2px 0;text-align:center;color:var(--muted);font-size:13px;font-weight:800;line-height:1.35}
 
-.directory-toolbar{position:sticky;top:-17px;z-index:4;margin:-2px 0 12px;padding:10px 0;background:linear-gradient(180deg,var(--cream) 0 82%,rgba(255,247,221,0) 100%)}
+.directory-toolbar{position:sticky;top:-10px;z-index:4;margin:-2px 0 12px;padding:10px 0;background:linear-gradient(180deg,var(--cream) 0 88%,rgba(255,247,221,0) 100%)}
 .directory-search{width:100%;padding:13px 14px;border:4px solid var(--navy);border-radius:18px;background:var(--paper);font-size:16px;font-weight:850;outline:none}
 .sort-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:9px}
 .sort-btn{min-height:45px;padding:8px;border:3px solid var(--navy);border-radius:15px;background:var(--paper);font-family:var(--title);font-size:18px;font-weight:800;cursor:pointer}
-.sort-btn.active{background:var(--yellow);box-shadow:0 4px 0 rgba(7,24,63,.14)}
+.sort-btn.active{
+  background:linear-gradient(180deg,#ffe98f,var(--yellow));
+  border-width:4px;
+  box-shadow:0 5px 0 var(--navy);
+  transform:translateY(-2px);
+}
 .directory-list{display:grid;gap:8px}
 .contact-row{padding:14px 13px;border:3px solid var(--navy);border-radius:18px;background:var(--paper);box-shadow:0 3px 0 rgba(7,24,63,.08);cursor:pointer;outline:none;text-align:center;transition:transform .12s ease,box-shadow .12s ease}
 .contact-row:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(7,24,63,.08)}
 .contact-row:focus-visible{box-shadow:0 0 0 4px rgba(248,207,74,.75),0 3px 0 rgba(7,24,63,.08)}
-.contact-ghe-line{font-family:var(--title);font-size:24px;font-weight:800;line-height:1}
-.contact-name-line{margin-top:6px;font-size:16px;font-weight:750;line-height:1.2}
-.contact-ghe-line strong,.contact-name-line strong{font-weight:950}
+.contact-ghe-line{font-family:var(--title);font-size:24px;font-weight:700;line-height:1.15}
+.contact-name-line{margin-top:8px;font-size:16px;font-weight:700;line-height:1.25}
+.sort-emphasis{
+  display:inline-block;
+  padding:3px 10px 4px;
+  border:3px solid var(--navy);
+  border-radius:12px;
+  background:linear-gradient(180deg,#ffe98f,var(--yellow));
+  color:var(--navy);
+  font-family:var(--title);
+  font-weight:800;
+  line-height:1;
+  box-shadow:0 4px 0 rgba(7,24,63,.18);
+}
 .contact-phone{display:inline-flex;margin-top:8px;color:var(--navy2);font-size:15px;font-weight:850;text-decoration:none}
 .contact-phone:hover{text-decoration:underline}
 .contact-phone.invalid{color:var(--red);text-decoration:none}
@@ -136,12 +152,35 @@ button{color:inherit}
 }
 .modal.open{display:flex}
 .sheet{
-  width:min(680px,100%);max-height:88vh;overflow:auto;padding:17px 14px 14px;
+  width:min(680px,100%);max-height:88vh;max-height:min(88dvh,760px);overflow:hidden;padding:0;
+  display:flex;flex-direction:column;
   border:5px solid var(--navy);border-radius:28px 28px 18px 18px;background:var(--cream);
   box-shadow:0 16px 0 rgba(0,0,0,.22);
 }
+.sheet-head{
+  flex:0 0 auto;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  padding:17px 14px 10px;background:linear-gradient(180deg,#fff9e7 0%,var(--cream) 100%);
+  border-bottom:2px solid rgba(7,24,63,.10);
+}
 .sheet h2{margin:0;font-family:var(--title);font-size:clamp(31px,8vw,50px);font-weight:800;line-height:.9;text-transform:uppercase}
-.sheet-sub{margin:8px 0 14px;color:var(--muted);font-size:15px;font-weight:850;line-height:1.35}
+.sheet-x{
+  flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:47px;height:47px;padding:0;
+  border:4px solid var(--navy);border-radius:16px;background:var(--paper);color:var(--navy);
+  font-family:system-ui,sans-serif;font-size:34px;font-weight:900;line-height:1;cursor:pointer;
+  box-shadow:0 4px 0 rgba(7,24,63,.14);-webkit-tap-highlight-color:transparent;
+}
+.sheet-x:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(7,24,63,.14)}
+.sheet-body{
+  flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+  padding:10px 14px 14px;
+}
+.sheet-actions{
+  flex:0 0 auto;display:grid;gap:8px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg,rgba(255,247,221,.82),var(--cream) 30%);
+  border-top:2px solid rgba(7,24,63,.12);
+}
+.sheet-actions .close-btn,.sheet-actions .confirm-btn{margin-top:0}
+.sheet-sub{margin:0 0 14px;color:var(--muted);font-size:15px;font-weight:850;line-height:1.35}
 .issue-list{display:grid;gap:10px}
 .issue{padding:13px;border:3px solid var(--navy);border-radius:19px;background:var(--paper)}
 .issue.danger{background:var(--red-bg);border-color:var(--red)}
@@ -179,6 +218,15 @@ button{color:inherit}
   .page-identity{min-height:150px;margin-bottom:10px}.page-avatar-wrap{width:148px;height:120px}.page-avatar-fallback{width:90px;height:90px;font-size:33px;border-width:4px}
   .action-panel{padding:20px 12px 16px;border-radius:27px;box-shadow:7px 8px 0 var(--yellow)}
   .send-btn{min-height:70px;border-radius:21px}.status-row{gap:8px}.status-box,.alerts-btn{min-height:72px}
+}
+
+@media(max-width:520px){
+  .modal{padding:7px;align-items:flex-end}
+  .sheet{max-height:calc(100vh - 18px);max-height:calc(100dvh - 18px);border-radius:24px 24px 15px 15px}
+  .sheet-head{padding:14px 11px 9px}
+  .sheet-body{padding:9px 11px 12px}
+  .sheet-actions{padding:9px 11px calc(9px + env(safe-area-inset-bottom))}
+  .sheet-x{width:44px;height:44px;border-radius:14px;font-size:31px}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 </style>
@@ -220,95 +268,113 @@ button{color:inherit}
 
 <div id="directoryModal" class="modal" aria-hidden="true">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="directoryTitle">
-    <h2 id="directoryTitle">Répertoire GHE</h2>
-    <div class="directory-toolbar">
-      <input id="directorySearch" class="directory-search" type="search" placeholder="Rechercher un GHE, un nom ou un prénom" autocomplete="off">
-      <div class="sort-tabs" role="group" aria-label="Trier le répertoire">
-        <button class="sort-btn active" type="button" data-sort="ghe">GHE</button>
-        <button class="sort-btn" type="button" data-sort="nom">Nom</button>
-        <button class="sort-btn" type="button" data-sort="prenom">Prénom</button>
+    <div class="sheet-head">
+      <h2 id="directoryTitle">Répertoire GHE</h2>
+      <button class="sheet-x" type="button" data-close aria-label="Fermer le répertoire">×</button>
+    </div>
+    <div class="sheet-body">
+      <div class="directory-toolbar">
+        <input id="directorySearch" class="directory-search" type="search" placeholder="Rechercher un GHE, un nom ou un prénom" autocomplete="off">
+        <div class="sort-tabs" role="group" aria-label="Trier le répertoire">
+          <button class="sort-btn active" type="button" data-sort="ghe">GHE</button>
+          <button class="sort-btn" type="button" data-sort="nom">Nom</button>
+          <button class="sort-btn" type="button" data-sort="prenom">Prénom</button>
+        </div>
+      </div>
+      <div id="directoryList" class="directory-list">
+        <div class="state-message">Chargement du répertoire…</div>
       </div>
     </div>
-
-    <div id="directoryList" class="directory-list">
-      <div class="state-message">Chargement du répertoire…</div>
+    <div class="sheet-actions">
+      <button class="close-btn" type="button" data-close>Fermer</button>
     </div>
-
-    <button class="close-btn" type="button" data-close>Fermer</button>
   </div>
 </div>
 
 <div id="contactModal" class="modal" aria-hidden="true">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
-    <h2 id="contactTitle">Contact GHE</h2>
-    <p class="sheet-sub">Fiche professionnelle de l’agent.</p>
-
-    <div class="contact-profile">
-      <div id="contactAvatarWrap" class="contact-avatar-wrap">
-        <img id="contactAvatar" alt="Avatar de l’agent" decoding="async">
-        <span id="contactAvatarFallback" class="contact-avatar-fallback">👤</span>
-      </div>
-      <div id="contactProfileGhe" class="contact-profile-ghe">GHE —</div>
-      <div id="contactProfileName" class="contact-profile-name">Agent</div>
-      <a id="contactProfilePhone" class="contact-profile-phone" href="#">Numéro professionnel</a>
+    <div class="sheet-head">
+      <h2 id="contactTitle">Contact GHE</h2>
+      <button class="sheet-x" type="button" data-close-contact aria-label="Retour au répertoire">×</button>
     </div>
-
-    <button class="close-btn" type="button" data-close-contact>Retour au répertoire</button>
+    <div class="sheet-body">
+      <div class="contact-profile">
+        <div id="contactAvatarWrap" class="contact-avatar-wrap">
+          <img id="contactAvatar" alt="Avatar de l’agent" decoding="async">
+          <span id="contactAvatarFallback" class="contact-avatar-fallback">👤</span>
+        </div>
+        <div id="contactProfileGhe" class="contact-profile-ghe">GHE —</div>
+        <div id="contactProfileName" class="contact-profile-name">Agent</div>
+        <a id="contactProfilePhone" class="contact-profile-phone" href="#">Numéro professionnel</a>
+      </div>
+    </div>
+    <div class="sheet-actions">
+      <button class="close-btn" type="button" data-close-contact>Retour au répertoire</button>
+    </div>
   </div>
 </div>
 
 <div id="alertsModal" class="modal" aria-hidden="true">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="alertsTitle">
-    <h2 id="alertsTitle">Anomalies détectées</h2>
-    <p class="sheet-sub">Ces points viennent de la photocopie intelligente et devront ensuite être alimentés automatiquement.</p>
-
-    <div class="issue-list" id="issueList">
-      <article class="issue danger">
-        <div class="issue-head">
-          <div class="issue-title">GHE 68</div>
-          <span class="issue-badge">Bloquante</span>
-        </div>
-        <div class="issue-detail">Le numéro enregistré contient 11 chiffres. Il n’est pas considéré comme valide.</div>
-        <div class="issue-action">Conséquence : l’envoi vers ce GHE doit être refusé tant que le numéro n’est pas corrigé.</div>
-      </article>
-
-      <article class="issue warning">
-        <div class="issue-head">
-          <div class="issue-title">GHE 03 et GHE 51</div>
-          <span class="issue-badge">À vérifier</span>
-        </div>
-        <div class="issue-detail">Le même numéro, se terminant par 3486, est associé aux deux GHE.</div>
-        <div class="issue-action">Conséquence : vérifier lequel des deux GHE doit réellement conserver ce numéro.</div>
-      </article>
+    <div class="sheet-head">
+      <h2 id="alertsTitle">Anomalies détectées</h2>
+      <button class="sheet-x" type="button" data-close aria-label="Fermer les anomalies">×</button>
     </div>
+    <div class="sheet-body">
+      <div class="issue-list" id="issueList">
+        <article class="issue danger">
+          <div class="issue-head">
+            <div class="issue-title">GHE 68</div>
+            <span class="issue-badge">Bloquante</span>
+          </div>
+          <div class="issue-detail">Le numéro enregistré contient 11 chiffres. Il n’est pas considéré comme valide.</div>
+          <div class="issue-action">Conséquence : l’envoi vers ce GHE doit être refusé tant que le numéro n’est pas corrigé.</div>
+        </article>
 
-    <button class="close-btn" type="button" data-close>Fermer</button>
+        <article class="issue warning">
+          <div class="issue-head">
+            <div class="issue-title">GHE 03 et GHE 51</div>
+            <span class="issue-badge">À vérifier</span>
+          </div>
+          <div class="issue-detail">Le même numéro, se terminant par 3486, est associé aux deux GHE.</div>
+          <div class="issue-action">Conséquence : vérifier lequel des deux GHE doit réellement conserver ce numéro.</div>
+        </article>
+      </div>
+    </div>
+    <div class="sheet-actions">
+      <button class="close-btn" type="button" data-close>Fermer</button>
+    </div>
   </div>
 </div>
 
 <div id="sendModal" class="modal" aria-hidden="true">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sendTitle">
-    <h2 id="sendTitle">Recevoir le répertoire</h2>
-    <p class="sheet-sub" id="sendSubtitle">Vérification du compte connecté…</p>
-
-    <div id="gheChoice" hidden>
-      <input id="gheSearch" class="search-agent" type="search" placeholder="Rechercher un GHE" autocomplete="off">
-      <div id="gheList" class="agent-list"></div>
+    <div class="sheet-head">
+      <h2 id="sendTitle">Recevoir le répertoire</h2>
+      <button class="sheet-x" type="button" data-close aria-label="Annuler et fermer">×</button>
     </div>
-
-    <div id="targetConfirm" class="confirm-card" hidden>
-      <strong id="targetTitle">Ton téléphone GHE</strong>
-      <span id="targetDetail">Le fichier VCF sera envoyé au téléphone professionnel associé.</span>
+    <div class="sheet-body">
+      <p class="sheet-sub" id="sendSubtitle">Vérification du compte connecté…</p>
+      <div id="gheChoice" hidden>
+        <input id="gheSearch" class="search-agent" type="search" placeholder="Rechercher un GHE" autocomplete="off">
+        <div id="gheList" class="agent-list"></div>
+      </div>
+      <div id="targetConfirm" class="confirm-card" hidden>
+        <strong id="targetTitle">Ton téléphone GHE</strong>
+        <span id="targetDetail">Le fichier VCF sera envoyé au téléphone professionnel associé.</span>
+      </div>
+      <div id="sendState" class="state-message" hidden></div>
     </div>
-
-    <div id="sendState" class="state-message" hidden></div>
-    <button id="confirmSend" class="confirm-btn" type="button" hidden>Confirmer l’envoi</button>
-    <button class="close-btn" type="button" data-close>Annuler</button>
+    <div class="sheet-actions">
+      <button id="confirmSend" class="confirm-btn" type="button" hidden>Confirmer l’envoi</button>
+      <button class="close-btn" type="button" data-close>Annuler</button>
+    </div>
   </div>
 </div>
 
 <script>
-const SEND_ENDPOINT="/api/contacts-ghe/send";
+const SEND_ENDPOINT="/__ghe/contacts/prepare";
+const DIRECTORY_ENDPOINT="/__ghe/contacts/directory";
 const AVATAR_ENDPOINT="https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8HZ_g_ota7tajTKLY3jvLKEF9AvSPjIbVpqcSkSRcl5OdWV9/exec";
 const DIRECTORY_FALLBACK=[
   {
@@ -714,6 +780,9 @@ let directorySort="ghe";
 let directoryLoaded=false;
 let avatarAgents=[];
 let avatarAgentsLoaded=false;
+let CONTACTS_API_DATA=null;
+let shortcutQueue=[];
+let confirmMode="prepare";
 
 const directoryModal=document.getElementById("directoryModal");
 const directorySearch=document.getElementById("directorySearch");
@@ -746,6 +815,12 @@ function openModal(el){
   el.classList.add("open");
   el.setAttribute("aria-hidden","false");
   document.body.classList.add("modal-open");
+  const body=el.querySelector(".sheet-body");
+  if(body)body.scrollTop=0;
+  requestAnimationFrame(()=>el.querySelector(".sheet-x")?.focus({preventScroll:true}));
+}
+function focusIfDesktop(el){
+  if(window.matchMedia?.("(pointer:fine)").matches)requestAnimationFrame(()=>el?.focus({preventScroll:true}));
 }
 function closeModals(){
   document.querySelectorAll(".modal.open").forEach(el=>{el.classList.remove("open");el.setAttribute("aria-hidden","true")});
@@ -837,7 +912,7 @@ function matchAvatarAgent(item){
   const nom=norm(item.nom);
   const prenom=norm(item.prenom);
   return avatarAgents.find(a=>{
-    const akey=norm(firstValue(a,["agent_key","AGENT_KEY","agent_uid","AGENT_UID","agent","AGENT","key"]));
+    const akey=norm(firstValue(a,["agentKey","agent_key","AGENT_KEY","agent_uid","AGENT_UID","agent","AGENT","key"]));
     const anom=norm(firstValue(a,["nom","NOM"]));
     const aprenom=norm(firstValue(a,["prenom","prénom","PRENOM","PRÉNOM"]));
     const full=norm(firstValue(a,["nomComplet","nom_complet","fullName","NOM / PRÉNOM","AGENT_AFFICHE","agent","AGENT"]));
@@ -925,7 +1000,7 @@ function extractDirectoryItem(a){
     if(!prenom&&parts.length)prenom=parts.join(" ");
   }
   return {
-    agent_key:firstValue(a,["agent_key","AGENT_KEY","agent_uid","AGENT_UID","agent","AGENT","key"])||norm(nom+" "+prenom),
+    agent_key:firstValue(a,["agentKey","agent_key","AGENT_KEY","agent_uid","AGENT_UID","agent","AGENT","key"])||norm(nom+" "+prenom),
     ghe:firstValue(a,["ghe","GHE","numero_ghe","NUMERO_GHE"]),
     nom:titleCase(nom),
     prenom:titleCase(prenom),
@@ -956,9 +1031,9 @@ function renderDirectory(){
     const gheText=esc(formatGhe(item.ghe));
     const nomText=esc(item.nom||"Nom non renseigné");
     const prenomText=esc(item.prenom||"Prénom non renseigné");
-    const ghePart=directorySort==="ghe"?`<strong>${gheText}</strong>`:gheText;
-    const nomPart=directorySort==="nom"?`<strong>${nomText}</strong>`:nomText;
-    const prenomPart=directorySort==="prenom"?`<strong>${prenomText}</strong>`:prenomText;
+    const ghePart=directorySort==="ghe"?`<span class="sort-emphasis">${gheText}</span>`:`<span>${gheText}</span>`;
+    const nomPart=directorySort==="nom"?`<span class="sort-emphasis">${nomText}</span>`:`<span>${nomText}</span>`;
+    const prenomPart=directorySort==="prenom"?`<span class="sort-emphasis">${prenomText}</span>`:`<span>${prenomText}</span>`;
     const phone=phoneIsValid(item.telephone)
       ?`<a class="contact-phone" href="tel:${esc(normalizePhone(item.telephone))}">${esc(formatPhone(item.telephone))}</a>`
       :`<span class="contact-phone invalid">${esc(formatPhone(item.telephone))}</span>`;
@@ -986,23 +1061,38 @@ async function openContactDetail(agentKey){
 async function loadDirectory(){
   if(directoryLoaded){renderDirectory();return}
   directoryList.innerHTML='<div class="state-message">Chargement du répertoire…</div>';
-
-  const byGhe=new Map();
-  DIRECTORY_FALLBACK.map(extractDirectoryItem).filter(item=>item.ghe).forEach(item=>{
-    const key=String(gheNumber(item.ghe));
-    if(!byGhe.has(key))byGhe.set(key,item);
-  });
-  directoryItems=[...byGhe.values()];
-  contactsCount.textContent=String(directoryItems.length);
-  directoryLoaded=true;
-  renderDirectory();
+  try{
+    const res=await fetch(DIRECTORY_ENDPOINT,{credentials:"same-origin",cache:"no-store"});
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok||!data.ok||!Array.isArray(data.contacts)){
+      throw new Error(data.message||data.erreur||"Répertoire indisponible");
+    }
+    CONTACTS_API_DATA=data;
+    const byGhe=new Map();
+    data.contacts.map(extractDirectoryItem).filter(item=>item.ghe).forEach(item=>{
+      const key=String(gheNumber(item.ghe));
+      if(!byGhe.has(key))byGhe.set(key,item);
+    });
+    directoryItems=[...byGhe.values()];
+    contactsCount.textContent=String(data.nombreContacts??directoryItems.length);
+    const alertsCount=document.getElementById("alertsCount");
+    if(alertsCount)alertsCount.textContent=String(data.nombreAnomalies??0);
+    directoryLoaded=true;
+    renderDirectory();
+  }catch(err){
+    directoryItems=[];
+    contactsCount.textContent="0";
+    directoryList.innerHTML='<div class="state-message error">Impossible de charger le répertoire à jour.</div>';
+    console.error("Contacts GHE",err);
+    throw err;
+  }
 }
 async function openDirectoryFlow(){
   openModal(directoryModal);
   directorySearch.value="";
   directorySort="ghe";
   await loadDirectory();
-  setTimeout(()=>directorySearch.focus(),100);
+  focusIfDesktop(directorySearch);
 }
 
 function showState(message,type){
@@ -1012,8 +1102,12 @@ function showState(message,type){
 }
 function resetSendModal(){
   selectedTargets=[];
+  shortcutQueue=[];
+  sessionStorage.removeItem("ghe_contacts_queue");
+  confirmMode="prepare";
   sendState.hidden=true;
   confirmSend.hidden=true;
+  confirmSend.disabled=false;
   gheChoice.hidden=true;
   targetConfirm.hidden=true;
   gheSearch.value="";
@@ -1032,18 +1126,33 @@ function findConnectedDirectoryItem(session){
 async function openSendFlow(){
   resetSendModal();
   openModal(sendModal);
-  await Promise.all([loadCurrentSession(),loadDirectory()]);
-
-  const role=effectiveRole(CURRENT_SESSION);
-  if(role!=="agent"){
-    sendSubtitle.textContent="Choisis un ou plusieurs GHE qui doivent recevoir le répertoire.";
-    gheChoice.hidden=false;
-    await loadGhe();
-    setTimeout(()=>gheSearch.focus(),100);
+  try{
+    await Promise.all([loadCurrentSession(),loadDirectory()]);
+  }catch(err){
+    sendSubtitle.textContent="Envoi indisponible";
+    showState("Le répertoire à jour n’a pas pu être chargé.","error");
     return;
   }
 
-  const agent=findConnectedDirectoryItem(CURRENT_SESSION);
+  if(CONTACTS_API_DATA?.modeDemo){
+    sendSubtitle.textContent="Mode démonstration";
+    showState("Le mode DEMO ne peut pas préparer un véritable envoi.","error");
+    return;
+  }
+
+  const peutChoisir=CONTACTS_API_DATA?.peutChoisirPlusieurs===true;
+  if(peutChoisir){
+    sendSubtitle.textContent="Choisis un ou plusieurs GHE qui doivent recevoir le répertoire.";
+    gheChoice.hidden=false;
+    await loadGhe();
+    focusIfDesktop(gheSearch);
+    return;
+  }
+
+  const agent=CONTACTS_API_DATA?.contactConnecte
+    ? extractDirectoryItem(CONTACTS_API_DATA.contactConnecte)
+    : findConnectedDirectoryItem(CURRENT_SESSION);
+
   if(!agent?.ghe){
     sendSubtitle.textContent="Envoi impossible";
     showState("Aucun GHE n’est associé au compte agent connecté.","error");
@@ -1053,7 +1162,7 @@ async function openSendFlow(){
   selectedTargets=[{agent_key:sessionKey(CURRENT_SESSION)||agent.agent_key||"",ghe:formatGhe(agent.ghe)}];
   sendSubtitle.textContent="Envoi vers ton téléphone professionnel…";
   targetTitle.textContent=selectedTargets[0].ghe;
-  targetDetail.textContent="Le répertoire sera envoyé automatiquement au téléphone professionnel associé à ton GHE.";
+  targetDetail.textContent="Le répertoire sera préparé pour le téléphone professionnel associé à ton GHE.";
   targetConfirm.hidden=false;
   await sendContacts();
 }
@@ -1097,44 +1206,78 @@ function chooseGhe(ghe){
 }
 
 async function sendContacts(){
+  if(confirmMode==="next"){
+    launchNextShortcut();
+    return;
+  }
   if(!selectedTargets.length)return;
-  const role=effectiveRole(CURRENT_SESSION);
-  const ghes=selectedTargets.map(item=>item.ghe);
-  const first=selectedTargets[0];
+
+  const ghes=selectedTargets.map(item=>gheNumber(item.ghe)).filter(Boolean);
   confirmSend.disabled=true;
-  confirmSend.textContent="Envoi en cours…";
-  showState("Connexion au service d’envoi…","");
+  confirmSend.textContent="Préparation…";
+  showState("Préparation du message…","");
+
   try{
     const res=await fetch(SEND_ENDPOINT,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       credentials:"same-origin",
-      body:JSON.stringify({agent_key:first.agent_key||"",ghe:first.ghe||"",ghes})
+      body:JSON.stringify({ghes})
     });
     const data=await res.json().catch(()=>({}));
-    if(!res.ok||data.ok===false)throw new Error(data.erreur||"envoi_impossible");
-    const successMessage=ghes.length===1
-      ?"Le répertoire a été envoyé au téléphone professionnel associé à "+ghes[0]+"."
-      :"Le répertoire a été envoyé aux "+ghes.length+" GHE sélectionnés.";
-    showState(successMessage,"success");
-    confirmSend.hidden=true;
-  }catch(err){
-    showState("L’envoi n’est pas encore relié au service téléphone. La sélection des GHE est prête.","error");
-  }finally{
-    confirmSend.disabled=false;
-    if(role!=="agent"){
-      const count=selectedTargets.length;
-      confirmSend.textContent=count===1?"Envoyer à 1 GHE":"Envoyer à "+count+" GHE";
-    }else{
-      confirmSend.textContent="Confirmer l’envoi";
+    if(!res.ok||data.ok===false||!Array.isArray(data.envois)||!data.envois.length){
+      throw new Error(data.message||data.erreur||"Préparation impossible");
     }
+
+    shortcutQueue=data.envois.slice();
+    sessionStorage.setItem("ghe_contacts_queue",JSON.stringify(shortcutQueue));
+    launchNextShortcut();
+  }catch(err){
+    showState(String(err.message||err),"error");
+    confirmSend.disabled=false;
+    confirmSend.hidden=false;
+    confirmSend.textContent=ghes.length===1?"Réessayer":"Réessayer l’envoi";
+  }
+}
+
+function launchNextShortcut(){
+  if(!shortcutQueue.length){
+    confirmMode="prepare";
+    confirmSend.hidden=true;
+    sessionStorage.removeItem("ghe_contacts_queue");
+    showState("Tous les messages ont été préparés.","success");
+    return;
+  }
+
+  const item=shortcutQueue.shift();
+  sessionStorage.setItem("ghe_contacts_queue",JSON.stringify(shortcutQueue));
+  confirmMode=shortcutQueue.length?"next":"prepare";
+  confirmSend.hidden=true;
+  showState("Ouverture de Messages pour "+item.ghe+"…","success");
+  setTimeout(()=>{window.location.href=item.raccourci},80);
+}
+
+function restoreShortcutQueue(){
+  try{
+    const pending=JSON.parse(sessionStorage.getItem("ghe_contacts_queue")||"[]");
+    if(!Array.isArray(pending)||!pending.length)return;
+    shortcutQueue=pending;
+    confirmMode="next";
+    openModal(sendModal);
+    sendSubtitle.textContent="Envoi suivant";
+    showState(shortcutQueue.length+" message"+(shortcutQueue.length>1?"s":"")+" restant"+(shortcutQueue.length>1?"s":"")+".","success");
+    confirmSend.hidden=false;
+    confirmSend.disabled=false;
+    confirmSend.textContent="Ouvrir le message suivant";
+  }catch(_){
+    shortcutQueue=[];
   }
 }
 
 document.getElementById("openDirectory").addEventListener("click",openDirectoryFlow);
 document.getElementById("openAlerts").addEventListener("click",()=>openModal(alertsModal));
 document.getElementById("sendMain").addEventListener("click",openSendFlow);
-confirmSend.addEventListener("click",sendContacts);
+confirmSend.addEventListener("click",()=>{if(confirmMode==="next")launchNextShortcut();else sendContacts()});
 gheSearch.addEventListener("input",()=>renderGhe(gheSearch.value));
 directorySearch.addEventListener("input",renderDirectory);
 directoryModal.querySelectorAll(".sort-btn[data-sort]").forEach(btn=>btn.addEventListener("click",()=>{
@@ -1146,7 +1289,13 @@ directoryModal.querySelectorAll(".sort-btn[data-sort]").forEach(btn=>btn.addEven
 
 document.addEventListener("click",e=>{
   if(e.target.closest("[data-close-contact]")){closeContactModal();return}
-  if(e.target.closest("[data-close]")){closeModals();return}
+  const closeTrigger=e.target.closest("[data-close]");
+  if(closeTrigger){
+    const modal=closeTrigger.closest(".modal");
+    if(modal){modal.classList.remove("open");modal.setAttribute("aria-hidden","true")}
+    if(!document.querySelector(".modal.open"))document.body.classList.remove("modal-open");
+    return;
+  }
   const contactCard=e.target.closest("[data-contact-key]");
   if(contactCard&&!e.target.closest("a")){openContactDetail(contactCard.dataset.contactKey);return}
   const gheBtn=e.target.closest("[data-ghe]");
@@ -1166,8 +1315,10 @@ document.addEventListener("keydown",e=>{
   }
 });
 
+window.addEventListener("pageshow",restoreShortcutQueue);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")restoreShortcutQueue()});
 loadPageIdentity();
-loadDirectory();
+loadDirectory().catch(()=>{});
 
 </script>
 </body>
