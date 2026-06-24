@@ -48,13 +48,33 @@ button{color:inherit}
   box-shadow:0 5px 0 rgba(7,24,63,.18);-webkit-tap-highlight-color:transparent;
 }
 .back-btn:active{transform:translateY(2px);box-shadow:0 3px 0 rgba(7,24,63,.18)}
-.hero{
-  overflow:hidden;border:5px solid var(--navy);border-radius:29px;background:var(--paper);
-  box-shadow:0 8px 0 rgba(7,24,63,.16),0 14px 24px rgba(7,24,63,.10);
+.page-identity{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:170px;margin:2px 0 12px;text-align:center;
 }
-.hero img{display:block;width:100%;height:auto;background:var(--paper)}
+.page-avatar-wrap{
+  position:relative;display:flex;align-items:flex-end;justify-content:center;
+  width:168px;height:138px;overflow:visible;background:transparent;
+}
+.page-avatar-wrap img{
+  display:none;width:100%;height:100%;object-fit:contain;object-position:center bottom;
+  filter:drop-shadow(0 7px 0 rgba(7,24,63,.13));
+}
+.page-avatar-wrap.has-image img{display:block}
+.page-avatar-wrap.has-image .page-avatar-fallback{display:none}
+.page-avatar-fallback{
+  display:flex;align-items:center;justify-content:center;width:104px;height:104px;
+  border:5px solid var(--navy);border-radius:26px;background:#fff9e8;
+  color:var(--navy);font-family:var(--title);font-size:38px;font-weight:800;
+  box-shadow:0 6px 0 rgba(7,24,63,.16);
+}
+.page-firstname{
+  margin:6px 0 0;color:var(--navy);font-family:var(--title);
+  font-size:clamp(25px,7vw,38px);font-weight:800;line-height:.9;
+  text-transform:uppercase;text-shadow:0 2px 0 #f8d67d;
+}
 .action-panel{
-  position:relative;margin:25px 0 0;padding:23px 16px 18px;border:5px solid var(--navy);border-radius:30px;
+  position:relative;margin:8px 0 0;padding:23px 16px 18px;border:5px solid var(--navy);border-radius:30px;
   background:linear-gradient(180deg,#fffdf4 0%,#fff5cb 100%);
   box-shadow:10px 10px 0 var(--yellow),0 16px 26px rgba(7,24,63,.10);
 }
@@ -89,15 +109,15 @@ button{color:inherit}
 .sort-btn{min-height:45px;padding:8px;border:3px solid var(--navy);border-radius:15px;background:var(--paper);font-family:var(--title);font-size:18px;font-weight:800;cursor:pointer}
 .sort-btn.active{background:var(--yellow);box-shadow:0 4px 0 rgba(7,24,63,.14)}
 .directory-list{display:grid;gap:8px}
-.contact-row{padding:12px 13px;border:3px solid var(--navy);border-radius:18px;background:var(--paper);box-shadow:0 3px 0 rgba(7,24,63,.08);cursor:pointer;outline:none;transition:transform .12s ease,box-shadow .12s ease}
+.contact-row{padding:14px 13px;border:3px solid var(--navy);border-radius:18px;background:var(--paper);box-shadow:0 3px 0 rgba(7,24,63,.08);cursor:pointer;outline:none;text-align:center;transition:transform .12s ease,box-shadow .12s ease}
 .contact-row:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(7,24,63,.08)}
 .contact-row:focus-visible{box-shadow:0 0 0 4px rgba(248,207,74,.75),0 3px 0 rgba(7,24,63,.08)}
-.contact-line{font-size:17px;font-weight:700;line-height:1.25}
-.contact-line strong{font-weight:950}
-.contact-phone{display:inline-flex;margin-top:6px;color:var(--navy2);font-size:14px;font-weight:850;text-decoration:none}
+.contact-ghe-line{font-family:var(--title);font-size:24px;font-weight:800;line-height:1}
+.contact-name-line{margin-top:6px;font-size:16px;font-weight:750;line-height:1.2}
+.contact-ghe-line strong,.contact-name-line strong{font-weight:950}
+.contact-phone{display:inline-flex;margin-top:8px;color:var(--navy2);font-size:15px;font-weight:850;text-decoration:none}
 .contact-phone:hover{text-decoration:underline}
 .contact-phone.invalid{color:var(--red);text-decoration:none}
-.contact-hint{display:block;margin-top:5px;color:var(--muted);font-size:11px;font-weight:850}
 .contact-profile{padding:16px;border:3px solid var(--navy);border-radius:22px;background:var(--paper);text-align:center}
 .contact-avatar-wrap{position:relative;width:150px;height:150px;margin:0 auto 13px;border:4px solid var(--navy);border-radius:34px;background:#fff9e8;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 0 rgba(7,24,63,.14)}
 .contact-avatar-wrap img{display:none;width:100%;height:100%;object-fit:contain;background:#fff9e8}
@@ -142,15 +162,21 @@ button{color:inherit}
 .confirm-card span{display:block;margin-top:8px;color:var(--muted);font-size:14px;font-weight:850;line-height:1.35}
 .search-agent{width:100%;margin:0 0 10px;padding:13px;border:4px solid var(--navy);border-radius:18px;background:var(--paper);font-size:17px;font-weight:850;outline:none}
 .agent-list{display:grid;gap:8px;max-height:46vh;overflow:auto}
-.agent-btn{min-height:54px;padding:9px 11px;border:3px solid var(--navy);border-radius:17px;background:var(--paper);font-family:var(--title);font-size:22px;font-weight:800;text-transform:uppercase;cursor:pointer}
-.agent-btn small{display:block;margin-top:3px;color:var(--muted);font-family:system-ui,sans-serif;font-size:12px;font-weight:900;text-transform:none}
+.agent-btn{position:relative;min-height:74px;padding:11px 42px 11px 11px;border:3px solid var(--navy);border-radius:17px;background:var(--paper);font-family:var(--title);font-size:22px;font-weight:800;text-transform:uppercase;cursor:pointer}
+.agent-btn small{display:block;margin-top:4px;color:var(--muted);font-family:system-ui,sans-serif;font-size:13px;font-weight:850;text-transform:none}
+.agent-btn .select-mark{position:absolute;right:12px;top:50%;display:flex;align-items:center;justify-content:center;width:27px;height:27px;border:3px solid var(--navy);border-radius:9px;background:#fff;transform:translateY(-50%);font-family:system-ui,sans-serif;font-size:17px;line-height:1}
+.agent-btn.selected{background:linear-gradient(180deg,#fff4b7,#f8cf4a);box-shadow:0 4px 0 rgba(7,24,63,.16)}
+.agent-btn.selected .select-mark{background:var(--navy);color:#fff5c7}
 .agent-btn:disabled{cursor:not-allowed;opacity:.52;background:#ece8dc;box-shadow:none}
+.agent-btn:disabled .select-mark{display:none}
+.agent-btn .invalid-label{color:var(--red)}
 .state-message{margin-top:10px;padding:11px;border:3px solid var(--navy);border-radius:17px;background:var(--paper);text-align:center;font-size:14px;font-weight:900;line-height:1.3}
 .state-message.error{background:var(--red-bg);color:var(--red);border-color:var(--red)}
 .state-message.success{background:var(--green-bg);color:var(--green);border-color:var(--green)}
 @media(min-width:720px){.modal{align-items:center}.sheet{border-radius:28px}}
 @media(max-width:520px){
-  .page{padding-left:9px;padding-right:9px}.back-btn{min-height:45px;font-size:18px}.hero{border-radius:25px}
+  .page{padding-left:9px;padding-right:9px}.back-btn{min-height:45px;font-size:18px}
+  .page-identity{min-height:150px;margin-bottom:10px}.page-avatar-wrap{width:148px;height:120px}.page-avatar-fallback{width:90px;height:90px;font-size:33px;border-width:4px}
   .action-panel{padding:20px 12px 16px;border-radius:27px;box-shadow:7px 8px 0 var(--yellow)}
   .send-btn{min-height:70px;border-radius:21px}.status-row{gap:8px}.status-box,.alerts-btn{min-height:72px}
 }
@@ -161,13 +187,18 @@ button{color:inherit}
 <main class="page">
   <div class="topbar"><a class="back-btn" href="index.html">← Retour accueil</a></div>
 
-  <section class="hero" aria-label="Contacts GHE">
-    <img src="Image/Bannière/Contacte-Ghe.PNG" alt="Contacts GHE" fetchpriority="high" decoding="async">
+  <!-- En-tête volontairement sans bannière : uniquement l’avatar du compte connecté et son prénom. -->
+  <section class="page-identity" aria-label="Compte connecté">
+    <div id="pageAvatarWrap" class="page-avatar-wrap">
+      <img id="pageAvatar" alt="Avatar du compte connecté" decoding="async">
+      <span id="pageAvatarFallback" class="page-avatar-fallback">👤</span>
+    </div>
+    <div id="pageFirstName" class="page-firstname">GHE</div>
   </section>
 
   <section class="action-panel">
     <h1 class="action-title">Répertoire GHE</h1>
-    <p class="action-lead">Reçois la dernière version du répertoire directement sur un téléphone professionnel GHE.</p>
+    <p class="action-lead">Contacts mis à jour le 24 juin 2026.</p>
 
     <button id="sendMain" class="send-btn" type="button">Recevoir le répertoire</button>
 
@@ -190,8 +221,6 @@ button{color:inherit}
 <div id="directoryModal" class="modal" aria-hidden="true">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="directoryTitle">
     <h2 id="directoryTitle">Répertoire GHE</h2>
-    <p class="sheet-sub">Consulte les contacts professionnels. Le tri par GHE est affiché par défaut.</p>
-
     <div class="directory-toolbar">
       <input id="directorySearch" class="directory-search" type="search" placeholder="Rechercher un GHE, un nom ou un prénom" autocomplete="off">
       <div class="sort-tabs" role="group" aria-label="Trier le répertoire">
@@ -222,7 +251,6 @@ button{color:inherit}
       <div id="contactProfileGhe" class="contact-profile-ghe">GHE —</div>
       <div id="contactProfileName" class="contact-profile-name">Agent</div>
       <a id="contactProfilePhone" class="contact-profile-phone" href="#">Numéro professionnel</a>
-      <p class="contact-profile-note">Avatar et coordonnées issus du répertoire professionnel GHE.</p>
     </div>
 
     <button class="close-btn" type="button" data-close-contact>Retour au répertoire</button>
@@ -679,7 +707,7 @@ const DIRECTORY_FALLBACK=[
 
 let CURRENT_SESSION=window.__GHE_SESSION__||window.GHE_SESSION||null;
 let sessionChecked=Boolean(CURRENT_SESSION);
-let selectedTarget=null;
+let selectedTargets=[];
 let gheItems=[];
 let directoryItems=[];
 let directorySort="ghe";
@@ -709,6 +737,10 @@ const targetTitle=document.getElementById("targetTitle");
 const targetDetail=document.getElementById("targetDetail");
 const confirmSend=document.getElementById("confirmSend");
 const sendState=document.getElementById("sendState");
+const pageAvatarWrap=document.getElementById("pageAvatarWrap");
+const pageAvatar=document.getElementById("pageAvatar");
+const pageAvatarFallback=document.getElementById("pageAvatarFallback");
+const pageFirstName=document.getElementById("pageFirstName");
 
 function openModal(el){
   el.classList.add("open");
@@ -790,7 +822,7 @@ async function loadAvatarAgents(){
   if(avatarAgentsLoaded)return avatarAgents;
   avatarAgentsLoaded=true;
   try{
-    const res=await fetch(AVATAR_ENDPOINT+"?mode=list&t="+Date.now(),{cache:"no-store"});
+    const res=await fetch(AVATAR_ENDPOINT+"?mode=list");
     if(!res.ok)throw new Error("HTTP "+res.status);
     const data=await res.json();
     avatarAgents=Array.isArray(data?.agents)?data.agents:[];
@@ -825,6 +857,19 @@ function showAvatarCandidates(urls){
   if(candidates.length)contactAvatar.src=candidates[index++];
 }
 
+function showPageAvatarCandidates(urls){
+  const candidates=[...new Set((urls||[]).filter(Boolean))];
+  let index=0;
+  pageAvatarWrap.classList.remove("has-image");
+  pageAvatar.removeAttribute("src");
+  pageAvatar.onerror=()=>{
+    pageAvatarWrap.classList.remove("has-image");
+    if(index<candidates.length)pageAvatar.src=candidates[index++];
+  };
+  pageAvatar.onload=()=>pageAvatarWrap.classList.add("has-image");
+  if(candidates.length)pageAvatar.src=candidates[index++];
+}
+
 function sessionAgent(session){return session?.agent||session?.utilisateur||{}}
 function sessionRights(session){return session?.droits||{}}
 function sessionNom(session){return firstValue(sessionAgent(session),["nom","NOM","lastName","lastname"])}
@@ -844,7 +889,7 @@ async function loadCurrentSession(){
   if(sessionChecked)return CURRENT_SESSION;
   sessionChecked=true;
   try{
-    const res=await fetch("/__ghe/me?t="+Date.now(),{credentials:"same-origin",cache:"no-store"});
+    const res=await fetch("/__ghe/me",{credentials:"same-origin"});
     if(!res.ok)throw new Error("HTTP "+res.status);
     const data=await res.json();
     if(data?.ok&&data?.session)CURRENT_SESSION=data.session;
@@ -852,6 +897,22 @@ async function loadCurrentSession(){
     console.warn("Session GHE indisponible",err);
   }
   return CURRENT_SESSION;
+}
+
+async function loadPageIdentity(){
+  await loadCurrentSession();
+  const item={
+    agent_key:sessionKey(CURRENT_SESSION),
+    nom:titleCase(sessionNom(CURRENT_SESSION)),
+    prenom:titleCase(sessionPrenom(CURRENT_SESSION))
+  };
+  const roleLabel=titleCase(effectiveRole(CURRENT_SESSION));
+  pageFirstName.textContent=item.prenom||roleLabel||"GHE";
+  pageAvatarFallback.textContent=initials(item);
+  await loadAvatarAgents();
+  const avatarAgent=matchAvatarAgent(item);
+  const sessionAvatarUrls=avatarUrlsFromObject(sessionAgent(CURRENT_SESSION));
+  showPageAvatarCandidates([...sessionAvatarUrls,...avatarUrlsFromObject(avatarAgent)]);
 }
 
 function extractDirectoryItem(a){
@@ -901,7 +962,7 @@ function renderDirectory(){
     const phone=phoneIsValid(item.telephone)
       ?`<a class="contact-phone" href="tel:${esc(normalizePhone(item.telephone))}">${esc(formatPhone(item.telephone))}</a>`
       :`<span class="contact-phone invalid">${esc(formatPhone(item.telephone))}</span>`;
-    return `<article class="contact-row" role="button" tabindex="0" data-contact-key="${esc(item.agent_key)}" aria-label="Ouvrir la fiche de ${nomText} ${prenomText}"><div class="contact-line">${ghePart} · ${nomPart} ${prenomPart}</div>${phone}<span class="contact-hint">Appuyer pour voir la fiche et l’avatar</span></article>`;
+    return `<article class="contact-row" role="button" tabindex="0" data-contact-key="${esc(item.agent_key)}" aria-label="Ouvrir la fiche de ${nomText} ${prenomText}"><div class="contact-ghe-line">${ghePart}</div><div class="contact-name-line">${nomPart} ${prenomPart}</div>${phone}</article>`;
   }).join("");
 }
 async function openContactDetail(agentKey){
@@ -950,7 +1011,7 @@ function showState(message,type){
   sendState.textContent=message;
 }
 function resetSendModal(){
-  selectedTarget=null;
+  selectedTargets=[];
   sendState.hidden=true;
   confirmSend.hidden=true;
   gheChoice.hidden=true;
@@ -975,7 +1036,7 @@ async function openSendFlow(){
 
   const role=effectiveRole(CURRENT_SESSION);
   if(role!=="agent"){
-    sendSubtitle.textContent="Choisis le GHE qui doit recevoir le répertoire.";
+    sendSubtitle.textContent="Choisis un ou plusieurs GHE qui doivent recevoir le répertoire.";
     gheChoice.hidden=false;
     await loadGhe();
     setTimeout(()=>gheSearch.focus(),100);
@@ -989,9 +1050,9 @@ async function openSendFlow(){
     return;
   }
 
-  selectedTarget={agent_key:sessionKey(CURRENT_SESSION)||agent.agent_key||"",ghe:formatGhe(agent.ghe)};
+  selectedTargets=[{agent_key:sessionKey(CURRENT_SESSION)||agent.agent_key||"",ghe:formatGhe(agent.ghe)}];
   sendSubtitle.textContent="Envoi vers ton téléphone professionnel…";
-  targetTitle.textContent=selectedTarget.ghe;
+  targetTitle.textContent=selectedTargets[0].ghe;
   targetDetail.textContent="Le répertoire sera envoyé automatiquement au téléphone professionnel associé à ton GHE.";
   targetConfirm.hidden=false;
   await sendContacts();
@@ -1003,36 +1064,43 @@ async function loadGhe(){
   directoryItems.forEach(item=>{
     const ghe=formatGhe(item.ghe);
     if(!ghe||ghe==="GHE —")return;
-    if(!uniques.has(ghe))uniques.set(ghe,{ghe,valid:phoneIsValid(item.telephone)});
+    if(!uniques.has(ghe))uniques.set(ghe,{ghe,valid:phoneIsValid(item.telephone),nom:item.nom||"",prenom:item.prenom||""});
   });
   gheItems=[...uniques.values()].sort((a,b)=>gheNumber(a.ghe)-gheNumber(b.ghe));
   renderGhe("");
 }
 function renderGhe(q){
   const needle=norm(q);
-  const list=gheItems.filter(item=>!needle||norm(item.ghe).includes(needle));
+  const list=gheItems.filter(item=>!needle||norm([item.ghe,item.nom,item.prenom].join(" ")).includes(needle));
   if(!list.length){gheList.innerHTML='<div class="state-message">Aucun GHE trouvé.</div>';return}
   gheList.innerHTML=list.map(item=>{
     const disabled=item.valid?"":" disabled";
-    const detail=item.valid?"Téléphone professionnel associé":"Numéro invalide — envoi indisponible";
-    return `<button class="agent-btn" type="button" data-ghe="${esc(item.ghe)}"${disabled}><span>${esc(item.ghe)}</span><small>${esc(detail)}</small></button>`;
+    const selected=selectedTargets.some(x=>x.ghe===item.ghe);
+    const selectedClass=selected?" selected":"";
+    const name=[item.nom,item.prenom].filter(Boolean).join(" ")||"Agent non renseigné";
+    const detail=item.valid?esc(name):`${esc(name)}<span class="invalid-label"> — numéro invalide</span>`;
+    return `<button class="agent-btn${selectedClass}" type="button" data-ghe="${esc(item.ghe)}" aria-pressed="${selected?"true":"false"}"${disabled}><span>${esc(item.ghe)}</span><small>${detail}</small><span class="select-mark" aria-hidden="true">${selected?"✓":""}</span></button>`;
   }).join("");
 }
 function chooseGhe(ghe){
   const item=gheItems.find(x=>x.ghe===ghe&&x.valid);
   if(!item)return;
-  selectedTarget={agent_key:"",ghe:item.ghe};
-  gheChoice.hidden=true;
-  targetConfirm.hidden=false;
-  targetTitle.textContent=item.ghe;
-  targetDetail.textContent="Le fichier VCF sera envoyé au numéro professionnel associé à ce GHE. Le numéro n’est pas affiché ici.";
-  confirmSend.hidden=false;
-  confirmSend.textContent="Envoyer au "+item.ghe;
-  sendSubtitle.textContent="Vérifie le GHE avant de confirmer.";
+  const index=selectedTargets.findIndex(x=>x.ghe===item.ghe);
+  if(index>=0)selectedTargets.splice(index,1);
+  else selectedTargets.push({agent_key:"",ghe:item.ghe});
+  renderGhe(gheSearch.value);
+  targetConfirm.hidden=true;
+  const count=selectedTargets.length;
+  confirmSend.hidden=count===0;
+  confirmSend.textContent=count===1?"Envoyer à 1 GHE":"Envoyer à "+count+" GHE";
+  sendSubtitle.textContent=count===0?"Choisis un ou plusieurs GHE qui doivent recevoir le répertoire.":count+" GHE sélectionné"+(count>1?"s":"")+".";
 }
 
 async function sendContacts(){
-  if(!selectedTarget)return;
+  if(!selectedTargets.length)return;
+  const role=effectiveRole(CURRENT_SESSION);
+  const ghes=selectedTargets.map(item=>item.ghe);
+  const first=selectedTargets[0];
   confirmSend.disabled=true;
   confirmSend.textContent="Envoi en cours…";
   showState("Connexion au service d’envoi…","");
@@ -1041,17 +1109,25 @@ async function sendContacts(){
       method:"POST",
       headers:{"Content-Type":"application/json"},
       credentials:"same-origin",
-      body:JSON.stringify({agent_key:selectedTarget.agent_key||"",ghe:selectedTarget.ghe||""})
+      body:JSON.stringify({agent_key:first.agent_key||"",ghe:first.ghe||"",ghes})
     });
     const data=await res.json().catch(()=>({}));
     if(!res.ok||data.ok===false)throw new Error(data.erreur||"envoi_impossible");
-    showState("Le répertoire a été envoyé au téléphone professionnel associé à "+selectedTarget.ghe+".","success");
+    const successMessage=ghes.length===1
+      ?"Le répertoire a été envoyé au téléphone professionnel associé à "+ghes[0]+"."
+      :"Le répertoire a été envoyé aux "+ghes.length+" GHE sélectionnés.";
+    showState(successMessage,"success");
     confirmSend.hidden=true;
   }catch(err){
-    showState("L’envoi n’est pas encore relié au service téléphone. La sélection du GHE est maintenant correcte.","error");
+    showState("L’envoi n’est pas encore relié au service téléphone. La sélection des GHE est prête.","error");
   }finally{
     confirmSend.disabled=false;
-    confirmSend.textContent=effectiveRole(CURRENT_SESSION)!=="agent"&&selectedTarget?.ghe?"Envoyer au "+selectedTarget.ghe:"Confirmer l’envoi";
+    if(role!=="agent"){
+      const count=selectedTargets.length;
+      confirmSend.textContent=count===1?"Envoyer à 1 GHE":"Envoyer à "+count+" GHE";
+    }else{
+      confirmSend.textContent="Confirmer l’envoi";
+    }
   }
 }
 
@@ -1090,7 +1166,7 @@ document.addEventListener("keydown",e=>{
   }
 });
 
-loadCurrentSession();
+loadPageIdentity();
 loadDirectory();
 
 </script>
