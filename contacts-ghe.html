@@ -89,12 +89,26 @@ button{color:inherit}
 .sort-btn{min-height:45px;padding:8px;border:3px solid var(--navy);border-radius:15px;background:var(--paper);font-family:var(--title);font-size:18px;font-weight:800;cursor:pointer}
 .sort-btn.active{background:var(--yellow);box-shadow:0 4px 0 rgba(7,24,63,.14)}
 .directory-list{display:grid;gap:8px}
-.contact-row{padding:12px 13px;border:3px solid var(--navy);border-radius:18px;background:var(--paper);box-shadow:0 3px 0 rgba(7,24,63,.08)}
+.contact-row{padding:12px 13px;border:3px solid var(--navy);border-radius:18px;background:var(--paper);box-shadow:0 3px 0 rgba(7,24,63,.08);cursor:pointer;outline:none;transition:transform .12s ease,box-shadow .12s ease}
+.contact-row:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(7,24,63,.08)}
+.contact-row:focus-visible{box-shadow:0 0 0 4px rgba(248,207,74,.75),0 3px 0 rgba(7,24,63,.08)}
 .contact-line{font-size:17px;font-weight:700;line-height:1.25}
 .contact-line strong{font-weight:950}
 .contact-phone{display:inline-flex;margin-top:6px;color:var(--navy2);font-size:14px;font-weight:850;text-decoration:none}
 .contact-phone:hover{text-decoration:underline}
 .contact-phone.invalid{color:var(--red);text-decoration:none}
+.contact-hint{display:block;margin-top:5px;color:var(--muted);font-size:11px;font-weight:850}
+.contact-profile{padding:16px;border:3px solid var(--navy);border-radius:22px;background:var(--paper);text-align:center}
+.contact-avatar-wrap{position:relative;width:150px;height:150px;margin:0 auto 13px;border:4px solid var(--navy);border-radius:34px;background:#fff9e8;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 0 rgba(7,24,63,.14)}
+.contact-avatar-wrap img{display:none;width:100%;height:100%;object-fit:contain;background:#fff9e8}
+.contact-avatar-wrap.has-image img{display:block}
+.contact-avatar-wrap.has-image .contact-avatar-fallback{display:none}
+.contact-avatar-fallback{font-family:var(--title);font-size:42px;font-weight:800;color:var(--navy)}
+.contact-profile-ghe{font-family:var(--title);font-size:27px;font-weight:800;line-height:1;color:var(--navy)}
+.contact-profile-name{margin-top:5px;font-family:var(--title);font-size:30px;font-weight:800;line-height:1}
+.contact-profile-phone{display:inline-flex;margin-top:12px;padding:9px 13px;border:3px solid var(--navy);border-radius:14px;background:linear-gradient(180deg,#fff4b7,#f8cf4a);color:var(--navy);font-size:18px;font-weight:900;text-decoration:none}
+.contact-profile-phone.invalid{background:var(--red-bg);color:var(--red);border-color:var(--red);pointer-events:none}
+.contact-profile-note{margin:11px 0 0;color:var(--muted);font-size:13px;font-weight:800;line-height:1.35}
 .directory-empty{padding:16px;border:3px dashed var(--navy);border-radius:18px;text-align:center;font-weight:900;background:rgba(255,255,255,.45)}
 .modal{
   position:fixed;inset:0;z-index:1000;display:none;align-items:flex-end;justify-content:center;padding:10px;
@@ -130,6 +144,7 @@ button{color:inherit}
 .agent-list{display:grid;gap:8px;max-height:46vh;overflow:auto}
 .agent-btn{min-height:54px;padding:9px 11px;border:3px solid var(--navy);border-radius:17px;background:var(--paper);font-family:var(--title);font-size:22px;font-weight:800;text-transform:uppercase;cursor:pointer}
 .agent-btn small{display:block;margin-top:3px;color:var(--muted);font-family:system-ui,sans-serif;font-size:12px;font-weight:900;text-transform:none}
+.agent-btn:disabled{cursor:not-allowed;opacity:.52;background:#ece8dc;box-shadow:none}
 .state-message{margin-top:10px;padding:11px;border:3px solid var(--navy);border-radius:17px;background:var(--paper);text-align:center;font-size:14px;font-weight:900;line-height:1.3}
 .state-message.error{background:var(--red-bg);color:var(--red);border-color:var(--red)}
 .state-message.success{background:var(--green-bg);color:var(--green);border-color:var(--green)}
@@ -194,6 +209,26 @@ button{color:inherit}
   </div>
 </div>
 
+<div id="contactModal" class="modal" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+    <h2 id="contactTitle">Contact GHE</h2>
+    <p class="sheet-sub">Fiche professionnelle de l’agent.</p>
+
+    <div class="contact-profile">
+      <div id="contactAvatarWrap" class="contact-avatar-wrap">
+        <img id="contactAvatar" alt="Avatar de l’agent" decoding="async">
+        <span id="contactAvatarFallback" class="contact-avatar-fallback">👤</span>
+      </div>
+      <div id="contactProfileGhe" class="contact-profile-ghe">GHE —</div>
+      <div id="contactProfileName" class="contact-profile-name">Agent</div>
+      <a id="contactProfilePhone" class="contact-profile-phone" href="#">Numéro professionnel</a>
+      <p class="contact-profile-note">Avatar et coordonnées issus du répertoire professionnel GHE.</p>
+    </div>
+
+    <button class="close-btn" type="button" data-close-contact>Retour au répertoire</button>
+  </div>
+</div>
+
 <div id="alertsModal" class="modal" aria-hidden="true">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="alertsTitle">
     <h2 id="alertsTitle">Anomalies détectées</h2>
@@ -245,20 +280,424 @@ button{color:inherit}
 </div>
 
 <script>
-const PASSERELLE_AGENTS="https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8HZ_g_ota7tajTKLY3jvLKEF9AvSPjIbVpqcSkSRcl5OdWV9/exec";
 const SEND_ENDPOINT="/api/contacts-ghe/send";
+const AVATAR_ENDPOINT="https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8HZ_g_ota7tajTKLY3jvLKEF9AvSPjIbVpqcSkSRcl5OdWV9/exec";
+const DIRECTORY_FALLBACK=[
+  {
+    "nom": "ABDELKEBIR",
+    "prenom": "MEHDI",
+    "ghe": "GHE 08",
+    "telephone": "0614437506",
+    "agent_key": "ABDELKEBIR_MEHDI"
+  },
+  {
+    "nom": "ABOU KASH",
+    "prenom": "DANIEL",
+    "ghe": "GHE 73",
+    "telephone": "0621164167",
+    "agent_key": "ABOU_KASH_DANIEL"
+  },
+  {
+    "nom": "ADOUANI",
+    "prenom": "JAMILA",
+    "ghe": "GHE 02",
+    "telephone": "0616874288",
+    "agent_key": "ADOUANI_JAMILA"
+  },
+  {
+    "nom": "ALIMELIE",
+    "prenom": "GILBERT",
+    "ghe": "GHE 09",
+    "telephone": "0623659353",
+    "agent_key": "ALIMELIE_GILBERT"
+  },
+  {
+    "nom": "BAHLOUL",
+    "prenom": "ANTHONY",
+    "ghe": "GHE 15",
+    "telephone": "0778195289",
+    "agent_key": "BAHLOUL_ANTHONY"
+  },
+  {
+    "nom": "BAIBOU",
+    "prenom": "MEHDI",
+    "ghe": "GHE 47",
+    "telephone": "0625019753",
+    "agent_key": "BAIBOU_MEHDI"
+  },
+  {
+    "nom": "BEKKA",
+    "prenom": "JAWAD",
+    "ghe": "GHE 78",
+    "telephone": "0628475675",
+    "agent_key": "BEKKA_JAWAD"
+  },
+  {
+    "nom": "BELFAKIR",
+    "prenom": "ASMAA",
+    "ghe": "GHE 74",
+    "telephone": "0609775788",
+    "agent_key": "BELFAKIR_ASMAA"
+  },
+  {
+    "nom": "BENAKKA",
+    "prenom": "ATIKA",
+    "ghe": "GHE 41",
+    "telephone": "0609770944",
+    "agent_key": "BENAKKA_ATIKA"
+  },
+  {
+    "nom": "BENDAHMANE",
+    "prenom": "YACINE",
+    "ghe": "GHE 17",
+    "telephone": "0621109458",
+    "agent_key": "BENDAHMANE_YACINE"
+  },
+  {
+    "nom": "BERHOUNE",
+    "prenom": "LARBY",
+    "ghe": "GHE 03",
+    "telephone": "0612323486",
+    "agent_key": "BERHOUNE_LARBY"
+  },
+  {
+    "nom": "BERISHA",
+    "prenom": "SHERIFE",
+    "ghe": "GHE 70",
+    "telephone": "0620737358",
+    "agent_key": "BERISHA_SHERIFE"
+  },
+  {
+    "nom": "BOISSET",
+    "prenom": "FLORENT",
+    "ghe": "GHE 07",
+    "telephone": "0634093697",
+    "agent_key": "BOISSET_FLORENT"
+  },
+  {
+    "nom": "BOTTERO",
+    "prenom": "GEOFFROY",
+    "ghe": "GHE 04",
+    "telephone": "0609775413",
+    "agent_key": "BOTTERO_GEOFFROY"
+  },
+  {
+    "nom": "BOUHAMI",
+    "prenom": "NADIA",
+    "ghe": "GHE 22",
+    "telephone": "0603929410",
+    "agent_key": "BOUHAMI_NADIA"
+  },
+  {
+    "nom": "BOULENOUAR",
+    "prenom": "FATIMA",
+    "ghe": "GHE 25",
+    "telephone": "0616294555",
+    "agent_key": "BOULENOUAR_FATIMA"
+  },
+  {
+    "nom": "BOUSSENA",
+    "prenom": "ISLEM",
+    "ghe": "GHE 36",
+    "telephone": "0609770337",
+    "agent_key": "BOUSSENA_ISLEM"
+  },
+  {
+    "nom": "CANGUIO",
+    "prenom": "WILLY",
+    "ghe": "GHE 55",
+    "telephone": "0609779931",
+    "agent_key": "CANGUIO_WILLY"
+  },
+  {
+    "nom": "CHATILLON",
+    "prenom": "Marion",
+    "ghe": "GHE 39",
+    "telephone": "0616528531",
+    "agent_key": "CHATILLON_MARION"
+  },
+  {
+    "nom": "CHAUSSIERE",
+    "prenom": "PASCAL",
+    "ghe": "GHE 29",
+    "telephone": "0628547358",
+    "agent_key": "CHAUSSIERE_PASCAL"
+  },
+  {
+    "nom": "CHAVEROT",
+    "prenom": "SEBASTIEN",
+    "ghe": "GHE 45",
+    "telephone": "0610371258",
+    "agent_key": "CHAVEROT_SEBASTIEN"
+  },
+  {
+    "nom": "COUSSAT",
+    "prenom": "CHRISTOPHE",
+    "ghe": "GHE 51",
+    "telephone": "0612323486",
+    "agent_key": "COUSSAT_CHRISTOPHE"
+  },
+  {
+    "nom": "DANDIS",
+    "prenom": "FREDERIC",
+    "ghe": "GHE 77",
+    "telephone": "0609777389",
+    "agent_key": "DANDIS_FREDERIC"
+  },
+  {
+    "nom": "DHRIOUA",
+    "prenom": "WAFA",
+    "ghe": "GHE 35",
+    "telephone": "0778055235",
+    "agent_key": "DHRIOUA_WAFA"
+  },
+  {
+    "nom": "DIALLO",
+    "prenom": "ACIA TOU",
+    "ghe": "GHE 58",
+    "telephone": "0776232095",
+    "agent_key": "DIALLO_ACIA_TOU"
+  },
+  {
+    "nom": "DJELASSI",
+    "prenom": "FAICAL",
+    "ghe": "GHE 75",
+    "telephone": "0776232088",
+    "agent_key": "DJELASSI_FAICAL"
+  },
+  {
+    "nom": "DJENNAS",
+    "prenom": "SABRINA",
+    "ghe": "GHE 44",
+    "telephone": "0624649811",
+    "agent_key": "DJENNAS_SABRINA"
+  },
+  {
+    "nom": "EZZINE",
+    "prenom": "NORRA",
+    "ghe": "GHE 20",
+    "telephone": "0626888750",
+    "agent_key": "EZZINE_NORRA"
+  },
+  {
+    "nom": "FAURE",
+    "prenom": "BENJAMIN",
+    "ghe": "GHE 32",
+    "telephone": "0616714738",
+    "agent_key": "FAURE_BENJAMIN"
+  },
+  {
+    "nom": "FLAGEOLLET",
+    "prenom": "ROXANA",
+    "ghe": "GHE 28",
+    "telephone": "0622119851",
+    "agent_key": "FLAGEOLLET_ROXANA"
+  },
+  {
+    "nom": "FUMELE",
+    "prenom": "KEVIN",
+    "ghe": "GHE 26",
+    "telephone": "0611661648",
+    "agent_key": "FUMELE_KEVIN"
+  },
+  {
+    "nom": "GALEA",
+    "prenom": "SERGE",
+    "ghe": "GHE 01",
+    "telephone": "0612384328",
+    "agent_key": "GALEA_SERGE"
+  },
+  {
+    "nom": "HAMIDAT",
+    "prenom": "SAMI",
+    "ghe": "GHE 68",
+    "telephone": "06777122487",
+    "agent_key": "HAMIDAT_SAMI"
+  },
+  {
+    "nom": "HAZMI",
+    "prenom": "WAHEL",
+    "ghe": "GHE 43",
+    "telephone": "0626368472",
+    "agent_key": "HAZMI_WAHEL"
+  },
+  {
+    "nom": "IAFRATE",
+    "prenom": "MARGOT",
+    "ghe": "GHE 10",
+    "telephone": "0624096508",
+    "agent_key": "IAFRATE_MARGOT"
+  },
+  {
+    "nom": "JIFFARD",
+    "prenom": "LUDOVIC",
+    "ghe": "GHE 16",
+    "telephone": "0610108073",
+    "agent_key": "JIFFARD_LUDOVIC"
+  },
+  {
+    "nom": "KARA",
+    "prenom": "SINAN",
+    "ghe": "GHE 11",
+    "telephone": "0609776969",
+    "agent_key": "KARA_SINAN"
+  },
+  {
+    "nom": "KHALDI",
+    "prenom": "FAHIM",
+    "ghe": "GHE 14",
+    "telephone": "0776232084",
+    "agent_key": "KHALDI_FAHIM"
+  },
+  {
+    "nom": "KRIVOPISSKO",
+    "prenom": "ANTOINE",
+    "ghe": "GHE 18",
+    "telephone": "0612536669",
+    "agent_key": "KRIVOPISSKO_ANTOINE"
+  },
+  {
+    "nom": "MADI MOUSSA",
+    "prenom": "SALAMI",
+    "ghe": "GHE 06",
+    "telephone": "0609777243",
+    "agent_key": "MADI_MOUSSA_SALAMI"
+  },
+  {
+    "nom": "MATOUG",
+    "prenom": "KARIM",
+    "ghe": "GHE 31",
+    "telephone": "0609279033",
+    "agent_key": "MATOUG_KARIM"
+  },
+  {
+    "nom": "MDERREG",
+    "prenom": "LAMIA",
+    "ghe": "GHE 30",
+    "telephone": "0612841004",
+    "agent_key": "MDERREG_LAMIA"
+  },
+  {
+    "nom": "MEGHARI",
+    "prenom": "NASSER",
+    "ghe": "GHE 21",
+    "telephone": "0634093110",
+    "agent_key": "MEGHARI_NASSER"
+  },
+  {
+    "nom": "MEHIAOUI",
+    "prenom": "MOHAMED",
+    "ghe": "GHE 61",
+    "telephone": "0618888307",
+    "agent_key": "MEHIAOUI_MOHAMED"
+  },
+  {
+    "nom": "MOKEDDEM",
+    "prenom": "SOUHELA",
+    "ghe": "GHE 34",
+    "telephone": "0611667172",
+    "agent_key": "MOKEDDEM_SOUHELA"
+  },
+  {
+    "nom": "MONNERET",
+    "prenom": "REMY",
+    "ghe": "GHE 42",
+    "telephone": "0625017954",
+    "agent_key": "MONNERET_REMY"
+  },
+  {
+    "nom": "MONTAGNON",
+    "prenom": "THOMAS",
+    "ghe": "GHE 13",
+    "telephone": "0609773305",
+    "agent_key": "MONTAGNON_THOMAS"
+  },
+  {
+    "nom": "OULD BOUKHITINE",
+    "prenom": "MOUNIR",
+    "ghe": "GHE 27",
+    "telephone": "0603920217",
+    "agent_key": "OULD_BOUKHITINE_MOUNIR"
+  },
+  {
+    "nom": "PERSOUYRE",
+    "prenom": "CHRISTINE",
+    "ghe": "GHE 67",
+    "telephone": "0609778181",
+    "agent_key": "PERSOUYRE_CHRISTINE"
+  },
+  {
+    "nom": "RIDDE",
+    "prenom": "YAEL",
+    "ghe": "GHE 37",
+    "telephone": "0603929531",
+    "agent_key": "RIDDE_YAEL"
+  },
+  {
+    "nom": "SAHLI",
+    "prenom": "LYNDA",
+    "ghe": "GHE 33",
+    "telephone": "0616879960",
+    "agent_key": "SAHLI_LYNDA"
+  },
+  {
+    "nom": "SAPIN",
+    "prenom": "EDDY",
+    "ghe": "24",
+    "telephone": "0609779806",
+    "agent_key": "SAPIN_EDDY"
+  },
+  {
+    "nom": "TEKIN",
+    "prenom": "MICKAEL",
+    "ghe": "GHE 05",
+    "telephone": "0622770622",
+    "agent_key": "TEKIN_MICKAEL"
+  },
+  {
+    "nom": "TIBERGHIEN",
+    "prenom": "VINCENT",
+    "ghe": "GHE 76",
+    "telephone": "0609777617",
+    "agent_key": "TIBERGHIEN_VINCENT"
+  },
+  {
+    "nom": "TRIBOULET",
+    "prenom": "MATHIEU",
+    "ghe": "GHE 19",
+    "telephone": "0777694742",
+    "agent_key": "TRIBOULET_MATHIEU"
+  },
+  {
+    "nom": "VASCONCELOS",
+    "prenom": "SAMMY",
+    "ghe": "GHE 63",
+    "telephone": "0618886239",
+    "agent_key": "VASCONCELOS_SAMMY"
+  }
+];
 
-const CURRENT_SESSION=window.__GHE_SESSION__||window.GHE_SESSION||null;
+let CURRENT_SESSION=window.__GHE_SESSION__||window.GHE_SESSION||null;
+let sessionChecked=Boolean(CURRENT_SESSION);
 let selectedTarget=null;
 let gheItems=[];
 let directoryItems=[];
 let directorySort="ghe";
 let directoryLoaded=false;
+let avatarAgents=[];
+let avatarAgentsLoaded=false;
 
 const directoryModal=document.getElementById("directoryModal");
 const directorySearch=document.getElementById("directorySearch");
 const directoryList=document.getElementById("directoryList");
 const contactsCount=document.getElementById("contactsCount");
+const contactModal=document.getElementById("contactModal");
+const contactAvatarWrap=document.getElementById("contactAvatarWrap");
+const contactAvatar=document.getElementById("contactAvatar");
+const contactAvatarFallback=document.getElementById("contactAvatarFallback");
+const contactProfileGhe=document.getElementById("contactProfileGhe");
+const contactProfileName=document.getElementById("contactProfileName");
+const contactProfilePhone=document.getElementById("contactProfilePhone");
 const alertsModal=document.getElementById("alertsModal");
 const sendModal=document.getElementById("sendModal");
 const sendSubtitle=document.getElementById("sendSubtitle");
@@ -280,16 +719,14 @@ function closeModals(){
   document.querySelectorAll(".modal.open").forEach(el=>{el.classList.remove("open");el.setAttribute("aria-hidden","true")});
   document.body.classList.remove("modal-open");
 }
-function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
-function norm(v){return String(v??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().replace(/\s+/g," ").trim()}
-function sessionRole(){
-  const role=CURRENT_SESSION?.droits?.role||CURRENT_SESSION?.role||"agent";
-  return String(role).toLowerCase();
+function closeContactModal(){
+  contactModal.classList.remove("open");
+  contactModal.setAttribute("aria-hidden","true");
+  if(!document.querySelector(".modal.open"))document.body.classList.remove("modal-open");
 }
-function isResponsible(){return sessionRole()!=="agent"||CURRENT_SESSION?.droits?.acces_chefs===true}
-function currentAgent(){return CURRENT_SESSION?.agent||CURRENT_SESSION?.utilisateur||null}
-
-
+function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function clean(v){return String(v??"").trim()}
+function norm(v){return clean(v).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().replace(/[^A-Z0-9]+/g,"_").replace(/^_+|_+$/g,"")}
 function firstValue(obj,keys){
   for(const key of keys){
     const value=obj?.[key];
@@ -309,22 +746,126 @@ function formatGhe(value){
   return Number.isFinite(n)&&n!==9999?"GHE "+String(n).padStart(2,"0"):String(value||"GHE —").trim();
 }
 function normalizePhone(value){return String(value||"").replace(/[^\d+]/g,"")}
+function phoneIsValid(value){return String(value||"").replace(/\D/g,"").length===10}
 function formatPhone(value){
   const digits=String(value||"").replace(/\D/g,"");
   if(digits.length===10)return digits.replace(/(\d{2})(?=\d)/g,"$1 ").trim();
   return value||"Numéro à vérifier";
 }
+function initials(item){
+  return [item?.prenom,item?.nom].filter(Boolean).map(v=>String(v).trim().charAt(0)).join("").slice(0,2).toUpperCase()||"👤";
+}
+function extractDriveId(value){
+  const v=clean(value);
+  if(!v)return "";
+  let m=v.match(/\/file\/d\/([^/]+)/); if(m?.[1])return m[1];
+  m=v.match(/[?&]id=([^&]+)/); if(m?.[1])return decodeURIComponent(m[1]);
+  m=v.match(/\/d\/([A-Za-z0-9_-]{20,})/); if(m?.[1])return m[1];
+  return /^[A-Za-z0-9_-]{20,}$/.test(v)?v:"";
+}
+function avatarUrlsFromValue(value){
+  const v=clean(value); if(!v)return [];
+  const id=extractDriveId(v);
+  if(id)return [
+    "https://drive.google.com/thumbnail?id="+encodeURIComponent(id)+"&sz=w500",
+    "https://drive.google.com/uc?export=view&id="+encodeURIComponent(id),
+    "https://lh3.googleusercontent.com/d/"+encodeURIComponent(id)+"=w500"
+  ];
+  return /^https?:\/\//i.test(v)?[v]:[];
+}
+function avatarUrlsFromObject(obj){
+  if(!obj)return [];
+  const vals=[];
+  ["avatar_image_url","avatar_thumb_url","avatar_url","avatar_id","AVATAR_IMAGE_URL","AVATAR_THUMB_URL","AVATAR_URL","AVATAR_ID","AVATAR_IMAGE"].forEach(key=>{
+    if(obj[key]!==undefined&&obj[key]!==null&&clean(obj[key]))vals.push(obj[key]);
+  });
+  if(obj.avatar&&typeof obj.avatar==="object"){
+    ["avatar_image_url","avatar_thumb_url","avatar_url","avatar_id","thumb","image","url","AVATAR_IMAGE_URL","AVATAR_URL","AVATAR_ID"].forEach(key=>{
+      if(obj.avatar[key]!==undefined&&obj.avatar[key]!==null&&clean(obj.avatar[key]))vals.push(obj.avatar[key]);
+    });
+  }
+  return [...new Set(vals.flatMap(avatarUrlsFromValue))];
+}
+async function loadAvatarAgents(){
+  if(avatarAgentsLoaded)return avatarAgents;
+  avatarAgentsLoaded=true;
+  try{
+    const res=await fetch(AVATAR_ENDPOINT+"?mode=list&t="+Date.now(),{cache:"no-store"});
+    if(!res.ok)throw new Error("HTTP "+res.status);
+    const data=await res.json();
+    avatarAgents=Array.isArray(data?.agents)?data.agents:[];
+  }catch(err){
+    console.warn("Passerelle avatars indisponible",err);
+    avatarAgents=[];
+  }
+  return avatarAgents;
+}
+function matchAvatarAgent(item){
+  const key=norm(item.agent_key);
+  const nom=norm(item.nom);
+  const prenom=norm(item.prenom);
+  return avatarAgents.find(a=>{
+    const akey=norm(firstValue(a,["agent_key","AGENT_KEY","agent_uid","AGENT_UID","agent","AGENT","key"]));
+    const anom=norm(firstValue(a,["nom","NOM"]));
+    const aprenom=norm(firstValue(a,["prenom","prénom","PRENOM","PRÉNOM"]));
+    const full=norm(firstValue(a,["nomComplet","nom_complet","fullName","NOM / PRÉNOM","AGENT_AFFICHE","agent","AGENT"]));
+    return (key&&akey&&key===akey)||(nom&&prenom&&anom===nom&&aprenom===prenom)||(nom&&prenom&&full.includes(nom)&&full.includes(prenom));
+  })||null;
+}
+function showAvatarCandidates(urls){
+  const candidates=[...new Set((urls||[]).filter(Boolean))];
+  let index=0;
+  contactAvatarWrap.classList.remove("has-image");
+  contactAvatar.removeAttribute("src");
+  contactAvatar.onerror=()=>{
+    contactAvatarWrap.classList.remove("has-image");
+    if(index<candidates.length)contactAvatar.src=candidates[index++];
+  };
+  contactAvatar.onload=()=>contactAvatarWrap.classList.add("has-image");
+  if(candidates.length)contactAvatar.src=candidates[index++];
+}
+
+function sessionAgent(session){return session?.agent||session?.utilisateur||{}}
+function sessionRights(session){return session?.droits||{}}
+function sessionNom(session){return firstValue(sessionAgent(session),["nom","NOM","lastName","lastname"])}
+function sessionPrenom(session){return firstValue(sessionAgent(session),["prenom","prénom","PRENOM","PRÉNOM","firstName","firstname"])}
+function sessionKey(session){return firstValue(sessionAgent(session),["agent_key","agent","key","AGENT_KEY","AGENT","agent_uid","AGENT_UID"])}
+function sessionRole(session){return clean(sessionRights(session).role||sessionRights(session).ROLE||session?.role).toLowerCase()}
+function isDemo(session){return norm(sessionNom(session))==="DEMO"&&norm(sessionPrenom(session))==="DEMO"}
+function isEddy(session){
+  return norm(sessionKey(session))==="SAPIN_EDDY"||(norm(sessionNom(session))==="SAPIN"&&norm(sessionPrenom(session))==="EDDY");
+}
+function effectiveRole(session){
+  if(isDemo(session))return "total";
+  if(isEddy(session))return "agent";
+  return sessionRole(session)||"inconnu";
+}
+async function loadCurrentSession(){
+  if(sessionChecked)return CURRENT_SESSION;
+  sessionChecked=true;
+  try{
+    const res=await fetch("/__ghe/me?t="+Date.now(),{credentials:"same-origin",cache:"no-store"});
+    if(!res.ok)throw new Error("HTTP "+res.status);
+    const data=await res.json();
+    if(data?.ok&&data?.session)CURRENT_SESSION=data.session;
+  }catch(err){
+    console.warn("Session GHE indisponible",err);
+  }
+  return CURRENT_SESSION;
+}
+
 function extractDirectoryItem(a){
   let nom=firstValue(a,["nom","NOM","last_name","lastname"]);
   let prenom=firstValue(a,["prenom","PRÉNOM","PRENOM","first_name","firstname"]);
-  const full=firstValue(a,["nom_prenom","NOM / PRÉNOM","nomPrenom","agent","AGENT"]);
+  const full=firstValue(a,["nom_prenom","NOM / PRÉNOM","nomPrenom","nomComplet","nom_complet","fullName","AGENT_AFFICHE"]);
   if((!nom||!prenom)&&full){
     const parts=full.replace(/\s+/g," ").trim().split(" ");
     if(!nom&&parts.length)nom=parts.shift()||"";
     if(!prenom&&parts.length)prenom=parts.join(" ");
   }
   return {
-    ghe:firstValue(a,["ghe","GHE"]),
+    agent_key:firstValue(a,["agent_key","AGENT_KEY","agent_uid","AGENT_UID","agent","AGENT","key"])||norm(nom+" "+prenom),
+    ghe:firstValue(a,["ghe","GHE","numero_ghe","NUMERO_GHE"]),
     nom:titleCase(nom),
     prenom:titleCase(prenom),
     telephone:firstValue(a,["telephone","TÉLÉPHONE","TELEPHONE","tel","TEL","phone","numero","NUMERO"])
@@ -343,7 +884,11 @@ function renderDirectory(){
     return !needle||haystack.includes(needle);
   }).sort(compareDirectory);
 
-  document.querySelectorAll("[data-sort]").forEach(btn=>btn.classList.toggle("active",btn.dataset.sort===directorySort));
+  directoryModal.querySelectorAll(".sort-btn[data-sort]").forEach(btn=>{
+    const active=btn.dataset.sort===directorySort;
+    btn.classList.toggle("active",active);
+    btn.setAttribute("aria-pressed",active?"true":"false");
+  });
   if(!list.length){directoryList.innerHTML='<div class="directory-empty">Aucun contact trouvé.</div>';return}
 
   directoryList.innerHTML=list.map(item=>{
@@ -353,39 +898,43 @@ function renderDirectory(){
     const ghePart=directorySort==="ghe"?`<strong>${gheText}</strong>`:gheText;
     const nomPart=directorySort==="nom"?`<strong>${nomText}</strong>`:nomText;
     const prenomPart=directorySort==="prenom"?`<strong>${prenomText}</strong>`:prenomText;
-    const phoneDigits=String(item.telephone||"").replace(/\D/g,"");
-    const validPhone=phoneDigits.length===10;
-    const phone=validPhone
+    const phone=phoneIsValid(item.telephone)
       ?`<a class="contact-phone" href="tel:${esc(normalizePhone(item.telephone))}">${esc(formatPhone(item.telephone))}</a>`
       :`<span class="contact-phone invalid">${esc(formatPhone(item.telephone))}</span>`;
-    return `<article class="contact-row"><div class="contact-line">${ghePart} · ${nomPart} ${prenomPart}</div>${phone}</article>`;
+    return `<article class="contact-row" role="button" tabindex="0" data-contact-key="${esc(item.agent_key)}" aria-label="Ouvrir la fiche de ${nomText} ${prenomText}"><div class="contact-line">${ghePart} · ${nomPart} ${prenomPart}</div>${phone}<span class="contact-hint">Appuyer pour voir la fiche et l’avatar</span></article>`;
   }).join("");
 }
+async function openContactDetail(agentKey){
+  const item=directoryItems.find(x=>norm(x.agent_key)===norm(agentKey));
+  if(!item)return;
+  contactProfileGhe.textContent=formatGhe(item.ghe);
+  contactProfileName.textContent=(item.nom||"Nom")+" "+(item.prenom||"Prénom");
+  contactAvatarFallback.textContent=initials(item);
+  contactAvatarWrap.classList.remove("has-image");
+  contactAvatar.removeAttribute("src");
+  const valid=phoneIsValid(item.telephone);
+  contactProfilePhone.textContent=formatPhone(item.telephone);
+  contactProfilePhone.classList.toggle("invalid",!valid);
+  if(valid){contactProfilePhone.href="tel:"+normalizePhone(item.telephone)}else{contactProfilePhone.removeAttribute("href")}
+  openModal(contactModal);
+  await loadAvatarAgents();
+  const avatarAgent=matchAvatarAgent(item);
+  showAvatarCandidates(avatarUrlsFromObject(avatarAgent));
+}
+
 async function loadDirectory(){
   if(directoryLoaded){renderDirectory();return}
   directoryList.innerHTML='<div class="state-message">Chargement du répertoire…</div>';
-  try{
-    const res=await fetch(PASSERELLE_AGENTS+"?mode=list&t="+Date.now(),{cache:"no-store"});
-    if(!res.ok)throw new Error("HTTP "+res.status);
-    const data=await res.json();
-    if(!data||data.ok===false||!Array.isArray(data.agents))throw new Error("Réponse invalide");
 
-    const byGhe=new Map();
-    data.agents.map(extractDirectoryItem).filter(item=>item.ghe).forEach(item=>{
-      const key=String(gheNumber(item.ghe));
-      if(!byGhe.has(key))byGhe.set(key,item);
-      else{
-        const current=byGhe.get(key);
-        if(!current.telephone&&item.telephone)byGhe.set(key,item);
-      }
-    });
-    directoryItems=[...byGhe.values()];
-    contactsCount.textContent=String(directoryItems.length);
-    directoryLoaded=true;
-    renderDirectory();
-  }catch(err){
-    directoryList.innerHTML='<div class="state-message error">Impossible de charger le répertoire pour le moment.</div>';
-  }
+  const byGhe=new Map();
+  DIRECTORY_FALLBACK.map(extractDirectoryItem).filter(item=>item.ghe).forEach(item=>{
+    const key=String(gheNumber(item.ghe));
+    if(!byGhe.has(key))byGhe.set(key,item);
+  });
+  directoryItems=[...byGhe.values()];
+  contactsCount.textContent=String(directoryItems.length);
+  directoryLoaded=true;
+  renderDirectory();
 }
 async function openDirectoryFlow(){
   openModal(directoryModal);
@@ -406,82 +955,77 @@ function resetSendModal(){
   confirmSend.hidden=true;
   gheChoice.hidden=true;
   targetConfirm.hidden=true;
+  gheSearch.value="";
   sendSubtitle.textContent="Vérification du compte connecté…";
+}
+function findConnectedDirectoryItem(session){
+  const key=norm(sessionKey(session));
+  const nom=norm(sessionNom(session));
+  const prenom=norm(sessionPrenom(session));
+  return directoryItems.find(item=>{
+    const itemKey=norm(item.agent_key);
+    return (key&&itemKey&&key===itemKey)||(nom&&prenom&&norm(item.nom)===nom&&norm(item.prenom)===prenom);
+  })||null;
 }
 
 async function openSendFlow(){
   resetSendModal();
   openModal(sendModal);
+  await Promise.all([loadCurrentSession(),loadDirectory()]);
 
-  if(isResponsible()){
-    sendSubtitle.textContent="À quel GHE veux-tu envoyer le répertoire ?";
+  const role=effectiveRole(CURRENT_SESSION);
+  if(role!=="agent"){
+    sendSubtitle.textContent="Choisis le GHE qui doit recevoir le répertoire.";
     gheChoice.hidden=false;
     await loadGhe();
     setTimeout(()=>gheSearch.focus(),100);
     return;
   }
 
-  const agent=currentAgent();
-  selectedTarget={
-    agent_key:agent?.agent_key||agent?.agent||"",
-    ghe:agent?.ghe||agent?.GHE||""
-  };
-
-  if(!selectedTarget.ghe){
+  const agent=findConnectedDirectoryItem(CURRENT_SESSION);
+  if(!agent?.ghe){
     sendSubtitle.textContent="Envoi impossible";
-    showState("Aucun GHE n’est associé au compte connecté.","error");
+    showState("Aucun GHE n’est associé au compte agent connecté.","error");
     return;
   }
 
+  selectedTarget={agent_key:sessionKey(CURRENT_SESSION)||agent.agent_key||"",ghe:formatGhe(agent.ghe)};
   sendSubtitle.textContent="Envoi vers ton téléphone professionnel…";
   targetTitle.textContent=selectedTarget.ghe;
-  targetDetail.textContent="Le répertoire est envoyé automatiquement au numéro professionnel associé à ton GHE.";
+  targetDetail.textContent="Le répertoire sera envoyé automatiquement au téléphone professionnel associé à ton GHE.";
   targetConfirm.hidden=false;
-
-  // Un agent n’a aucun choix à faire : l’envoi part directement vers son propre GHE.
   await sendContacts();
 }
 
 async function loadGhe(){
-  gheList.innerHTML='<div class="state-message">Chargement des GHE…</div>';
-  try{
-    const res=await fetch(PASSERELLE_AGENTS+"?mode=list&t="+Date.now(),{cache:"no-store"});
-    if(!res.ok)throw new Error("HTTP "+res.status);
-    const data=await res.json();
-    if(!data||data.ok===false||!Array.isArray(data.agents))throw new Error("Réponse invalide");
-
-    const uniques=new Map();
-    data.agents.forEach(a=>{
-      const ghe=String(a.ghe||a.GHE||"").trim();
-      if(!ghe)return;
-      const key=norm(ghe).replace(/\s+/g," ");
-      if(!uniques.has(key))uniques.set(key,{ghe});
-    });
-
-    gheItems=[...uniques.values()].sort((a,b)=>{
-      const na=Number((a.ghe.match(/\d+/)||[9999])[0]);
-      const nb=Number((b.ghe.match(/\d+/)||[9999])[0]);
-      return na-nb||a.ghe.localeCompare(b.ghe,"fr");
-    });
-    renderGhe("");
-  }catch(err){
-    gheList.innerHTML='<div class="state-message error">Impossible de charger la liste des GHE.</div>';
-  }
+  await loadDirectory();
+  const uniques=new Map();
+  directoryItems.forEach(item=>{
+    const ghe=formatGhe(item.ghe);
+    if(!ghe||ghe==="GHE —")return;
+    if(!uniques.has(ghe))uniques.set(ghe,{ghe,valid:phoneIsValid(item.telephone)});
+  });
+  gheItems=[...uniques.values()].sort((a,b)=>gheNumber(a.ghe)-gheNumber(b.ghe));
+  renderGhe("");
 }
 function renderGhe(q){
   const needle=norm(q);
   const list=gheItems.filter(item=>!needle||norm(item.ghe).includes(needle));
   if(!list.length){gheList.innerHTML='<div class="state-message">Aucun GHE trouvé.</div>';return}
-  gheList.innerHTML=list.map(item=>`<button class="agent-btn" type="button" data-ghe="${esc(item.ghe)}"><span>${esc(item.ghe)}</span><small>Téléphone professionnel associé</small></button>`).join("");
+  gheList.innerHTML=list.map(item=>{
+    const disabled=item.valid?"":" disabled";
+    const detail=item.valid?"Téléphone professionnel associé":"Numéro invalide — envoi indisponible";
+    return `<button class="agent-btn" type="button" data-ghe="${esc(item.ghe)}"${disabled}><span>${esc(item.ghe)}</span><small>${esc(detail)}</small></button>`;
+  }).join("");
 }
 function chooseGhe(ghe){
-  const item=gheItems.find(x=>x.ghe===ghe);
+  const item=gheItems.find(x=>x.ghe===ghe&&x.valid);
   if(!item)return;
   selectedTarget={agent_key:"",ghe:item.ghe};
   gheChoice.hidden=true;
   targetConfirm.hidden=false;
   targetTitle.textContent=item.ghe;
-  targetDetail.textContent="Le fichier VCF sera envoyé au numéro professionnel associé à ce GHE.";
+  targetDetail.textContent="Le fichier VCF sera envoyé au numéro professionnel associé à ce GHE. Le numéro n’est pas affiché ici.";
   confirmSend.hidden=false;
   confirmSend.textContent="Envoyer au "+item.ghe;
   sendSubtitle.textContent="Vérifie le GHE avant de confirmer.";
@@ -504,10 +1048,10 @@ async function sendContacts(){
     showState("Le répertoire a été envoyé au téléphone professionnel associé à "+selectedTarget.ghe+".","success");
     confirmSend.hidden=true;
   }catch(err){
-    showState("L’envoi n’est pas encore relié au service téléphone. La page et le parcours sont prêts.","error");
+    showState("L’envoi n’est pas encore relié au service téléphone. La sélection du GHE est maintenant correcte.","error");
   }finally{
     confirmSend.disabled=false;
-    confirmSend.textContent=isResponsible()&&selectedTarget?.ghe?"Envoyer au "+selectedTarget.ghe:"Confirmer l’envoi";
+    confirmSend.textContent=effectiveRole(CURRENT_SESSION)!=="agent"&&selectedTarget?.ghe?"Envoyer au "+selectedTarget.ghe:"Confirmer l’envoi";
   }
 }
 
@@ -517,15 +1061,38 @@ document.getElementById("sendMain").addEventListener("click",openSendFlow);
 confirmSend.addEventListener("click",sendContacts);
 gheSearch.addEventListener("input",()=>renderGhe(gheSearch.value));
 directorySearch.addEventListener("input",renderDirectory);
-document.querySelectorAll("[data-sort]").forEach(btn=>btn.addEventListener("click",()=>{directorySort=btn.dataset.sort;renderDirectory()}));
+directoryModal.querySelectorAll(".sort-btn[data-sort]").forEach(btn=>btn.addEventListener("click",()=>{
+  const next=btn.dataset.sort;
+  if(!["ghe","nom","prenom"].includes(next))return;
+  directorySort=next;
+  renderDirectory();
+}));
 
 document.addEventListener("click",e=>{
+  if(e.target.closest("[data-close-contact]")){closeContactModal();return}
   if(e.target.closest("[data-close]")){closeModals();return}
+  const contactCard=e.target.closest("[data-contact-key]");
+  if(contactCard&&!e.target.closest("a")){openContactDetail(contactCard.dataset.contactKey);return}
   const gheBtn=e.target.closest("[data-ghe]");
-  if(gheBtn){chooseGhe(gheBtn.dataset.ghe);return}
+  if(gheBtn&&!gheBtn.disabled){chooseGhe(gheBtn.dataset.ghe);return}
+  if(e.target===contactModal){closeContactModal();return}
   if(e.target.classList.contains("modal"))closeModals();
 });
-document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModals()});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){
+    if(contactModal.classList.contains("open")){closeContactModal();return}
+    closeModals();return
+  }
+  const contactCard=e.target.closest?.("[data-contact-key]");
+  if(contactCard&&(e.key==="Enter"||e.key===" ")){
+    e.preventDefault();
+    openContactDetail(contactCard.dataset.contactKey);
+  }
+});
+
+loadCurrentSession();
+loadDirectory();
+
 </script>
 </body>
 </html>
