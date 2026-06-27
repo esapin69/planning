@@ -1,0 +1,1353 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fff7dd">
+<title>GHE — Contacts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --navy:#07183f;
+  --navy2:#0d285c;
+  --cream:#fff7dd;
+  --paper:#fffdf4;
+  --yellow:#f8cf4a;
+  --yellow2:#ffe99a;
+  --muted:#667085;
+  --red:#a82018;
+  --red-bg:#fff0ec;
+  --orange:#8a5100;
+  --orange-bg:#fff4c8;
+  --green:#18783b;
+  --green-bg:#eaf8ef;
+  --title:"Baloo 2","Arial Rounded MT Bold","Trebuchet MS",system-ui,sans-serif;
+}
+html,body{margin:0;min-height:100%;background:var(--cream);color:var(--navy)}
+body{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:
+    radial-gradient(circle at 12% 0%,rgba(255,255,255,.9) 0 8%,transparent 29%),
+    radial-gradient(circle at 88% 4%,rgba(248,207,74,.30) 0 9%,transparent 31%),
+    repeating-linear-gradient(-6deg,rgba(7,24,63,.025) 0 1px,transparent 1px 13px),
+    linear-gradient(180deg,#fff9e8 0%,#f4e6b6 100%);
+}
+body.modal-open{overflow:hidden}
+button,a,input{font:inherit}
+button{color:inherit}
+[hidden]{display:none!important}
+.page{width:min(760px,100%);margin:auto;padding:calc(10px + env(safe-area-inset-top)) 11px calc(72px + env(safe-area-inset-bottom))}
+.topbar{margin-bottom:12px}
+.back-btn{
+  display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:8px 16px;
+  border:4px solid var(--navy);border-radius:18px;background:linear-gradient(180deg,#fff4b7,#f8cf4a);
+  color:var(--navy);text-decoration:none;font-family:var(--title);font-size:20px;font-weight:800;line-height:1;
+  box-shadow:0 5px 0 rgba(7,24,63,.18);-webkit-tap-highlight-color:transparent;
+}
+.back-btn:active{transform:translateY(2px);box-shadow:0 3px 0 rgba(7,24,63,.18)}
+.page-identity{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:170px;margin:2px 0 12px;text-align:center;
+}
+.page-avatar-wrap{
+  position:relative;display:flex;align-items:flex-end;justify-content:center;
+  width:168px;height:138px;overflow:visible;background:transparent;
+}
+.page-avatar-wrap img{
+  display:none;width:100%;height:100%;object-fit:contain;object-position:center bottom;
+  filter:drop-shadow(0 7px 0 rgba(7,24,63,.13));
+}
+.page-avatar-wrap.has-image img{display:block}
+.page-avatar-wrap.has-image .page-avatar-fallback{display:none}
+.page-avatar-fallback{
+  display:flex;align-items:center;justify-content:center;width:104px;height:104px;
+  border:5px solid var(--navy);border-radius:26px;background:#fff9e8;
+  color:var(--navy);font-family:var(--title);font-size:38px;font-weight:800;
+  box-shadow:0 6px 0 rgba(7,24,63,.16);
+}
+.page-firstname{
+  margin:6px 0 0;color:var(--navy);font-family:var(--title);
+  font-size:clamp(25px,7vw,38px);font-weight:800;line-height:.9;
+  text-transform:uppercase;text-shadow:0 2px 0 #f8d67d;
+}
+.action-panel{
+  position:relative;margin:8px 0 0;padding:23px 16px 18px;border:5px solid var(--navy);border-radius:30px;
+  background:linear-gradient(180deg,#fffdf4 0%,#fff5cb 100%);
+  box-shadow:10px 10px 0 var(--yellow),0 16px 26px rgba(7,24,63,.10);
+}
+.action-panel::before{
+  content:"";position:absolute;inset:8px;border:2px solid rgba(248,207,74,.58);border-radius:21px;pointer-events:none;
+}
+.action-title{position:relative;margin:0;text-align:center;font-family:var(--title);font-size:clamp(31px,8vw,52px);font-weight:800;line-height:.9;text-transform:uppercase}
+.action-lead{position:relative;margin:10px auto 18px;max-width:560px;text-align:center;color:var(--muted);font-size:16px;font-weight:800;line-height:1.35}
+.send-btn{
+  position:relative;display:flex;align-items:center;justify-content:center;width:100%;min-height:76px;padding:13px 17px;
+  border:5px solid var(--navy);border-radius:24px;background:linear-gradient(180deg,var(--navy2),var(--navy));
+  color:#fff5c7;font-family:var(--title);font-size:clamp(26px,7vw,43px);font-weight:800;line-height:.9;text-align:center;text-transform:uppercase;
+  cursor:pointer;box-shadow:0 7px 0 #e6b817;transition:transform .12s ease,box-shadow .12s ease;
+}
+.send-btn:active{transform:translateY(3px);box-shadow:0 4px 0 #e6b817}
+.status-row{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.status-box,.directory-btn,.alerts-btn{
+  min-height:76px;padding:11px 10px;border:3px solid var(--navy);border-radius:19px;background:var(--paper);
+  text-align:center;box-shadow:0 4px 0 rgba(7,24,63,.10);
+}
+.status-box strong,.directory-btn strong,.alerts-btn strong{display:block;font-family:var(--title);font-size:25px;font-weight:800;line-height:.92}
+.status-box small,.directory-btn small,.alerts-btn small{display:block;margin-top:4px;color:var(--muted);font-size:12px;font-weight:900;line-height:1.15}
+.directory-btn,.alerts-btn{cursor:pointer;color:var(--navy)}
+.directory-btn{background:linear-gradient(180deg,#fffdf4,#fff6d4)}
+.alerts-btn{background:linear-gradient(180deg,#fff7d6,#ffe28a)}
+.directory-btn:active,.alerts-btn:active{transform:translateY(2px)}
+.micro-note{position:relative;margin:14px 2px 0;text-align:center;color:var(--muted);font-size:13px;font-weight:800;line-height:1.35}
+
+.directory-toolbar{position:sticky;top:-10px;z-index:4;margin:-2px 0 12px;padding:10px 0;background:linear-gradient(180deg,var(--cream) 0 88%,rgba(255,247,221,0) 100%)}
+.directory-search{width:100%;padding:13px 14px;border:4px solid var(--navy);border-radius:18px;background:var(--paper);font-size:16px;font-weight:850;outline:none}
+.sort-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:9px}
+.sort-btn{min-height:45px;padding:8px;border:3px solid var(--navy);border-radius:15px;background:var(--paper);font-family:var(--title);font-size:18px;font-weight:800;cursor:pointer}
+.sort-btn.active{
+  background:linear-gradient(180deg,#ffe98f,var(--yellow));
+  border-width:4px;
+  box-shadow:0 5px 0 var(--navy);
+  transform:translateY(-2px);
+}
+.directory-list{display:grid;gap:8px}
+.contact-row{padding:14px 13px;border:3px solid var(--navy);border-radius:18px;background:var(--paper);box-shadow:0 3px 0 rgba(7,24,63,.08);cursor:pointer;outline:none;text-align:center;transition:transform .12s ease,box-shadow .12s ease}
+.contact-row:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(7,24,63,.08)}
+.contact-row:focus-visible{box-shadow:0 0 0 4px rgba(248,207,74,.75),0 3px 0 rgba(7,24,63,.08)}
+.contact-ghe-line{font-family:var(--title);font-size:24px;font-weight:700;line-height:1.15}
+.contact-name-line{margin-top:8px;font-size:16px;font-weight:700;line-height:1.25}
+.sort-emphasis{
+  display:inline-block;
+  padding:3px 10px 4px;
+  border:3px solid var(--navy);
+  border-radius:12px;
+  background:linear-gradient(180deg,#ffe98f,var(--yellow));
+  color:var(--navy);
+  font-family:var(--title);
+  font-weight:800;
+  line-height:1;
+  box-shadow:0 4px 0 rgba(7,24,63,.18);
+}
+.contact-phone{display:inline-flex;margin-top:8px;color:var(--navy2);font-size:15px;font-weight:850;text-decoration:none}
+.contact-phone:hover{text-decoration:underline}
+.contact-phone.invalid{color:var(--red);text-decoration:none}
+.contact-profile{padding:16px;border:3px solid var(--navy);border-radius:22px;background:var(--paper);text-align:center}
+.contact-avatar-wrap{position:relative;width:150px;height:150px;margin:0 auto 13px;border:4px solid var(--navy);border-radius:34px;background:#fff9e8;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 0 rgba(7,24,63,.14)}
+.contact-avatar-wrap img{display:none;width:100%;height:100%;object-fit:contain;background:#fff9e8}
+.contact-avatar-wrap.has-image img{display:block}
+.contact-avatar-wrap.has-image .contact-avatar-fallback{display:none}
+.contact-avatar-fallback{font-family:var(--title);font-size:42px;font-weight:800;color:var(--navy)}
+.contact-profile-ghe{font-family:var(--title);font-size:27px;font-weight:800;line-height:1;color:var(--navy)}
+.contact-profile-name{margin-top:5px;font-family:var(--title);font-size:30px;font-weight:800;line-height:1}
+.contact-profile-phone{display:inline-flex;margin-top:12px;padding:9px 13px;border:3px solid var(--navy);border-radius:14px;background:linear-gradient(180deg,#fff4b7,#f8cf4a);color:var(--navy);font-size:18px;font-weight:900;text-decoration:none}
+.contact-profile-phone.invalid{background:var(--red-bg);color:var(--red);border-color:var(--red);pointer-events:none}
+.contact-profile-note{margin:11px 0 0;color:var(--muted);font-size:13px;font-weight:800;line-height:1.35}
+.directory-empty{padding:16px;border:3px dashed var(--navy);border-radius:18px;text-align:center;font-weight:900;background:rgba(255,255,255,.45)}
+.modal{
+  position:fixed;inset:0;z-index:1000;display:none;align-items:flex-end;justify-content:center;padding:10px;
+  background:rgba(2,8,23,.68);backdrop-filter:blur(5px);
+}
+.modal.open{display:flex}
+.sheet{
+  width:min(680px,100%);max-height:88vh;max-height:min(88dvh,760px);overflow:hidden;padding:0;
+  display:flex;flex-direction:column;
+  border:5px solid var(--navy);border-radius:28px 28px 18px 18px;background:var(--cream);
+  box-shadow:0 16px 0 rgba(0,0,0,.22);
+}
+.sheet-head{
+  flex:0 0 auto;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  padding:17px 14px 10px;background:linear-gradient(180deg,#fff9e7 0%,var(--cream) 100%);
+  border-bottom:2px solid rgba(7,24,63,.10);
+}
+.sheet h2{margin:0;font-family:var(--title);font-size:clamp(31px,8vw,50px);font-weight:800;line-height:.9;text-transform:uppercase}
+.sheet-x{
+  flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:47px;height:47px;padding:0;
+  border:4px solid var(--navy);border-radius:16px;background:var(--paper);color:var(--navy);
+  font-family:system-ui,sans-serif;font-size:34px;font-weight:900;line-height:1;cursor:pointer;
+  box-shadow:0 4px 0 rgba(7,24,63,.14);-webkit-tap-highlight-color:transparent;
+}
+.sheet-x:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(7,24,63,.14)}
+.sheet-body{
+  flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+  padding:10px 14px 14px;
+}
+.sheet-actions{
+  flex:0 0 auto;display:grid;gap:8px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg,rgba(255,247,221,.82),var(--cream) 30%);
+  border-top:2px solid rgba(7,24,63,.12);
+}
+.sheet-actions .close-btn,.sheet-actions .confirm-btn{margin-top:0}
+.sheet-sub{margin:0 0 14px;color:var(--muted);font-size:15px;font-weight:850;line-height:1.35}
+.issue-list{display:grid;gap:10px}
+.issue{padding:13px;border:3px solid var(--navy);border-radius:19px;background:var(--paper)}
+.issue.danger{background:var(--red-bg);border-color:var(--red)}
+.issue.warning{background:var(--orange-bg);border-color:#d99a22}
+.issue-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.issue-title{font-family:var(--title);font-size:23px;font-weight:800;line-height:.95;text-transform:uppercase}
+.issue-badge{flex:0 0 auto;padding:5px 8px;border-radius:999px;background:var(--navy);color:#fff6cf;font-size:11px;font-weight:950;text-transform:uppercase}
+.issue-detail{margin-top:8px;font-size:14px;font-weight:850;line-height:1.35}
+.issue-action{margin-top:8px;padding-top:8px;border-top:1px solid rgba(7,24,63,.24);font-size:13px;font-weight:900;line-height:1.3}
+.close-btn,.confirm-btn{
+  display:flex;align-items:center;justify-content:center;width:100%;min-height:55px;margin-top:12px;padding:10px 14px;
+  border:4px solid var(--navy);border-radius:18px;font-family:var(--title);font-size:25px;font-weight:800;line-height:.9;text-transform:uppercase;cursor:pointer;
+}
+.close-btn{background:#343943;color:#fff7dd}
+.confirm-btn{background:var(--navy);color:#fff5c7;box-shadow:0 5px 0 #e6b817}
+.confirm-card{padding:14px;border:3px solid var(--navy);border-radius:20px;background:var(--paper);text-align:center}
+.confirm-card strong{display:block;font-family:var(--title);font-size:27px;font-weight:800;line-height:.95;text-transform:uppercase}
+.confirm-card span{display:block;margin-top:8px;color:var(--muted);font-size:14px;font-weight:850;line-height:1.35}
+.search-agent{width:100%;margin:0 0 10px;padding:13px;border:4px solid var(--navy);border-radius:18px;background:var(--paper);font-size:17px;font-weight:850;outline:none}
+.agent-list{display:grid;gap:8px;max-height:46vh;overflow:auto}
+.agent-btn{position:relative;min-height:74px;padding:11px 42px 11px 11px;border:3px solid var(--navy);border-radius:17px;background:var(--paper);font-family:var(--title);font-size:22px;font-weight:800;text-transform:uppercase;cursor:pointer}
+.agent-btn small{display:block;margin-top:4px;color:var(--muted);font-family:system-ui,sans-serif;font-size:13px;font-weight:850;text-transform:none}
+.agent-btn .select-mark{position:absolute;right:12px;top:50%;display:flex;align-items:center;justify-content:center;width:27px;height:27px;border:3px solid var(--navy);border-radius:9px;background:#fff;transform:translateY(-50%);font-family:system-ui,sans-serif;font-size:17px;line-height:1}
+.agent-btn.selected{background:linear-gradient(180deg,#fff4b7,#f8cf4a);box-shadow:0 4px 0 rgba(7,24,63,.16)}
+.agent-btn.selected .select-mark{background:var(--navy);color:#fff5c7}
+.agent-btn:disabled{cursor:not-allowed;opacity:.52;background:#ece8dc;box-shadow:none}
+.agent-btn:disabled .select-mark{display:none}
+.agent-btn .invalid-label{color:var(--red)}
+.state-message{margin-top:10px;padding:11px;border:3px solid var(--navy);border-radius:17px;background:var(--paper);text-align:center;font-size:14px;font-weight:900;line-height:1.3}
+.state-message.error{background:var(--red-bg);color:var(--red);border-color:var(--red)}
+.state-message.success{background:var(--green-bg);color:var(--green);border-color:var(--green)}
+@media(min-width:720px){.modal{align-items:center}.sheet{border-radius:28px}}
+@media(max-width:520px){
+  .page{padding-left:9px;padding-right:9px}.back-btn{min-height:45px;font-size:18px}
+  .page-identity{min-height:150px;margin-bottom:10px}.page-avatar-wrap{width:148px;height:120px}.page-avatar-fallback{width:90px;height:90px;font-size:33px;border-width:4px}
+  .action-panel{padding:20px 12px 16px;border-radius:27px;box-shadow:7px 8px 0 var(--yellow)}
+  .send-btn{min-height:70px;border-radius:21px}.status-row{gap:8px}.status-box,.alerts-btn{min-height:72px}
+}
+
+@media(max-width:520px){
+  .modal{padding:7px;align-items:flex-end}
+  .sheet{max-height:calc(100vh - 18px);max-height:calc(100dvh - 18px);border-radius:24px 24px 15px 15px}
+  .sheet-head{padding:14px 11px 9px}
+  .sheet-body{padding:9px 11px 12px}
+  .sheet-actions{padding:9px 11px calc(9px + env(safe-area-inset-bottom))}
+  .sheet-x{width:44px;height:44px;border-radius:14px;font-size:31px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="topbar"><a class="back-btn" href="index.html">← Retour accueil</a></div>
+
+  <!-- En-tête volontairement sans bannière : uniquement l’avatar du compte connecté et son prénom. -->
+  <section class="page-identity" aria-label="Compte connecté">
+    <div id="pageAvatarWrap" class="page-avatar-wrap">
+      <img id="pageAvatar" alt="Avatar du compte connecté" decoding="async">
+      <span id="pageAvatarFallback" class="page-avatar-fallback">👤</span>
+    </div>
+    <div id="pageFirstName" class="page-firstname">GHE</div>
+  </section>
+
+  <section class="action-panel">
+    <h1 class="action-title">Répertoire GHE</h1>
+    <p class="action-lead">Contacts mis à jour le 24 juin 2026.</p>
+
+    <button id="sendMain" class="send-btn" type="button">Recevoir le répertoire</button>
+
+    <div class="status-row" aria-label="État du répertoire">
+      <button id="openDirectory" class="directory-btn" type="button">
+        <strong id="contactsCount">57</strong>
+        <small>contacts disponibles</small>
+      </button>
+      <button id="openAlerts" class="alerts-btn" type="button">
+        <strong id="alertsCount">2</strong>
+        <small>anomalies à vérifier</small>
+      </button>
+    </div>
+
+    <p class="micro-note">Les anomalies restent visibles sans bloquer les GHE qui disposent d’un numéro valide.</p>
+  </section>
+</main>
+
+
+<div id="directoryModal" class="modal" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="directoryTitle">
+    <div class="sheet-head">
+      <h2 id="directoryTitle">Répertoire GHE</h2>
+      <button class="sheet-x" type="button" data-close aria-label="Fermer le répertoire">×</button>
+    </div>
+    <div class="sheet-body">
+      <div class="directory-toolbar">
+        <input id="directorySearch" class="directory-search" type="search" placeholder="Rechercher un GHE, un nom ou un prénom" autocomplete="off">
+        <div class="sort-tabs" role="group" aria-label="Trier le répertoire">
+          <button class="sort-btn active" type="button" data-sort="ghe">GHE</button>
+          <button class="sort-btn" type="button" data-sort="nom">Nom</button>
+          <button class="sort-btn" type="button" data-sort="prenom">Prénom</button>
+        </div>
+      </div>
+      <div id="directoryList" class="directory-list">
+        <div class="state-message">Chargement du répertoire…</div>
+      </div>
+    </div>
+    <div class="sheet-actions">
+      <button class="close-btn" type="button" data-close>Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div id="contactModal" class="modal" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+    <div class="sheet-head">
+      <h2 id="contactTitle">Contact GHE</h2>
+      <button class="sheet-x" type="button" data-close-contact aria-label="Retour au répertoire">×</button>
+    </div>
+    <div class="sheet-body">
+      <div class="contact-profile">
+        <div id="contactAvatarWrap" class="contact-avatar-wrap">
+          <img id="contactAvatar" alt="Avatar de l’agent" decoding="async">
+          <span id="contactAvatarFallback" class="contact-avatar-fallback">👤</span>
+        </div>
+        <div id="contactProfileGhe" class="contact-profile-ghe">GHE —</div>
+        <div id="contactProfileName" class="contact-profile-name">Agent</div>
+        <a id="contactProfilePhone" class="contact-profile-phone" href="#">Numéro professionnel</a>
+      </div>
+    </div>
+    <div class="sheet-actions">
+      <button class="close-btn" type="button" data-close-contact>Retour au répertoire</button>
+    </div>
+  </div>
+</div>
+
+<div id="alertsModal" class="modal" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="alertsTitle">
+    <div class="sheet-head">
+      <h2 id="alertsTitle">Anomalies détectées</h2>
+      <button class="sheet-x" type="button" data-close aria-label="Fermer les anomalies">×</button>
+    </div>
+    <div class="sheet-body">
+      <div class="issue-list" id="issueList">
+        <article class="issue danger">
+          <div class="issue-head">
+            <div class="issue-title">GHE 68</div>
+            <span class="issue-badge">Bloquante</span>
+          </div>
+          <div class="issue-detail">Le numéro enregistré contient 11 chiffres. Il n’est pas considéré comme valide.</div>
+          <div class="issue-action">Conséquence : l’envoi vers ce GHE doit être refusé tant que le numéro n’est pas corrigé.</div>
+        </article>
+
+        <article class="issue warning">
+          <div class="issue-head">
+            <div class="issue-title">GHE 03 et GHE 51</div>
+            <span class="issue-badge">À vérifier</span>
+          </div>
+          <div class="issue-detail">Le même numéro, se terminant par 3486, est associé aux deux GHE.</div>
+          <div class="issue-action">Conséquence : vérifier lequel des deux GHE doit réellement conserver ce numéro.</div>
+        </article>
+      </div>
+    </div>
+    <div class="sheet-actions">
+      <button class="close-btn" type="button" data-close>Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div id="sendModal" class="modal" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sendTitle">
+    <div class="sheet-head">
+      <h2 id="sendTitle">Recevoir le répertoire</h2>
+      <button class="sheet-x" type="button" data-close aria-label="Annuler et fermer">×</button>
+    </div>
+    <div class="sheet-body">
+      <p class="sheet-sub" id="sendSubtitle">Vérification du compte connecté…</p>
+      <div id="gheChoice" hidden>
+        <input id="gheSearch" class="search-agent" type="search" placeholder="Rechercher un GHE" autocomplete="off">
+        <div id="gheList" class="agent-list"></div>
+      </div>
+      <div id="targetConfirm" class="confirm-card" hidden>
+        <strong id="targetTitle">Ton téléphone GHE</strong>
+        <span id="targetDetail">Un message avec le lien du répertoire sera préparé pour le téléphone professionnel associé.</span>
+      </div>
+      <div id="sendState" class="state-message" hidden></div>
+    </div>
+    <div class="sheet-actions">
+      <button id="confirmSend" class="confirm-btn" type="button" hidden>Confirmer l’envoi</button>
+      <button class="close-btn" type="button" data-close>Annuler</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SEND_ENDPOINT="/__ghe/contacts/prepare";
+const DIRECTORY_ENDPOINT="/__ghe/contacts/directory";
+const AVATAR_ENDPOINT="https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8HZ_g_ota7tajTKLY3jvLKEF9AvSPjIbVpqcSkSRcl5OdWV9/exec";
+const DIRECTORY_FALLBACK=[
+  {
+    "nom": "ABDELKEBIR",
+    "prenom": "MEHDI",
+    "ghe": "GHE 08",
+    "telephone": "0614437506",
+    "agent_key": "ABDELKEBIR_MEHDI"
+  },
+  {
+    "nom": "ABOU KASH",
+    "prenom": "DANIEL",
+    "ghe": "GHE 73",
+    "telephone": "0621164167",
+    "agent_key": "ABOU_KASH_DANIEL"
+  },
+  {
+    "nom": "ADOUANI",
+    "prenom": "JAMILA",
+    "ghe": "GHE 02",
+    "telephone": "0616874288",
+    "agent_key": "ADOUANI_JAMILA"
+  },
+  {
+    "nom": "ALIMELIE",
+    "prenom": "GILBERT",
+    "ghe": "GHE 09",
+    "telephone": "0623659353",
+    "agent_key": "ALIMELIE_GILBERT"
+  },
+  {
+    "nom": "BAHLOUL",
+    "prenom": "ANTHONY",
+    "ghe": "GHE 15",
+    "telephone": "0778195289",
+    "agent_key": "BAHLOUL_ANTHONY"
+  },
+  {
+    "nom": "BAIBOU",
+    "prenom": "MEHDI",
+    "ghe": "GHE 47",
+    "telephone": "0625019753",
+    "agent_key": "BAIBOU_MEHDI"
+  },
+  {
+    "nom": "BEKKA",
+    "prenom": "JAWAD",
+    "ghe": "GHE 78",
+    "telephone": "0628475675",
+    "agent_key": "BEKKA_JAWAD"
+  },
+  {
+    "nom": "BELFAKIR",
+    "prenom": "ASMAA",
+    "ghe": "GHE 74",
+    "telephone": "0609775788",
+    "agent_key": "BELFAKIR_ASMAA"
+  },
+  {
+    "nom": "BENAKKA",
+    "prenom": "ATIKA",
+    "ghe": "GHE 41",
+    "telephone": "0609770944",
+    "agent_key": "BENAKKA_ATIKA"
+  },
+  {
+    "nom": "BENDAHMANE",
+    "prenom": "YACINE",
+    "ghe": "GHE 17",
+    "telephone": "0621109458",
+    "agent_key": "BENDAHMANE_YACINE"
+  },
+  {
+    "nom": "BERHOUNE",
+    "prenom": "LARBY",
+    "ghe": "GHE 03",
+    "telephone": "0612323486",
+    "agent_key": "BERHOUNE_LARBY"
+  },
+  {
+    "nom": "BERISHA",
+    "prenom": "SHERIFE",
+    "ghe": "GHE 70",
+    "telephone": "0620737358",
+    "agent_key": "BERISHA_SHERIFE"
+  },
+  {
+    "nom": "BOISSET",
+    "prenom": "FLORENT",
+    "ghe": "GHE 07",
+    "telephone": "0634093697",
+    "agent_key": "BOISSET_FLORENT"
+  },
+  {
+    "nom": "BOTTERO",
+    "prenom": "GEOFFROY",
+    "ghe": "GHE 04",
+    "telephone": "0609775413",
+    "agent_key": "BOTTERO_GEOFFROY"
+  },
+  {
+    "nom": "BOUHAMI",
+    "prenom": "NADIA",
+    "ghe": "GHE 22",
+    "telephone": "0603929410",
+    "agent_key": "BOUHAMI_NADIA"
+  },
+  {
+    "nom": "BOULENOUAR",
+    "prenom": "FATIMA",
+    "ghe": "GHE 25",
+    "telephone": "0616294555",
+    "agent_key": "BOULENOUAR_FATIMA"
+  },
+  {
+    "nom": "BOUSSENA",
+    "prenom": "ISLEM",
+    "ghe": "GHE 36",
+    "telephone": "0609770337",
+    "agent_key": "BOUSSENA_ISLEM"
+  },
+  {
+    "nom": "CANGUIO",
+    "prenom": "WILLY",
+    "ghe": "GHE 55",
+    "telephone": "0609779931",
+    "agent_key": "CANGUIO_WILLY"
+  },
+  {
+    "nom": "CHATILLON",
+    "prenom": "Marion",
+    "ghe": "GHE 39",
+    "telephone": "0616528531",
+    "agent_key": "CHATILLON_MARION"
+  },
+  {
+    "nom": "CHAUSSIERE",
+    "prenom": "PASCAL",
+    "ghe": "GHE 29",
+    "telephone": "0628547358",
+    "agent_key": "CHAUSSIERE_PASCAL"
+  },
+  {
+    "nom": "CHAVEROT",
+    "prenom": "SEBASTIEN",
+    "ghe": "GHE 45",
+    "telephone": "0610371258",
+    "agent_key": "CHAVEROT_SEBASTIEN"
+  },
+  {
+    "nom": "COUSSAT",
+    "prenom": "CHRISTOPHE",
+    "ghe": "GHE 51",
+    "telephone": "0612323486",
+    "agent_key": "COUSSAT_CHRISTOPHE"
+  },
+  {
+    "nom": "DANDIS",
+    "prenom": "FREDERIC",
+    "ghe": "GHE 77",
+    "telephone": "0609777389",
+    "agent_key": "DANDIS_FREDERIC"
+  },
+  {
+    "nom": "DHRIOUA",
+    "prenom": "WAFA",
+    "ghe": "GHE 35",
+    "telephone": "0778055235",
+    "agent_key": "DHRIOUA_WAFA"
+  },
+  {
+    "nom": "DIALLO",
+    "prenom": "ACIA TOU",
+    "ghe": "GHE 58",
+    "telephone": "0776232095",
+    "agent_key": "DIALLO_ACIA_TOU"
+  },
+  {
+    "nom": "DJELASSI",
+    "prenom": "FAICAL",
+    "ghe": "GHE 75",
+    "telephone": "0776232088",
+    "agent_key": "DJELASSI_FAICAL"
+  },
+  {
+    "nom": "DJENNAS",
+    "prenom": "SABRINA",
+    "ghe": "GHE 44",
+    "telephone": "0624649811",
+    "agent_key": "DJENNAS_SABRINA"
+  },
+  {
+    "nom": "EZZINE",
+    "prenom": "NORRA",
+    "ghe": "GHE 20",
+    "telephone": "0626888750",
+    "agent_key": "EZZINE_NORRA"
+  },
+  {
+    "nom": "FAURE",
+    "prenom": "BENJAMIN",
+    "ghe": "GHE 32",
+    "telephone": "0616714738",
+    "agent_key": "FAURE_BENJAMIN"
+  },
+  {
+    "nom": "FLAGEOLLET",
+    "prenom": "ROXANA",
+    "ghe": "GHE 28",
+    "telephone": "0622119851",
+    "agent_key": "FLAGEOLLET_ROXANA"
+  },
+  {
+    "nom": "FUMELE",
+    "prenom": "KEVIN",
+    "ghe": "GHE 26",
+    "telephone": "0611661648",
+    "agent_key": "FUMELE_KEVIN"
+  },
+  {
+    "nom": "GALEA",
+    "prenom": "SERGE",
+    "ghe": "GHE 01",
+    "telephone": "0612384328",
+    "agent_key": "GALEA_SERGE"
+  },
+  {
+    "nom": "HAMIDAT",
+    "prenom": "SAMI",
+    "ghe": "GHE 68",
+    "telephone": "06777122487",
+    "agent_key": "HAMIDAT_SAMI"
+  },
+  {
+    "nom": "HAZMI",
+    "prenom": "WAHEL",
+    "ghe": "GHE 43",
+    "telephone": "0626368472",
+    "agent_key": "HAZMI_WAHEL"
+  },
+  {
+    "nom": "IAFRATE",
+    "prenom": "MARGOT",
+    "ghe": "GHE 10",
+    "telephone": "0624096508",
+    "agent_key": "IAFRATE_MARGOT"
+  },
+  {
+    "nom": "JIFFARD",
+    "prenom": "LUDOVIC",
+    "ghe": "GHE 16",
+    "telephone": "0610108073",
+    "agent_key": "JIFFARD_LUDOVIC"
+  },
+  {
+    "nom": "KARA",
+    "prenom": "SINAN",
+    "ghe": "GHE 11",
+    "telephone": "0609776969",
+    "agent_key": "KARA_SINAN"
+  },
+  {
+    "nom": "KHALDI",
+    "prenom": "FAHIM",
+    "ghe": "GHE 14",
+    "telephone": "0776232084",
+    "agent_key": "KHALDI_FAHIM"
+  },
+  {
+    "nom": "KRIVOPISSKO",
+    "prenom": "ANTOINE",
+    "ghe": "GHE 18",
+    "telephone": "0612536669",
+    "agent_key": "KRIVOPISSKO_ANTOINE"
+  },
+  {
+    "nom": "MADI MOUSSA",
+    "prenom": "SALAMI",
+    "ghe": "GHE 06",
+    "telephone": "0609777243",
+    "agent_key": "MADI_MOUSSA_SALAMI"
+  },
+  {
+    "nom": "MATOUG",
+    "prenom": "KARIM",
+    "ghe": "GHE 31",
+    "telephone": "0609279033",
+    "agent_key": "MATOUG_KARIM"
+  },
+  {
+    "nom": "MDERREG",
+    "prenom": "LAMIA",
+    "ghe": "GHE 30",
+    "telephone": "0612841004",
+    "agent_key": "MDERREG_LAMIA"
+  },
+  {
+    "nom": "MEGHARI",
+    "prenom": "NASSER",
+    "ghe": "GHE 21",
+    "telephone": "0634093110",
+    "agent_key": "MEGHARI_NASSER"
+  },
+  {
+    "nom": "MEHIAOUI",
+    "prenom": "MOHAMED",
+    "ghe": "GHE 61",
+    "telephone": "0618888307",
+    "agent_key": "MEHIAOUI_MOHAMED"
+  },
+  {
+    "nom": "MOKEDDEM",
+    "prenom": "SOUHELA",
+    "ghe": "GHE 34",
+    "telephone": "0611667172",
+    "agent_key": "MOKEDDEM_SOUHELA"
+  },
+  {
+    "nom": "MONNERET",
+    "prenom": "REMY",
+    "ghe": "GHE 42",
+    "telephone": "0625017954",
+    "agent_key": "MONNERET_REMY"
+  },
+  {
+    "nom": "MONTAGNON",
+    "prenom": "THOMAS",
+    "ghe": "GHE 13",
+    "telephone": "0609773305",
+    "agent_key": "MONTAGNON_THOMAS"
+  },
+  {
+    "nom": "OULD BOUKHITINE",
+    "prenom": "MOUNIR",
+    "ghe": "GHE 27",
+    "telephone": "0603920217",
+    "agent_key": "OULD_BOUKHITINE_MOUNIR"
+  },
+  {
+    "nom": "PERSOUYRE",
+    "prenom": "CHRISTINE",
+    "ghe": "GHE 67",
+    "telephone": "0609778181",
+    "agent_key": "PERSOUYRE_CHRISTINE"
+  },
+  {
+    "nom": "RIDDE",
+    "prenom": "YAEL",
+    "ghe": "GHE 37",
+    "telephone": "0603929531",
+    "agent_key": "RIDDE_YAEL"
+  },
+  {
+    "nom": "SAHLI",
+    "prenom": "LYNDA",
+    "ghe": "GHE 33",
+    "telephone": "0616879960",
+    "agent_key": "SAHLI_LYNDA"
+  },
+  {
+    "nom": "SAPIN",
+    "prenom": "EDDY",
+    "ghe": "24",
+    "telephone": "0609779806",
+    "agent_key": "SAPIN_EDDY"
+  },
+  {
+    "nom": "TEKIN",
+    "prenom": "MICKAEL",
+    "ghe": "GHE 05",
+    "telephone": "0622770622",
+    "agent_key": "TEKIN_MICKAEL"
+  },
+  {
+    "nom": "TIBERGHIEN",
+    "prenom": "VINCENT",
+    "ghe": "GHE 76",
+    "telephone": "0609777617",
+    "agent_key": "TIBERGHIEN_VINCENT"
+  },
+  {
+    "nom": "TRIBOULET",
+    "prenom": "MATHIEU",
+    "ghe": "GHE 19",
+    "telephone": "0777694742",
+    "agent_key": "TRIBOULET_MATHIEU"
+  },
+  {
+    "nom": "VASCONCELOS",
+    "prenom": "SAMMY",
+    "ghe": "GHE 63",
+    "telephone": "0618886239",
+    "agent_key": "VASCONCELOS_SAMMY"
+  }
+];
+
+let CURRENT_SESSION=window.__GHE_SESSION__||window.GHE_SESSION||null;
+let sessionChecked=Boolean(CURRENT_SESSION);
+let selectedTargets=[];
+let gheItems=[];
+let directoryItems=[];
+let directorySort="ghe";
+let directoryLoaded=false;
+let avatarAgents=[];
+let avatarAgentsLoaded=false;
+let CONTACTS_API_DATA=null;
+let shortcutQueue=[]; // file d’ouverture directe de Messages
+let confirmMode="prepare";
+
+const directoryModal=document.getElementById("directoryModal");
+const directorySearch=document.getElementById("directorySearch");
+const directoryList=document.getElementById("directoryList");
+const contactsCount=document.getElementById("contactsCount");
+const contactModal=document.getElementById("contactModal");
+const contactAvatarWrap=document.getElementById("contactAvatarWrap");
+const contactAvatar=document.getElementById("contactAvatar");
+const contactAvatarFallback=document.getElementById("contactAvatarFallback");
+const contactProfileGhe=document.getElementById("contactProfileGhe");
+const contactProfileName=document.getElementById("contactProfileName");
+const contactProfilePhone=document.getElementById("contactProfilePhone");
+const alertsModal=document.getElementById("alertsModal");
+const sendModal=document.getElementById("sendModal");
+const sendSubtitle=document.getElementById("sendSubtitle");
+const gheChoice=document.getElementById("gheChoice");
+const gheSearch=document.getElementById("gheSearch");
+const gheList=document.getElementById("gheList");
+const targetConfirm=document.getElementById("targetConfirm");
+const targetTitle=document.getElementById("targetTitle");
+const targetDetail=document.getElementById("targetDetail");
+const confirmSend=document.getElementById("confirmSend");
+const sendState=document.getElementById("sendState");
+const pageAvatarWrap=document.getElementById("pageAvatarWrap");
+const pageAvatar=document.getElementById("pageAvatar");
+const pageAvatarFallback=document.getElementById("pageAvatarFallback");
+const pageFirstName=document.getElementById("pageFirstName");
+
+function openModal(el){
+  el.classList.add("open");
+  el.setAttribute("aria-hidden","false");
+  document.body.classList.add("modal-open");
+  const body=el.querySelector(".sheet-body");
+  if(body)body.scrollTop=0;
+  requestAnimationFrame(()=>el.querySelector(".sheet-x")?.focus({preventScroll:true}));
+}
+function focusIfDesktop(el){
+  if(window.matchMedia?.("(pointer:fine)").matches)requestAnimationFrame(()=>el?.focus({preventScroll:true}));
+}
+function closeModals(){
+  document.querySelectorAll(".modal.open").forEach(el=>{el.classList.remove("open");el.setAttribute("aria-hidden","true")});
+  document.body.classList.remove("modal-open");
+}
+function closeContactModal(){
+  contactModal.classList.remove("open");
+  contactModal.setAttribute("aria-hidden","true");
+  if(!document.querySelector(".modal.open"))document.body.classList.remove("modal-open");
+}
+function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function clean(v){return String(v??"").trim()}
+function norm(v){return clean(v).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().replace(/[^A-Z0-9]+/g,"_").replace(/^_+|_+$/g,"")}
+function firstValue(obj,keys){
+  for(const key of keys){
+    const value=obj?.[key];
+    if(value!==undefined&&value!==null&&String(value).trim()!=="")return String(value).trim();
+  }
+  return "";
+}
+function titleCase(value){
+  return String(value||"").toLocaleLowerCase("fr-FR").replace(/(^|[\s'’-])([\p{L}])/gu,(m,sep,letter)=>sep+letter.toLocaleUpperCase("fr-FR"));
+}
+function gheNumber(value){
+  const match=String(value||"").match(/\d+/);
+  return match?Number(match[0]):9999;
+}
+function formatGhe(value){
+  const n=gheNumber(value);
+  return Number.isFinite(n)&&n!==9999?"GHE "+String(n).padStart(2,"0"):String(value||"GHE —").trim();
+}
+function normalizePhone(value){return String(value||"").replace(/[^\d+]/g,"")}
+function phoneIsValid(value){return String(value||"").replace(/\D/g,"").length===10}
+function formatPhone(value){
+  const digits=String(value||"").replace(/\D/g,"");
+  if(digits.length===10)return digits.replace(/(\d{2})(?=\d)/g,"$1 ").trim();
+  return value||"Numéro à vérifier";
+}
+function initials(item){
+  return [item?.prenom,item?.nom].filter(Boolean).map(v=>String(v).trim().charAt(0)).join("").slice(0,2).toUpperCase()||"👤";
+}
+function extractDriveId(value){
+  const v=clean(value);
+  if(!v)return "";
+  let m=v.match(/\/file\/d\/([^/]+)/); if(m?.[1])return m[1];
+  m=v.match(/[?&]id=([^&]+)/); if(m?.[1])return decodeURIComponent(m[1]);
+  m=v.match(/\/d\/([A-Za-z0-9_-]{20,})/); if(m?.[1])return m[1];
+  return /^[A-Za-z0-9_-]{20,}$/.test(v)?v:"";
+}
+function avatarUrlsFromValue(value){
+  const v=clean(value); if(!v)return [];
+  const id=extractDriveId(v);
+  if(id)return [
+    "https://drive.google.com/thumbnail?id="+encodeURIComponent(id)+"&sz=w500",
+    "https://drive.google.com/uc?export=view&id="+encodeURIComponent(id),
+    "https://lh3.googleusercontent.com/d/"+encodeURIComponent(id)+"=w500"
+  ];
+  return /^https?:\/\//i.test(v)?[v]:[];
+}
+function avatarUrlsFromObject(obj){
+  if(!obj)return [];
+  const vals=[];
+  ["avatar_image_url","avatar_thumb_url","avatar_url","avatar_id","AVATAR_IMAGE_URL","AVATAR_THUMB_URL","AVATAR_URL","AVATAR_ID","AVATAR_IMAGE"].forEach(key=>{
+    if(obj[key]!==undefined&&obj[key]!==null&&clean(obj[key]))vals.push(obj[key]);
+  });
+  if(obj.avatar&&typeof obj.avatar==="object"){
+    ["avatar_image_url","avatar_thumb_url","avatar_url","avatar_id","thumb","image","url","AVATAR_IMAGE_URL","AVATAR_URL","AVATAR_ID"].forEach(key=>{
+      if(obj.avatar[key]!==undefined&&obj.avatar[key]!==null&&clean(obj.avatar[key]))vals.push(obj.avatar[key]);
+    });
+  }
+  return [...new Set(vals.flatMap(avatarUrlsFromValue))];
+}
+async function loadAvatarAgents(){
+  if(avatarAgentsLoaded)return avatarAgents;
+  avatarAgentsLoaded=true;
+  try{
+    const res=await fetch(AVATAR_ENDPOINT+"?mode=list");
+    if(!res.ok)throw new Error("HTTP "+res.status);
+    const data=await res.json();
+    avatarAgents=Array.isArray(data?.agents)?data.agents:[];
+  }catch(err){
+    console.warn("Passerelle avatars indisponible",err);
+    avatarAgents=[];
+  }
+  return avatarAgents;
+}
+function matchAvatarAgent(item){
+  const key=norm(item.agent_key);
+  const nom=norm(item.nom);
+  const prenom=norm(item.prenom);
+  return avatarAgents.find(a=>{
+    const akey=norm(firstValue(a,["agentKey","agent_key","AGENT_KEY","agent_uid","AGENT_UID","agent","AGENT","key"]));
+    const anom=norm(firstValue(a,["nom","NOM"]));
+    const aprenom=norm(firstValue(a,["prenom","prénom","PRENOM","PRÉNOM"]));
+    const full=norm(firstValue(a,["nomComplet","nom_complet","fullName","NOM / PRÉNOM","AGENT_AFFICHE","agent","AGENT"]));
+    return (key&&akey&&key===akey)||(nom&&prenom&&anom===nom&&aprenom===prenom)||(nom&&prenom&&full.includes(nom)&&full.includes(prenom));
+  })||null;
+}
+function showAvatarCandidates(urls){
+  const candidates=[...new Set((urls||[]).filter(Boolean))];
+  let index=0;
+  contactAvatarWrap.classList.remove("has-image");
+  contactAvatar.removeAttribute("src");
+  contactAvatar.onerror=()=>{
+    contactAvatarWrap.classList.remove("has-image");
+    if(index<candidates.length)contactAvatar.src=candidates[index++];
+  };
+  contactAvatar.onload=()=>contactAvatarWrap.classList.add("has-image");
+  if(candidates.length)contactAvatar.src=candidates[index++];
+}
+
+function showPageAvatarCandidates(urls){
+  const candidates=[...new Set((urls||[]).filter(Boolean))];
+  let index=0;
+  pageAvatarWrap.classList.remove("has-image");
+  pageAvatar.removeAttribute("src");
+  pageAvatar.onerror=()=>{
+    pageAvatarWrap.classList.remove("has-image");
+    if(index<candidates.length)pageAvatar.src=candidates[index++];
+  };
+  pageAvatar.onload=()=>pageAvatarWrap.classList.add("has-image");
+  if(candidates.length)pageAvatar.src=candidates[index++];
+}
+
+function sessionAgent(session){return session?.agent||session?.utilisateur||{}}
+function sessionRights(session){return session?.droits||{}}
+function sessionNom(session){return firstValue(sessionAgent(session),["nom","NOM","lastName","lastname"])}
+function sessionPrenom(session){return firstValue(sessionAgent(session),["prenom","prénom","PRENOM","PRÉNOM","firstName","firstname"])}
+function sessionKey(session){return firstValue(sessionAgent(session),["agent_key","agent","key","AGENT_KEY","AGENT","agent_uid","AGENT_UID"])}
+function sessionRole(session){return clean(sessionRights(session).role||sessionRights(session).ROLE||session?.role).toLowerCase()}
+function isDemo(session){return norm(sessionNom(session))==="DEMO"&&norm(sessionPrenom(session))==="DEMO"}
+function isEddy(session){
+  return norm(sessionKey(session))==="SAPIN_EDDY"||(norm(sessionNom(session))==="SAPIN"&&norm(sessionPrenom(session))==="EDDY");
+}
+function effectiveRole(session){
+  if(isDemo(session))return "total";
+  if(isEddy(session))return "agent";
+  return sessionRole(session)||"inconnu";
+}
+async function loadCurrentSession(){
+  if(sessionChecked)return CURRENT_SESSION;
+  sessionChecked=true;
+  try{
+    const res=await fetch("/__ghe/me",{credentials:"same-origin"});
+    if(!res.ok)throw new Error("HTTP "+res.status);
+    const data=await res.json();
+    if(data?.ok&&data?.session)CURRENT_SESSION=data.session;
+  }catch(err){
+    console.warn("Session GHE indisponible",err);
+  }
+  return CURRENT_SESSION;
+}
+
+async function loadPageIdentity(){
+  await loadCurrentSession();
+  const item={
+    agent_key:sessionKey(CURRENT_SESSION),
+    nom:titleCase(sessionNom(CURRENT_SESSION)),
+    prenom:titleCase(sessionPrenom(CURRENT_SESSION))
+  };
+  const roleLabel=titleCase(effectiveRole(CURRENT_SESSION));
+  pageFirstName.textContent=item.prenom||roleLabel||"GHE";
+  pageAvatarFallback.textContent=initials(item);
+  await loadAvatarAgents();
+  const avatarAgent=matchAvatarAgent(item);
+  const sessionAvatarUrls=avatarUrlsFromObject(sessionAgent(CURRENT_SESSION));
+  showPageAvatarCandidates([...sessionAvatarUrls,...avatarUrlsFromObject(avatarAgent)]);
+}
+
+function extractDirectoryItem(a){
+  let nom=firstValue(a,["nom","NOM","last_name","lastname"]);
+  let prenom=firstValue(a,["prenom","PRÉNOM","PRENOM","first_name","firstname"]);
+  const full=firstValue(a,["nom_prenom","NOM / PRÉNOM","nomPrenom","nomComplet","nom_complet","fullName","AGENT_AFFICHE"]);
+  if((!nom||!prenom)&&full){
+    const parts=full.replace(/\s+/g," ").trim().split(" ");
+    if(!nom&&parts.length)nom=parts.shift()||"";
+    if(!prenom&&parts.length)prenom=parts.join(" ");
+  }
+  return {
+    agent_key:firstValue(a,["agentKey","agent_key","AGENT_KEY","agent_uid","AGENT_UID","agent","AGENT","key"])||norm(nom+" "+prenom),
+    ghe:firstValue(a,["ghe","GHE","numero_ghe","NUMERO_GHE"]),
+    nom:titleCase(nom),
+    prenom:titleCase(prenom),
+    telephone:firstValue(a,["telephone","TÉLÉPHONE","TELEPHONE","tel","TEL","phone","numero","NUMERO"])
+  };
+}
+function compareDirectory(a,b){
+  const collator=new Intl.Collator("fr",{sensitivity:"base",numeric:true});
+  if(directorySort==="nom")return collator.compare(a.nom,b.nom)||collator.compare(a.prenom,b.prenom)||gheNumber(a.ghe)-gheNumber(b.ghe);
+  if(directorySort==="prenom")return collator.compare(a.prenom,b.prenom)||collator.compare(a.nom,b.nom)||gheNumber(a.ghe)-gheNumber(b.ghe);
+  return gheNumber(a.ghe)-gheNumber(b.ghe)||collator.compare(a.ghe,b.ghe);
+}
+function renderDirectory(){
+  const needle=norm(directorySearch.value);
+  const list=directoryItems.filter(item=>{
+    const haystack=norm([item.ghe,item.nom,item.prenom,item.telephone].join(" "));
+    return !needle||haystack.includes(needle);
+  }).sort(compareDirectory);
+
+  directoryModal.querySelectorAll(".sort-btn[data-sort]").forEach(btn=>{
+    const active=btn.dataset.sort===directorySort;
+    btn.classList.toggle("active",active);
+    btn.setAttribute("aria-pressed",active?"true":"false");
+  });
+  if(!list.length){directoryList.innerHTML='<div class="directory-empty">Aucun contact trouvé.</div>';return}
+
+  directoryList.innerHTML=list.map(item=>{
+    const gheText=esc(formatGhe(item.ghe));
+    const nomText=esc(item.nom||"Nom non renseigné");
+    const prenomText=esc(item.prenom||"Prénom non renseigné");
+    const ghePart=directorySort==="ghe"?`<span class="sort-emphasis">${gheText}</span>`:`<span>${gheText}</span>`;
+    const nomPart=directorySort==="nom"?`<span class="sort-emphasis">${nomText}</span>`:`<span>${nomText}</span>`;
+    const prenomPart=directorySort==="prenom"?`<span class="sort-emphasis">${prenomText}</span>`:`<span>${prenomText}</span>`;
+    const phone=phoneIsValid(item.telephone)
+      ?`<a class="contact-phone" href="tel:${esc(normalizePhone(item.telephone))}">${esc(formatPhone(item.telephone))}</a>`
+      :`<span class="contact-phone invalid">${esc(formatPhone(item.telephone))}</span>`;
+    return `<article class="contact-row" role="button" tabindex="0" data-contact-key="${esc(item.agent_key)}" aria-label="Ouvrir la fiche de ${nomText} ${prenomText}"><div class="contact-ghe-line">${ghePart}</div><div class="contact-name-line">${nomPart} ${prenomPart}</div>${phone}</article>`;
+  }).join("");
+}
+async function openContactDetail(agentKey){
+  const item=directoryItems.find(x=>norm(x.agent_key)===norm(agentKey));
+  if(!item)return;
+  contactProfileGhe.textContent=formatGhe(item.ghe);
+  contactProfileName.textContent=(item.nom||"Nom")+" "+(item.prenom||"Prénom");
+  contactAvatarFallback.textContent=initials(item);
+  contactAvatarWrap.classList.remove("has-image");
+  contactAvatar.removeAttribute("src");
+  const valid=phoneIsValid(item.telephone);
+  contactProfilePhone.textContent=formatPhone(item.telephone);
+  contactProfilePhone.classList.toggle("invalid",!valid);
+  if(valid){contactProfilePhone.href="tel:"+normalizePhone(item.telephone)}else{contactProfilePhone.removeAttribute("href")}
+  openModal(contactModal);
+  await loadAvatarAgents();
+  const avatarAgent=matchAvatarAgent(item);
+  showAvatarCandidates(avatarUrlsFromObject(avatarAgent));
+}
+
+async function loadDirectory(){
+  if(directoryLoaded){renderDirectory();return}
+  directoryList.innerHTML='<div class="state-message">Chargement du répertoire…</div>';
+  try{
+    const res=await fetch(DIRECTORY_ENDPOINT,{credentials:"same-origin",cache:"no-store"});
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok||!data.ok||!Array.isArray(data.contacts)){
+      throw new Error(data.message||data.erreur||"Répertoire indisponible");
+    }
+    CONTACTS_API_DATA=data;
+    const byGhe=new Map();
+    data.contacts.map(extractDirectoryItem).filter(item=>item.ghe).forEach(item=>{
+      const key=String(gheNumber(item.ghe));
+      if(!byGhe.has(key))byGhe.set(key,item);
+    });
+    directoryItems=[...byGhe.values()];
+    contactsCount.textContent=String(data.nombreContacts??directoryItems.length);
+    const alertsCount=document.getElementById("alertsCount");
+    if(alertsCount)alertsCount.textContent=String(data.nombreAnomalies??0);
+    directoryLoaded=true;
+    renderDirectory();
+  }catch(err){
+    directoryItems=[];
+    contactsCount.textContent="0";
+    directoryList.innerHTML='<div class="state-message error">Impossible de charger le répertoire à jour.</div>';
+    console.error("Contacts GHE",err);
+    throw err;
+  }
+}
+async function openDirectoryFlow(){
+  openModal(directoryModal);
+  directorySearch.value="";
+  directorySort="ghe";
+  await loadDirectory();
+  focusIfDesktop(directorySearch);
+}
+
+function showState(message,type){
+  sendState.hidden=false;
+  sendState.className="state-message"+(type?" "+type:"");
+  sendState.textContent=message;
+}
+function resetSendModal(){
+  selectedTargets=[];
+  shortcutQueue=[];
+  sessionStorage.removeItem("ghe_contacts_queue");
+  confirmMode="prepare";
+  sendState.hidden=true;
+  confirmSend.hidden=true;
+  confirmSend.disabled=false;
+  gheChoice.hidden=true;
+  targetConfirm.hidden=true;
+  gheSearch.value="";
+  sendSubtitle.textContent="Vérification du compte connecté…";
+}
+function findConnectedDirectoryItem(session){
+  const key=norm(sessionKey(session));
+  const nom=norm(sessionNom(session));
+  const prenom=norm(sessionPrenom(session));
+  return directoryItems.find(item=>{
+    const itemKey=norm(item.agent_key);
+    return (key&&itemKey&&key===itemKey)||(nom&&prenom&&norm(item.nom)===nom&&norm(item.prenom)===prenom);
+  })||null;
+}
+
+async function openSendFlow(){
+  resetSendModal();
+  openModal(sendModal);
+  try{
+    await Promise.all([loadCurrentSession(),loadDirectory()]);
+  }catch(err){
+    sendSubtitle.textContent="Envoi indisponible";
+    showState("Le répertoire à jour n’a pas pu être chargé.","error");
+    return;
+  }
+
+  if(CONTACTS_API_DATA?.modeDemo){
+    sendSubtitle.textContent="Mode démonstration";
+    showState("Le mode DEMO ne peut pas préparer un véritable envoi.","error");
+    return;
+  }
+
+  const peutChoisir=CONTACTS_API_DATA?.peutChoisirPlusieurs===true;
+  if(peutChoisir){
+    sendSubtitle.textContent="Choisis un ou plusieurs GHE qui doivent recevoir le répertoire.";
+    gheChoice.hidden=false;
+    await loadGhe();
+    focusIfDesktop(gheSearch);
+    return;
+  }
+
+  const agent=CONTACTS_API_DATA?.contactConnecte
+    ? extractDirectoryItem(CONTACTS_API_DATA.contactConnecte)
+    : findConnectedDirectoryItem(CURRENT_SESSION);
+
+  if(!agent?.ghe){
+    sendSubtitle.textContent="Envoi impossible";
+    showState("Aucun GHE n’est associé au compte agent connecté.","error");
+    return;
+  }
+
+  selectedTargets=[{agent_key:sessionKey(CURRENT_SESSION)||agent.agent_key||"",ghe:formatGhe(agent.ghe)}];
+  sendSubtitle.textContent="Envoi vers ton téléphone professionnel…";
+  targetTitle.textContent=selectedTargets[0].ghe;
+  targetDetail.textContent="Messages va s’ouvrir avec le bon numéro et le lien du répertoire.";
+  targetConfirm.hidden=false;
+  await sendContacts();
+}
+
+async function loadGhe(){
+  await loadDirectory();
+  const uniques=new Map();
+  directoryItems.forEach(item=>{
+    const ghe=formatGhe(item.ghe);
+    if(!ghe||ghe==="GHE —")return;
+    if(!uniques.has(ghe))uniques.set(ghe,{ghe,valid:phoneIsValid(item.telephone),nom:item.nom||"",prenom:item.prenom||""});
+  });
+  gheItems=[...uniques.values()].sort((a,b)=>gheNumber(a.ghe)-gheNumber(b.ghe));
+  renderGhe("");
+}
+function renderGhe(q){
+  const needle=norm(q);
+  const list=gheItems.filter(item=>!needle||norm([item.ghe,item.nom,item.prenom].join(" ")).includes(needle));
+  if(!list.length){gheList.innerHTML='<div class="state-message">Aucun GHE trouvé.</div>';return}
+  gheList.innerHTML=list.map(item=>{
+    const disabled=item.valid?"":" disabled";
+    const selected=selectedTargets.some(x=>x.ghe===item.ghe);
+    const selectedClass=selected?" selected":"";
+    const name=[item.nom,item.prenom].filter(Boolean).join(" ")||"Agent non renseigné";
+    const detail=item.valid?esc(name):`${esc(name)}<span class="invalid-label"> — numéro invalide</span>`;
+    return `<button class="agent-btn${selectedClass}" type="button" data-ghe="${esc(item.ghe)}" aria-pressed="${selected?"true":"false"}"${disabled}><span>${esc(item.ghe)}</span><small>${detail}</small><span class="select-mark" aria-hidden="true">${selected?"✓":""}</span></button>`;
+  }).join("");
+}
+function chooseGhe(ghe){
+  const item=gheItems.find(x=>x.ghe===ghe&&x.valid);
+  if(!item)return;
+  const index=selectedTargets.findIndex(x=>x.ghe===item.ghe);
+  if(index>=0)selectedTargets.splice(index,1);
+  else selectedTargets.push({agent_key:"",ghe:item.ghe});
+  renderGhe(gheSearch.value);
+  targetConfirm.hidden=true;
+  const count=selectedTargets.length;
+  confirmSend.hidden=count===0;
+  confirmSend.textContent=count===1?"Envoyer à 1 GHE":"Envoyer à "+count+" GHE";
+  sendSubtitle.textContent=count===0?"Choisis un ou plusieurs GHE qui doivent recevoir le répertoire.":count+" GHE sélectionné"+(count>1?"s":"")+".";
+}
+
+async function sendContacts(){
+  if(confirmMode==="next"){
+    launchNextShortcut();
+    return;
+  }
+  if(!selectedTargets.length)return;
+
+  const ghes=selectedTargets.map(item=>gheNumber(item.ghe)).filter(Boolean);
+  confirmSend.disabled=true;
+  confirmSend.textContent="Préparation…";
+  showState("Préparation du message…","");
+
+  try{
+    const res=await fetch(SEND_ENDPOINT,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      credentials:"same-origin",
+      body:JSON.stringify({ghes})
+    });
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok||data.ok===false||!Array.isArray(data.envois)||!data.envois.length){
+      throw new Error(data.message||data.erreur||"Préparation impossible");
+    }
+
+    shortcutQueue=data.envois.slice();
+    sessionStorage.setItem("ghe_contacts_queue",JSON.stringify(shortcutQueue));
+    confirmMode="next";
+    const first=shortcutQueue[0];
+    showState("Message prêt pour "+first.ghe+". Appuie sur le bouton ci-dessous.","success");
+    confirmSend.disabled=false;
+    confirmSend.hidden=false;
+    confirmSend.textContent=shortcutQueue.length===1?"Ouvrir Messages":"Ouvrir le premier message";
+  }catch(err){
+    showState(String(err.message||err),"error");
+    confirmSend.disabled=false;
+    confirmSend.hidden=false;
+    confirmSend.textContent=ghes.length===1?"Réessayer":"Réessayer l’envoi";
+  }
+}
+
+async function launchNextShortcut(){
+  if(!shortcutQueue.length){
+    confirmMode="prepare";
+    confirmSend.hidden=true;
+    sessionStorage.removeItem("ghe_contacts_queue");
+    showState("Tous les messages ont été préparés.","success");
+    return;
+  }
+
+  const item=shortcutQueue.shift();
+  if(shortcutQueue.length){
+    sessionStorage.setItem("ghe_contacts_queue",JSON.stringify(shortcutQueue));
+  }else{
+    sessionStorage.removeItem("ghe_contacts_queue");
+  }
+
+  confirmMode=shortcutQueue.length?"next":"prepare";
+  confirmSend.hidden=true;
+  showState("Ouverture de Messages pour "+item.ghe+"…","success");
+
+  try{
+    if(item.message && navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(item.message);
+    }
+  }catch(_){ }
+
+  const ua=navigator.userAgent||"";
+  const isIOS=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  const smsUrl=isIOS?item.smsIos:item.smsAndroid;
+
+  if(!smsUrl){
+    showState("Lien Messages indisponible.","error");
+    confirmSend.hidden=false;
+    confirmSend.textContent="Réessayer";
+    return;
+  }
+
+  window.location.href=smsUrl;
+}
+
+function restoreShortcutQueue(){
+  try{
+    const pending=JSON.parse(sessionStorage.getItem("ghe_contacts_queue")||"[]");
+    if(!Array.isArray(pending)||!pending.length)return;
+    shortcutQueue=pending;
+    confirmMode="next";
+    openModal(sendModal);
+    sendSubtitle.textContent="Envoi suivant";
+    showState(shortcutQueue.length+" message"+(shortcutQueue.length>1?"s":"")+" restant"+(shortcutQueue.length>1?"s":"")+".","success");
+    confirmSend.hidden=false;
+    confirmSend.disabled=false;
+    confirmSend.textContent="Ouvrir Messages";
+  }catch(_){
+    shortcutQueue=[];
+  }
+}
+
+document.getElementById("openDirectory").addEventListener("click",openDirectoryFlow);
+document.getElementById("openAlerts").addEventListener("click",()=>openModal(alertsModal));
+document.getElementById("sendMain").addEventListener("click",openSendFlow);
+confirmSend.addEventListener("click",()=>{if(confirmMode==="next")launchNextShortcut();else sendContacts()});
+gheSearch.addEventListener("input",()=>renderGhe(gheSearch.value));
+directorySearch.addEventListener("input",renderDirectory);
+directoryModal.querySelectorAll(".sort-btn[data-sort]").forEach(btn=>btn.addEventListener("click",()=>{
+  const next=btn.dataset.sort;
+  if(!["ghe","nom","prenom"].includes(next))return;
+  directorySort=next;
+  renderDirectory();
+}));
+
+document.addEventListener("click",e=>{
+  if(e.target.closest("[data-close-contact]")){closeContactModal();return}
+  const closeTrigger=e.target.closest("[data-close]");
+  if(closeTrigger){
+    const modal=closeTrigger.closest(".modal");
+    if(modal){modal.classList.remove("open");modal.setAttribute("aria-hidden","true")}
+    if(!document.querySelector(".modal.open"))document.body.classList.remove("modal-open");
+    return;
+  }
+  const contactCard=e.target.closest("[data-contact-key]");
+  if(contactCard&&!e.target.closest("a")){openContactDetail(contactCard.dataset.contactKey);return}
+  const gheBtn=e.target.closest("[data-ghe]");
+  if(gheBtn&&!gheBtn.disabled){chooseGhe(gheBtn.dataset.ghe);return}
+  if(e.target===contactModal){closeContactModal();return}
+  if(e.target.classList.contains("modal"))closeModals();
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){
+    if(contactModal.classList.contains("open")){closeContactModal();return}
+    closeModals();return
+  }
+  const contactCard=e.target.closest?.("[data-contact-key]");
+  if(contactCard&&(e.key==="Enter"||e.key===" ")){
+    e.preventDefault();
+    openContactDetail(contactCard.dataset.contactKey);
+  }
+});
+
+window.addEventListener("pageshow",restoreShortcutQueue);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")restoreShortcutQueue()});
+loadPageIdentity();
+loadDirectory().catch(()=>{});
+
+</script>
+</body>
+</html>
