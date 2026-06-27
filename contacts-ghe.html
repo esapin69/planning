@@ -352,7 +352,7 @@ button{color:inherit}
 <div id="sendModal" class="modal" aria-hidden="true">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sendTitle">
     <div class="sheet-head">
-      <h2 id="sendTitle">Envoyer le répertoire</h2>
+      <h2 id="sendTitle">Partager le répertoire</h2>
       <button class="sheet-x" type="button" data-close aria-label="Annuler et fermer">×</button>
     </div>
     <div class="sheet-body">
@@ -363,7 +363,7 @@ button{color:inherit}
       </div>
       <div id="targetConfirm" class="confirm-card" hidden>
         <strong id="targetTitle">Ton téléphone GHE</strong>
-        <span id="targetDetail">Un message avec le lien du répertoire sera préparé pour le téléphone professionnel associé.</span>
+        <span id="targetDetail">Le vrai fichier VCF sera préparé pour le partage du téléphone.</span>
       </div>
       <div id="sendState" class="state-message" hidden></div>
     </div>
@@ -783,7 +783,9 @@ let directoryLoaded=false;
 let avatarAgents=[];
 let avatarAgentsLoaded=false;
 let CONTACTS_API_DATA=null;
-let shortcutQueue=[]; // file d’ouverture directe de Messages
+let preparedShareFile=null;
+let preparedShareTargets=[];
+let sharePrepareSeq=0;
 let confirmMode="prepare";
 let directSendItem=null;
 let directSendReady=false;
@@ -1107,8 +1109,9 @@ function showState(message,type){
 }
 function resetSendModal(){
   selectedTargets=[];
-  shortcutQueue=[];
-  sessionStorage.removeItem("ghe_contacts_queue");
+  preparedShareFile=null;
+  preparedShareTargets=[];
+  sharePrepareSeq++;
   confirmMode="prepare";
   sendState.hidden=true;
   confirmSend.hidden=true;
@@ -1118,7 +1121,7 @@ function resetSendModal(){
   gheChoice.hidden=true;
   targetConfirm.hidden=true;
   gheSearch.value="";
-  sendSubtitle.textContent="Choisis le ou les GHE.";
+  sendSubtitle.textContent="Choisis le ou les GHE, puis partage le fichier.";
 }
 function findConnectedDirectoryItem(session){
   const key=norm(sessionKey(session));
@@ -1149,7 +1152,7 @@ async function openSendFlow(){
 
   const peutChoisir=CONTACTS_API_DATA?.peutChoisirPlusieurs===true;
   if(peutChoisir){
-    sendSubtitle.textContent="Choisis un ou plusieurs GHE qui doivent recevoir le répertoire.";
+    sendSubtitle.textContent="Choisis un ou plusieurs GHE, puis partage le vrai fichier VCF.";
     gheChoice.hidden=false;
     await loadGhe();
     focusIfDesktop(gheSearch);
@@ -1167,9 +1170,9 @@ async function openSendFlow(){
   }
 
   selectedTargets=[{agent_key:sessionKey(CURRENT_SESSION)||agent.agent_key||"",ghe:formatGhe(agent.ghe)}];
-  sendSubtitle.textContent="Envoi vers ton téléphone professionnel…";
+  sendSubtitle.textContent="Préparation du vrai fichier VCF…";
   targetTitle.textContent=selectedTargets[0].ghe;
-  targetDetail.textContent="Le SMS est prêt pour ton téléphone professionnel.";
+  targetDetail.textContent="Le fichier VCF sera ouvert dans le partage du téléphone.";
   targetConfirm.hidden=false;
   await sendContacts();
 }
@@ -1208,27 +1211,41 @@ function chooseGhe(ghe){
   targetConfirm.hidden=true;
   const count=selectedTargets.length;
   confirmSend.hidden=count===0;
-  confirmSend.textContent=count===1?"Envoyer à 1 GHE":"Envoyer à "+count+" GHE";
-  sendSubtitle.textContent=count===0?"Choisis un ou plusieurs GHE qui doivent recevoir le répertoire.":count+" GHE sélectionné"+(count>1?"s":"")+".";
+  sendSubtitle.textContent=count===0
+    ? "Choisis un ou plusieurs GHE."
+    : count+" GHE sélectionné"+(count>1?"s":"")+".";
+  if(count){
+    prepareSelectedShare();
+  }else{
+    preparedShareFile=null;
+    preparedShareTargets=[];
+    confirmSend.dataset.mode="prepare";
+    confirmSend.textContent="Partager le fichier";
+    sendState.hidden=true;
+  }
 }
 
-function smsHref(item){
-  const digits=String(item?.telephone||item?.telephoneInternational||"").replace(/\D/g,"");
-  const message=String(item?.message||"");
-  if(!digits)return "";
-  const ua=navigator.userAgent||"";
-  const isIOS=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
-  return isIOS
-    ? `sms:${digits}&body=${encodeURIComponent(message)}`
-    : `sms:${digits}?body=${encodeURIComponent(message)}`;
+function vcfUrlFromItem(item){
+  if(item&&item.vcfUrl)return String(item.vcfUrl);
+  const match=String(item?.message||"").match(/https?:\/\/[^\s]+/);
+  return match?match[0]:"";
 }
 
-function copyMessageQuietly(item){
-  try{
-    if(item?.message&&navigator.clipboard&&window.isSecureContext){
-      navigator.clipboard.writeText(item.message).catch(()=>{});
-    }
-  }catch(_){ }
+async function buildShareFile(item){
+  const url=vcfUrlFromItem(item);
+  if(!url)throw new Error("Lien du fichier introuvable");
+  const res=await fetch(url,{credentials:"same-origin"});
+  if(!res.ok)throw new Error("Téléchargement du fichier impossible");
+  const blob=await res.blob();
+  return new File([blob],"contact_GHE.vcf",{type:"text/vcard"});
+}
+
+async function sharePreparedFile(file){
+  if(!file)throw new Error("Fichier non prêt");
+  const shareData={files:[file],title:"Répertoire GHE"};
+  if(!navigator.share)throw new Error("Partage non disponible sur ce téléphone");
+  if(navigator.canShare&&!navigator.canShare(shareData))throw new Error("Partage du fichier non pris en charge");
+  await navigator.share(shareData);
 }
 
 async function requestPreparedMessages(ghes){
@@ -1249,6 +1266,8 @@ async function preparePrimarySend(){
   sendMain.classList.add("is-loading");
   sendMain.textContent="Préparation…";
   sendMain.href="#";
+  preparedShareFile=null;
+  directSendReady=false;
 
   try{
     await Promise.all([loadCurrentSession(),loadDirectory()]);
@@ -1256,12 +1275,12 @@ async function preparePrimarySend(){
     if(CONTACTS_API_DATA?.modeDemo){
       sendMain.classList.remove("is-loading");
       sendMain.classList.add("is-error");
-      sendMain.textContent="Envoi indisponible en démo";
+      sendMain.textContent="Partage indisponible en démo";
       return;
     }
 
     if(CONTACTS_API_DATA?.peutChoisirPlusieurs===true){
-      sendMain.classList.remove("is-loading");
+      sendMain.classList.remove("is-loading","is-error");
       sendMain.textContent="Choisir les GHE";
       sendMain.dataset.mode="choose";
       return;
@@ -1271,126 +1290,92 @@ async function preparePrimarySend(){
       ? extractDirectoryItem(CONTACTS_API_DATA.contactConnecte)
       : findConnectedDirectoryItem(CURRENT_SESSION);
 
-    if(!agent?.ghe){
-      throw new Error("Aucun GHE associé à ce compte");
-    }
+    if(!agent?.ghe)throw new Error("Aucun GHE associé à ce compte");
 
     const envois=await requestPreparedMessages([gheNumber(agent.ghe)]);
-    const item=envois[0];
-    const href=smsHref(item);
-    if(!href)throw new Error("Numéro professionnel introuvable");
-
-    directSendItem=item;
+    directSendItem=envois[0];
+    preparedShareTargets=envois;
+    preparedShareFile=await buildShareFile(directSendItem);
     directSendReady=true;
-    sendMain.href=href;
     sendMain.dataset.mode="direct";
     sendMain.classList.remove("is-loading","is-error");
-    sendMain.textContent="Envoyer sur mon téléphone";
+    sendMain.textContent="Partager le fichier";
   }catch(err){
     directSendReady=false;
-    sendMain.href="#";
+    preparedShareFile=null;
     sendMain.dataset.mode="error";
     sendMain.classList.remove("is-loading");
     sendMain.classList.add("is-error");
     sendMain.textContent="Réessayer";
-    console.error("Préparation SMS GHE",err);
+    console.error("Préparation partage GHE",err);
+  }
+}
+
+async function prepareSelectedShare(){
+  const seq=++sharePrepareSeq;
+  const ghes=selectedTargets.map(item=>gheNumber(item.ghe)).filter(Boolean);
+  preparedShareFile=null;
+  preparedShareTargets=[];
+  confirmSend.hidden=false;
+  confirmSend.dataset.mode="loading";
+  confirmSend.setAttribute("aria-disabled","true");
+  confirmSend.textContent="Préparation…";
+  showState("Préparation du fichier VCF…","");
+
+  try{
+    const envois=await requestPreparedMessages(ghes);
+    const file=await buildShareFile(envois[0]);
+    if(seq!==sharePrepareSeq)return;
+    preparedShareTargets=envois;
+    preparedShareFile=file;
+    confirmSend.dataset.mode="share";
+    confirmSend.removeAttribute("aria-disabled");
+    confirmSend.textContent="Partager le fichier";
+    showState("Fichier prêt.","success");
+  }catch(err){
+    if(seq!==sharePrepareSeq)return;
+    preparedShareFile=null;
+    confirmSend.dataset.mode="prepare";
+    confirmSend.removeAttribute("aria-disabled");
+    confirmSend.textContent="Réessayer";
+    showState(String(err.message||err),"error");
   }
 }
 
 async function sendContacts(){
   if(!selectedTargets.length)return;
-
-  const ghes=selectedTargets.map(item=>gheNumber(item.ghe)).filter(Boolean);
-  confirmSend.removeAttribute("href");
-  confirmSend.setAttribute("aria-disabled","true");
-  confirmSend.textContent="Préparation…";
-  showState("Préparation des SMS…","");
-
-  try{
-    shortcutQueue=await requestPreparedMessages(ghes);
-    sessionStorage.setItem("ghe_contacts_queue",JSON.stringify(shortcutQueue));
-    prepareNextMessageLink();
-  }catch(err){
-    showState(String(err.message||err),"error");
-    confirmSend.hidden=false;
-    confirmSend.removeAttribute("aria-disabled");
-    confirmSend.href="#";
-    confirmSend.dataset.mode="prepare";
-    confirmSend.textContent=ghes.length===1?"Réessayer":"Réessayer";
-  }
-}
-
-function prepareNextMessageLink(){
-  if(!shortcutQueue.length){
-    sessionStorage.removeItem("ghe_contacts_queue");
-    confirmSend.hidden=true;
-    showState("Tous les SMS ont été préparés.","success");
-    return;
-  }
-
-  const item=shortcutQueue[0];
-  const href=smsHref(item);
-  if(!href){
-    showState("Numéro indisponible pour "+item.ghe+".","error");
-    confirmSend.hidden=true;
-    return;
-  }
-
-  confirmSend.hidden=false;
-  confirmSend.removeAttribute("aria-disabled");
-  confirmSend.dataset.mode="open";
-  confirmSend.href=href;
-  confirmSend.textContent=shortcutQueue.length===1
-    ? "Ouvrir le SMS"
-    : "Ouvrir le SMS · "+item.ghe;
-  showState("SMS prêt pour "+item.ghe+".","success");
-}
-
-function consumeCurrentMessage(){
-  if(!shortcutQueue.length)return;
-  const item=shortcutQueue.shift();
-  copyMessageQuietly(item);
-  if(shortcutQueue.length){
-    sessionStorage.setItem("ghe_contacts_queue",JSON.stringify(shortcutQueue));
-  }else{
-    sessionStorage.removeItem("ghe_contacts_queue");
-  }
-}
-
-function restoreShortcutQueue(){
-  try{
-    const pending=JSON.parse(sessionStorage.getItem("ghe_contacts_queue")||"[]");
-    if(!Array.isArray(pending)||!pending.length)return;
-    shortcutQueue=pending;
-    openModal(sendModal);
-    sendSubtitle.textContent="SMS suivants";
-    prepareNextMessageLink();
-  }catch(_){
-    shortcutQueue=[];
-  }
+  await prepareSelectedShare();
 }
 
 document.getElementById("openDirectory").addEventListener("click",openDirectoryFlow);
 document.getElementById("openAlerts").addEventListener("click",()=>openModal(alertsModal));
-sendMain.addEventListener("click",e=>{
+sendMain.addEventListener("click",async e=>{
+  e.preventDefault();
   if(sendMain.dataset.mode==="direct"&&directSendReady){
-    copyMessageQuietly(directSendItem);
+    try{await sharePreparedFile(preparedShareFile)}catch(err){
+      if(err&&err.name==="AbortError")return;
+      sendMain.classList.add("is-error");
+      sendMain.textContent="Réessayer";
+      console.error(err);
+    }
     return;
   }
-  e.preventDefault();
   if(sendMain.dataset.mode==="choose"){
     openSendFlow();
     return;
   }
   preparePrimarySend();
 });
-confirmSend.addEventListener("click",e=>{
-  if(confirmSend.dataset.mode==="open"&&shortcutQueue.length){
-    consumeCurrentMessage();
+confirmSend.addEventListener("click",async e=>{
+  e.preventDefault();
+  if(confirmSend.dataset.mode==="share"&&preparedShareFile){
+    try{await sharePreparedFile(preparedShareFile)}catch(err){
+      if(err&&err.name==="AbortError")return;
+      showState(String(err.message||err),"error");
+    }
     return;
   }
-  e.preventDefault();
-  sendContacts();
+  if(selectedTargets.length)prepareSelectedShare();
 });
 gheSearch.addEventListener("input",()=>renderGhe(gheSearch.value));
 directorySearch.addEventListener("input",renderDirectory);
@@ -1429,13 +1414,7 @@ document.addEventListener("keydown",e=>{
   }
 });
 
-window.addEventListener("pageshow",()=>{
-  restoreShortcutQueue();
-  if(!shortcutQueue.length)preparePrimarySend();
-});
-document.addEventListener("visibilitychange",()=>{
-  if(document.visibilityState==="visible")restoreShortcutQueue();
-});
+window.addEventListener("pageshow",()=>preparePrimarySend());
 loadPageIdentity();
 preparePrimarySend();
 
