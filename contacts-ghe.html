@@ -87,8 +87,10 @@ button{color:inherit}
   position:relative;display:flex;align-items:center;justify-content:center;width:100%;min-height:76px;padding:13px 17px;
   border:5px solid var(--navy);border-radius:24px;background:linear-gradient(180deg,var(--navy2),var(--navy));
   color:#fff5c7;font-family:var(--title);font-size:clamp(26px,7vw,43px);font-weight:800;line-height:.9;text-align:center;text-transform:uppercase;
-  cursor:pointer;box-shadow:0 7px 0 #e6b817;transition:transform .12s ease,box-shadow .12s ease;
+  cursor:pointer;box-shadow:0 7px 0 #e6b817;transition:transform .12s ease,box-shadow .12s ease;text-decoration:none;
 }
+.send-btn.is-loading{opacity:.72;pointer-events:none}
+.send-btn.is-error{background:linear-gradient(180deg,#7d2222,#5a1616)}
 .send-btn:active{transform:translateY(3px);box-shadow:0 4px 0 #e6b817}
 .status-row{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
 .status-box,.directory-btn,.alerts-btn{
@@ -248,7 +250,7 @@ button{color:inherit}
     <h1 class="action-title">Répertoire GHE</h1>
     <p class="action-lead">Contacts mis à jour le 24 juin 2026.</p>
 
-    <button id="sendMain" class="send-btn" type="button">Recevoir le répertoire</button>
+    <a id="sendMain" class="send-btn" href="#" role="button">Préparation…</a>
 
     <div class="status-row" aria-label="État du répertoire">
       <button id="openDirectory" class="directory-btn" type="button">
@@ -350,7 +352,7 @@ button{color:inherit}
 <div id="sendModal" class="modal" aria-hidden="true">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sendTitle">
     <div class="sheet-head">
-      <h2 id="sendTitle">Recevoir le répertoire</h2>
+      <h2 id="sendTitle">Envoyer le répertoire</h2>
       <button class="sheet-x" type="button" data-close aria-label="Annuler et fermer">×</button>
     </div>
     <div class="sheet-body">
@@ -361,12 +363,12 @@ button{color:inherit}
       </div>
       <div id="targetConfirm" class="confirm-card" hidden>
         <strong id="targetTitle">Ton téléphone GHE</strong>
-        <span id="targetDetail">Le fichier VCF sera envoyé au téléphone professionnel associé.</span>
+        <span id="targetDetail">Un message avec le lien du répertoire sera préparé pour le téléphone professionnel associé.</span>
       </div>
       <div id="sendState" class="state-message" hidden></div>
     </div>
     <div class="sheet-actions">
-      <button id="confirmSend" class="confirm-btn" type="button" hidden>Confirmer l’envoi</button>
+      <a id="confirmSend" class="confirm-btn" href="#" role="button" hidden>Confirmer l’envoi</a>
       <button class="close-btn" type="button" data-close>Annuler</button>
     </div>
   </div>
@@ -781,9 +783,12 @@ let directoryLoaded=false;
 let avatarAgents=[];
 let avatarAgentsLoaded=false;
 let CONTACTS_API_DATA=null;
-let shortcutQueue=[];
+let shortcutQueue=[]; // file d’ouverture directe de Messages
 let confirmMode="prepare";
+let directSendItem=null;
+let directSendReady=false;
 
+const sendMain=document.getElementById("sendMain");
 const directoryModal=document.getElementById("directoryModal");
 const directorySearch=document.getElementById("directorySearch");
 const directoryList=document.getElementById("directoryList");
@@ -1107,11 +1112,13 @@ function resetSendModal(){
   confirmMode="prepare";
   sendState.hidden=true;
   confirmSend.hidden=true;
-  confirmSend.disabled=false;
+  confirmSend.href="#";
+  confirmSend.dataset.mode="prepare";
+  confirmSend.removeAttribute("aria-disabled");
   gheChoice.hidden=true;
   targetConfirm.hidden=true;
   gheSearch.value="";
-  sendSubtitle.textContent="Vérification du compte connecté…";
+  sendSubtitle.textContent="Choisis le ou les GHE.";
 }
 function findConnectedDirectoryItem(session){
   const key=norm(sessionKey(session));
@@ -1162,7 +1169,7 @@ async function openSendFlow(){
   selectedTargets=[{agent_key:sessionKey(CURRENT_SESSION)||agent.agent_key||"",ghe:formatGhe(agent.ghe)}];
   sendSubtitle.textContent="Envoi vers ton téléphone professionnel…";
   targetTitle.textContent=selectedTargets[0].ghe;
-  targetDetail.textContent="Le répertoire sera préparé pour le téléphone professionnel associé à ton GHE.";
+  targetDetail.textContent="Le SMS est prêt pour ton téléphone professionnel.";
   targetConfirm.hidden=false;
   await sendContacts();
 }
@@ -1205,69 +1212,149 @@ function chooseGhe(ghe){
   sendSubtitle.textContent=count===0?"Choisis un ou plusieurs GHE qui doivent recevoir le répertoire.":count+" GHE sélectionné"+(count>1?"s":"")+".";
 }
 
-async function sendContacts(){
-  if(confirmMode==="next"){
-    launchNextShortcut();
-    return;
-  }
-  if(!selectedTargets.length)return;
+function smsHref(item){
+  const digits=String(item?.telephone||item?.telephoneInternational||"").replace(/\D/g,"");
+  const message=String(item?.message||"");
+  if(!digits)return "";
+  const ua=navigator.userAgent||"";
+  const isIOS=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  return isIOS
+    ? `sms:${digits}&body=${encodeURIComponent(message)}`
+    : `sms:${digits}?body=${encodeURIComponent(message)}`;
+}
 
-  const ghes=selectedTargets.map(item=>gheNumber(item.ghe)).filter(Boolean);
-  confirmSend.disabled=true;
-  confirmSend.textContent="Préparation…";
-  showState("Préparation du message…","");
+function copyMessageQuietly(item){
+  try{
+    if(item?.message&&navigator.clipboard&&window.isSecureContext){
+      navigator.clipboard.writeText(item.message).catch(()=>{});
+    }
+  }catch(_){ }
+}
+
+async function requestPreparedMessages(ghes){
+  const res=await fetch(SEND_ENDPOINT,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    credentials:"same-origin",
+    body:JSON.stringify({ghes})
+  });
+  const data=await res.json().catch(()=>({}));
+  if(!res.ok||data.ok===false||!Array.isArray(data.envois)||!data.envois.length){
+    throw new Error(data.message||data.erreur||"Préparation impossible");
+  }
+  return data.envois;
+}
+
+async function preparePrimarySend(){
+  sendMain.classList.add("is-loading");
+  sendMain.textContent="Préparation…";
+  sendMain.href="#";
 
   try{
-    const res=await fetch(SEND_ENDPOINT,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      credentials:"same-origin",
-      body:JSON.stringify({ghes})
-    });
-    const data=await res.json().catch(()=>({}));
-    if(!res.ok||data.ok===false||!Array.isArray(data.envois)||!data.envois.length){
-      throw new Error(data.message||data.erreur||"Préparation impossible");
+    await Promise.all([loadCurrentSession(),loadDirectory()]);
+
+    if(CONTACTS_API_DATA?.modeDemo){
+      sendMain.classList.remove("is-loading");
+      sendMain.classList.add("is-error");
+      sendMain.textContent="Envoi indisponible en démo";
+      return;
     }
 
-    shortcutQueue=data.envois.slice();
-    sessionStorage.setItem("ghe_contacts_queue",JSON.stringify(shortcutQueue));
-    confirmMode="next";
-    const first=shortcutQueue[0];
-    showState("Message prêt pour "+first.ghe+". Appuie sur le bouton ci-dessous.","success");
-    confirmSend.disabled=false;
-    confirmSend.hidden=false;
-    confirmSend.textContent=shortcutQueue.length===1?"Ouvrir Messages":"Ouvrir le premier message";
+    if(CONTACTS_API_DATA?.peutChoisirPlusieurs===true){
+      sendMain.classList.remove("is-loading");
+      sendMain.textContent="Choisir les GHE";
+      sendMain.dataset.mode="choose";
+      return;
+    }
+
+    const agent=CONTACTS_API_DATA?.contactConnecte
+      ? extractDirectoryItem(CONTACTS_API_DATA.contactConnecte)
+      : findConnectedDirectoryItem(CURRENT_SESSION);
+
+    if(!agent?.ghe){
+      throw new Error("Aucun GHE associé à ce compte");
+    }
+
+    const envois=await requestPreparedMessages([gheNumber(agent.ghe)]);
+    const item=envois[0];
+    const href=smsHref(item);
+    if(!href)throw new Error("Numéro professionnel introuvable");
+
+    directSendItem=item;
+    directSendReady=true;
+    sendMain.href=href;
+    sendMain.dataset.mode="direct";
+    sendMain.classList.remove("is-loading","is-error");
+    sendMain.textContent="Envoyer sur mon téléphone";
   }catch(err){
-    showState(String(err.message||err),"error");
-    confirmSend.disabled=false;
-    confirmSend.hidden=false;
-    confirmSend.textContent=ghes.length===1?"Réessayer":"Réessayer l’envoi";
+    directSendReady=false;
+    sendMain.href="#";
+    sendMain.dataset.mode="error";
+    sendMain.classList.remove("is-loading");
+    sendMain.classList.add("is-error");
+    sendMain.textContent="Réessayer";
+    console.error("Préparation SMS GHE",err);
   }
 }
 
-function launchNextShortcut(){
+async function sendContacts(){
+  if(!selectedTargets.length)return;
+
+  const ghes=selectedTargets.map(item=>gheNumber(item.ghe)).filter(Boolean);
+  confirmSend.removeAttribute("href");
+  confirmSend.setAttribute("aria-disabled","true");
+  confirmSend.textContent="Préparation…";
+  showState("Préparation des SMS…","");
+
+  try{
+    shortcutQueue=await requestPreparedMessages(ghes);
+    sessionStorage.setItem("ghe_contacts_queue",JSON.stringify(shortcutQueue));
+    prepareNextMessageLink();
+  }catch(err){
+    showState(String(err.message||err),"error");
+    confirmSend.hidden=false;
+    confirmSend.removeAttribute("aria-disabled");
+    confirmSend.href="#";
+    confirmSend.dataset.mode="prepare";
+    confirmSend.textContent=ghes.length===1?"Réessayer":"Réessayer";
+  }
+}
+
+function prepareNextMessageLink(){
   if(!shortcutQueue.length){
-    confirmMode="prepare";
-    confirmSend.hidden=true;
     sessionStorage.removeItem("ghe_contacts_queue");
-    showState("Tous les messages ont été préparés.","success");
+    confirmSend.hidden=true;
+    showState("Tous les SMS ont été préparés.","success");
     return;
   }
 
+  const item=shortcutQueue[0];
+  const href=smsHref(item);
+  if(!href){
+    showState("Numéro indisponible pour "+item.ghe+".","error");
+    confirmSend.hidden=true;
+    return;
+  }
+
+  confirmSend.hidden=false;
+  confirmSend.removeAttribute("aria-disabled");
+  confirmSend.dataset.mode="open";
+  confirmSend.href=href;
+  confirmSend.textContent=shortcutQueue.length===1
+    ? "Ouvrir le SMS"
+    : "Ouvrir le SMS · "+item.ghe;
+  showState("SMS prêt pour "+item.ghe+".","success");
+}
+
+function consumeCurrentMessage(){
+  if(!shortcutQueue.length)return;
   const item=shortcutQueue.shift();
+  copyMessageQuietly(item);
   if(shortcutQueue.length){
     sessionStorage.setItem("ghe_contacts_queue",JSON.stringify(shortcutQueue));
   }else{
     sessionStorage.removeItem("ghe_contacts_queue");
   }
-
-  confirmMode=shortcutQueue.length?"next":"prepare";
-  confirmSend.hidden=true;
-  showState("Ouverture de Messages pour "+item.ghe+"…","success");
-
-  // Lancement direct depuis le clic utilisateur : Safari accepte mieux
-  // les schémas shortcuts:// lorsqu'ils ne partent pas après un délai.
-  window.location.href=item.raccourci;
 }
 
 function restoreShortcutQueue(){
@@ -1275,13 +1362,9 @@ function restoreShortcutQueue(){
     const pending=JSON.parse(sessionStorage.getItem("ghe_contacts_queue")||"[]");
     if(!Array.isArray(pending)||!pending.length)return;
     shortcutQueue=pending;
-    confirmMode="next";
     openModal(sendModal);
-    sendSubtitle.textContent="Envoi suivant";
-    showState(shortcutQueue.length+" message"+(shortcutQueue.length>1?"s":"")+" restant"+(shortcutQueue.length>1?"s":"")+".","success");
-    confirmSend.hidden=false;
-    confirmSend.disabled=false;
-    confirmSend.textContent="Ouvrir Messages";
+    sendSubtitle.textContent="SMS suivants";
+    prepareNextMessageLink();
   }catch(_){
     shortcutQueue=[];
   }
@@ -1289,8 +1372,26 @@ function restoreShortcutQueue(){
 
 document.getElementById("openDirectory").addEventListener("click",openDirectoryFlow);
 document.getElementById("openAlerts").addEventListener("click",()=>openModal(alertsModal));
-document.getElementById("sendMain").addEventListener("click",openSendFlow);
-confirmSend.addEventListener("click",()=>{if(confirmMode==="next")launchNextShortcut();else sendContacts()});
+sendMain.addEventListener("click",e=>{
+  if(sendMain.dataset.mode==="direct"&&directSendReady){
+    copyMessageQuietly(directSendItem);
+    return;
+  }
+  e.preventDefault();
+  if(sendMain.dataset.mode==="choose"){
+    openSendFlow();
+    return;
+  }
+  preparePrimarySend();
+});
+confirmSend.addEventListener("click",e=>{
+  if(confirmSend.dataset.mode==="open"&&shortcutQueue.length){
+    consumeCurrentMessage();
+    return;
+  }
+  e.preventDefault();
+  sendContacts();
+});
 gheSearch.addEventListener("input",()=>renderGhe(gheSearch.value));
 directorySearch.addEventListener("input",renderDirectory);
 directoryModal.querySelectorAll(".sort-btn[data-sort]").forEach(btn=>btn.addEventListener("click",()=>{
@@ -1328,10 +1429,15 @@ document.addEventListener("keydown",e=>{
   }
 });
 
-window.addEventListener("pageshow",restoreShortcutQueue);
-document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")restoreShortcutQueue()});
+window.addEventListener("pageshow",()=>{
+  restoreShortcutQueue();
+  if(!shortcutQueue.length)preparePrimarySend();
+});
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState==="visible")restoreShortcutQueue();
+});
 loadPageIdentity();
-loadDirectory().catch(()=>{});
+preparePrimarySend();
 
 </script>
 </body>
