@@ -1,4 +1,3 @@
-<!-- CONTACTS_GHE_ENVOI_RELIE_V2_2026-06-25 -->
 <!doctype html>
 <html lang="fr">
 <head>
@@ -1232,7 +1231,12 @@ async function sendContacts(){
 
     shortcutQueue=data.envois.slice();
     sessionStorage.setItem("ghe_contacts_queue",JSON.stringify(shortcutQueue));
-    launchNextShortcut();
+    confirmMode="next";
+    const first=shortcutQueue[0];
+    showState("Message prêt pour "+first.ghe+". Appuie sur le bouton ci-dessous.","success");
+    confirmSend.disabled=false;
+    confirmSend.hidden=false;
+    confirmSend.textContent=shortcutQueue.length===1?"Ouvrir Messages":"Ouvrir le premier message";
   }catch(err){
     showState(String(err.message||err),"error");
     confirmSend.disabled=false;
@@ -1251,11 +1255,19 @@ function launchNextShortcut(){
   }
 
   const item=shortcutQueue.shift();
-  sessionStorage.setItem("ghe_contacts_queue",JSON.stringify(shortcutQueue));
+  if(shortcutQueue.length){
+    sessionStorage.setItem("ghe_contacts_queue",JSON.stringify(shortcutQueue));
+  }else{
+    sessionStorage.removeItem("ghe_contacts_queue");
+  }
+
   confirmMode=shortcutQueue.length?"next":"prepare";
   confirmSend.hidden=true;
   showState("Ouverture de Messages pour "+item.ghe+"…","success");
-  setTimeout(()=>{window.location.href=item.raccourci},80);
+
+  // Lancement direct depuis le clic utilisateur : Safari accepte mieux
+  // les schémas shortcuts:// lorsqu'ils ne partent pas après un délai.
+  window.location.href=item.raccourci;
 }
 
 function restoreShortcutQueue(){
@@ -1269,7 +1281,7 @@ function restoreShortcutQueue(){
     showState(shortcutQueue.length+" message"+(shortcutQueue.length>1?"s":"")+" restant"+(shortcutQueue.length>1?"s":"")+".","success");
     confirmSend.hidden=false;
     confirmSend.disabled=false;
-    confirmSend.textContent="Ouvrir le message suivant";
+    confirmSend.textContent="Ouvrir Messages";
   }catch(_){
     shortcutQueue=[];
   }
