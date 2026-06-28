@@ -1924,13 +1924,13 @@ function peutChoisirTousLesDemandeurs(session){
   const droits=droitsSession(session);
   const role=roleSession(session);
 
-
+  // Exceptions : ces comptes gardent la liste complète des agents.
   if(estDemo(session)) return true;
   if(estEddySapin(session)) return false;
 
-
   return (
     role==='chef' ||
+    role==='cadre' ||
     role==='total' ||
     droits.acces_chefs===true ||
     droits.admin===true ||
