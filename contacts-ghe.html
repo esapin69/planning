@@ -231,6 +231,15 @@ button{color:inherit}
   .sheet-x{width:44px;height:44px;border-radius:14px;font-size:31px}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+.admin-contacts{margin-top:16px;display:grid;gap:12px}
+.admin-card{border:4px solid var(--navy);border-radius:22px;background:rgba(255,255,255,.72);padding:15px;box-shadow:0 6px 0 rgba(7,24,63,.18)}
+.admin-kicker{font-size:12px;font-weight:950;letter-spacing:.7px;text-transform:uppercase;color:rgba(7,24,63,.58)}
+.admin-name{margin-top:3px;font-family:var(--title);font-size:clamp(25px,6.5vw,39px);line-height:.95;text-transform:uppercase;color:var(--navy)}
+.admin-role{margin:7px 0 12px;font-weight:850;color:rgba(7,24,63,.76)}
+.admin-write{display:flex;align-items:center;justify-content:center;min-height:52px;border:4px solid var(--navy);border-radius:17px;background:linear-gradient(145deg,#2d64d6,#10266f);color:#fff7dd;text-decoration:none;font-family:var(--title);font-size:clamp(20px,5.2vw,31px);text-transform:uppercase;box-shadow:0 5px 0 rgba(7,24,63,.24)}
+.admin-note{margin:8px 2px 0;font-size:12px;font-weight:750;color:rgba(7,24,63,.62)}
+
 </style>
 </head>
 <body>
@@ -265,6 +274,22 @@ button{color:inherit}
 
     <p class="micro-note">Les anomalies restent visibles sans bloquer les GHE qui disposent d’un numéro valide.</p>
   </section>
+  <section class="admin-contacts" aria-label="Contacts administratifs et encadrement">
+    <article class="admin-card">
+      <div class="admin-kicker">Contact administratif</div>
+      <div class="admin-name">Céline Turpin</div>
+      <div class="admin-role">Référente administrative</div>
+      <a class="admin-write" href="mailto:celine.turpin@chu-lyon.fr">Écrire</a>
+    </article>
+    <article class="admin-card">
+      <div class="admin-kicker">Encadrement</div>
+      <div class="admin-name">Chefs d’équipe</div>
+      <div class="admin-role">Message libre à l’encadrement</div>
+      <a class="admin-write" href="mailto:rami.rahali@chu-lyon.fr,kouamelan.nobou@chu-lyon.fr,samir.diabi@chu-lyon.fr,mohamed.rahmani@chu-lyon.fr">Écrire</a>
+      <p class="admin-note">L’adresse reste discrète et le sujet du message est entièrement libre.</p>
+    </article>
+  </section>
+
 </main>
 
 

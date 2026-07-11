@@ -455,35 +455,33 @@ const monthImages = [
 ];
 
 /*
-  Regle d'affichage des mois :
-  - Du 1 au 4 : mois precedent + mois courant
-  - Du 5 au 19 : mois courant seulement
-  - Du 20 a la fin : mois courant + mois suivant
-
-  Cette page contient uniquement les mois 2026.
-  Si le mois precedent ou suivant n'existe pas dans monthImages,
-  il est simplement ignore.
+  Règle d’affichage validée :
+  - Du 1 au 4 : mois précédent + mois courant.
+  - À partir du 5 : le mois précédent disparaît.
+  - Le mois suivant apparaît dès qu’une ressource existe réellement,
+    sans attendre une date fixe comme le 20.
 */
+function monthHasResource(month){
+  if(!month) return false;
+  if(type === "agent") return true;
+  return Boolean(links?.[type]?.[month.key]);
+}
+
 function getVisibleMonths(dateReference = new Date()){
   const jourDuMois = dateReference.getDate();
   const moisCourant = dateReference.getMonth() + 1;
-
   const numeros = [];
 
-  if(jourDuMois <= 4){
-    numeros.push(moisCourant - 1);
-  }
-
+  if(jourDuMois <= 4) numeros.push(moisCourant - 1);
   numeros.push(moisCourant);
 
-  if(jourDuMois >= 20){
-    numeros.push(moisCourant + 1);
-  }
+  const suivant = monthImages.find(month => month.number === moisCourant + 1);
+  if(monthHasResource(suivant)) numeros.push(moisCourant + 1);
 
   return numeros
-    .filter((numero, index, arr) => numero >= 1 && numero <= 12 && arr.indexOf(numero) === index)
+    .filter((numero,index,liste) => numero >= 1 && numero <= 12 && liste.indexOf(numero) === index)
     .map(numero => monthImages.find(month => month.number === numero))
-    .filter(Boolean);
+    .filter(month => month && monthHasResource(month));
 }
 
 let visibleMonths = getVisibleMonths();

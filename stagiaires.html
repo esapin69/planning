@@ -540,7 +540,7 @@ button.ghe-badge:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(7,24,6
 </head>
 <body>
 <main class="page">
-  <div class="topbar"><a class="navbtn" href="index.html">← Accueil</a></div>
+  <div class="topbar"><a class="navbtn" href="index.html">← Retour accueil</a></div>
 
   <section class="hero">
     <img src="Image/Bannière/Page stagiaire.PNG" alt="Stagiaires GHE" onerror="this.onerror=null;this.src='Image/Banni%C3%A8re/Page%20stagiaire.PNG';">
@@ -569,7 +569,7 @@ button.ghe-badge:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(7,24,6
 <div id="callModal" class="modal" aria-hidden="true">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="callTitle">
     <h2 id="callTitle">Contacter l’agent</h2>
-    <div id="callSub" class="sheet-sub"></div>
+    <div id="callAvatar" class="avatar" style="margin:8px auto 10px"><span class="avatar-fallback">👤</span></div><div id="callSub" class="sheet-sub"></div>
     <div id="callNumber" class="call-number"></div>
     <div class="call-actions">
       <a id="callNormal" class="call-action primary" href="#">Appeler</a>
@@ -590,6 +590,7 @@ const issueModal=document.getElementById("issueModal");
 const modalSub=document.getElementById("modalSub");
 const modalBody=document.getElementById("modalBody");
 const callModal=document.getElementById("callModal");
+const callAvatar=document.getElementById("callAvatar");
 const callSub=document.getElementById("callSub");
 const callNumber=document.getElementById("callNumber");
 const callNormal=document.getElementById("callNormal");
@@ -1212,6 +1213,7 @@ function openCall(button){
   const ghe=button.dataset.callGhe||"";
   const provided=phoneDigits(button.dataset.callPhone||"");
 
+  if(callAvatar) callAvatar.innerHTML=`<span class="avatar-fallback">${esc(initials(name))}</span>`;
   callSub.textContent=[name,ghe].filter(Boolean).join(" · ");
   callNumber.textContent=provided
     ? phoneDisplay(provided)

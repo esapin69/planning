@@ -95,7 +95,7 @@ button,input,a{font:inherit;color:inherit}
 </head>
 <body>
 <main class="page">
-  <div class="topbar"><a class="navbtn" href="index.html">← Accueil</a></div>
+  <div class="topbar"><a class="navbtn" href="index.html">← Retour accueil</a></div>
   <section class="hero"><img src="Image/Bannière/Page Formation.PNG" alt="Formations GHE" onerror="this.onerror=null;this.src='Image/Banni%C3%A8re/Page%20Formation.PNG';"></section>
   <section id="pilot" class="pilot"><div class="pilot-title">Chargement des formations…</div><div class="pilot-sub">Toutes les sessions et tous les agents restent visibles directement dans la page.</div></section>
   <section class="tools">
@@ -103,13 +103,13 @@ button,input,a{font:inherit;color:inherit}
     <div class="filters"><button class="filter-btn active" data-filter="tous" type="button">Toutes</button><button class="filter-btn" data-filter="traiter" type="button">À vérifier</button><button class="filter-btn" data-filter="bloquants" type="button">Bloquantes</button></div>
   </section>
   <section id="content"><div class="loading">Connexion aux données…</div></section>
-  <section class="agenda"><h2 class="agenda-title">S’abonner aux formations</h2><div class="agenda-buttons"><a id="btnIos" class="agenda-btn ios" href="#">iPhone</a><a id="btnAndroid" class="agenda-btn android" href="#">Android</a></div></section>
+  <section class="agenda"><h2 class="agenda-title">S’abonner aux formations</h2><div class="agenda-buttons"><a id="btnIos" class="agenda-btn ios" href="#">Abonnement iOS</a><a id="btnAndroid" class="agenda-btn android" href="#">Abonnement Android</a></div></section>
 </main>
 
 <div id="callModal" class="modal" aria-hidden="true">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="callTitle">
     <h2 id="callTitle">Contacter l’agent</h2>
-    <div id="callSub" class="sheet-sub"></div>
+    <div id="callAvatar" class="avatar" style="margin:8px auto 10px"><span class="initials">👤</span></div><div id="callSub" class="sheet-sub"></div>
     <div id="callNumber" class="call-number"></div>
 
     <div class="call-actions">
@@ -133,6 +133,7 @@ modal=document.getElementById("issueModal"),
 modalSub=document.getElementById("modalSub"),
 modalBody=document.getElementById("modalBody"),
 callModal=document.getElementById("callModal"),
+callAvatar=document.getElementById("callAvatar"),
 callSub=document.getElementById("callSub"),
 callNumber=document.getElementById("callNumber"),
 callNormal=document.getElementById("callNormal"),
@@ -303,6 +304,8 @@ function openCall(button){
   const provided=phoneDigits(
     button.dataset.callPhone||""
   );
+
+  if(callAvatar) callAvatar.innerHTML=`<span class="initials">${esc(initials(name))}</span>`;
 
   callSub.textContent=[name,ghe]
     .filter(Boolean)
