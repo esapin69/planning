@@ -922,7 +922,7 @@ async function loadAvatarAgents(){
   if(avatarAgentsLoaded)return avatarAgents;
   avatarAgentsLoaded=true;
   try{
-    const res=await fetch(AVATAR_ENDPOINT+"?mode=list");
+    const res=await fetch(AVATAR_ENDPOINT+"?mode=list&t="+Date.now(),{cache:"no-store"});
     if(!res.ok)throw new Error("HTTP "+res.status);
     const data=await res.json();
     avatarAgents=Array.isArray(data?.agents)?data.agents:[];
@@ -1374,5 +1374,6 @@ loadPageIdentity();
 loadDirectory().catch(()=>{});
 
 </script>
+<script src="affichage-different/avatars-frais.js?v=1"></script>
 </body>
 </html>

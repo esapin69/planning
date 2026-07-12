@@ -462,5 +462,6 @@ document.addEventListener("keydown",e=>{
 });
 (function load(){const cb="recevoirFormations_"+Date.now(),s=document.createElement("script");window[cb]=data=>{delete window[cb];s.remove();if(!data||!data.ok){content.innerHTML=`<div class="error">${esc(data&&data.erreur||"Données invalides.")}</div>`;return}ITEMS=arr(data.items);updatePilot();render()};s.onerror=()=>{delete window[cb];s.remove();content.innerHTML='<div class="error">Impossible de charger les données.</div>'};s.src=WEB_APP_URL+"?mode=site_stagiaires_formations&type=formations&callback="+encodeURIComponent(cb)+"&v="+Date.now();document.body.appendChild(s)})();
 </script>
+<script src="affichage-different/avatars-frais.js?v=1"></script>
 </body>
 </html>
