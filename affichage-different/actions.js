@@ -334,34 +334,37 @@
     return uniq(urls);
   }
 
+  function ajouterAntiCacheAvatar(urls){
+    var version = Date.now();
+
+    return uniq((urls || []).map(function(url){
+      var propre = clean(url);
+      if(!propre) return "";
+      return propre + (propre.indexOf("?") === -1 ? "?" : "&") + "ghe_avatar_v=" + version;
+    }));
+  }
+
   async function trouverUrlsAvatar(session){
-    var key = norm(agentKey(session)) || norm(agentNom(session) + "_" + agentPrenom(session));
-    var cacheKey = "ghe_avatar_urls_v12_" + key;
-
-    try{
-      var cached = sessionStorage.getItem(cacheKey);
-      if(cached){
-        var parsed = JSON.parse(cached);
-        if(Array.isArray(parsed) && parsed.length) return parsed;
-      }
-    }catch(e){}
-
-    var direct = urlsAvatarDansObjet(agentSession(session));
-    if(direct.length){
-      try{ sessionStorage.setItem(cacheKey, JSON.stringify(direct)); }catch(e){}
-      return direct;
-    }
-
+    /*
+      Toujours interroger la passerelle en premier.
+      L'avatar contenu dans la session peut être ancien lorsque le fichier Drive
+      a été remplacé après la connexion de l'agent.
+    */
     var agents = await chargerAgentsPasserelle();
     var trouve = trouverAgentDansListe(session, agents);
     var depuisListe = urlsAvatarDansObjet(trouve);
 
     if(depuisListe.length){
-      try{ sessionStorage.setItem(cacheKey, JSON.stringify(depuisListe)); }catch(e){}
-      return depuisListe;
+      return ajouterAntiCacheAvatar(depuisListe);
     }
 
-    return urlsAvatarDefaut();
+    /* Repli seulement si la passerelle est indisponible ou ne trouve pas l'agent. */
+    var direct = urlsAvatarDansObjet(agentSession(session));
+    if(direct.length){
+      return ajouterAntiCacheAvatar(direct);
+    }
+
+    return ajouterAntiCacheAvatar(urlsAvatarDefaut());
   }
 
   function appliquerImageSansSecours(img, avatarWrap, candidats){
