@@ -346,9 +346,9 @@
 
   async function trouverUrlsAvatar(session){
     /*
-      Toujours interroger la passerelle en premier.
-      L'avatar contenu dans la session peut être ancien lorsque le fichier Drive
-      a été remplacé après la connexion de l'agent.
+      La passerelle Drive est la source prioritaire afin de récupérer l'avatar
+      actuellement associé à l'agent, sans reprendre l'ancienne URL mémorisée
+      lors de la connexion.
     */
     var agents = await chargerAgentsPasserelle();
     var trouve = trouverAgentDansListe(session, agents);
@@ -358,7 +358,7 @@
       return ajouterAntiCacheAvatar(depuisListe);
     }
 
-    /* Repli seulement si la passerelle est indisponible ou ne trouve pas l'agent. */
+    /* Repli si la passerelle est momentanément indisponible. */
     var direct = urlsAvatarDansObjet(agentSession(session));
     if(direct.length){
       return ajouterAntiCacheAvatar(direct);
@@ -707,10 +707,20 @@
 
       var session = data.session;
 
-      await insererCarteProfil(session);
-      await reglerPlanningOfficiel(session);
+      /*
+        Les liens personnels sont activés immédiatement. La recherche d'avatar
+        se fait ensuite en arrière-plan et ne peut plus rétablir la demande de nom.
+      */
       rendreMonPlanningDirect(session);
       reglerDemandeChangement(session);
+
+      reglerPlanningOfficiel(session).catch(function(err){
+        console.warn("GHE planning officiel", err);
+      });
+
+      insererCarteProfil(session).catch(function(err){
+        console.warn("GHE avatar accueil", err);
+      });
 
     }catch(e){
       console.error("GHE affichage différent", e);
