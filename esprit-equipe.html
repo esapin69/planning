@@ -76,6 +76,9 @@ h1{margin:0;font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:clam
 .ghe{color:rgba(7,24,63,.60);font-weight:900}
 .ghe-phone-trigger{cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
 .ghe-phone-trigger:focus-visible{outline:3px solid #1769e0;outline-offset:3px;border-radius:6px}
+.agent-name-trigger{cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px;text-decoration-color:rgba(7,24,63,.28)}
+.agent-name-trigger:active{transform:translateY(1px)}
+.agent-name-trigger:focus-visible{outline:3px solid #1769e0;outline-offset:3px;border-radius:6px}
 .empty{color:rgba(7,24,63,.55);font-weight:900;font-style:italic}
 .alert-list{display:grid;gap:8px}
 .alert-line{padding:10px;border:2px solid rgba(7,24,63,.16);border-radius:14px;background:#fff}
@@ -1174,6 +1177,7 @@ details.control summary::-webkit-details-marker{display:none}
 
 <script>
 const API_ESPRIT_EQUIPE = "https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOlle3cafAKEAZQ8NAX-peSN6D-yxFO3gX26SnVNUVd5xbwV3CUISg/exec";
+const API_PLANNING_AGENT = "https://script.google.com/macros/s/AKfycbwrhifE-4wl-YvKOjJI8HZ_g_ota7tajTKLY3jvLKEF9AvSPjIbVpqcSkSRcl5OdWV9/exec";
 
 const loader = document.getElementById("loader");
 const errorBox = document.getElementById("errorBox");
@@ -1222,6 +1226,7 @@ let loadedDateIso = "";
 let weekSwipeStartX = null;
 let traineeScheduleCache = null;
 let traineeScheduleRequestId = 0;
+const agentPlanningCache = new Map();
 
 function esc(value){
   return String(value ?? "")
@@ -1416,7 +1421,12 @@ function agentLine(agent){
     prenom;
 
   return `<div class="agent">
-    <span class="agent-name">${esc(String(prenom).toUpperCase())}</span>
+    <span
+      class="agent-name agent-name-trigger"
+      role="button"
+      tabindex="0"
+      aria-label="Voir le planning de ${esc(agentComplet)}"
+      data-agent-planning="${esc(agentComplet)}">${esc(String(prenom).toUpperCase())}</span>
     ${gheTriggerHtml(agentComplet,agent.ghe||"",true)}
   </div>`;
 }
@@ -2244,6 +2254,98 @@ async function openTraineePlanning(name){
   }
 }
 
+
+function agentPlanningDateParts(dateIso){
+  const date=isoToDate(dateIso||"");
+  if(!date)return{jour:"DATE",date:"À CONFIRMER"};
+  return{
+    jour:date.toLocaleDateString("fr-FR",{weekday:"long"}).toUpperCase(),
+    date:date.toLocaleDateString("fr-FR",{day:"numeric",month:"long"}).toUpperCase()
+  };
+}
+
+function agentPlanningShift(event){
+  const raw=String(
+    event.shift_code||event.pastille||event.titre||event.summary||""
+  ).trim().toUpperCase();
+  const compact=raw.replace(/[^A-Z0-9]/g,"");
+  let code="";
+  if(compact.startsWith("J4"))code="J4";
+  else if(compact.startsWith("M"))code="M";
+  else if(compact.startsWith("J"))code="J";
+  else if(compact.startsWith("S"))code="S";
+  else if(compact.startsWith("N"))code="N";
+  else code=(compact||"EV").slice(0,4);
+  return{code,label:raw||code};
+}
+
+function renderAgentScheduleCard(event){
+  const parts=agentPlanningDateParts(event.date||"");
+  const shift=agentPlanningShift(event||{});
+  const horaire=formatRange(event.horaire||"");
+  const detail=String(event.description||event.titre||event.summary||"").trim();
+
+  return `<article class="trainee-date-card ${esc(String(shift.code||"").toLowerCase())}">
+    <div class="trainee-date-top">
+      <span>${esc(parts.jour)}</span>
+      <span class="date-small">${esc(parts.date)}</span>
+    </div>
+    <div class="trainee-date-body">
+      <div class="trainee-date-medal">${esc(shift.code||"?")}</div>
+      <div class="trainee-date-info">
+        <div class="trainee-date-hours">${esc(horaire||shift.label||"Horaire à confirmer")}</div>
+        ${detail&&detail.toUpperCase()!==shift.label.toUpperCase()?`<div class="trainee-date-referent">${esc(detail)}</div>`:""}
+      </div>
+    </div>
+  </article>`;
+}
+
+async function fetchAgentPlanning(agentName){
+  const key=normalizePersonName(agentName);
+  if(agentPlanningCache.has(key))return agentPlanningCache.get(key);
+
+  const url=new URL(API_PLANNING_AGENT);
+  url.searchParams.set("mode","agenda");
+  url.searchParams.set("agent",agentName);
+  url.searchParams.set("t",Date.now());
+
+  const response=await fetch(url.toString(),{method:"GET",cache:"no-store"});
+  if(!response.ok)throw new Error("Erreur HTTP "+response.status);
+  const data=await response.json();
+  if(!data||data.ok===false){
+    throw new Error(data&&data.erreur?data.erreur:"Planning indisponible.");
+  }
+  agentPlanningCache.set(key,data);
+  return data;
+}
+
+async function openAgentPlanning(agentName){
+  const name=String(agentName||"").trim();
+  traineePlanningTitle.textContent=name||"Planning agent";
+  traineePlanningSubtitle.textContent="Chargement de toutes les dates à venir…";
+  traineePlanningBody.innerHTML='<div class="trainee-planning-loader">Chargement du planning…</div>';
+  openModal(traineePlanningModal);
+
+  try{
+    const data=await fetchAgentPlanning(name);
+    const today=dateToIso(parisToday());
+    const events=asArray(data.events)
+      .filter(item=>String(item.date||"")>=today)
+      .sort((a,b)=>String(a.date||"").localeCompare(String(b.date||"")));
+
+    traineePlanningTitle.textContent=String(data.nom||name||"Planning agent");
+    traineePlanningSubtitle.textContent=events.length
+      ? `${events.length} date${events.length>1?"s":""} à venir`
+      : "Aucune date à venir trouvée";
+    traineePlanningBody.innerHTML=events.length
+      ? `<div class="trainee-planning-list">${events.map(renderAgentScheduleCard).join("")}</div>`
+      : '<div class="trainee-planning-empty">Aucune date disponible pour cet agent.</div>';
+  }catch(error){
+    traineePlanningSubtitle.textContent="Chargement impossible";
+    traineePlanningBody.innerHTML=`<div class="trainee-planning-empty">${esc(String(error.message||error))}</div>`;
+  }
+}
+
 function normalizeHour(value){
   const txt=String(value||"").trim();
   const m=txt.match(/(\d{1,2})[:h](\d{2})/i);
@@ -2802,6 +2904,13 @@ window.addEventListener("popstate",()=>{
 });
 
 content.addEventListener("click",event=>{
+  const agentPlanningTarget=event.target.closest("[data-agent-planning]");
+
+  if(agentPlanningTarget){
+    openAgentPlanning(agentPlanningTarget.dataset.agentPlanning||"");
+    return;
+  }
+
   const traineeTarget=event.target.closest("[data-trainee-name]");
 
   if(traineeTarget){
@@ -2859,6 +2968,14 @@ content.addEventListener("click",event=>{
   if(el)demanderTelephone(el.dataset.agent||"",el.dataset.ghe||"");
 });
 content.addEventListener("keydown",event=>{
+  const agentPlanningTarget=event.target.closest("[data-agent-planning]");
+
+  if(agentPlanningTarget&&(event.key==="Enter"||event.key===" ")){
+    event.preventDefault();
+    openAgentPlanning(agentPlanningTarget.dataset.agentPlanning||"");
+    return;
+  }
+
   const gheTarget=event.target.closest(".ghe-phone-trigger");
 
   if(gheTarget&&(event.key==="Enter"||event.key===" ")){
