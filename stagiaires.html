@@ -1111,7 +1111,7 @@ function traineePlanningCard(item){
   const referentName=referent.nomComplet||referent.nomPrenom||"Référent non renseigné";
   return `<article class="trainee-planning-card">
     <div class="trainee-planning-date">${esc(item.dateLabel||item.dateKey||"Date non renseignée")}</div>
-    <div class="trainee-planning-line">${esc(shiftLabel(shift))} · ${esc(shiftHours(shift))}</div>
+    <div class="trainee-planning-line">${esc(shiftText(shift))} · ${esc(shiftHours(shift))}</div>
     <div class="trainee-planning-line">Référent : ${esc(referentName)}</div>
   </article>`;
 }
