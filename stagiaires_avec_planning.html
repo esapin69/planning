@@ -1,0 +1,1501 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fff7dd">
+<title>GHE — Stagiaires</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --navy:#07183f;
+  --cream:#fff7dd;
+  --paper:#fffdf4;
+  --muted:#697184;
+  --blue:#1675ef;
+  --green:#24a247;
+  --orange:#ff7c12;
+  --yellow:#f5bd00;
+  --black:#171717;
+  --warn:#7c4b00;
+  --warn-bg:#fff1b8;
+  --danger:#a82018;
+  --danger-bg:#fff0ec;
+  --shadow:0 9px 0 rgba(7,24,63,.16);
+  --display:Impact,"Arial Black",system-ui,sans-serif;
+}
+html,body{margin:0;min-height:100%;background:var(--cream);color:var(--navy)}
+body{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:
+    repeating-linear-gradient(0deg,rgba(7,24,63,.025) 0 1px,transparent 1px 27px),
+    linear-gradient(180deg,#fffaf0 0%,#fff6d6 100%);
+}
+body.modal-open{overflow:hidden}
+button,a{font:inherit;color:inherit}
+button{border:0}
+[hidden]{display:none!important}
+.page{width:min(760px,100%);margin:auto;padding:calc(7px + env(safe-area-inset-top)) 9px calc(95px + env(safe-area-inset-bottom))}
+.topbar{margin-bottom:9px}
+.navbtn{min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:8px 14px;border:3px solid var(--navy);border-radius:17px;background:var(--paper);text-decoration:none;font-size:16px;font-weight:950;box-shadow:0 4px 0 rgba(7,24,63,.13)}
+.hero{overflow:hidden;border:5px solid var(--navy);border-radius:28px;background:var(--navy);box-shadow:var(--shadow);margin-bottom:17px}
+.hero img{display:block;width:100%;height:clamp(112px,26vw,190px);object-fit:cover}
+.loading,.empty,.error{background:var(--paper);border:4px solid var(--navy);border-radius:22px;padding:16px;font-weight:900;box-shadow:var(--shadow)}
+.error{color:var(--danger)}
+.day-card{overflow:hidden;background:var(--paper);border:5px solid var(--navy);border-radius:30px;box-shadow:var(--shadow);margin:0 0 18px}
+.day-band{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:13px 17px 12px;background:linear-gradient(180deg,#aab4c8 0%,#6b778e 100%);color:#fff;text-shadow:0 3px 0 rgba(7,24,63,.22)}
+.day-name{font-family:var(--display);font-size:clamp(31px,8vw,52px);line-height:.82;text-transform:uppercase;letter-spacing:.3px}
+.date-inline{font-family:var(--display);font-size:clamp(19px,5vw,31px);line-height:.9;text-transform:uppercase;white-space:nowrap}
+.assignments{background:linear-gradient(145deg,#fffdf6 0%,#fff6da 100%)}
+.assignment{--accent:#7b8597;--accent-deep:#5f697b;position:relative;padding:16px 14px 15px;background:linear-gradient(145deg,#f2f4f7 0%,rgba(255,255,255,.96) 75%)}
+.assignment+.assignment{border-top:3px dashed rgba(7,24,63,.16)}
+.assignment.status-ok{background:linear-gradient(145deg,#eaf8ef 0%,#fbfffc 78%)}
+.assignment.status-warning{background:linear-gradient(145deg,#fff7d9 0%,#fffdf5 78%)}
+.assignment.status-danger{background:linear-gradient(145deg,#fff0ec 0%,#fffdfb 78%)}
+.assignment.shift-m{--accent:var(--blue);--accent-deep:#0756c7}
+.assignment.shift-j{--accent:var(--green);--accent-deep:#168037}
+.assignment.shift-j4{--accent:var(--orange);--accent-deep:#d95800}
+.assignment.shift-s{--accent:var(--yellow);--accent-deep:#c79300}
+.assignment.shift-n{--accent:var(--black);--accent-deep:#000}
+.shift-head{display:flex;align-items:center;justify-content:center;gap:12px;margin:0 0 16px;text-align:center}
+.shift-medallion{width:58px;height:58px;flex:0 0 58px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 34% 28%,#fff 0 7%,var(--accent) 18% 58%,var(--accent-deep) 59% 100%);border:5px solid var(--accent-deep);box-shadow:inset 0 0 0 5px rgba(255,255,255,.35),0 6px 0 rgba(7,24,63,.14)}
+.shift-letter{font-family:var(--display);font-size:30px;line-height:1;color:var(--navy);text-shadow:0 2px 0 rgba(255,255,255,.35)}
+.shift-name{font-family:var(--display);font-size:clamp(24px,6vw,36px);line-height:.9;text-transform:uppercase;letter-spacing:.3px}
+.people{display:grid;grid-template-columns:minmax(0,1fr) 36px minmax(0,1fr);gap:8px;align-items:start}
+.arrow{align-self:center;display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--navy);color:#fff;font-size:21px;font-weight:950;box-shadow:0 4px 0 rgba(7,24,63,.16)}
+.person{text-align:center;min-width:0}
+.role-tag{display:inline-flex;align-items:center;justify-content:center;min-width:94px;margin:0 auto 8px;padding:5px 10px;border:3px solid var(--navy);border-radius:999px;background:var(--paper);font-size:10px;line-height:1;font-weight:1000;letter-spacing:.7px;text-transform:uppercase;box-shadow:0 3px 0 rgba(7,24,63,.11)}
+.avatar-shell{position:relative;width:116px;height:116px;margin:0 auto 9px}
+.avatar{width:116px;height:116px;border-radius:31px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.86);border:4px solid var(--navy);box-shadow:0 6px 0 rgba(7,24,63,.14)}
+.avatar img{width:100%;height:100%;object-fit:contain;display:block}
+.avatar-fallback{display:flex;align-items:center;justify-content:center;width:74px;height:74px;border-radius:24px;background:#eef1f7;border:3px solid rgba(7,24,63,.3);font-size:40px}
+.avatar.has-img .avatar-fallback{display:none}
+.ghe-badge{position:absolute;top:-7px;right:-7px;z-index:3;min-height:29px;padding:5px 8px;border:3px solid var(--navy);border-radius:999px;background:var(--navy);color:#fff;font-size:10px;line-height:1;font-weight:1000;letter-spacing:.2px;box-shadow:0 3px 0 rgba(7,24,63,.16);white-space:nowrap}
+button.ghe-badge{cursor:pointer}
+button.ghe-badge:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(7,24,63,.16)}
+.person-name{display:block;min-height:42px;font-size:clamp(17px,4.8vw,24px);line-height:.94;font-weight:1000;text-transform:uppercase;overflow-wrap:anywhere}
+.person-shift{min-height:42px;margin-top:7px;display:flex;align-items:flex-start;justify-content:center;gap:6px;color:var(--muted);font-size:12px;line-height:1.18;font-weight:900}
+.person-shift-dot{width:11px;height:11px;margin-top:2px;flex:0 0 auto;border-radius:3px;background:var(--accent);border:1px solid rgba(7,24,63,.2)}
+.person-shift-text{max-width:132px}
+.alert-strip{width:100%;margin-top:14px;border:0;border-radius:15px;padding:10px 12px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:9px;align-items:center;text-align:left;box-shadow:0 3px 0 rgba(7,24,63,.09)}
+.alert-strip.warning{background:var(--warn-bg);color:var(--warn);cursor:pointer}
+.alert-strip.danger{background:var(--danger-bg);color:var(--danger);cursor:pointer}
+.alert-icon{font-size:20px}
+.alert-main{min-width:0}
+.alert-title{font-size:13px;font-weight:1000;text-transform:uppercase;line-height:1.05}
+.alert-text{margin-top:3px;font-size:12px;font-weight:850;line-height:1.24}
+.alert-more{font-size:23px;font-weight:1000}
+.modal{position:fixed;inset:0;z-index:1000;display:none;align-items:flex-end;justify-content:center;padding:12px;background:rgba(7,24,63,.62);backdrop-filter:blur(5px)}
+.modal.open{display:flex}
+.sheet{width:min(650px,100%);max-height:86vh;overflow:auto;border:5px solid var(--navy);border-radius:29px 29px 22px 22px;background:var(--paper);padding:18px 15px calc(18px + env(safe-area-inset-bottom));box-shadow:0 14px 0 rgba(0,0,0,.22)}
+.sheet h2{margin:0;font-family:var(--display);font-size:clamp(31px,8vw,49px);line-height:.88;text-transform:uppercase}
+.sheet-sub{margin:8px 0 15px;color:var(--muted);font-size:13px;font-weight:850;line-height:1.3}
+.group{margin-top:13px}
+.group-title{margin-bottom:7px;font-size:13px;font-weight:1000;text-transform:uppercase;color:var(--navy)}
+.issue{border-radius:17px;padding:12px;margin-bottom:9px}
+.issue.warning{background:var(--warn-bg);color:var(--warn)}
+.issue.danger{background:var(--danger-bg);color:var(--danger)}
+.issue-title{font-size:15px;font-weight:1000}
+.issue-detail{margin-top:5px;font-size:13px;font-weight:800;line-height:1.34}
+.issue-action{margin-top:8px;padding-top:8px;border-top:1px solid currentColor;font-size:13px;font-weight:850;line-height:1.34}
+.close{width:100%;min-height:50px;margin-top:11px;border:4px solid var(--navy);border-radius:17px;background:var(--navy);color:var(--cream);font-weight:1000;cursor:pointer}
+.call-number{margin:16px 0 12px;padding:14px;border:3px solid var(--navy);border-radius:18px;background:#f7f9ff;text-align:center;font-size:24px;font-weight:1000;letter-spacing:.8px}
+.call-actions{display:grid;gap:9px}
+.call-action{min-height:52px;display:flex;align-items:center;justify-content:center;border:4px solid var(--navy);border-radius:17px;text-decoration:none;font-weight:1000}
+.call-action.primary{background:var(--navy);color:var(--cream)}
+.call-action.secondary{background:var(--paper)}
+@media(max-width:390px){
+  .page{padding-left:7px;padding-right:7px}
+  .day-band{padding-left:13px;padding-right:13px}
+  .assignment{padding-left:10px;padding-right:10px}
+  .shift-medallion{width:51px;height:51px;flex-basis:51px}
+  .shift-letter{font-size:27px}
+  .shift-name{font-size:24px}
+  .avatar-shell,.avatar{width:96px;height:96px}
+  .avatar{border-radius:26px}
+  .avatar-fallback{width:62px;height:62px;font-size:33px}
+  .role-tag{min-width:82px;font-size:9px}
+  .people{grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);gap:4px}
+  .arrow{width:28px;height:28px;font-size:16px}
+  .person-name{font-size:16px}
+  .person-shift{font-size:10.5px}
+  .ghe-badge{font-size:9px;padding:4px 6px}
+}
+@media(min-width:700px){
+  .assignment{padding:20px 22px 18px}
+  .avatar-shell,.avatar{width:142px;height:142px}
+  .avatar{border-radius:36px}
+  .avatar-fallback{width:88px;height:88px;font-size:47px}
+  .role-tag{min-width:112px;font-size:12px}
+  .person-name{font-size:27px}
+  .person-shift{font-size:14px}
+  .modal{align-items:center}
+}
+
+/* Correction finale — GHE toujours cliquable */
+.call-action.is-disabled{
+  pointer-events:none;
+  opacity:.45;
+}
+.ghe-badge{
+  -webkit-tap-highlight-color:transparent;
+}
+
+
+/* VERSION FINALE — 2 colonnes réelles, sans shift commun */
+.day-card{
+  overflow:hidden;
+  background:var(--paper);
+  border:5px solid var(--navy);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  margin:0 0 18px;
+}
+.day-band{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:13px 14px 12px;
+  background:linear-gradient(180deg,#aab4c8 0%,#6b778e 100%);
+  color:#fff;
+  text-align:center;
+  text-shadow:0 3px 0 rgba(7,24,63,.22);
+}
+.day-title{
+  font-family:var(--display);
+  font-size:clamp(28px,7.2vw,46px);
+  line-height:.88;
+  text-transform:uppercase;
+  letter-spacing:.35px;
+}
+.day-title-date{
+  margin-left:8px;
+  font-size:.72em;
+  white-space:nowrap;
+}
+.assignments{
+  padding:12px;
+  background:linear-gradient(145deg,#fffdf6 0%,#fff6da 100%);
+}
+.assignment{
+  --accent:#7b8597;
+  --accent-deep:#5f697b;
+  position:relative;
+  padding:13px 12px 12px;
+  border:3px solid rgba(7,24,63,.13);
+  border-radius:22px;
+  background:rgba(255,255,255,.72);
+  box-shadow:0 5px 0 rgba(7,24,63,.10);
+}
+.assignment+.assignment{
+  margin-top:12px;
+  border-top:3px solid rgba(7,24,63,.13);
+}
+.assignment.status-ok{
+  background:linear-gradient(145deg,#f8fffa 0%,#fffdf7 85%);
+}
+.assignment.status-warning{
+  background:linear-gradient(145deg,#fffaf0 0%,#fffdf7 85%);
+}
+.assignment.status-danger{
+  background:linear-gradient(145deg,#fff4f1 0%,#fffdfb 85%);
+}
+
+/* L’ancien titre commun n’est plus utilisé */
+.shift-head{
+  display:none!important;
+}
+
+.people{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr);
+  gap:9px;
+  align-items:center;
+}
+.arrow{
+  align-self:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  background:var(--navy);
+  color:#fff;
+  font-size:20px;
+  font-weight:950;
+  box-shadow:0 4px 0 rgba(7,24,63,.16);
+}
+.person{
+  min-width:0;
+  text-align:center;
+}
+.person-button{
+  width:100%;
+  margin:0;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:inherit;
+  font:inherit;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.person-button:active{
+  transform:translateY(1px);
+}
+.role-tag{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:96px;
+  margin:0 auto 8px;
+  padding:5px 10px;
+  border:3px solid var(--navy);
+  border-radius:999px;
+  background:var(--paper);
+  font-size:10px;
+  line-height:1;
+  font-weight:1000;
+  letter-spacing:.7px;
+  text-transform:uppercase;
+  box-shadow:0 3px 0 rgba(7,24,63,.11);
+}
+.person.referent .role-tag{
+  background:#eff9f2;
+}
+.avatar-shell{
+  position:relative;
+  width:132px;
+  height:132px;
+  margin:0 auto 10px;
+}
+.avatar{
+  width:132px;
+  height:132px;
+  border-radius:34px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(255,255,255,.88);
+  border:4px solid var(--navy);
+  box-shadow:0 7px 0 rgba(7,24,63,.14);
+}
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
+.avatar-fallback{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:82px;
+  height:82px;
+  border-radius:25px;
+  background:#eef1f7;
+  border:3px solid rgba(7,24,63,.3);
+  font-size:43px;
+}
+.avatar.has-img .avatar-fallback{
+  display:none;
+}
+.person-name{
+  display:block;
+  min-height:44px;
+  font-size:clamp(19px,5.2vw,27px);
+  line-height:.93;
+  font-weight:1000;
+  text-transform:uppercase;
+  overflow-wrap:anywhere;
+}
+.person-shift{
+  --person-accent:#7b8597;
+  --person-deep:#5f697b;
+  min-height:48px;
+  margin-top:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  color:var(--muted);
+  font-size:clamp(12px,3.2vw,15px);
+  line-height:1.1;
+  font-weight:950;
+}
+.person-shift.shift-m{
+  --person-accent:var(--blue);
+  --person-deep:#0756c7;
+}
+.person-shift.shift-j{
+  --person-accent:var(--green);
+  --person-deep:#168037;
+}
+.person-shift.shift-j4{
+  --person-accent:var(--orange);
+  --person-deep:#d95800;
+}
+.person-shift.shift-s{
+  --person-accent:var(--yellow);
+  --person-deep:#c79300;
+}
+.person-shift.shift-n{
+  --person-accent:var(--black);
+  --person-deep:#000;
+}
+.person-shift-medal{
+  width:38px;
+  height:38px;
+  flex:0 0 38px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  border:3px solid var(--person-deep);
+  background:
+    radial-gradient(circle at 34% 27%,#fff 0 7%,var(--person-accent) 20% 58%,var(--person-deep) 60% 100%);
+  box-shadow:
+    inset 0 0 0 3px rgba(255,255,255,.3),
+    0 4px 0 rgba(7,24,63,.12);
+  color:var(--navy);
+  font-family:var(--display);
+  font-size:20px;
+  line-height:1;
+}
+.person-shift.shift-n .person-shift-medal{
+  color:#fff;
+}
+.person-shift-hours{
+  max-width:118px;
+  text-align:left;
+}
+
+/* Popup détails référent */
+.referent-sheet{
+  width:min(560px,100%);
+}
+.referent-profile{
+  --ref-accent:#7b8597;
+  --ref-deep:#5f697b;
+  display:grid;
+  justify-items:center;
+  gap:12px;
+  text-align:center;
+}
+.referent-profile.shift-m{
+  --ref-accent:var(--blue);
+  --ref-deep:#0756c7;
+}
+.referent-profile.shift-j{
+  --ref-accent:var(--green);
+  --ref-deep:#168037;
+}
+.referent-profile.shift-j4{
+  --ref-accent:var(--orange);
+  --ref-deep:#d95800;
+}
+.referent-profile.shift-s{
+  --ref-accent:var(--yellow);
+  --ref-deep:#c79300;
+}
+.referent-profile.shift-n{
+  --ref-accent:var(--black);
+  --ref-deep:#000;
+}
+.referent-avatar{
+  width:190px;
+  height:190px;
+  border-radius:38px;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+  background:#fff;
+  border:5px solid var(--navy);
+  box-shadow:0 9px 0 rgba(7,24,63,.16);
+}
+.referent-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+.referent-avatar-fallback{
+  font-size:72px;
+}
+.referent-name{
+  color:var(--navy);
+  font-size:clamp(28px,7vw,42px);
+  line-height:.92;
+  font-weight:1000;
+  text-transform:uppercase;
+}
+.referent-context{
+  color:var(--muted);
+  font-size:14px;
+  font-weight:900;
+  line-height:1.35;
+}
+.referent-shift{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+}
+.referent-shift-medal{
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  border:4px solid var(--ref-deep);
+  background:
+    radial-gradient(circle at 34% 27%,#fff 0 7%,var(--ref-accent) 20% 58%,var(--ref-deep) 60% 100%);
+  box-shadow:
+    inset 0 0 0 4px rgba(255,255,255,.3),
+    0 5px 0 rgba(7,24,63,.13);
+  color:var(--navy);
+  font-family:var(--display);
+  font-size:29px;
+}
+.referent-profile.shift-n .referent-shift-medal{
+  color:#fff;
+}
+.referent-hours{
+  color:var(--navy);
+  font-size:22px;
+  font-weight:1000;
+}
+.referent-ghe{
+  min-height:48px;
+  padding:9px 15px;
+  border:4px solid var(--navy);
+  border-radius:999px;
+  background:var(--navy);
+  color:#fff;
+  font-size:17px;
+  font-weight:1000;
+  cursor:pointer;
+  box-shadow:0 5px 0 rgba(7,24,63,.17);
+}
+.referent-ghe:active{
+  transform:translateY(2px);
+  box-shadow:0 3px 0 rgba(7,24,63,.17);
+}
+.referent-ghe.disabled{
+  background:#eef1f7;
+  color:var(--muted);
+  cursor:default;
+  box-shadow:none;
+  opacity:.75;
+}
+.referent-hint{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:850;
+}
+
+@media(max-width:390px){
+  .assignments{
+    padding:9px;
+  }
+  .assignment{
+    padding:12px 8px 11px;
+  }
+  .people{
+    grid-template-columns:minmax(0,1fr) 30px minmax(0,1fr);
+    gap:6px;
+  }
+  .arrow{
+    width:30px;
+    height:30px;
+    font-size:18px;
+  }
+  .avatar-shell,
+  .avatar{
+    width:116px;
+    height:116px;
+  }
+  .avatar{
+    border-radius:30px;
+  }
+  .person-name{
+    font-size:19px;
+  }
+  .person-shift{
+    gap:6px;
+    font-size:12px;
+  }
+  .person-shift-medal{
+    width:34px;
+    height:34px;
+    flex-basis:34px;
+    font-size:18px;
+  }
+  .person-shift-hours{
+    max-width:96px;
+  }
+}
+
+
+
+/* Planning complet du stagiaire au clic */
+.trainee-button{
+  width:100%;border:0;background:transparent;padding:0;margin:0;color:inherit;font:inherit;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;text-align:center
+}
+.trainee-button:active{transform:translateY(1px)}
+.trainee-button .person-name{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px;text-decoration-color:rgba(7,24,63,.25)}
+.trainee-planning-sheet{max-height:90vh;overflow:auto}
+.trainee-planning-sub{margin:-4px 0 14px;color:#667085;font-weight:900;text-align:center}
+.trainee-planning-list{display:grid;gap:12px}
+.trainee-planning-card{overflow:hidden;border:4px solid var(--ink);border-radius:20px;background:#fffdf5;box-shadow:0 5px 0 rgba(7,24,63,.16)}
+.trainee-planning-date{padding:10px 13px;background:var(--ink);color:#fff7dd;font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:25px;line-height:1;text-transform:uppercase}
+.trainee-planning-body{padding:13px}
+.trainee-planning-shift{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.trainee-planning-medal{width:52px;height:52px;border:4px solid var(--ink);border-radius:50%;display:grid;place-items:center;background:#fff;font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:22px}
+.trainee-planning-hours{font-size:19px;font-weight:1000}
+.trainee-planning-ref{padding-top:9px;border-top:2px dashed rgba(7,24,63,.18);font-weight:900}
+.trainee-planning-empty{padding:20px;border:3px solid var(--ink);border-radius:18px;background:#fffdf5;text-align:center;font-weight:950}
+
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="topbar"><a class="navbtn" href="index.html">← Retour accueil</a></div>
+
+  <section class="hero">
+    <img src="Image/Bannière/Page stagiaire.PNG" alt="Stagiaires GHE" onerror="this.onerror=null;this.src='Image/Banni%C3%A8re/Page%20stagiaire.PNG';">
+  </section>
+
+  <section id="content"><div class="loading">Connexion aux données…</div></section>
+</main>
+
+<div id="referentModal" class="modal" aria-hidden="true">
+  <div class="sheet referent-sheet" role="dialog" aria-modal="true" aria-labelledby="referentTitle">
+    <h2 id="referentTitle">Référent</h2>
+    <div id="referentBody"></div>
+    <button id="referentClose" class="close" type="button">Fermer</button>
+  </div>
+</div>
+
+
+
+<div id="traineePlanningModal" class="modal" aria-hidden="true">
+  <div class="sheet trainee-planning-sheet" role="dialog" aria-modal="true" aria-labelledby="traineePlanningTitle">
+    <h2 id="traineePlanningTitle">Planning stagiaire</h2>
+    <div id="traineePlanningSub" class="trainee-planning-sub"></div>
+    <div id="traineePlanningBody"></div>
+    <button id="traineePlanningClose" class="close" type="button">Fermer</button>
+  </div>
+</div>
+
+<div id="issueModal" class="modal" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h2 id="modalTitle">Pourquoi cette alerte ?</h2>
+    <div id="modalSub" class="sheet-sub"></div>
+    <div id="modalBody"></div>
+    <button id="modalClose" class="close" type="button">Fermer</button>
+  </div>
+</div>
+
+<div id="callModal" class="modal" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="callTitle">
+    <h2 id="callTitle">Contacter l’agent</h2>
+    <div id="callAvatar" class="avatar" style="margin:8px auto 10px"><span class="avatar-fallback">👤</span></div><div id="callSub" class="sheet-sub"></div>
+    <div id="callNumber" class="call-number"></div>
+    <div class="call-actions">
+      <a id="callNormal" class="call-action primary" href="#">Appeler</a>
+      <a id="callHidden" class="call-action secondary" href="#">Appeler en numéro masqué</a>
+      <button id="callClose" class="close" type="button">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const WEB_APP_URL="https://script.google.com/macros/s/AKfycbzmelNrBU583V3CvOlle3cafAKEAZQ8NAX-peSN6D-yxFO3gX26SnVNUVd5xbwV3CUISg/exec";
+let ITEMS=[];
+
+const content=document.getElementById("content");
+const referentModal=document.getElementById("referentModal");
+const traineePlanningModal=document.getElementById("traineePlanningModal");
+const traineePlanningSub=document.getElementById("traineePlanningSub");
+const traineePlanningBody=document.getElementById("traineePlanningBody");
+const referentBody=document.getElementById("referentBody");
+const issueModal=document.getElementById("issueModal");
+const modalSub=document.getElementById("modalSub");
+const modalBody=document.getElementById("modalBody");
+const callModal=document.getElementById("callModal");
+const callAvatar=document.getElementById("callAvatar");
+const callSub=document.getElementById("callSub");
+const callNumber=document.getElementById("callNumber");
+const callNormal=document.getElementById("callNormal");
+const callHidden=document.getElementById("callHidden");
+
+function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#039;")}
+function norm(v){return String(v??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().replace(/\s+/g," ").trim()}
+function arr(v){return Array.isArray(v)?v:[]}
+
+function dateParts(item){
+  const raw=String(item&&item.dateKey||"");
+  const m=raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  let d;
+  if(m){d=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]),12,0,0)}else{d=new Date(item&&item.dateLabel||raw)}
+  const jours=["DIMANCHE","LUNDI","MARDI","MERCREDI","JEUDI","VENDREDI","SAMEDI"];
+  const mois=["JANVIER","FÉVRIER","MARS","AVRIL","MAI","JUIN","JUILLET","AOÛT","SEPTEMBRE","OCTOBRE","NOVEMBRE","DÉCEMBRE"];
+  return Number.isNaN(d.getTime())?{jour:"DATE",numero:"--",mois:""}:{jour:jours[d.getDay()],numero:String(d.getDate()),mois:mois[d.getMonth()]};
+}
+
+function rawGroups(item){
+  const a=item&&item.anomalies||{};
+  return{
+    stagiaire:arr(a.stagiaire),
+    referent:arr(a.referent),
+    affectation:arr(a.affectation)
+  };
+}
+
+function hourMinutes(value){
+  const txt=String(value||"").trim();
+  const match=txt.match(/(\d{1,2})[:h](\d{2})/i);
+  if(!match)return null;
+  return Number(match[1])*60+Number(match[2]);
+}
+
+function shiftInterval(shift){
+  shift=shift||{};
+
+  let debut=shift.heureDebut||"";
+  let fin=shift.heureFin||"";
+
+  if((!debut||!fin)&&shift.horaire){
+    const matches=[
+      ...String(shift.horaire).matchAll(/(\d{1,2})[:h](\d{2})/gi)
+    ];
+
+    if(matches.length>=2){
+      debut=`${matches[0][1]}:${matches[0][2]}`;
+      fin=`${matches[1][1]}:${matches[1][2]}`;
+    }
+  }
+
+  const start=hourMinutes(debut);
+  let end=hourMinutes(fin);
+
+  if(start===null||end===null)return null;
+  if(end<=start)end+=1440;
+
+  return {start,end};
+}
+
+function bestReferentInterval(traineeInterval,referentInterval){
+  if(!traineeInterval||!referentInterval)return null;
+
+  const candidates=[-1440,0,1440].map(offset=>({
+    start:referentInterval.start+offset,
+    end:referentInterval.end+offset
+  }));
+
+  candidates.sort((a,b)=>{
+    const overlapA=Math.max(
+      0,
+      Math.min(traineeInterval.end,a.end)-
+      Math.max(traineeInterval.start,a.start)
+    );
+
+    const overlapB=Math.max(
+      0,
+      Math.min(traineeInterval.end,b.end)-
+      Math.max(traineeInterval.start,b.start)
+    );
+
+    return overlapB-overlapA;
+  });
+
+  return candidates[0];
+}
+
+function isMismatchIssue(issue){
+  const text=norm(
+    [
+      issue&&issue.titre,
+      issue&&issue.resume,
+      issue&&issue.detail,
+      issue&&issue.message
+    ].filter(Boolean).join(" ")
+  );
+
+  return (
+    text.includes("HORAIRES DIFFERENTS")||
+    text.includes("HORAIRE DIFFERENT")||
+    text.includes("PAS EXACTEMENT")||
+    text.includes("CRENEAUX DIFFERENTS")||
+    text.includes("SHIFT DIFFERENT")||
+    text.includes("SHIFTS DIFFERENTS")||
+    text.includes("HORAIRE INCOMPATIBLE")||
+    text.includes("HORAIRES INCOMPATIBLES")||
+    text.includes("MEME SHIFT")
+  );
+}
+
+function isTechnicalIssue(issue){
+  const text=norm(
+    [
+      issue&&issue.titre,
+      issue&&issue.resume,
+      issue&&issue.detail,
+      issue&&issue.message,
+      issue&&issue.action
+    ].filter(Boolean).join(" ")
+  );
+
+  return (
+    text.includes("HORAIRE STAGIAIRE RECUPERE DEPUIS LIGNE")||
+    text.includes("RECUPERE DEPUIS LIGNE")||
+    text.includes("SOURCE INTERNE")||
+    text.includes("PHOTOCOPIE INTELLIGENTE")||
+    text.includes("SORTIE_MAILS")||
+    text.includes("MAIL PERSONNEL")||
+    text.includes("ADRESSE MAIL PERSONNELLE")||
+    text.includes("DONNEE TECHNIQUE")||
+    text.includes("RATTACHEMENT TECHNIQUE")
+  );
+}
+
+function formatClock(minutes){
+  const normalized=((minutes%1440)+1440)%1440;
+  const h=Math.floor(normalized/60);
+  const m=normalized%60;
+
+  return String(h).padStart(2,"0")+":"+
+    String(m).padStart(2,"0");
+}
+
+function formatDuration(minutes){
+  const total=Math.max(0,Math.round(Number(minutes)||0));
+  const h=Math.floor(total/60);
+  const m=total%60;
+
+  if(h&&m)return`${h} h ${String(m).padStart(2,"0")}`;
+  if(h)return`${h} h`;
+  return`${m} min`;
+}
+
+function coverageIssue(item){
+  const traineeInterval=shiftInterval(item&&item.stagiaireShift);
+  const rawReferentInterval=shiftInterval(item&&item.referentShift);
+
+  if(!traineeInterval||!rawReferentInterval)return null;
+
+  const referentInterval=bestReferentInterval(
+    traineeInterval,
+    rawReferentInterval
+  );
+
+  if(!referentInterval)return null;
+
+  const fullyCovered=
+    referentInterval.start<=traineeInterval.start&&
+    referentInterval.end>=traineeInterval.end;
+
+  if(fullyCovered)return null;
+
+  const stagiaire=String(
+    item&&item.stagiaire&&item.stagiaire.nomPrenom||
+    "Le stagiaire"
+  ).toUpperCase();
+
+  const referent=String(
+    item&&item.referent&&item.referent.nomComplet||
+    "Le référent"
+  ).toUpperCase();
+
+  const beforeGap=Math.max(
+    0,
+    referentInterval.start-traineeInterval.start
+  );
+
+  const afterGap=Math.max(
+    0,
+    traineeInterval.end-referentInterval.end
+  );
+
+  const totalGap=beforeGap+afterGap;
+
+  const overlap=
+    Math.min(traineeInterval.end,referentInterval.end)-
+    Math.max(traineeInterval.start,referentInterval.start);
+
+  const noOverlap=overlap<=0;
+  const details=[];
+
+  if(beforeGap>0){
+    details.push(
+      `${stagiaire} est présent de `+
+      `${formatClock(traineeInterval.start)} à `+
+      `${formatClock(referentInterval.start)} avant l’arrivée de `+
+      `${referent} (${formatDuration(beforeGap)} sans référent).`
+    );
+  }
+
+  if(afterGap>0){
+    details.push(
+      `${stagiaire} reste présent de `+
+      `${formatClock(referentInterval.end)} à `+
+      `${formatClock(traineeInterval.end)} après le départ de `+
+      `${referent} (${formatDuration(afterGap)} sans référent).`
+    );
+  }
+
+  return {
+    niveau:noOverlap?"danger":"warning",
+    titre:noOverlap
+      ?"Référent absent pendant le créneau"
+      :"Accompagnement incomplet",
+    resume:noOverlap
+      ?"Le référent n’est pas présent pendant le créneau du stagiaire."
+      :`${formatDuration(totalGap)} sans référent au total.`,
+    detail:details.join(" ")||
+      "Le référent ne couvre pas toute la présence du stagiaire.",
+    action:"Vérifier l’affectation ou choisir un référent présent pendant tout le créneau du stagiaire."
+  };
+}
+
+function groups(item){
+  const raw=rawGroups(item);
+
+  const publicIssue=issue=>
+    !isMismatchIssue(issue)&&
+    !isTechnicalIssue(issue);
+
+  const clean={
+    stagiaire:raw.stagiaire.filter(publicIssue),
+    referent:raw.referent.filter(publicIssue),
+    affectation:raw.affectation.filter(publicIssue)
+  };
+
+  const coverage=coverageIssue(item);
+
+  if(coverage){
+    clean.affectation.push(coverage);
+  }
+
+  return clean;
+}
+
+function issuesWithTargets(item){
+  const g=groups(item);
+  return[
+    ...g.stagiaire.map(x=>({target:"Stagiaire",issue:x})),
+    ...g.referent.map(x=>({target:"Référent",issue:x})),
+    ...g.affectation.map(x=>({target:"Affectation",issue:x}))
+  ];
+}
+
+function level(item){
+  const all=issuesWithTargets(item);
+
+  if(
+    all.some(
+      x=>x.issue&&x.issue.niveau==="danger"
+    )
+  ){
+    return"danger";
+  }
+
+  return all.length?"warning":"ok";
+}
+
+function shiftBase(shift){
+  const code=norm(shift&&(shift.code||shift.base||shift.label)).replace(/[^A-Z0-9]/g,"");
+  if(code.includes("J4"))return"J4";
+  if(code==="M"||code.includes("MATIN"))return"M";
+  if(code==="J"||code.includes("JOURNEE")||code==="JOUR")return"J";
+  if(code==="S"||code.includes("SOIR"))return"S";
+  if(code==="N"||code.includes("NUIT"))return"N";
+  return code;
+}
+
+function shiftClass(shift){
+  const base=shiftBase(shift);
+  return base==="M"?"shift-m":base==="J4"?"shift-j4":base==="J"?"shift-j":base==="S"?"shift-s":base==="N"?"shift-n":"shift-neutral";
+}
+
+function shiftLetter(shift){
+  const base=shiftBase(shift);
+  return base||"?";
+}
+
+function shiftText(shift){
+  const base=shiftBase(shift);
+
+  if(base==="M")return"Matin";
+  if(base==="J")return"Journée";
+  if(base==="J4")return"J4";
+  if(base==="S")return"Soir";
+  if(base==="N")return"Nuit";
+
+  return shift&&(shift.label||shift.code)||"Shift à vérifier";
+}
+function shiftHours(shift){return shift&&shift.horaire||"Horaire non renseigné"}
+
+function mainShift(item){
+  const s=item&&item.stagiaireShift||{};
+  const r=item&&item.referentShift||{};
+  if(shiftBase(s)&&shiftBase(s)===shiftBase(r))return s;
+  return item&&item.shift&&Object.keys(item.shift).length?item.shift:(s.code?s:r);
+}
+
+function avatarOnly(person){
+  person=person||{};
+  const avatar=person.avatar||{};
+  const thumb=avatar.thumb||"";
+
+  return `<div class="avatar-shell">
+    <div class="avatar ${thumb?"has-img":""}">
+      ${
+        thumb
+          ? `<img
+              src="${esc(thumb)}"
+              alt=""
+              loading="lazy"
+              onerror="this.parentElement.classList.remove('has-img');this.remove()">`
+          : ""
+      }
+      <span class="avatar-fallback">👤</span>
+    </div>
+  </div>`;
+}
+
+function personShiftHtml(shift){
+  const base=shiftBase(shift);
+  const hours=shiftHours(shift);
+
+  return `<div class="person-shift ${esc(shiftClass(shift))}">
+    <span class="person-shift-medal">${esc(base||"?")}</span>
+    <span class="person-shift-hours">${esc(hours)}</span>
+  </div>`;
+}
+
+function traineePerson(personData,shift,itemIndex){
+  personData=personData||{};
+
+  const name=
+    personData.nomPrenom||
+    personData.nomComplet||
+    "Stagiaire";
+
+  return `<button
+    class="person stagiaire trainee-button"
+    type="button"
+    data-trainee-index="${itemIndex}"
+    aria-label="Voir le planning de ${esc(name)}">
+    <div class="role-tag">Stagiaire</div>
+    ${avatarOnly(personData)}
+    <span class="person-name">${esc(name)}</span>
+    ${personShiftHtml(shift||{})}
+  </button>`;
+}
+
+function referentPerson(personData,shift,itemIndex){
+  personData=personData||{};
+
+  const name=
+    personData.nomComplet||
+    personData.nomPrenom||
+    "Référent à attribuer";
+
+  const hasReferent=!!(
+    personData.nomComplet||
+    personData.nomPrenom
+  );
+
+  if(!hasReferent){
+    return `<section class="person referent">
+      <div class="role-tag">Référent</div>
+      ${avatarOnly(personData)}
+      <span class="person-name">${esc(name)}</span>
+      ${personShiftHtml(shift||{})}
+    </section>`;
+  }
+
+  return `<button
+    class="person person-button referent"
+    type="button"
+    data-referent-index="${itemIndex}"
+    aria-label="Voir les informations de ${esc(name)}">
+    <div class="role-tag">Référent</div>
+    ${avatarOnly(personData)}
+    <span class="person-name">${esc(name)}</span>
+    ${personShiftHtml(shift||{})}
+  </button>`;
+}
+
+function publicIssue(issue){
+  issue=issue||{};
+  const bag=norm([issue.titre,issue.resume,issue.detail].filter(Boolean).join(" "));
+  const mismatch=bag.includes("MEME SHIFT")||bag.includes("CRENEAUX DIFFERENTS")||bag.includes("HORAIRES DIFFERENTS")||bag.includes("PAS EXACTEMENT")||bag.includes("HORAIRE DIFFERENT");
+  if(mismatch){
+    return{
+      ...issue,
+      titre:"Horaires différents",
+      resume:"Le stagiaire et le référent n’ont pas exactement les mêmes horaires.",
+      detail:"Ils travaillent sur le même type de shift, mais leur heure de début ou de fin est différente.",
+      action:issue.action||"Vérifier que la différence d’horaires permet l’accompagnement prévu."
+    };
+  }
+  return issue;
+}
+
+function alertStrip(item,index){
+  const all=issuesWithTargets(item);
+  if(!all.length)return"";
+  const first=all.find(x=>x.issue&&x.issue.niveau==="danger")||all[0];
+  const lvl=level(item);
+  const issue=publicIssue(first.issue||{});
+  const target=first.target||"Affectation";
+  const suffix=all.length>1?` · ${all.length} points au total`:"";
+  return `<button class="alert-strip ${lvl}" type="button" data-alert-index="${index}"><span class="alert-icon">${lvl==="danger"?"⛔":"⚠️"}</span><div class="alert-main"><div class="alert-title">${esc(target)} · ${esc(issue.titre||"Point à vérifier")}</div><div class="alert-text">${esc(issue.resume||issue.detail||"Une information doit être vérifiée.")}${esc(suffix)}</div></div><span class="alert-more">›</span></button>`;
+}
+
+function assignment(item,index){
+  const levelValue=level(item);
+
+  return `<article class="assignment status-${levelValue}">
+    <div class="people">
+      ${traineePerson(
+        item.stagiaire,
+        item.stagiaireShift||{},
+        index
+      )}
+
+      <div class="arrow" aria-hidden="true">→</div>
+
+      ${referentPerson(
+        item.referent,
+        item.referentShift||{},
+        index
+      )}
+    </div>
+
+    ${alertStrip(item,index)}
+  </article>`;
+}
+
+function dayCard(list){
+  const first=list[0].item;
+  const parts=dateParts(first);
+
+  return `<article class="day-card">
+    <header class="day-band">
+      <div class="day-title">
+        ${esc(parts.jour)}
+        <span class="day-title-date">
+          · ${esc(parts.numero)} ${esc(parts.mois)}
+        </span>
+      </div>
+    </header>
+
+    <div class="assignments">
+      ${list.map(entry=>
+        assignment(entry.item,entry.index)
+      ).join("")}
+    </div>
+  </article>`;
+}
+
+function issueHtml(x){
+  const shown=publicIssue(x);
+  const lvl=shown&&shown.niveau==="danger"?"danger":"warning";
+  return `<div class="issue ${lvl}"><div class="issue-title">${lvl==="danger"?"⛔":"⚠️"} ${esc(shown&&shown.titre||"Point à vérifier")}</div><div class="issue-detail">${esc(shown&&shown.detail||shown&&shown.resume||"Une information doit être vérifiée.")}</div><div class="issue-action"><strong>À faire :</strong> ${esc(shown&&shown.action||"Vérifier l’information concernée.")}</div></div>`;
+}
+
+function groupHtml(label,list){
+  list=arr(list);
+  if(!list.length)return"";
+  return `<section class="group"><div class="group-title">${esc(label)}</div>${list.map(issueHtml).join("")}</section>`;
+}
+
+
+
+function traineePlanningKey(value){
+  return norm(value).replace(/[^A-Z0-9]/g,"");
+}
+
+function traineePlanningCard(item){
+  const shift=item&&item.stagiaireShift||{};
+  const referent=item&&item.referent||{};
+  const code=shiftLetter(shift)||"?";
+  const hours=shiftHours(shift)||"Horaire non renseigné";
+  const refName=referent.nomComplet||referent.nomPrenom||"Référent à attribuer";
+
+  return `<article class="trainee-planning-card">
+    <div class="trainee-planning-date">${esc(item.dateLabel||item.dateKey||"Date")}</div>
+    <div class="trainee-planning-body">
+      <div class="trainee-planning-shift">
+        <span class="trainee-planning-medal">${esc(code)}</span>
+        <span class="trainee-planning-hours">${esc(hours)}</span>
+      </div>
+      <div class="trainee-planning-ref">Référent : ${esc(refName)}</div>
+    </div>
+  </article>`;
+}
+
+function openTraineePlanning(index){
+  const current=ITEMS[index];
+  if(!current)return;
+
+  const name=current.stagiaire&&(
+    current.stagiaire.nomPrenom||
+    current.stagiaire.nomComplet
+  )||"Stagiaire";
+
+  const key=traineePlanningKey(name);
+  const dates=ITEMS
+    .filter(item=>{
+      const itemName=item&&item.stagiaire&&(
+        item.stagiaire.nomPrenom||
+        item.stagiaire.nomComplet
+      )||"";
+      return traineePlanningKey(itemName)===key;
+    })
+    .sort((a,b)=>String(a.dateKey||"").localeCompare(String(b.dateKey||"")));
+
+  traineePlanningSub.textContent=name+" · "+dates.length+" date"+(dates.length>1?"s":"")+" à venir";
+  traineePlanningBody.innerHTML=dates.length
+    ? `<div class="trainee-planning-list">${dates.map(traineePlanningCard).join("")}</div>`
+    : '<div class="trainee-planning-empty">Aucune prochaine date trouvée.</div>';
+
+  traineePlanningModal.classList.add("open");
+  traineePlanningModal.setAttribute("aria-hidden","false");
+  document.body.classList.add("modal-open");
+}
+
+function closeTraineePlanning(){
+  traineePlanningModal.classList.remove("open");
+  traineePlanningModal.setAttribute("aria-hidden","true");
+  document.body.classList.remove("modal-open");
+}
+
+function openAlert(index){
+  const item=ITEMS[index];
+  if(!item)return;
+  const g=groups(item);
+  const stagiaire=item.stagiaire&&item.stagiaire.nomPrenom||"Stagiaire";
+  const referent=item.referent&&item.referent.nomComplet||"Référent à attribuer";
+  modalSub.textContent=(item.dateLabel||"")+" · "+stagiaire+" → "+referent;
+  modalBody.innerHTML=groupHtml("Concernant le stagiaire",g.stagiaire)+groupHtml("Concernant le référent",g.referent)+groupHtml("Concernant l’affectation",g.affectation);
+  issueModal.classList.add("open");
+  issueModal.setAttribute("aria-hidden","false");
+  document.body.classList.add("modal-open");
+}
+
+function referentProfileHtml(item){
+  item=item||{};
+
+  const referent=item.referent||{};
+  const shift=item.referentShift||{};
+  const avatar=referent.avatar||{};
+  const thumb=avatar.thumb||"";
+
+  const name=
+    referent.nomComplet||
+    referent.nomPrenom||
+    "Référent";
+
+  const stagiaire=
+    item.stagiaire&&item.stagiaire.nomPrenom||
+    "Stagiaire";
+
+  const ghe=String(referent.ghe||"").trim();
+  const phone=String(referent.telephone||"").trim();
+
+  const date=item.dateLabel||"";
+  const shiftClassName=shiftClass(shift);
+  const shiftCode=shiftLetter(shift);
+  const hours=shiftHours(shift);
+
+  return `<section class="referent-profile ${esc(shiftClassName)}">
+    <div class="referent-avatar">
+      ${
+        thumb
+          ? `<img
+              src="${esc(thumb)}"
+              alt=""
+              onerror="this.remove();this.parentElement.innerHTML='<span class=&quot;referent-avatar-fallback&quot;>👤</span>'">`
+          : '<span class="referent-avatar-fallback">👤</span>'
+      }
+    </div>
+
+    <div class="referent-name">${esc(name)}</div>
+
+    <div class="referent-context">
+      Référent de ${esc(stagiaire)}
+      ${date?` · ${esc(date)}`:""}
+    </div>
+
+    <div class="referent-shift">
+      <span class="referent-shift-medal">${esc(shiftCode||"?")}</span>
+      <span class="referent-hours">${esc(hours)}</span>
+    </div>
+
+    ${
+      ghe
+        ? `<button
+            class="referent-ghe"
+            type="button"
+            data-call-name="${esc(name)}"
+            data-call-ghe="${esc(ghe)}"
+            data-call-phone="${esc(phone)}">${esc(ghe)}</button>`
+        : `<div class="referent-ghe disabled">GHE non renseigné</div>`
+    }
+
+    <div class="referent-hint">
+      Touchez le GHE pour afficher le numéro professionnel.
+    </div>
+  </section>`;
+}
+
+function openReferent(index){
+  const item=ITEMS[index];
+  if(!item)return;
+
+  referentBody.innerHTML=referentProfileHtml(item);
+  referentModal.classList.add("open");
+  referentModal.setAttribute("aria-hidden","false");
+  document.body.classList.add("modal-open");
+}
+
+function closeReferentModal(){
+  referentModal.classList.remove("open");
+  referentModal.setAttribute("aria-hidden","true");
+  document.body.classList.remove("modal-open");
+}
+
+function closeIssueModal(){
+  issueModal.classList.remove("open");
+  issueModal.setAttribute("aria-hidden","true");
+  document.body.classList.remove("modal-open");
+}
+
+function phoneDigits(value){
+  let digits=String(value||"").replace(/\D/g,"");
+  if(digits.startsWith("33")&&digits.length===11)digits="0"+digits.slice(2);
+  if((digits.startsWith("6")||digits.startsWith("7"))&&digits.length===9)digits="0"+digits;
+  return digits;
+}
+
+function phoneDisplay(value){
+  const digits=phoneDigits(value);
+  return digits.replace(/(\d{2})(?=\d)/g,"$1 ").trim();
+}
+
+function setCallUnavailable(){
+  callNumber.textContent="Numéro indisponible";
+  callNormal.href="#";
+  callHidden.href="#";
+  callNormal.classList.add("is-disabled");
+  callHidden.classList.add("is-disabled");
+  callNormal.setAttribute("aria-disabled","true");
+  callHidden.setAttribute("aria-disabled","true");
+}
+
+function setCallReady(digits){
+  callNumber.textContent=phoneDisplay(digits);
+  callNormal.href="tel:"+digits;
+  callHidden.href="tel:%2331%23"+digits;
+  callNormal.classList.remove("is-disabled");
+  callHidden.classList.remove("is-disabled");
+  callNormal.removeAttribute("aria-disabled");
+  callHidden.removeAttribute("aria-disabled");
+}
+
+function openCall(button){
+  const name=button.dataset.callName||"Agent";
+  const ghe=button.dataset.callGhe||"";
+  const provided=phoneDigits(button.dataset.callPhone||"");
+
+  if(callAvatar) callAvatar.innerHTML=`<span class="avatar-fallback">${esc(initials(name))}</span>`;
+  callSub.textContent=[name,ghe].filter(Boolean).join(" · ");
+  callNumber.textContent=provided
+    ? phoneDisplay(provided)
+    : "Chargement…";
+
+  callModal.classList.add("open");
+  callModal.setAttribute("aria-hidden","false");
+  document.body.classList.add("modal-open");
+
+  if(provided){
+    setCallReady(provided);
+    return;
+  }
+
+  callNormal.classList.add("is-disabled");
+  callHidden.classList.add("is-disabled");
+  callNormal.setAttribute("aria-disabled","true");
+  callHidden.setAttribute("aria-disabled","true");
+
+  const callback=
+    "recevoirTelephoneStagiaire_"+
+    Date.now()+"_"+
+    Math.floor(Math.random()*100000);
+
+  const script=document.createElement("script");
+  let finished=false;
+
+  function cleanup(){
+    if(finished)return;
+    finished=true;
+    delete window[callback];
+    if(script.isConnected)script.remove();
+  }
+
+  window[callback]=data=>{
+    const digits=phoneDigits(
+      data&&(
+        data.telephoneDial||
+        data.telephone
+      )||
+      ""
+    );
+
+    if(data&&data.ok&&digits){
+      button.dataset.callPhone=digits;
+      setCallReady(digits);
+    }else{
+      setCallUnavailable();
+    }
+
+    cleanup();
+  };
+
+  script.onerror=()=>{
+    setCallUnavailable();
+    cleanup();
+  };
+
+  script.src=
+    WEB_APP_URL+
+    "?mode=telephone"+
+    "&agent="+encodeURIComponent(name)+
+    "&ghe="+encodeURIComponent(ghe)+
+    "&callback="+encodeURIComponent(callback)+
+    "&v="+Date.now();
+
+  document.body.appendChild(script);
+
+  setTimeout(()=>{
+    if(!finished){
+      setCallUnavailable();
+      cleanup();
+    }
+  },8000);
+}
+
+function closeCallModal(){
+  callModal.classList.remove("open");
+  callModal.setAttribute("aria-hidden","true");
+  document.body.classList.remove("modal-open");
+}
+
+function render(){
+  if(!ITEMS.length){content.innerHTML='<div class="empty">Aucun stagiaire à venir.</div>';return}
+  const byDate={};
+  ITEMS.forEach((item,index)=>{const key=item.dateKey||String(index);(byDate[key]||(byDate[key]=[])).push({item,index})});
+  content.innerHTML=Object.keys(byDate).sort().map(key=>dayCard(byDate[key])).join("");
+}
+
+content.addEventListener("click",e=>{
+  const traineeButton=e.target.closest("[data-trainee-index]");
+
+  if(traineeButton){
+    openTraineePlanning(Number(traineeButton.dataset.traineeIndex));
+    return;
+  }
+
+  const referentButton=e.target.closest("[data-referent-index]");
+
+  if(referentButton){
+    openReferent(
+      Number(referentButton.dataset.referentIndex)
+    );
+    return;
+  }
+
+  const alertButton=e.target.closest("[data-alert-index]");
+
+  if(alertButton){
+    openAlert(
+      Number(alertButton.dataset.alertIndex)
+    );
+  }
+});
+
+referentBody.addEventListener("click",e=>{
+  const callButton=e.target.closest("[data-call-ghe]");
+
+  if(callButton){
+    e.preventDefault();
+    e.stopPropagation();
+    closeReferentModal();
+    openCall(callButton);
+  }
+});
+document.getElementById("traineePlanningClose")
+  .addEventListener("click",closeTraineePlanning);
+
+traineePlanningModal.addEventListener("click",e=>{
+  if(e.target===traineePlanningModal)closeTraineePlanning();
+});
+
+document.getElementById("referentClose")
+  .addEventListener("click",closeReferentModal);
+
+referentModal.addEventListener("click",e=>{
+  if(e.target===referentModal)closeReferentModal();
+});
+
+document.getElementById("modalClose")
+  .addEventListener("click",closeIssueModal);
+
+issueModal.addEventListener("click",e=>{
+  if(e.target===issueModal)closeIssueModal();
+});
+
+document.getElementById("callClose")
+  .addEventListener("click",closeCallModal);
+
+callModal.addEventListener("click",e=>{
+  if(e.target===callModal)closeCallModal();
+});
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){
+    closeTraineePlanning();
+    closeReferentModal();
+    closeIssueModal();
+    closeCallModal();
+  }
+});
+
+(function load(){
+  const cb="recevoirStagiaires_"+Date.now();
+  const s=document.createElement("script");
+  window[cb]=data=>{
+    delete window[cb];
+    s.remove();
+    if(!data||!data.ok){content.innerHTML=`<div class="error">${esc(data&&data.erreur||"Données invalides.")}</div>`;return}
+    ITEMS=arr(data.items);
+    render();
+  };
+  s.onerror=()=>{
+    delete window[cb];
+    s.remove();
+    content.innerHTML='<div class="error">Impossible de charger les données.</div>';
+  };
+  s.src=WEB_APP_URL+"?mode=site_stagiaires_formations&type=stagiaires&callback="+encodeURIComponent(cb)+"&v="+Date.now();
+  document.body.appendChild(s);
+})();
+</script>
+<script src="affichage-different/avatars-frais.js?v=1"></script>
+</body>
+</html>
