@@ -536,6 +536,14 @@ button.ghe-badge:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(7,24,6
   }
 }
 
+
+/* Planning stagiaire au clic */
+.trainee-planning-list{display:grid;gap:10px;margin-top:14px}
+.trainee-planning-card{border:3px solid var(--navy);border-radius:16px;padding:12px;background:#fffaf0;box-shadow:0 4px 0 rgba(7,24,63,.12)}
+.trainee-planning-date{font-weight:950;font-size:18px;margin-bottom:7px}
+.trainee-planning-line{font-weight:800;line-height:1.4}
+.person-button.stagiaire{cursor:pointer}
+
 </style>
 </head>
 <body>
@@ -566,6 +574,16 @@ button.ghe-badge:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(7,24,6
   </div>
 </div>
 
+
+<div id="traineeModal" class="modal" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="traineeTitle">
+    <h2 id="traineeTitle">Planning stagiaire</h2>
+    <div id="traineeSub" class="sheet-sub"></div>
+    <div id="traineeBody"></div>
+    <button id="traineeClose" class="close" type="button">Fermer</button>
+  </div>
+</div>
+
 <div id="callModal" class="modal" aria-hidden="true">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="callTitle">
     <h2 id="callTitle">Contacter l’agent</h2>
@@ -589,6 +607,9 @@ const referentBody=document.getElementById("referentBody");
 const issueModal=document.getElementById("issueModal");
 const modalSub=document.getElementById("modalSub");
 const modalBody=document.getElementById("modalBody");
+const traineeModal=document.getElementById("traineeModal");
+const traineeSub=document.getElementById("traineeSub");
+const traineeBody=document.getElementById("traineeBody");
 const callModal=document.getElementById("callModal");
 const callAvatar=document.getElementById("callAvatar");
 const callSub=document.getElementById("callSub");
@@ -913,7 +934,10 @@ function mainShift(item){
 function avatarOnly(person){
   person=person||{};
   const avatar=person.avatar||{};
-  const thumb=avatar.thumb||"";
+  const thumb=
+    avatar.thumb||avatar.url||avatar.avatar||
+    person.avatarThumb||person.avatarUrl||
+    (typeof person.avatar==="string"?person.avatar:"")||"";
 
   return `<div class="avatar-shell">
     <div class="avatar ${thumb?"has-img":""}">
@@ -949,12 +973,16 @@ function traineePerson(personData,shift){
     personData.nomComplet||
     "Stagiaire";
 
-  return `<section class="person stagiaire">
+  return `<button
+    class="person person-button stagiaire"
+    type="button"
+    data-trainee-name="${esc(name)}"
+    aria-label="Voir le planning de ${esc(name)}">
     <div class="role-tag">Stagiaire</div>
     ${avatarOnly(personData)}
     <span class="person-name">${esc(name)}</span>
     ${personShiftHtml(shift||{})}
-  </section>`;
+  </button>`;
 }
 
 function referentPerson(personData,shift,itemIndex){
@@ -1075,6 +1103,39 @@ function groupHtml(label,list){
   return `<section class="group"><div class="group-title">${esc(label)}</div>${list.map(issueHtml).join("")}</section>`;
 }
 
+function sameTraineeName(a,b){return norm(a)===norm(b)}
+
+function traineePlanningCard(item){
+  const shift=item&&item.stagiaireShift||item&&item.shift||{};
+  const referent=item&&item.referent||{};
+  const referentName=referent.nomComplet||referent.nomPrenom||"Référent non renseigné";
+  return `<article class="trainee-planning-card">
+    <div class="trainee-planning-date">${esc(item.dateLabel||item.dateKey||"Date non renseignée")}</div>
+    <div class="trainee-planning-line">${esc(shiftLabel(shift))} · ${esc(shiftHours(shift))}</div>
+    <div class="trainee-planning-line">Référent : ${esc(referentName)}</div>
+  </article>`;
+}
+
+function openTraineePlanning(name){
+  const matches=ITEMS
+    .filter(item=>sameTraineeName(item&&item.stagiaire&&item.stagiaire.nomPrenom,name))
+    .sort((a,b)=>String(a.dateKey||"").localeCompare(String(b.dateKey||"")));
+
+  traineeSub.textContent=name||"Stagiaire";
+  traineeBody.innerHTML=matches.length
+    ? `<div class="trainee-planning-list">${matches.map(traineePlanningCard).join("")}</div>`
+    : '<div class="empty">Aucune prochaine date disponible.</div>';
+  traineeModal.classList.add("open");
+  traineeModal.setAttribute("aria-hidden","false");
+  document.body.classList.add("modal-open");
+}
+
+function closeTraineeModal(){
+  traineeModal.classList.remove("open");
+  traineeModal.setAttribute("aria-hidden","true");
+  document.body.classList.remove("modal-open");
+}
+
 function openAlert(index){
   const item=ITEMS[index];
   if(!item)return;
@@ -1094,7 +1155,10 @@ function referentProfileHtml(item){
   const referent=item.referent||{};
   const shift=item.referentShift||{};
   const avatar=referent.avatar||{};
-  const thumb=avatar.thumb||"";
+  const thumb=
+    avatar.thumb||avatar.url||avatar.avatar||
+    referent.avatarThumb||referent.avatarUrl||
+    (typeof referent.avatar==="string"?referent.avatar:"")||"";
 
   const name=
     referent.nomComplet||
@@ -1304,6 +1368,13 @@ function render(){
 }
 
 content.addEventListener("click",e=>{
+  const traineeButton=e.target.closest("[data-trainee-name]");
+
+  if(traineeButton){
+    openTraineePlanning(traineeButton.dataset.traineeName||"");
+    return;
+  }
+
   const referentButton=e.target.closest("[data-referent-index]");
 
   if(referentButton){
@@ -1332,6 +1403,13 @@ referentBody.addEventListener("click",e=>{
     openCall(callButton);
   }
 });
+document.getElementById("traineeClose")
+  .addEventListener("click",closeTraineeModal);
+
+traineeModal.addEventListener("click",e=>{
+  if(e.target===traineeModal)closeTraineeModal();
+});
+
 document.getElementById("referentClose")
   .addEventListener("click",closeReferentModal);
 
@@ -1355,6 +1433,7 @@ callModal.addEventListener("click",e=>{
 
 document.addEventListener("keydown",e=>{
   if(e.key==="Escape"){
+    closeTraineeModal();
     closeReferentModal();
     closeIssueModal();
     closeCallModal();
@@ -1380,6 +1459,5 @@ document.addEventListener("keydown",e=>{
   document.body.appendChild(s);
 })();
 </script>
-<script src="affichage-different/avatars-frais.js?v=1"></script>
 </body>
 </html>
