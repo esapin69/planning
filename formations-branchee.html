@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fff7dd">
+<title>GHE — Formations</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --ink:#07183f;--soft:#33415f;--cream:#fff7dd;--paper:#fffaf0;--paper2:#fff2c9;
+  --line:#07183f;--muted:rgba(7,24,63,.18);--shadow:0 7px 0 rgba(7,24,63,.16);
+  --small:0 4px 0 rgba(7,24,63,.12);--danger:#b42318;--dangerLine:#c43a2f;
+  --dangerBg:#fff0ec;--warning:#8a4b00;--warningLine:#d2a631;--warningBg:#fff4c7;
+  --ok:#176b39;--okLine:#2f8f4e;--okBg:#eaf8ef;--display:Impact,"Arial Black",system-ui,sans-serif;
+}
+html,body{margin:0;min-height:100%;background:var(--cream);color:var(--ink)}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+body.modal-open{overflow:hidden}
+button,input,a{font:inherit;color:inherit}
+.page{width:min(1080px,100%);margin:auto;padding:calc(8px + env(safe-area-inset-top)) 8px calc(120px + env(safe-area-inset-bottom))}
+.topbar{display:flex;gap:9px;margin-bottom:9px}.navbtn{min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:8px 14px;border:3px solid var(--line);border-radius:18px;background:var(--paper);text-decoration:none;font-size:18px;font-weight:950;box-shadow:var(--small)}
+.hero{border:4px solid var(--line);border-radius:22px;overflow:hidden;background:var(--ink);box-shadow:var(--shadow);margin-bottom:11px}.hero img{display:block;width:100%;height:clamp(108px,25vw,200px);object-fit:cover}
+.pilot{background:var(--paper);border:4px solid var(--line);border-radius:22px;padding:11px 12px;box-shadow:var(--shadow);margin-bottom:10px}.pilot.ok{border-color:var(--okLine)}.pilot.warning{border-color:var(--warningLine)}.pilot.danger{border-color:var(--dangerLine)}.pilot-title{font-weight:950;font-size:clamp(21px,5.5vw,33px);line-height:1.02}.pilot-sub{margin-top:4px;color:var(--soft);font-size:14px;font-weight:850;line-height:1.25}.pilot-pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+.pill,.chip{display:inline-flex;align-items:center;min-height:30px;padding:6px 9px;border-radius:999px;background:var(--paper2);border:2px solid var(--muted);font-size:13px;font-weight:900}.pill.ok{background:var(--okBg);color:var(--ok);border-color:#9dd5af}.pill.warning{background:var(--warningBg);color:var(--warning);border-color:#e2c060}.pill.danger{background:var(--dangerBg);color:var(--danger);border-color:#e7a29d}
+.tools{display:grid;gap:8px;margin-bottom:12px}.search{width:100%;min-height:48px;border:3px solid var(--line);border-radius:17px;padding:9px 12px;font-size:16px;font-weight:850;background:var(--paper);outline:none;box-shadow:var(--small)}.filters{display:flex;gap:7px;overflow-x:auto;padding:1px 0 4px}.filter-btn{flex:0 0 auto;border:3px solid var(--line);border-radius:999px;background:var(--paper);padding:8px 12px;font-size:14px;font-weight:950;cursor:pointer;box-shadow:0 3px 0 rgba(7,24,63,.12)}.filter-btn.active{background:var(--ink);color:var(--cream)}
+.day-title{margin:22px 4px 9px;font-family:var(--display);font-size:clamp(32px,8.4vw,58px);line-height:.88;letter-spacing:-1px;text-transform:uppercase;text-shadow:0 3px 0 #f8d67d}
+.session{background:var(--paper);border:4px solid var(--line);border-radius:25px;padding:0 10px 11px;margin-bottom:14px;box-shadow:var(--shadow);overflow:hidden}.session.warning{border-color:var(--warningLine)}.session.danger{border-color:var(--dangerLine)}
+.session-head{margin:0 -10px 10px;padding:12px;background:linear-gradient(135deg,#dce9ff,#9ec4ff);border-bottom:4px solid var(--line)}.session.incendie .session-head{background:linear-gradient(135deg,#ffdfbf,#ffb36b)}.session.caces .session-head{background:linear-gradient(135deg,#fff1a8,#ffc941)}.session.identite .session-head{background:linear-gradient(135deg,#e8e2ff,#b8a7ff)}
+.session-kicker{font-size:12px;font-weight:950;letter-spacing:.7px;text-transform:uppercase;color:rgba(7,24,63,.68)}.session-title{margin-top:3px;font-family:var(--display);font-size:clamp(29px,7.6vw,46px);line-height:.9;text-transform:uppercase}.session-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.session-alert,.agent-alert{width:100%;border:2px solid transparent;border-radius:16px;padding:9px 10px;text-align:left;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;align-items:center}.session-alert{margin-bottom:9px}.agent-alert{margin-top:8px}button.session-alert,button.agent-alert{cursor:pointer}.session-alert.ok,.agent-alert.ok{background:var(--okBg);color:var(--ok);border-color:#9dd5af}.session-alert.warning,.agent-alert.warning{background:var(--warningBg);color:var(--warning);border-color:#e2c060}.session-alert.danger,.agent-alert.danger{background:var(--dangerBg);color:var(--danger);border-color:#e7a29d}.alert-title{font-size:14px;font-weight:950;line-height:1.1}.alert-text{margin-top:3px;font-size:13px;font-weight:800;line-height:1.28}.alert-count{margin-top:5px;font-size:11px;font-weight:900;opacity:.78}.alert-more{font-size:20px;font-weight:950}
+.agent-list{display:grid;gap:9px}.agent{position:relative;display:grid;grid-template-columns:68px minmax(0,1fr);gap:10px;align-items:start;padding:10px 10px 10px 15px;border:3px solid var(--line);border-radius:21px;background:var(--paper2)}.agent::before{content:"";position:absolute;left:0;top:0;bottom:0;width:7px;border-radius:16px 0 0 16px;background:var(--okLine)}.agent.warning::before{background:var(--warningLine)}.agent.danger::before{background:var(--dangerLine)}
+.avatar{width:68px;height:68px;border-radius:18px;background:#eaf0ff;overflow:hidden;display:flex;align-items:center;justify-content:center;border:2px solid rgba(7,24,63,.13)}.avatar img{max-width:97%;max-height:97%;object-fit:contain;display:block}.avatar .initials{width:54px;height:54px;border-radius:15px;border:3px solid var(--line);background:var(--paper);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:20px}.avatar.has-img .initials{display:none}.role{display:block;margin-bottom:3px;color:rgba(7,24,63,.58);font-size:12px;font-weight:950;letter-spacing:.65px;text-transform:uppercase}.name{display:block;font-size:clamp(21px,5.4vw,33px);line-height:.98;font-weight:950;letter-spacing:-.7px;text-transform:uppercase;overflow-wrap:anywhere}.info{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.empty,.error,.loading{background:var(--paper);border:4px solid var(--line);border-radius:21px;padding:14px;font-weight:900;box-shadow:var(--shadow)}.error{color:var(--danger)}
+.agenda{margin:25px 0 4px;padding:13px;background:var(--paper);border:4px solid var(--line);border-radius:25px;box-shadow:var(--shadow)}.agenda-title{margin:0 0 10px;font-family:var(--display);font-size:clamp(25px,7vw,44px);line-height:.92;text-align:center;text-transform:uppercase;text-shadow:0 3px 0 #f8d67d}.agenda-buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px}.agenda-btn{min-height:62px;display:flex;align-items:center;justify-content:center;text-decoration:none;color:#fff4ce;border:4px solid #061738;border-radius:20px;font-family:var(--display);font-size:clamp(21px,5.5vw,34px);text-transform:uppercase;box-shadow:0 6px 0 rgba(7,24,63,.32)}.agenda-btn.ios{background:linear-gradient(145deg,#3db9ff,#0c6ed5 56%,#083c91)}.agenda-btn.android{background:linear-gradient(145deg,#35d864,#12873d 56%,#075324)}
+.modal{position:fixed;inset:0;z-index:1000;display:none;align-items:flex-end;justify-content:center;padding:10px;background:rgba(2,8,23,.68);backdrop-filter:blur(5px)}.modal.open{display:flex}.sheet{width:min(680px,100%);max-height:88vh;overflow:auto;background:var(--cream);border:5px solid var(--line);border-radius:27px 27px 18px 18px;padding:14px;box-shadow:0 15px 0 rgba(0,0,0,.24)}.sheet h2{margin:0;font-family:var(--display);font-size:clamp(30px,8vw,49px);line-height:.9;text-transform:uppercase}.sheet-sub{margin:7px 0 12px;color:var(--soft);font-weight:850;line-height:1.3}.issue{margin-top:8px;border:2px solid transparent;border-radius:15px;padding:10px}.issue.warning{background:var(--warningBg);color:var(--warning);border-color:#e2c060}.issue.danger{background:var(--dangerBg);color:var(--danger);border-color:#e7a29d}.issue-title{font-size:15px;font-weight:950}.issue-detail{margin-top:4px;font-size:13px;font-weight:800;line-height:1.32}.issue-action{margin-top:7px;padding-top:7px;border-top:1px solid currentColor;font-size:13px;font-weight:850;line-height:1.32}.close{width:100%;min-height:50px;margin-top:12px;border:4px solid var(--line);border-radius:17px;background:var(--ink);color:var(--cream);font-weight:950;cursor:pointer}
+@media(min-width:720px){.page{padding-left:14px;padding-right:14px}.agent{grid-template-columns:76px minmax(0,1fr)}.avatar{width:76px;height:76px}.modal{align-items:center}.sheet{border-radius:27px}}
+
+/* GHE cliquable partout dans la page Formations */
+.ghe-chip{
+  display:inline-flex;
+  align-items:center;
+  min-height:30px;
+  padding:6px 9px;
+  border:2px solid var(--muted);
+  border-radius:999px;
+  background:var(--paper2);
+  color:var(--ink);
+  font-size:13px;
+  font-weight:950;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.ghe-chip:active{
+  transform:translateY(1px);
+}
+.call-number{
+  margin:16px 0 12px;
+  padding:14px;
+  border:3px solid var(--line);
+  border-radius:18px;
+  background:#f7f9ff;
+  text-align:center;
+  font-size:24px;
+  font-weight:1000;
+  letter-spacing:.8px;
+}
+.call-actions{
+  display:grid;
+  gap:9px;
+}
+.call-action{
+  min-height:52px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:4px solid var(--line);
+  border-radius:17px;
+  text-decoration:none;
+  font-weight:1000;
+}
+.call-action.primary{
+  background:var(--ink);
+  color:var(--cream);
+}
+.call-action.secondary{
+  background:var(--paper);
+}
+.call-action.is-disabled{
+  pointer-events:none;
+  opacity:.45;
+}
+
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="topbar"><a class="navbtn" href="index.html">← Retour accueil</a></div>
+  <section class="hero"><img src="Image/Bannière/Page Formation.PNG" alt="Formations GHE" onerror="this.onerror=null;this.src='Image/Banni%C3%A8re/Page%20Formation.PNG';"></section>
+  <section id="pilot" class="pilot"><div class="pilot-title">Chargement des formations…</div><div class="pilot-sub">Toutes les sessions et tous les agents restent visibles directement dans la page.</div></section>
+  <section class="tools">
+    <input id="search" class="search" type="search" placeholder="Rechercher une formation, un agent ou un GHE…" autocomplete="off">
+    <div class="filters"><button class="filter-btn active" data-filter="tous" type="button">Toutes</button><button class="filter-btn" data-filter="traiter" type="button">À vérifier</button><button class="filter-btn" data-filter="bloquants" type="button">Bloquantes</button></div>
+  </section>
+  <section id="content"><div class="loading">Connexion aux données…</div></section>
+  <section class="agenda"><h2 class="agenda-title">S’abonner aux formations</h2><div class="agenda-buttons"><a id="btnIos" class="agenda-btn ios" href="#">Abonnement iOS</a><a id="btnAndroid" class="agenda-btn android" href="#">Abonnement Android</a></div></section>
+</main>
+
+<div id="callModal" class="modal" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="callTitle">
+    <h2 id="callTitle">Contacter l’agent</h2>
+    <div id="callAvatar" class="avatar" style="margin:8px auto 10px"><span class="initials">👤</span></div><div id="callSub" class="sheet-sub"></div>
+    <div id="callNumber" class="call-number"></div>
+
+    <div class="call-actions">
+      <a id="callNormal" class="call-action primary" href="#">Appeler</a>
+      <a id="callHidden" class="call-action secondary" href="#">Appeler en numéro masqué</a>
+      <button id="callClose" class="close" type="button">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<div id="issueModal" class="modal" aria-hidden="true"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><h2 id="modalTitle">Détail de l’alerte</h2><div id="modalSub" class="sheet-sub"></div><div id="modalBody"></div><button id="modalClose" class="close" type="button">Fermer</button></div></div>
+
+<script>
+const WEB_APP_URL="https://script.google.com/macros/s/AKfycbybgBjbWp2YhJqv0vR-X8Mh_x2FbIpsPdDt2VmogXK-QcojNtoRKb_uP4jm8rDMTbE/exec";
+const FORMATIONS_SHEET_ID="10PLA4lxXPCDqGdPs1qWywIa1SBv1YKKpiQioJmVBsXc";
+const FORMATIONS_SHEET_NAME="FORMATIONS_SITE";
+const FORMATIONS_GVIZ_URL=
+  "https://docs.google.com/spreadsheets/d/"+
+  FORMATIONS_SHEET_ID+
+  "/gviz/tq?tqx=out:json&headers=1&sheet="+
+  encodeURIComponent(FORMATIONS_SHEET_NAME);
+const ICS_URL="https://calendar.google.com/calendar/ical/c5da5df12db0eba65a14410cada08fea4e5a8037ddd256b03e7426cb22cb751b%40group.calendar.google.com/private-4f5072a64d36548137a30abb665ed23f/basic.ics";
+let ITEMS=[];let FILTER="tous";
+const pilot=document.getElementById("pilot"),
+content=document.getElementById("content"),
+search=document.getElementById("search"),
+modal=document.getElementById("issueModal"),
+modalSub=document.getElementById("modalSub"),
+modalBody=document.getElementById("modalBody"),
+callModal=document.getElementById("callModal"),
+callAvatar=document.getElementById("callAvatar"),
+callSub=document.getElementById("callSub"),
+callNumber=document.getElementById("callNumber"),
+callNormal=document.getElementById("callNormal"),
+callHidden=document.getElementById("callHidden");
+document.getElementById("btnIos").href=ICS_URL.replace(/^https:\/\//i,"webcal://");document.getElementById("btnAndroid").href="https://calendar.google.com/calendar/render?cid="+encodeURIComponent(ICS_URL);
+function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function norm(v){return String(v??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().replace(/\s+/g," ").trim()}
+function arr(v){return Array.isArray(v)?v:[]}
+function initials(v){const p=String(v||"").trim().split(/\s+/).filter(Boolean);return p.length?((p[0][0]||"")+(p[1]?.[0]||p[0][1]||"")).toUpperCase():"?"}
+function avatar(agent){
+  const raw=agent&&(
+    agent.avatar||
+    agent.avatarUrl||
+    ""
+  );
+
+  const data=(raw&&typeof raw==="object")?raw:{};
+  const thumb=typeof raw==="string"
+    ?raw
+    :(data.thumb||data.url||data.avatarUrl||"");
+
+  const initiales=data.initiales||initials(agent&&agent.nomComplet);
+
+  return `<div class="avatar ${thumb?"has-img":""}">${thumb?`<img src="${esc(thumb)}" alt="" loading="lazy" onerror="this.parentElement.classList.remove('has-img');this.remove()">`:""}<span class="initials">${esc(initiales)}</span></div>`;
+}
+function chip(text){return text?`<span class="chip">${esc(text)}</span>`:""}
+function shiftBasePublic(shift){
+  shift=shift||{};
+
+  const code=norm(
+    shift.code||
+    shift.base||
+    shift.label||
+    ""
+  ).replace(/[^A-Z0-9]/g,"");
+
+  if(code.includes("J4"))return"J4";
+  if(code==="M"||code.includes("MATIN"))return"M";
+  if(code==="J"||code==="JOUR"||code.includes("JOURNEE"))return"J";
+  if(code==="S"||code.includes("SOIR"))return"S";
+  if(code==="N"||code.includes("NUIT"))return"N";
+
+  return code;
+}
+
+function shiftText(shift){
+  shift=shift||{};
+
+  const base=shiftBasePublic(shift);
+
+  const labels={
+    M:"Matin",
+    J:"Journée",
+    J4:"J4",
+    S:"Soir",
+    N:"Nuit"
+  };
+
+  const icons={
+    M:"🔵",
+    J:"🟢",
+    J4:"🟠",
+    S:"🟡",
+    N:"⚫"
+  };
+
+  const label=
+    labels[base]||
+    shift.label||
+    shift.code||
+    "";
+
+  const icon=
+    icons[base]||
+    shift.icone||
+    "";
+
+  const left=[icon,label]
+    .filter(Boolean)
+    .join(" ");
+
+  return [left,shift.horaire]
+    .filter(Boolean)
+    .join(" · ");
+}
+function typeClass(item){const n=norm(item&&item.formation&&((item.formation.typeLabel||"")+" "+(item.formation.intitule||"")));return n.includes("INCENDIE")?"incendie":n.includes("CACES")?"caces":(n.includes("IDENTITE")||n.includes("VIGILANCE"))?"identite":"default"}
+function issuesOfAgent(agent){return arr(agent&&agent.anomalies)}
+function issuesOfSession(item){return arr(item&&item.anomalies)}
+function allIssues(item){return[...issuesOfSession(item),...arr(item&&item.agents).flatMap(issuesOfAgent)]}
+function itemLevel(item){if(item&&item.niveau==="danger"||allIssues(item).some(x=>x.niveau==="danger"))return"danger";return allIssues(item).length?"warning":"ok"}
+function agentLevel(agent){const list=issuesOfAgent(agent);if(list.some(x=>x.niveau==="danger"))return"danger";return list.length?"warning":"ok"}
+function stateLabel(lvl){return lvl==="danger"?"Alerte bloquante":lvl==="warning"?"Attention":"Conforme"}
+function alertSummary(list,scope,itemIndex,agentIndex){list=arr(list);if(!list.length)return "";const lvl=list.some(x=>x.niveau==="danger")?"danger":"warning",first=list.find(x=>x.niveau==="danger")||list[0],attr=scope==="session"?`data-session-alert="${itemIndex}"`:`data-agent-alert="${itemIndex}:${agentIndex}"`;return `<button class="${scope==="session"?"session-alert":"agent-alert"} ${lvl}" type="button" ${attr}><div><div class="alert-title">${lvl==="danger"?"⛔ Alerte bloquante":"⚠️ Attention"}</div><div class="alert-text">${esc(first.resume||first.detail||"Un point doit être vérifié.")}</div><div class="alert-count">Toucher pour voir la raison précise</div></div><span class="alert-more">›</span></button>`}
+function gheButton(agent){
+  const ghe=String(agent&&agent.ghe||"").trim();
+  if(!ghe)return "";
+
+  const name=String(agent&&agent.nomComplet||"Agent").trim();
+  const phone=String(agent&&agent.telephone||"").trim();
+
+  return `<button
+    class="ghe-chip"
+    type="button"
+    data-call-ghe="${esc(ghe)}"
+    data-call-name="${esc(name)}"
+    data-call-phone="${esc(phone)}">${esc(ghe)}</button>`;
+}
+
+function agentCard(agent,itemIndex,agentIndex){
+  const lvl=agentLevel(agent);
+
+  return `<article class="agent ${lvl}">
+    ${avatar(agent)}
+
+    <div>
+      <span class="role">Agent en formation</span>
+      <span class="name">${esc(agent.nomComplet||"Agent")}</span>
+
+      <div class="info">
+        ${gheButton(agent)}
+        ${chip(shiftText(agent.shift))}
+      </div>
+
+      ${alertSummary(
+        issuesOfAgent(agent),
+        "agent",
+        itemIndex,
+        agentIndex
+      )}
+    </div>
+  </article>`;
+}
+function sessionCard(item,index){const f=item.formation||{},agents=arr(item.agents),lvl=itemLevel(item);return `<article class="session ${lvl} ${typeClass(item)}"><header class="session-head"><div class="session-kicker">${esc(f.typeIcone||"🎓")} ${esc(f.typeLabel||"Formation")}</div><div class="session-title">${esc(f.intitule||"Formation")}</div><div class="session-meta">${chip(item.semaineLabel)}${chip(item.dateLabel)}${chip(f.horaireAffiche||"Journée")}${chip(agents.length+" agent"+(agents.length>1?"s":""))}</div></header>${alertSummary(issuesOfSession(item),"session",index,null)}<div class="agent-list">${agents.map((a,i)=>agentCard(a,index,i)).join("")||'<div class="empty">Aucun agent détecté.</div>'}</div></article>`}
+function issueHtml(x){const lvl=x&&x.niveau==="danger"?"danger":"warning";return `<div class="issue ${lvl}"><div class="issue-title">${lvl==="danger"?"⛔":"⚠️"} ${esc(x&&x.titre||"Point à vérifier")}</div><div class="issue-detail">${esc(x&&x.detail||x&&x.resume||"")}</div><div class="issue-action"><strong>À faire :</strong> ${esc(x&&x.action||"Vérifier l’information concernée.")}</div></div>`}
+function openModal(title,sub,list){list=arr(list);document.getElementById("modalTitle").textContent=title;modalSub.textContent=sub||"";modalBody.innerHTML=list.length?list.map(issueHtml).join(""):'<div class="empty">Aucun point à vérifier.</div>';modal.classList.add("open");modal.setAttribute("aria-hidden","false");document.body.classList.add("modal-open")}
+function closeModal(){modal.classList.remove("open");modal.setAttribute("aria-hidden","true");document.body.classList.remove("modal-open")}
+
+function phoneDigits(value){
+  let digits=String(value||"").replace(/\D/g,"");
+
+  if(digits.startsWith("33")&&digits.length===11){
+    digits="0"+digits.slice(2);
+  }
+
+  if(
+    (digits.startsWith("6")||digits.startsWith("7"))&&
+    digits.length===9
+  ){
+    digits="0"+digits;
+  }
+
+  return digits;
+}
+
+function phoneDisplay(value){
+  const digits=phoneDigits(value);
+  return digits.replace(/(\d{2})(?=\d)/g,"$1 ").trim();
+}
+
+function setCallUnavailable(){
+  callNumber.textContent="Numéro indisponible";
+  callNormal.href="#";
+  callHidden.href="#";
+  callNormal.classList.add("is-disabled");
+  callHidden.classList.add("is-disabled");
+  callNormal.setAttribute("aria-disabled","true");
+  callHidden.setAttribute("aria-disabled","true");
+}
+
+function setCallReady(digits){
+  callNumber.textContent=phoneDisplay(digits);
+  callNormal.href="tel:"+digits;
+  callHidden.href="tel:%2331%23"+digits;
+  callNormal.classList.remove("is-disabled");
+  callHidden.classList.remove("is-disabled");
+  callNormal.removeAttribute("aria-disabled");
+  callHidden.removeAttribute("aria-disabled");
+}
+
+function openCall(button){
+  const name=button.dataset.callName||"Agent";
+  const ghe=button.dataset.callGhe||"";
+  const provided=phoneDigits(
+    button.dataset.callPhone||""
+  );
+
+  if(callAvatar) callAvatar.innerHTML=`<span class="initials">${esc(initials(name))}</span>`;
+
+  callSub.textContent=[name,ghe]
+    .filter(Boolean)
+    .join(" · ");
+
+  callNumber.textContent=provided
+    ? phoneDisplay(provided)
+    : "Chargement…";
+
+  callModal.classList.add("open");
+  callModal.setAttribute("aria-hidden","false");
+  document.body.classList.add("modal-open");
+
+  if(provided){
+    setCallReady(provided);
+    return;
+  }
+
+  callNormal.classList.add("is-disabled");
+  callHidden.classList.add("is-disabled");
+  callNormal.setAttribute("aria-disabled","true");
+  callHidden.setAttribute("aria-disabled","true");
+
+  const callback=
+    "recevoirTelephoneFormation_"+
+    Date.now()+"_"+
+    Math.floor(Math.random()*100000);
+
+  const script=document.createElement("script");
+  let finished=false;
+
+  function cleanup(){
+    if(finished)return;
+    finished=true;
+    delete window[callback];
+    if(script.isConnected)script.remove();
+  }
+
+  window[callback]=data=>{
+    const digits=phoneDigits(
+      data&&(
+        data.telephoneDial||
+        data.telephone
+      )||
+      ""
+    );
+
+    if(data&&data.ok&&digits){
+      button.dataset.callPhone=digits;
+      setCallReady(digits);
+    }else{
+      setCallUnavailable();
+    }
+
+    cleanup();
+  };
+
+  script.onerror=()=>{
+    setCallUnavailable();
+    cleanup();
+  };
+
+  script.src=
+    WEB_APP_URL+
+    "?mode=telephone"+
+    "&agent="+encodeURIComponent(name)+
+    "&ghe="+encodeURIComponent(ghe)+
+    "&callback="+encodeURIComponent(callback)+
+    "&v="+Date.now();
+
+  document.body.appendChild(script);
+
+  setTimeout(()=>{
+    if(!finished){
+      setCallUnavailable();
+      cleanup();
+    }
+  },8000);
+}
+
+function closeCallModal(){
+  callModal.classList.remove("open");
+  callModal.setAttribute("aria-hidden","true");
+  document.body.classList.remove("modal-open");
+}
+
+
+function filtered(){const q=norm(search.value);return ITEMS.map((item,index)=>({item,index})).filter(({item})=>{const lvl=itemLevel(item),issues=allIssues(item);if(FILTER==="traiter"&&!issues.length)return false;if(FILTER==="bloquants"&&lvl!=="danger")return false;if(!q)return true;const f=item.formation||{};const text=[item.dateLabel,item.semaineLabel,f.intitule,f.typeLabel,f.horaireAffiche,...arr(item.agents).flatMap(a=>[a.nomComplet,a.ghe,shiftText(a.shift),...issuesOfAgent(a).flatMap(x=>[x.titre,x.resume,x.detail])]),...issuesOfSession(item).flatMap(x=>[x.titre,x.resume,x.detail])].join(" ");return norm(text).includes(q)})}
+function render(){const list=filtered();if(!list.length){content.innerHTML='<div class="empty">Aucune formation à afficher avec ce filtre.</div>';return}const byDate={};list.forEach(x=>{const k=x.item.dateKey||"date";(byDate[k]||(byDate[k]=[])).push(x)});content.innerHTML=Object.keys(byDate).sort().map(k=>`<section><h2 class="day-title">${esc(byDate[k][0].item.dateLabel||k)}</h2>${byDate[k].map(x=>sessionCard(x.item,x.index)).join("")}</section>`).join("")}
+function updatePilot(){const total=ITEMS.length,agents=ITEMS.reduce((n,x)=>n+arr(x.agents).length,0);pilot.className="pilot";pilot.innerHTML=`<div class="pilot-title">${total} formation${total>1?"s":""} · ${agents} agent${agents>1?"s":""}</div><div class="pilot-sub">Toutes les informations utiles sont visibles directement. Une alerte n’apparaît que lorsqu’un vrai point doit être contrôlé.</div>`}
+content.addEventListener("click",e=>{
+  const callButton=e.target.closest("[data-call-ghe]");
+
+  if(callButton){
+    e.preventDefault();
+    e.stopPropagation();
+    openCall(callButton);
+    return;
+  }
+
+  const sessionAlert=e.target.closest("[data-session-alert]");
+
+  if(sessionAlert){
+    const item=ITEMS[
+      Number(sessionAlert.dataset.sessionAlert)
+    ];
+    const formation=item&&item.formation||{};
+
+    openModal(
+      "Alerte de la session",
+      (item.dateLabel||"")+" · "+
+      (formation.intitule||"Formation"),
+      issuesOfSession(item)
+    );
+
+    return;
+  }
+
+  const agentAlert=e.target.closest("[data-agent-alert]");
+
+  if(agentAlert){
+    const indexes=agentAlert.dataset.agentAlert
+      .split(":")
+      .map(Number);
+
+    const item=ITEMS[indexes[0]];
+    const agent=arr(item&&item.agents)[indexes[1]];
+
+    openModal(
+      "Alerte de l’agent",
+      (agent&&agent.nomComplet)||"Agent",
+      issuesOfAgent(agent)
+    );
+  }
+});search.addEventListener("input",render);document.querySelectorAll(".filter-btn").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".filter-btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");FILTER=b.dataset.filter;render()}));document.getElementById("modalClose")
+  .addEventListener("click",closeModal);
+
+modal.addEventListener("click",e=>{
+  if(e.target===modal)closeModal();
+});
+
+document.getElementById("callClose")
+  .addEventListener("click",closeCallModal);
+
+callModal.addEventListener("click",e=>{
+  if(e.target===callModal)closeCallModal();
+});
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){
+    closeModal();
+    closeCallModal();
+  }
+});
+function gvizValue(cell){
+  if(!cell)return "";
+  if(cell.f!==undefined&&cell.f!==null)return String(cell.f);
+  if(cell.v===undefined||cell.v===null)return "";
+  return String(cell.v);
+}
+function directAvatar(row){
+  const id=String(row.AVATAR_ID||"").trim();
+  if(id)return "https://drive.google.com/thumbnail?id="+encodeURIComponent(id)+"&sz=w320";
+  const url=String(row.AVATAR_URL||"").trim();
+  const match=url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  return match?"https://drive.google.com/thumbnail?id="+encodeURIComponent(match[1])+"&sz=w320":url;
+}
+function semaineDepuisDate(dateIso){
+  if(!dateIso)return "";
+  const d=new Date(dateIso+"T12:00:00");
+  if(Number.isNaN(d.getTime()))return "";
+  const target=new Date(d.valueOf());
+  const dayNr=(d.getDay()+6)%7;
+  target.setDate(target.getDate()-dayNr+3);
+  const firstThursday=new Date(target.getFullYear(),0,4);
+  const firstDayNr=(firstThursday.getDay()+6)%7;
+  firstThursday.setDate(firstThursday.getDate()-firstDayNr+3);
+  return "Semaine "+(1+Math.round((target-firstThursday)/(7*24*60*60*1000)));
+}
+function anomaliesAgent(row){
+  const list=[];
+  const rattachement=String(row.RATTACHEMENT||"").trim();
+  const score=Number(String(row.SCORE||"").replace(",","."));
+  if(!row.AGENT)list.push({niveau:"danger",titre:"Agent absent",resume:"Le nom de l’agent manque.",detail:"La ligne de formation ne contient pas d’identité exploitable.",action:"Vérifier la source de formation."});
+  if(/VALIDER|VERIFIER|IDENTITE/i.test(rattachement))list.push({niveau:"warning",titre:"Identité à contrôler",resume:rattachement,detail:rattachement,action:"Contrôler l’identité avant utilisation."});
+  if(Number.isFinite(score)&&score>0&&score<100)list.push({niveau:"warning",titre:"Rattachement fragile",resume:"Score de rapprochement faible : "+score,detail:rattachement||"Le rapprochement avec l’agent est incertain.",action:"Contrôler le nom, le prénom et le GHE."});
+  return list;
+}
+function convertirTableGviz(table){
+  const headers=(table.cols||[]).map((col,index)=>String(col&&col.label||col&&col.id||("COL_"+index)).trim());
+  const rows=(table.rows||[]).map(item=>{
+    const out={};
+    headers.forEach((header,index)=>out[header]=gvizValue(item.c&&item.c[index]));
+    return out;
+  });
+  const groupes=new Map();
+  rows.forEach(row=>{
+    const dateKey=String(row.DATE_ISO||"").trim();
+    const formation=String(row.FORMATION||"Formation").trim();
+    const horaire=String(row.HORAIRE_FORMATION||"").trim();
+    const key=[dateKey,formation,horaire].join("|");
+    if(!groupes.has(key))groupes.set(key,{
+      dateKey,
+      dateLabel:String(row.DATE_LABEL||dateKey||"Date non renseignée"),
+      semaineLabel:semaineDepuisDate(dateKey),
+      formation:{intitule:formation,horaireAffiche:horaire||"Journée",typeLabel:"Formation",typeIcone:"🎓"},
+      agents:[],
+      anomalies:[]
+    });
+    const shiftHoraire=[String(row["HEURE_DÉBUT"]||"").trim(),String(row.HEURE_FIN||"").trim()].filter(Boolean).join("-");
+    groupes.get(key).agents.push({
+      nomComplet:String(row.AGENT||[row.NOM,row["PRÉNOM"]].filter(Boolean).join(" ")||"Agent"),
+      nom:String(row.NOM||""),
+      prenom:String(row["PRÉNOM"]||""),
+      ghe:String(row.GHE||""),
+      telephone:String(row["TÉLÉPHONE"]||""),
+      matricule:String(row.MATRICULE||""),
+      avatar:{url:directAvatar(row),initiales:initials(row.AGENT||"")},
+      shift:{code:String(row.SHIFT_CODE||"FO"),label:String(row["SHIFT_LIBELLÉ"]||"Formation"),horaire:shiftHoraire},
+      anomalies:anomaliesAgent(row)
+    });
+  });
+  return Array.from(groupes.values()).sort((a,b)=>String(a.dateKey).localeCompare(String(b.dateKey))||String(a.formation.intitule).localeCompare(String(b.formation.intitule),"fr")||String(a.formation.horaireAffiche).localeCompare(String(b.formation.horaireAffiche),"fr"));
+}
+async function load(){
+  try{
+    const response=await fetch(FORMATIONS_GVIZ_URL+"&t="+Date.now(),{cache:"no-store"});
+    if(!response.ok)throw new Error("Réponse Google Sheets "+response.status);
+    const text=await response.text();
+    const match=text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/);
+    if(!match)throw new Error("Format de réponse Google Sheets invalide.");
+    const data=JSON.parse(match[1]);
+    if(data.status==="error")throw new Error(data.errors&&data.errors[0]&&data.errors[0].detailed_message||"Google Sheets a refusé la lecture.");
+    ITEMS=convertirTableGviz(data.table||{});
+    updatePilot();
+    render();
+  }catch(error){
+    console.error(error);
+    content.innerHTML='<div class="error">Impossible de charger le fichier FORMATIONS_SITE.</div>';
+    pilot.className="pilot danger";
+    pilot.innerHTML='<div class="pilot-title">Connexion impossible</div><div class="pilot-sub">La page n’a pas pu lire le fichier dédié aux formations.</div>';
+  }
+}
+load();
+</script>
+<script src="affichage-different/avatars-frais.js?v=1"></script>
+</body>
+</html>
