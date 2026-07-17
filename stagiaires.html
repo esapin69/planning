@@ -599,6 +599,13 @@ button.ghe-badge:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(7,24,6
 
 <script>
 const WEB_APP_URL="https://script.google.com/macros/s/AKfycbybgBjbWp2YhJqv0vR-X8Mh_x2FbIpsPdDt2VmogXK-QcojNtoRKb_uP4jm8rDMTbE/exec";
+const STAGIAIRES_SHEET_ID="10khttOAtAx6s3EM3LZgj-1uQmyOYZAnzixNdRpLNin8";
+const STAGIAIRES_SHEET_NAME="STAGIAIRES_SITE";
+const STAGIAIRES_GVIZ_URL=
+  "https://docs.google.com/spreadsheets/d/"+
+  STAGIAIRES_SHEET_ID+
+  "/gviz/tq?tqx=out:json&headers=1&sheet="+
+  encodeURIComponent(STAGIAIRES_SHEET_NAME);
 let ITEMS=[];
 
 const content=document.getElementById("content");
@@ -1440,24 +1447,289 @@ document.addEventListener("keydown",e=>{
   }
 });
 
-(function load(){
-  const cb="recevoirStagiaires_"+Date.now();
-  const s=document.createElement("script");
-  window[cb]=data=>{
-    delete window[cb];
-    s.remove();
-    if(!data||!data.ok){content.innerHTML=`<div class="error">${esc(data&&data.erreur||"Données invalides.")}</div>`;return}
-    ITEMS=arr(data.items);
+function gvizCellValue(cell){
+  if(!cell)return "";
+  if(cell.f!==undefined&&cell.f!==null)return String(cell.f);
+  if(cell.v===undefined||cell.v===null)return "";
+  return String(cell.v);
+}
+
+function avatarDepuisLigne(row,prefix){
+  const id=String(row[prefix+"_AVATAR_ID"]||"").trim();
+  const url=String(row[prefix+"_AVATAR_URL"]||"").trim();
+
+  if(id){
+    return "https://drive.google.com/thumbnail?id="+
+      encodeURIComponent(id)+
+      "&sz=w320";
+  }
+
+  const match=url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+
+  return match
+    ?"https://drive.google.com/thumbnail?id="+
+      encodeURIComponent(match[1])+
+      "&sz=w320"
+    :url;
+}
+
+function shiftDepuisLigne(row,prefix){
+  const code=String(
+    row[prefix+"_POSTE"]||
+    row[prefix+"_SHIFT_BRUT"]||
+    ""
+  ).trim();
+
+  const label=String(
+    row[prefix+"_LIBELLÉ_POSTE"]||
+    code||
+    ""
+  ).trim();
+
+  const debut=String(
+    row[prefix+"_HEURE_DÉBUT"]||
+    ""
+  ).trim();
+
+  const fin=String(
+    row[prefix+"_HEURE_FIN"]||
+    ""
+  ).trim();
+
+  return{
+    code,
+    label,
+    heureDebut:debut,
+    heureFin:fin,
+    horaire:[debut,fin].filter(Boolean).join(" – ")
+  };
+}
+
+function issueDepuisTexte(niveau,titre,texte,action){
+  const message=String(texte||"").trim();
+  if(!message)return null;
+
+  return{
+    niveau:niveau==="DANGER"?"danger":"warning",
+    titre:titre||"Point à vérifier",
+    resume:message,
+    detail:message,
+    action:action||"Vérifier cette information."
+  };
+}
+
+function anomaliesDepuisLigne(row){
+  const stagiaire=[];
+  const referent=[];
+  const affectation=[];
+
+  const niveau=String(row.NIVEAU_ALERTE||"ATTENTION").toUpperCase();
+
+  const identite=issueDepuisTexte(
+    niveau,
+    "Identité à contrôler",
+    row["ANOMALIE_IDENTITÉ"],
+    "Contrôler le nom du stagiaire et son rattachement."
+  );
+
+  const planning=issueDepuisTexte(
+    niveau,
+    "Planning du référent absent",
+    row.ANOMALIE_PLANNING,
+    "Vérifier le planning du référent pour cette date."
+  );
+
+  const horaire=issueDepuisTexte(
+    niveau,
+    "Horaire stagiaire absent",
+    row.ANOMALIE_HORAIRE,
+    "Vérifier le poste et les horaires du stagiaire."
+  );
+
+  const alerte=issueDepuisTexte(
+    niveau,
+    row.COUVERTURE_CRITIQUE==="Oui"
+      ?"Couverture critique"
+      :"Affectation à vérifier",
+    row.ALERTE,
+    "Vérifier la compatibilité entre les horaires du stagiaire et du référent."
+  );
+
+  if(identite)stagiaire.push(identite);
+  if(horaire)stagiaire.push(horaire);
+  if(planning)referent.push(planning);
+  if(alerte)affectation.push(alerte);
+
+  return{stagiaire,referent,affectation};
+}
+
+function convertirStagiairesGviz(table){
+  const headers=(table.cols||[]).map((col,index)=>
+    String(
+      col&&col.label||
+      col&&col.id||
+      ("COL_"+index)
+    ).trim()
+  );
+
+  const rows=(table.rows||[]).map(item=>{
+    const row={};
+
+    headers.forEach((header,index)=>{
+      row[header]=gvizCellValue(
+        item.c&&item.c[index]
+      );
+    });
+
+    return row;
+  });
+
+  return rows
+    .filter(row=>row.DATE_ISO&&row.STAGIAIRE)
+    .map(row=>({
+      dateKey:String(row.DATE_ISO||""),
+      dateLabel:String(
+        row.DATE_LABEL||
+        row.DATE_SOURCE||
+        row.DATE_ISO||
+        ""
+      ),
+
+      stagiaire:{
+        nomPrenom:String(row.STAGIAIRE||"Stagiaire"),
+        nomComplet:String(row.STAGIAIRE||"Stagiaire"),
+        avatar:{
+          url:avatarDepuisLigne(row,"STAGIAIRE")
+        }
+      },
+
+      referent:{
+        nomComplet:String(
+          row["RÉFÉRENT"]||
+          "Référent à attribuer"
+        ),
+        nomPrenom:String(row["RÉFÉRENT"]||""),
+        ghe:String(row["RÉFÉRENT_GHE"]||""),
+        telephone:String(
+          row["RÉFÉRENT_TÉLÉPHONE"]||
+          ""
+        ),
+        matricule:String(
+          row["RÉFÉRENT_MATRICULE"]||
+          ""
+        ),
+        avatar:{
+          url:avatarDepuisLigne(row,"RÉFÉRENT")
+        }
+      },
+
+      stagiaireShift:shiftDepuisLigne(
+        row,
+        "STAGIAIRE"
+      ),
+
+      referentShift:shiftDepuisLigne(
+        row,
+        "RÉFÉRENT"
+      ),
+
+      shift:shiftDepuisLigne(
+        row,
+        "STAGIAIRE"
+      ),
+
+      anomalies:anomaliesDepuisLigne(row),
+
+      couverture:{
+        minutes:String(
+          row.COUVERTURE_MINUTES||
+          ""
+        ),
+        pourcentage:String(
+          row.COUVERTURE_POURCENTAGE||
+          ""
+        ),
+        critique:String(
+          row.COUVERTURE_CRITIQUE||
+          ""
+        )
+      },
+
+      statut:String(row.STATUT_LIGNE||"")
+    }))
+    .sort((a,b)=>
+      String(a.dateKey).localeCompare(
+        String(b.dateKey)
+      )||
+      String(
+        a.stagiaire&&a.stagiaire.nomPrenom||
+        ""
+      ).localeCompare(
+        String(
+          b.stagiaire&&b.stagiaire.nomPrenom||
+          ""
+        ),
+        "fr"
+      )
+    );
+}
+
+async function load(){
+  try{
+    const response=await fetch(
+      STAGIAIRES_GVIZ_URL+
+      "&t="+
+      Date.now(),
+      {cache:"no-store"}
+    );
+
+    if(!response.ok){
+      throw new Error(
+        "Réponse Google Sheets "+
+        response.status
+      );
+    }
+
+    const text=await response.text();
+
+    const match=text.match(
+      /google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/
+    );
+
+    if(!match){
+      throw new Error(
+        "Format Google Sheets invalide."
+      );
+    }
+
+    const data=JSON.parse(match[1]);
+
+    if(data.status==="error"){
+      throw new Error(
+        data.errors&&
+        data.errors[0]&&
+        data.errors[0].detailed_message||
+        "Lecture Google Sheets refusée."
+      );
+    }
+
+    ITEMS=convertirStagiairesGviz(
+      data.table||{}
+    );
+
     render();
-  };
-  s.onerror=()=>{
-    delete window[cb];
-    s.remove();
-    content.innerHTML='<div class="error">Impossible de charger les données.</div>';
-  };
-  s.src=WEB_APP_URL+"?mode=site_stagiaires_formations&type=stagiaires&callback="+encodeURIComponent(cb)+"&v="+Date.now();
-  document.body.appendChild(s);
-})();
+
+  }catch(error){
+    console.error(error);
+
+    content.innerHTML=
+      '<div class="error">'+
+      'Impossible de charger STAGIAIRES_SITE.'+
+      '</div>';
+  }
+}
+
+load();
 </script>
 </body>
 </html>

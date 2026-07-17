@@ -124,6 +124,13 @@ button,input,a{font:inherit;color:inherit}
 
 <script>
 const WEB_APP_URL="https://script.google.com/macros/s/AKfycbybgBjbWp2YhJqv0vR-X8Mh_x2FbIpsPdDt2VmogXK-QcojNtoRKb_uP4jm8rDMTbE/exec";
+const FORMATIONS_SHEET_ID="10PLA4lxXPCDqGdPs1qWywIa1SBv1YKKpiQioJmVBsXc";
+const FORMATIONS_SHEET_NAME="FORMATIONS_SITE";
+const FORMATIONS_GVIZ_URL=
+  "https://docs.google.com/spreadsheets/d/"+
+  FORMATIONS_SHEET_ID+
+  "/gviz/tq?tqx=out:json&headers=1&sheet="+
+  encodeURIComponent(FORMATIONS_SHEET_NAME);
 const ICS_URL="https://calendar.google.com/calendar/ical/c5da5df12db0eba65a14410cada08fea4e5a8037ddd256b03e7426cb22cb751b%40group.calendar.google.com/private-4f5072a64d36548137a30abb665ed23f/basic.ics";
 let ITEMS=[];let FILTER="tous";
 const pilot=document.getElementById("pilot"),
@@ -475,7 +482,96 @@ document.addEventListener("keydown",e=>{
     closeCallModal();
   }
 });
-(function load(){const cb="recevoirFormations_"+Date.now(),s=document.createElement("script");window[cb]=data=>{delete window[cb];s.remove();if(!data||!data.ok){content.innerHTML=`<div class="error">${esc(data&&data.erreur||"Données invalides.")}</div>`;return}ITEMS=arr(data.items);updatePilot();render()};s.onerror=()=>{delete window[cb];s.remove();content.innerHTML='<div class="error">Impossible de charger les données.</div>'};s.src=WEB_APP_URL+"?mode=site_stagiaires_formations&type=formations&callback="+encodeURIComponent(cb)+"&v="+Date.now();document.body.appendChild(s)})();
+function gvizValue(cell){
+  if(!cell)return "";
+  if(cell.f!==undefined&&cell.f!==null)return String(cell.f);
+  if(cell.v===undefined||cell.v===null)return "";
+  return String(cell.v);
+}
+function directAvatar(row){
+  const id=String(row.AVATAR_ID||"").trim();
+  if(id)return "https://drive.google.com/thumbnail?id="+encodeURIComponent(id)+"&sz=w320";
+  const url=String(row.AVATAR_URL||"").trim();
+  const match=url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  return match?"https://drive.google.com/thumbnail?id="+encodeURIComponent(match[1])+"&sz=w320":url;
+}
+function semaineDepuisDate(dateIso){
+  if(!dateIso)return "";
+  const d=new Date(dateIso+"T12:00:00");
+  if(Number.isNaN(d.getTime()))return "";
+  const target=new Date(d.valueOf());
+  const dayNr=(d.getDay()+6)%7;
+  target.setDate(target.getDate()-dayNr+3);
+  const firstThursday=new Date(target.getFullYear(),0,4);
+  const firstDayNr=(firstThursday.getDay()+6)%7;
+  firstThursday.setDate(firstThursday.getDate()-firstDayNr+3);
+  return "Semaine "+(1+Math.round((target-firstThursday)/(7*24*60*60*1000)));
+}
+function anomaliesAgent(row){
+  const list=[];
+  const rattachement=String(row.RATTACHEMENT||"").trim();
+  const score=Number(String(row.SCORE||"").replace(",","."));
+  if(!row.AGENT)list.push({niveau:"danger",titre:"Agent absent",resume:"Le nom de l’agent manque.",detail:"La ligne de formation ne contient pas d’identité exploitable.",action:"Vérifier la source de formation."});
+  if(/VALIDER|VERIFIER|IDENTITE/i.test(rattachement))list.push({niveau:"warning",titre:"Identité à contrôler",resume:rattachement,detail:rattachement,action:"Contrôler l’identité avant utilisation."});
+  if(Number.isFinite(score)&&score>0&&score<100)list.push({niveau:"warning",titre:"Rattachement fragile",resume:"Score de rapprochement faible : "+score,detail:rattachement||"Le rapprochement avec l’agent est incertain.",action:"Contrôler le nom, le prénom et le GHE."});
+  return list;
+}
+function convertirTableGviz(table){
+  const headers=(table.cols||[]).map((col,index)=>String(col&&col.label||col&&col.id||("COL_"+index)).trim());
+  const rows=(table.rows||[]).map(item=>{
+    const out={};
+    headers.forEach((header,index)=>out[header]=gvizValue(item.c&&item.c[index]));
+    return out;
+  });
+  const groupes=new Map();
+  rows.forEach(row=>{
+    const dateKey=String(row.DATE_ISO||"").trim();
+    const formation=String(row.FORMATION||"Formation").trim();
+    const horaire=String(row.HORAIRE_FORMATION||"").trim();
+    const key=[dateKey,formation,horaire].join("|");
+    if(!groupes.has(key))groupes.set(key,{
+      dateKey,
+      dateLabel:String(row.DATE_LABEL||dateKey||"Date non renseignée"),
+      semaineLabel:semaineDepuisDate(dateKey),
+      formation:{intitule:formation,horaireAffiche:horaire||"Journée",typeLabel:"Formation",typeIcone:"🎓"},
+      agents:[],
+      anomalies:[]
+    });
+    const shiftHoraire=[String(row["HEURE_DÉBUT"]||"").trim(),String(row.HEURE_FIN||"").trim()].filter(Boolean).join("-");
+    groupes.get(key).agents.push({
+      nomComplet:String(row.AGENT||[row.NOM,row["PRÉNOM"]].filter(Boolean).join(" ")||"Agent"),
+      nom:String(row.NOM||""),
+      prenom:String(row["PRÉNOM"]||""),
+      ghe:String(row.GHE||""),
+      telephone:String(row["TÉLÉPHONE"]||""),
+      matricule:String(row.MATRICULE||""),
+      avatar:{url:directAvatar(row),initiales:initials(row.AGENT||"")},
+      shift:{code:String(row.SHIFT_CODE||"FO"),label:String(row["SHIFT_LIBELLÉ"]||"Formation"),horaire:shiftHoraire},
+      anomalies:anomaliesAgent(row)
+    });
+  });
+  return Array.from(groupes.values()).sort((a,b)=>String(a.dateKey).localeCompare(String(b.dateKey))||String(a.formation.intitule).localeCompare(String(b.formation.intitule),"fr")||String(a.formation.horaireAffiche).localeCompare(String(b.formation.horaireAffiche),"fr"));
+}
+async function load(){
+  try{
+    const response=await fetch(FORMATIONS_GVIZ_URL+"&t="+Date.now(),{cache:"no-store"});
+    if(!response.ok)throw new Error("Réponse Google Sheets "+response.status);
+    const text=await response.text();
+    const match=text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/);
+    if(!match)throw new Error("Format de réponse Google Sheets invalide.");
+    const data=JSON.parse(match[1]);
+    if(data.status==="error")throw new Error(data.errors&&data.errors[0]&&data.errors[0].detailed_message||"Google Sheets a refusé la lecture.");
+    ITEMS=convertirTableGviz(data.table||{});
+    updatePilot();
+    render();
+  }catch(error){
+    console.error(error);
+    content.innerHTML='<div class="error">Impossible de charger le fichier FORMATIONS_SITE.</div>';
+    pilot.className="pilot danger";
+    pilot.innerHTML='<div class="pilot-title">Connexion impossible</div><div class="pilot-sub">La page n’a pas pu lire le fichier dédié aux formations.</div>';
+  }
+}
+load();
 </script>
 <script src="affichage-different/avatars-frais.js?v=1"></script>
 </body>
