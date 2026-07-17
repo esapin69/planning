@@ -143,7 +143,22 @@ function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").
 function norm(v){return String(v??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().replace(/\s+/g," ").trim()}
 function arr(v){return Array.isArray(v)?v:[]}
 function initials(v){const p=String(v||"").trim().split(/\s+/).filter(Boolean);return p.length?((p[0][0]||"")+(p[1]?.[0]||p[0][1]||"")).toUpperCase():"?"}
-function avatar(agent){const a=agent&&agent.avatar||{},t=a.thumb||"";return `<div class="avatar ${t?"has-img":""}">${t?`<img src="${esc(t)}" alt="" loading="lazy" onerror="this.parentElement.classList.remove('has-img');this.remove()">`:""}<span class="initials">${esc(a.initiales||initials(agent&&agent.nomComplet))}</span></div>`}
+function avatar(agent){
+  const raw=agent&&(
+    agent.avatar||
+    agent.avatarUrl||
+    ""
+  );
+
+  const data=(raw&&typeof raw==="object")?raw:{};
+  const thumb=typeof raw==="string"
+    ?raw
+    :(data.thumb||data.url||data.avatarUrl||"");
+
+  const initiales=data.initiales||initials(agent&&agent.nomComplet);
+
+  return `<div class="avatar ${thumb?"has-img":""}">${thumb?`<img src="${esc(thumb)}" alt="" loading="lazy" onerror="this.parentElement.classList.remove('has-img');this.remove()">`:""}<span class="initials">${esc(initiales)}</span></div>`;
+}
 function chip(text){return text?`<span class="chip">${esc(text)}</span>`:""}
 function shiftBasePublic(shift){
   shift=shift||{};
