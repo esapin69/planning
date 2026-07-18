@@ -34,6 +34,11 @@ button,input,a{font:inherit;color:inherit}
 .empty,.error,.loading{background:var(--paper);border:4px solid var(--line);border-radius:21px;padding:14px;font-weight:900;box-shadow:var(--shadow)}.error{color:var(--danger)}
 .agenda{margin:25px 0 4px;padding:13px;background:var(--paper);border:4px solid var(--line);border-radius:25px;box-shadow:var(--shadow)}.agenda-title{margin:0 0 10px;font-family:var(--display);font-size:clamp(25px,7vw,44px);line-height:.92;text-align:center;text-transform:uppercase;text-shadow:0 3px 0 #f8d67d}.agenda-buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px}.agenda-btn{min-height:62px;display:flex;align-items:center;justify-content:center;text-decoration:none;color:#fff4ce;border:4px solid #061738;border-radius:20px;font-family:var(--display);font-size:clamp(21px,5.5vw,34px);text-transform:uppercase;box-shadow:0 6px 0 rgba(7,24,63,.32)}.agenda-btn.ios{background:linear-gradient(145deg,#3db9ff,#0c6ed5 56%,#083c91)}.agenda-btn.android{background:linear-gradient(145deg,#35d864,#12873d 56%,#075324)}
 .modal{position:fixed;inset:0;z-index:1000;display:none;align-items:flex-end;justify-content:center;padding:10px;background:rgba(2,8,23,.68);backdrop-filter:blur(5px)}.modal.open{display:flex}.sheet{width:min(680px,100%);max-height:88vh;overflow:auto;background:var(--cream);border:5px solid var(--line);border-radius:27px 27px 18px 18px;padding:14px;box-shadow:0 15px 0 rgba(0,0,0,.24)}.sheet h2{margin:0;font-family:var(--display);font-size:clamp(30px,8vw,49px);line-height:.9;text-transform:uppercase}.sheet-sub{margin:7px 0 12px;color:var(--soft);font-weight:850;line-height:1.3}.issue{margin-top:8px;border:2px solid transparent;border-radius:15px;padding:10px}.issue.warning{background:var(--warningBg);color:var(--warning);border-color:#e2c060}.issue.danger{background:var(--dangerBg);color:var(--danger);border-color:#e7a29d}.issue-title{font-size:15px;font-weight:950}.issue-detail{margin-top:4px;font-size:13px;font-weight:800;line-height:1.32}.issue-action{margin-top:7px;padding-top:7px;border-top:1px solid currentColor;font-size:13px;font-weight:850;line-height:1.32}.close{width:100%;min-height:50px;margin-top:12px;border:4px solid var(--line);border-radius:17px;background:var(--ink);color:var(--cream);font-weight:950;cursor:pointer}
+.sheet{position:relative}
+.modal-x{position:absolute;top:9px;right:9px;z-index:4;width:42px;height:42px;border:3px solid var(--line);border-radius:50%;background:#fff;color:var(--ink);font-size:25px;font-weight:1000;line-height:1;cursor:pointer;display:grid;place-items:center;box-shadow:0 4px 0 rgba(2,8,23,.2)}
+.shift-visual{display:inline-flex;align-items:center;gap:7px;min-height:30px;padding:3px 9px 3px 4px;border:2px solid var(--line);border-radius:999px;background:#fff;font-size:12px;font-weight:950;vertical-align:middle}
+.shift-visual img{width:28px;height:28px;border-radius:50%;object-fit:cover;display:block}
+.shift-visual .fallback{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#eef2ff}
 @media(min-width:720px){.page{padding-left:14px;padding-right:14px}.agent{grid-template-columns:76px minmax(0,1fr)}.avatar{width:76px;height:76px}.modal{align-items:center}.sheet{border-radius:27px}}
 
 /* GHE cliquable partout dans la page Formations */
@@ -107,7 +112,7 @@ button,input,a{font:inherit;color:inherit}
 </main>
 
 <div id="callModal" class="modal" aria-hidden="true">
-  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="callTitle">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="callTitle"><button class="modal-x" type="button" data-close-modal="callModal" aria-label="Fermer">×</button>
     <h2 id="callTitle">Contacter l’agent</h2>
     <div id="callAvatar" class="avatar" style="margin:8px auto 10px"><span class="initials">👤</span></div><div id="callSub" class="sheet-sub"></div>
     <div id="callNumber" class="call-number"></div>
@@ -120,7 +125,7 @@ button,input,a{font:inherit;color:inherit}
   </div>
 </div>
 
-<div id="issueModal" class="modal" aria-hidden="true"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><h2 id="modalTitle">Détail de l’alerte</h2><div id="modalSub" class="sheet-sub"></div><div id="modalBody"></div><button id="modalClose" class="close" type="button">Fermer</button></div></div>
+<div id="issueModal" class="modal" aria-hidden="true"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><button class="modal-x" type="button" data-close-modal="issueModal" aria-label="Fermer">×</button><h2 id="modalTitle">Détail de l’alerte</h2><div id="modalSub" class="sheet-sub"></div><div id="modalBody"></div><button id="modalClose" class="close" type="button">Fermer</button></div></div>
 
 <script>
 const WEB_APP_URL="https://script.google.com/macros/s/AKfycbybgBjbWp2YhJqv0vR-X8Mh_x2FbIpsPdDt2VmogXK-QcojNtoRKb_uP4jm8rDMTbE/exec";
@@ -226,6 +231,25 @@ function shiftText(shift){
     .filter(Boolean)
     .join(" · ");
 }
+function shiftVisualUrl(shift){
+  shift=shift||{};
+  if(shift.imageUrl)return shift.imageUrl;
+  if(shift.imageId)return "https://drive.google.com/thumbnail?id="+encodeURIComponent(shift.imageId)+"&sz=w320";
+  if(/^https?:\/\//i.test(shift.visuelPrincipal||""))return shift.visuelPrincipal;
+  return "";
+}
+
+function shiftHtml(shift){
+  shift=shift||{};
+  const image=shiftVisualUrl(shift);
+  const fallback=shift.icone||shiftBasePublic(shift)||"•";
+  return `<span class="shift-visual">${
+    image
+      ? `<img src="${esc(image)}" alt="" loading="lazy" onerror="this.outerHTML='<span class=&quot;fallback&quot;>${esc(fallback)}</span>'">`
+      : `<span class="fallback">${esc(fallback)}</span>`
+  }<span>${esc(shiftText(shift))}</span></span>`;
+}
+
 function typeClass(item){const n=norm(item&&item.formation&&((item.formation.typeLabel||"")+" "+(item.formation.intitule||"")));return n.includes("INCENDIE")?"incendie":n.includes("CACES")?"caces":(n.includes("IDENTITE")||n.includes("VIGILANCE"))?"identite":"default"}
 function issuesOfAgent(agent){return arr(agent&&agent.anomalies)}
 function issuesOfSession(item){return arr(item&&item.anomalies)}
@@ -261,7 +285,7 @@ function agentCard(agent,itemIndex,agentIndex){
 
       <div class="info">
         ${gheButton(agent)}
-        ${chip(shiftText(agent.shift))}
+        ${shiftHtml(agent.shift)}
       </div>
 
       ${alertSummary(
@@ -514,6 +538,28 @@ function anomaliesAgent(row){
   if(!row.AGENT)list.push({niveau:"danger",titre:"Agent absent",resume:"Le nom de l’agent manque.",detail:"La ligne de formation ne contient pas d’identité exploitable.",action:"Vérifier la source de formation."});
   if(/VALIDER|VERIFIER|IDENTITE/i.test(rattachement))list.push({niveau:"warning",titre:"Identité à contrôler",resume:rattachement,detail:rattachement,action:"Contrôler l’identité avant utilisation."});
   if(Number.isFinite(score)&&score>0&&score<100)list.push({niveau:"warning",titre:"Rattachement fragile",resume:"Score de rapprochement faible : "+score,detail:rattachement||"Le rapprochement avec l’agent est incertain.",action:"Contrôler le nom, le prénom et le GHE."});
+
+  const codeAlerte=String(row.CODE_ALERTE||"").toUpperCase();
+  const message=String(row.ALERTE||"").trim();
+
+  if(codeAlerte.indexOf("AGENT_INDISPONIBLE_")===0){
+    list.push({
+      niveau:"danger",
+      titre:"Agent indisponible le jour de la formation",
+      resume:message||("Statut constaté : "+String(row.STATUT_AGENT_LIBELLÉ||row.STATUT_AGENT||"indisponible")),
+      detail:message||("L’agent est en "+String(row.STATUT_AGENT_LIBELLÉ||row.STATUT_AGENT||"indisponibilité")+" le jour prévu."),
+      action:"Vérifier la participation ou reprogrammer la formation."
+    });
+  }else if(codeAlerte==="PLANNING_AGENT_ABSENT"){
+    list.push({
+      niveau:"warning",
+      titre:"Planning introuvable",
+      resume:"Aucune donnée de planning n’a été trouvée pour cet agent.",
+      detail:"Le planning est réellement absent pour cette date.",
+      action:"Contrôler la source du planning."
+    });
+  }
+
   return list;
 }
 function convertirTableGviz(table){
@@ -524,7 +570,20 @@ function convertirTableGviz(table){
     return out;
   });
   const groupes=new Map();
+  const today=new Date();
+  today.setHours(0,0,0,0);
+
   rows.forEach(row=>{
+    const afficher=String(row.AFFICHER_SITE||"").trim().toUpperCase();
+    const active=String(row.DATE_ACTIVE_SITE||"").trim().toUpperCase();
+    const dateTest=new Date(String(row.DATE_ISO||"")+"T12:00:00");
+
+    if(afficher==="NON"||active==="NON")return;
+    if(
+      afficher!=="OUI"&&
+      active!=="OUI"&&
+      (Number.isNaN(dateTest.getTime())||dateTest.getTime()<today.getTime())
+    )return;
     const dateKey=String(row.DATE_ISO||"").trim();
     const formation=String(row.FORMATION||"Formation").trim();
     const horaire=String(row.HORAIRE_FORMATION||"").trim();
@@ -546,7 +605,17 @@ function convertirTableGviz(table){
       telephone:String(row["TÉLÉPHONE"]||""),
       matricule:String(row.MATRICULE||""),
       avatar:{url:directAvatar(row),initiales:initials(row.AGENT||"")},
-      shift:{code:String(row.SHIFT_CODE||"FO"),label:String(row["SHIFT_LIBELLÉ"]||"Formation"),horaire:shiftHoraire},
+      shift:{
+        code:String(row.SHIFT_CODE_CANONIQUE||row.SHIFT_CODE||row.STATUT_AGENT||"FO"),
+        label:String(row.SHIFT_AFFICHAGE||row["SHIFT_LIBELLÉ"]||row.STATUT_AGENT_LIBELLÉ||"Formation"),
+        horaire:shiftHoraire,
+        icone:String(row["SHIFT_ICÔNE"]||row.SHIFT_ICONE||""),
+        imageUrl:String(row.SHIFT_IMAGE_URL||row.SHIFT_IMAGE_URL_DIRECTE||""),
+        imageId:String(row.SHIFT_IMAGE_ID||""),
+        visuelPrincipal:String(row.SHIFT_VISUEL_PRINCIPAL||""),
+        visuelType:String(row.SHIFT_VISUEL_TYPE||""),
+        categorie:String(row["SHIFT_CATÉGORIE"]||row.SHIFT_CATEGORIE||"")
+      },
       anomalies:anomaliesAgent(row)
     });
   });
@@ -571,6 +640,14 @@ async function load(){
     pilot.innerHTML='<div class="pilot-title">Connexion impossible</div><div class="pilot-sub">La page n’a pas pu lire le fichier dédié aux formations.</div>';
   }
 }
+document.addEventListener("click",event=>{
+  const button=event.target.closest("[data-close-modal]");
+  if(!button)return;
+
+  if(button.dataset.closeModal==="issueModal")closeModal();
+  if(button.dataset.closeModal==="callModal")closeCallModal();
+});
+
 load();
 </script>
 <script src="affichage-different/avatars-frais.js?v=1"></script>
