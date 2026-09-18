@@ -544,6 +544,10 @@ function classifyAgendaEvent(event){
   if(exact==="J0464"||exact==="J"||(/^J\d+$/.test(exact)&&hours.includes("08:30–16:20"))||raw.includes("JOURNEE")||raw.includes("JOUR")) return make("J","Journée","Journée",false,"kind-journee");
   if(exact==="N"||raw.includes("NUIT")) return make("N","Nuit","Nuit",false,"kind-nuit");
 
+  // Événements personnels et formations : visibles sans être confondus avec un poste.
+  if(event.type==="medical_visit"||raw.includes("VISITE MEDICALE")) return make("VM","Visite médicale",String(event.description||event.titre||"Visite médicale d’aptitude"),false,"kind-special");
+  if(event.type==="formation") return make("FO","Formation",String(event.description||event.titre||"Formation"),false,"kind-special");
+
   // Tous les codes non travaillés ou non reconnus restent volontairement gris.
   if(raw.includes("SYR")||raw.includes("SYN")||raw.includes("SYNDICAT")) return make("SYR","Activité syndicale","Activité syndicale",true,"kind-special");
   if(raw.includes("FORMATION")) return make("FO","Formation","Formation",true,"kind-special");
